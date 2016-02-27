@@ -1,0 +1,21 @@
+如果有一个模板类：
+template <typename T,int>
+class Node{
+
+};
+
+以下调用为错误调用：
+
+int number = 10;
+Node<Type,number> node;
+
+------------------------------------------------
+
+以下为正确调用：
+
+const int number = 10;
+Node<Type,number> node;
+
+或者
+
+Node<Type,10> node

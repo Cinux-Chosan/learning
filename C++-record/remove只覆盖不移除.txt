@@ -1,0 +1,37 @@
+remove 函数只是将后面的元素向前移动，覆盖需要 remove 的，但是并不erase，只会返回一个迭代器指向逻辑终点。需要自己调用erase来擦除容器内的数据。但是remove_copy()不会真正remove原来的容器，而是将remove后的结果copy到新的容器中。
+
+所以
+	vector<int> vecInt = { 2, 2, 0, 2, 1, 2, 3, 2, 4, 2, 2 };
+	vecInt.erase(remove(vecInt.begin(), vecInt.end(), 2), vecInt.end());
+	for_each(vecInt.begin(), vecInt.end(), p);
+
+
+上例中 p 为打印节点的函数指针（包含一个截断函数的形参的强制函数指针类型转换示例）：
+
+#include "stdafx.h"
+#include "stdio.h"
+#include "vector"
+#include "algorithm"
+
+using std::vector;
+
+auto Print(int n,int nn)->void
+{
+	fprintf(stdout, "%d\t", n);
+}
+
+typedef void(*P)(int);
+P p=(P) Print;
+
+int main(int argc, char **argv, char ** env)
+{
+	vector<int> vecInt = { 2, 2, 0, 2, 1, 2, 3, 2, 4, 2, 2 };
+	//	
+	vecInt.erase(remove(vecInt.begin(), vecInt.end(), 2), vecInt.end());     //可以写作lambda表达式
+	for_each(vecInt.begin(), vecInt.end(), p);
+	system("pause");
+}
+
+
+亦可写作 lambda 表达式：
+	for_each(vecInt.begin(), vecInt.end(), [](int n){fprintf(stdout, "%d\t", n); });

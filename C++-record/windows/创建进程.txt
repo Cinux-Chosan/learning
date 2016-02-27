@@ -1,0 +1,82 @@
+BOOL CreateProcess();
+
+后两个参数应该要设置。
+命令行参数需要在前面留一个空格。 即下例中的 L" D:\\test.txt";
+
+
+读取进程内存
+OpenProcess(id);
+ReadProcessMemory() //读进程内存数据
+WriteProcessMemory() //写进程内存
+GetProcessMemoryInfo() //得到进程内存的信息
+GetProcessImageFileName()
+
+//启动记事本
+
+{
+
+	STARTUPINFO startup = { 0 };
+	startup.dwFlags = STARTF_USESIZE| STARTF_USEPOSITION;
+	startup.cb = sizeof(STARTUPINFO);
+	startup.dwX = 900;
+	startup.dwY = 100;
+	startup.dwXSize = 400;
+	startup.dwYSize = 200;
+	PROCESS_INFORMATION process = { 0 };
+	BOOL bRet = CreateProcess(L"E:\\Teach\\Windows界面编程\\Lesson_07(2015-07-05)\\src\\Lesson_07\\Debug\\Lesson_07.exe", L" D:\\test.txt",	NULL, NULL, FALSE, 0, NULL, NULL, &startup, &process);
+	if (bRet)
+		{
+			CloseHandle(process.hThread);
+			CloseHandle(process.hProcess);
+		}
+}
+
+
+
+
+void FindProcess(HWND hWnd)
+{
+	/*
+	1)获取一个系统进程快照
+	2)
+	3)
+	*/
+	HWND hList = GetDlgItem(hWnd, IDC_LIST_PROCESS);
+	HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	TCHAR szBuffer[MAX_PATH + 1] = { 0 };
+	
+	
+	
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+	BOOL bRet = Process32First(hProcess, &entry);
+	int iIndex = 0;
+	while (bRet)
+	{
+		LV_ITEM lv1 = { 0 };
+		lv1.mask = LVIF_TEXT;
+		lv1.iItem = iIndex;
+		lv1.pszText = entry.szExeFile;
+		lv1.iSubItem = 0;
+		int iRet = ListView_InsertItem(hList, &lv1);
+
+		memset(szBuffer, 0, sizeof(TCHAR)*(MAX_PATH + 1));
+		wsprintf(szBuffer, L"%d", entry.th32ProcessID);
+		LV_ITEM lv2 = { 0 };
+		lv2.mask = LVIF_TEXT;
+		lv2.iItem = iIndex;
+		lv2.iSubItem = 1;
+		lv2.pszText = szBuffer;
+		iRet = ListView_SetItem(hList, &lv2);
+
+		//打开进程OpenProcess();
+		PPROCESS_MEMORY_COUNTERS memory;
+		//获取进程占用内存大小GetProcessMemoryInfo()
+
+		//获取进程全路径程序名称GetProcessImageFileName()
+
+		iIndex++;
+		bRet = Process32Next(hProcess, &entry);
+	}
+	CloseHandle(hProcess);
+}

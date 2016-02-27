@@ -1,0 +1,11 @@
+需要包含 gdiplus.lib
+
+初始化gdiplus环境，包含gdiplus.h
+
+名字空间 Gdiplus;
+
+开始的时候：
+GdiplushStartup();
+
+结束的时候：
+GdiShutdown();

@@ -1,0 +1,6 @@
+写入乱码可能是由于写入的时候是UNICODE而打开的软件并没有意识到这是UNICODE所以产生乱码。
+写入的时候要告诉打开的软件（记事本）这是UNICODE编码，而方法则是：
+
+WORD unicode = 0xFEFF;
+pFile->Write(&unicode, 2);
+pFile->Write(Message, Message.GetLength()*sizeof(wchar_t)); // 长度要乘以sizeof(wchar_t)

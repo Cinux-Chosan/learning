@@ -1,0 +1,16 @@
+
+vector<int> vecInt={0,1,2,3,4,5};
+for_each(vecInt.begin(),vecInt.end(),[](int & number_i){number_i++;});
+
+
+
+[](int & number_i){number_i++;} 即为 lambda 表达式。
+
+
+[] 为捕获列表。可以捕获在此之前的局部变量，相当于传入局部变量。如下例所示：
+
+
+int tmp;
+cin>>tmp;
+for_each(vecInt.begin(),vecInt.end(),[tmp](int & number_i){number_i += tmp;});
+

@@ -1,0 +1,12 @@
+1、文件遍历
+	FindFirstFile()
+	FindNextFile()
+	FindClose()
+
+
+2、ListView项添加图标
+	a) 使用 ImageList_Create 创建HIMAGELIST 
+	b) 使用 ListView_SetImageList 把HINAGELIST 与 Listview 关联起来
+	c) 使用 SHGetFileInfo 获取文件的图标
+	d) 使用 ImageList_AddIcon 把获取到的图标添加进 HIMAGELIST 里面，同时会返回图标在HIMAGELIST 里面的索引
+	e) 将返回的索引赋值给 ListView 里面的项

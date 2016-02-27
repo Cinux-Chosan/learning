@@ -1,0 +1,39 @@
+函数适配器(新标准 bind 朗阔了一下所有)：
+
+bind2nd
+bind1st
+mem_fun_ref
+mem_fun
+ptr_fun 将普通函数转换成函数对象
+
+某些函数由于参数个数多于1个，foreach不能直接调用，此时就要用到函数适配器。比如使用bind2nd 来将二元函数转化成一元函数。
+bind1st 和 bind2nd 都是用来将二元函数对象转化成一元函数对象的，但是对应参数位置不同，比如:
+bind1st(op,value) 为 op(param,value)   // param 为for_each传入的容器内的参数。
+bind2nd(op,value) 为 op(value,param)   // 即，有时候需要固定的参数值不同，所以出现了两种绑定。
+
+
+void AddForEach(int &number_i,int add_i)
+{
+   number_i += add_i;
+}
+
+int main()
+{
+    vector<int> vecInt= {0,1,2,3,4,5};
+    foreach(vector.begin(),vector.end(),std::bind2nd(AddForEach,10));
+
+
+}
+
+
+将二元函数转换为一元函数的简单写法，即用一元函数调用二元函数即可：
+
+int Two(int left,int right)
+{
+    return left + right;
+}
+
+int One(int number)
+{
+    return Two(number,2);
+}

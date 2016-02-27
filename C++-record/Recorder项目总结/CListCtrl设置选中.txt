@@ -1,0 +1,5 @@
+设置选中，需要用到
+pList->SetFocus();
+pList->SetItemState(nCount, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
+
+注意：如果将设置选中做在多线程里面，则需要在 AfxBeginThread 之前或者之后再设置一次焦点，否则无法选中。。具体原因可能是多线程执行完过后焦点被更改。

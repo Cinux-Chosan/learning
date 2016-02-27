@@ -1,0 +1,47 @@
+发送端：
+
+
+/*
+功能：通过WM_COPYDATA消息进行通讯
+*/
+void SendByCopyData()
+{
+	//找到接收进程的主窗口，给主窗品发送一个WM_COPYDATA
+	HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_INPUT);
+	TCHAR szBuffer[100] = { 0 };
+	GetWindowTextW(hEdit, szBuffer, 99);
+
+	HWND hWnd = FindWindow(NULL, L"接收端");
+	COPYDATASTRUCT cdata = { 0 };
+	cdata.dwData = 0;//WM_COPYDATA消息在两进程通讯的时候，数据有多种格式的话，可能通过dwData来区分
+	cdata.cbData = wcslen(szBuffer)*sizeof(TCHAR);//是内存大小，是以字节为单位 '\0'
+	cdata.lpData = (void*)szBuffer;
+	SendMessage(hWnd, WM_COPYDATA, 0, (LPARAM)&cdata);
+}
+
+
+----------------------------------------------------------------
+
+接收端：
+
+case WM_COPYDATA:
+		{
+			COPYDATASTRUCT* lpCData = (COPYDATASTRUCT*)lParam;
+			TCHAR szBuffer[100] = { 0 };
+			memcpy(szBuffer, lpCData->lpData, lpCData->cbData);
+
+			HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_OUTPUT);
+
+			//往文本里面插入数据
+			//1)选择一段空字符
+			SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+			//2)把一段选择的字符替换掉
+			SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)szBuffer);
+
+			//换行
+			SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+			SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)L"\r\n");
+
+		}
+		break;
+

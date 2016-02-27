@@ -1,0 +1,21 @@
+一：
+停止：
+# mysqladmin -r root -p123456 shutdown
+其中用户是root,密码是123456
+二：
+启动：
+假设我们不知是启动还是停止
+先查看状态：# /etc/rc.d/init.d/mysql status
+如果显示[FAILED]说明是停止的
+我们来启动：#service mysql start
+ 
+自动启动
+　　1）察看mysql是否在自动启动列表中
+　　[root@test1 local]#　/sbin/chkconfig –list
+　　2）把MySQL添加到你系统的启动服务组里面去
+　　[root@test1 local]#　/sbin/chkconfig　– add　mysql
+　　3）把MySQL从启动服务组里面删除。
+　　[root@test1 local]#　/sbin/chkconfig　– del　mysql
+ 
+ 
+哈哈，最简单，不过不专业，要更专业的上网去查，很多；

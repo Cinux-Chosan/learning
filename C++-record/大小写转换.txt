@@ -1,0 +1,4 @@
+
+to upper case:
+
+toupper()

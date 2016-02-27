@@ -1,0 +1,6 @@
+
+”√µΩSimpleDateFormat:
+
+File f = new File("C:/Users/Cinux/Desktop/test.txt");		
+SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+System.out.println(sdf.format(f.lastModified()));

@@ -1,0 +1,27 @@
+模态对话框：上层窗口接收不到任何系统消息
+非模态对话框：
+
+
+创建模态对话框：
+DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+
+
+
+About为窗口过程函数，负责处理消息。
+// “关于”框的消息处理程序。
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+参数 wParam 低字节保存的控件 ID 号。
+返回值为 INT_PTR  = int（typedef _W64 int INT_PTR,*PINT_PTR）即为int；而一般用CreateWindow 创建的窗口过程函数返回值为 LRESULT =long （ typedef _W64 long LONG_PTR, *PLONG_PTR;）（typedef LONG_PTR            LRESULT;）  即为 long 
+
+
+
+函数名前面的 CALLBACK 、 WINAPI 等为调用约定，调用约定不同，形参顺序不同，维护的堆栈顺序也不同。
+
+
+创建非模态对话框：
+HWND hDlg = CreateDialog(hInst,MAKEINTRESOURCE(IDC_ABOUTBOX),hWnd,Aboout);
+
+创建完成过后，还要调用显示和更新：
+ShowWindow(hDlg,SW_SHOW);
+UpdateWindow(hDlg);
+

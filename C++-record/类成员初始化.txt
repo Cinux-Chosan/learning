@@ -1,0 +1,28 @@
+
+class A {
+public:
+/*
+1、静态变量不属于某一个具体对象，所以不能通过构造函数进行初始化，
+但是可以在对象函数中进行修改，如++和--等操作，所以可以放在构造函数等其它函数里面进行值的修改。
+
+2、而const常量需要一开始就初始化，所以要在初始化列表中进行初始化
+
+3、引用类型变量也要在初始化列表中进行初始化
+*/
+	A(int num) :a(num),d(num) { b = num; };
+	const int a;
+	static int  b;
+	const static int c;
+	int & d;
+};
+
+
+int A::b = 0;
+const int A::c = 5;
+int main()
+{
+	A a(2);
+	fprintf(stdout, "%d \t %d \t %d \t %d", a.a,a.b,a.c,a.d);
+	getchar();
+        return 0;
+}

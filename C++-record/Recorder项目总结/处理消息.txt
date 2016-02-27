@@ -1,0 +1,17 @@
+MFC编辑框如果不进行任何设置是不会触发任何消息机制的
+
+可以设置一个函数，触发回车输入就可以了
+
+BOOL CxxxDlg::PreTranslateMessage(MSG* pMsg) 
+
+{
+ if(pMsg->message==WM_KEYDOWN && pMsg->wParam==VK_RETURN) 
+{
+m_strstring += "0x0D";//m_strstring 为编辑框对应的cstring类型变量
+UpdateData(false);
+return true;
+} 
+return CDialog::PreTranslateMessage(pMsg);
+}
+
+MFC编辑框不会触发任何消息机制，除非你自己手动设置事件。 

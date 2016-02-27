@@ -1,0 +1,3 @@
+rm type source dest
+如果source 和 dest 都为文件夹。source存在，而dest不存在，则会将source改名为dest  (为文件夹更名)
+如果都存在，则会把 source 移动到 dest 文件夹中。

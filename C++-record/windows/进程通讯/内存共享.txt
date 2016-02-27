@@ -1,0 +1,67 @@
+发送端：
+
+/*
+功能：创建共离区域
+*/
+void InitShareMemory()
+{
+	g_hFileMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, 255, L"Share Memory");
+	g_pszShareBuffer = (char*)MapViewOfFile(g_hFileMap, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+}
+
+/*
+功能：清除内存共享区
+*/
+void UnInitShareMemory()
+{
+	UnmapViewOfFile(g_pszShareBuffer);
+	CloseHandle(g_hFileMap);
+	g_pszShareBuffer = NULL;
+	g_hFileMap = NULL;
+}
+
+/*
+功能：写内存共享区域
+*/
+void SendByShareMemory()
+{
+	TCHAR szBuffer[100] = { 0 };
+	HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_INPUT);
+	GetWindowText(hEdit, szBuffer, 99);
+	memcpy(g_pszShareBuffer, szBuffer, sizeof(TCHAR) * 99);
+}
+
+
+------------------------------------------------------------------
+接收端：
+
+void InitShareMemory()
+{
+	g_hFileMap = OpenFileMapping(PAGE_READWRITE, FALSE, L"Share Memory");
+	g_pszFileBuffer = (char*)MapViewOfFile(g_hFileMap, PAGE_READWRITE, 0, 0, 0);
+}
+
+void UnInitShareMemory()
+{
+	UnmapViewOfFile(g_pszFileBuffer);
+	CloseHandle(g_hFileMap);
+	g_pszFileBuffer = NULL;
+	g_hFileMap = NULL;
+}
+
+void ReadShareMemory()
+{
+	TCHAR szBuffer[100] = { 0 };
+	memcpy(szBuffer, g_pszFileBuffer, sizeof(TCHAR)*99);
+	HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_OUTPUT);
+
+	//往文本里面插入数据
+	//1)选择一段空字符
+	SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+	//2)把一段选择的字符替换掉
+	SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)szBuffer);
+
+	//换行
+	SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+	SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)L"\r\n");
+}

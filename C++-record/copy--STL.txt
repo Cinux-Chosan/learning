@@ -1,0 +1,10 @@
+使用copy的时候，copy将目标容器转换成地址，进行挨个赋值，但是并不检查目标容器是否有足够空间，它并非使用目标容器的插入函数进行赋值。所以不会扩充目标容器的大小。
+所以使用copy之前，需要自己为容器分配足够的空间，确定空间能够容纳需要复制的对象而不至于弹出错误。
+
+以下代码会弹出错误：
+
+vector<int> number_vec={0,1,2,3,4,5};
+list<int> number_list;
+copy(number_vec.begin(),number_vec.end(),number_list.begin());
+
+此时会报错，原因在于number_list并没有空间来容纳数据。

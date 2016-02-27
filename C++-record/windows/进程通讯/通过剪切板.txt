@@ -1,0 +1,93 @@
+发送端：
+/*
+功能：通过剪切板通讯
+*/
+void SendByClipboard()
+{
+	//1)打开剪切板
+	//2)把剪切板清空
+	//3)锁定剪切板内存
+	//4)把数据拷贝到内存
+	//5)设置剪切板数据
+	//6)解锁内存
+	//7)关闭剪切板
+
+	//获取文本输入框内容
+	HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_INPUT);
+	TCHAR szSendBuffer[100] = { 0 };
+	GetWindowTextW(hEdit, szSendBuffer, 99);
+
+
+	//打开
+	if (!OpenClipboard(g_hMainWnd))
+		return;
+
+	//清空剪切板
+	EmptyClipboard();
+
+	//分配内存
+	HGLOBAL clipbuffer = GlobalAlloc(GMEM_DDESHARE, sizeof(szSendBuffer));
+	//锁定内存
+	TCHAR* buffer = (TCHAR*)GlobalLock(clipbuffer);
+	//把数据放进内存 剪切板什么堆内 
+	memcpy(buffer, szSendBuffer, sizeof(szSendBuffer));
+	GlobalUnlock(clipbuffer);
+
+	//把数据正式放进剪切板
+	SetClipboardData(CF_TEXT, clipbuffer);
+
+	//关闭剪切板
+	CloseClipboard();
+
+	//QQ尾巴
+
+	//找到接收进程的主窗口，给主窗品发送一个WM_PASTE(粘切消息)
+	HWND hWnd = FindWindow(NULL, L"接收端");
+	SendMessage(hWnd, WM_PASTE, 0, 0);//
+
+}
+
+
+
+
+----------------------------------------------------------------------------
+接收端：
+
+case WM_PASTE:
+		{//粘贴消息，把剪切板里面的数据拿出来，显示在文本框里面
+
+			//只接收文本消息
+			if (!IsClipboardFormatAvailable(CF_TEXT))
+				break;
+
+			//打开剪切板
+			if (!OpenClipboard(g_hMainWnd))
+				break;
+
+			//获取剪切板数据
+			HANDLE hClipboard = GetClipboardData(CF_TEXT);
+			TCHAR* szBuffer = (TCHAR*)GlobalLock(hClipboard);
+			if (szBuffer != NULL)
+			{
+				//把文本数据显示在文本框里面
+				HWND hEdit = GetDlgItem(g_hMainWnd, IDC_EDIT_OUTPUT);
+
+				//往文本里面插入数据
+				//1)选择一段空字符，
+				//EM_SETSEL代表发送Edit Message消息，
+				//第三个参数为起始位置，
+				//第四个为结束位置。
+				SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+				//2)把一段选择的字符替换掉
+				SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)szBuffer);
+
+				//换行
+				SendMessage(hEdit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+				SendMessage(hEdit, EM_REPLACESEL, FALSE, (LPARAM)L"\r\n");
+
+				//解锁
+				GlobalUnlock(hClipboard);
+			}
+			CloseClipboard();
+		}
+		break;

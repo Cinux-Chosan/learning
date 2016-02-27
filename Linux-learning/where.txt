@@ -1,0 +1,39 @@
+where  查找 PATH 下的可执行文件
+
+whereis [-bmsu] [文件名]
+-b 只查找 binary 文件
+-m 只查找 manual 路径下面的文件
+-s 只查找 source 来源文件
+-u 没有说明挡的文件
+
+
+
+locate 类似于 whereis :
+如果没有这个命令，需要安装mlocate ，CentOS 使用 yum install -y mlocate安装，如果出错，可能是系统还没有生成mlocate.db ，可以使用updatedb来生成，默认每周更新一次。可以在 /etc/updated.conf 配置这个数据库生成/更新规则。
+
+
+
+
+find [路径][参数]
+-atime +n ：访问或执行时间大于n天的文件 （Access time）
+-ctime +n ：写入，更改inode 属性（更改所有者，权限或者连接）时间大于n天的文件(Create time)
+-mtime +n ：写入时间大于n天的文件(Modified time)
+
+Access time 在读取文件或者执行文件时更改
+Create time 在写入，更改所有者，权限或者连接设置时随inode 更改
+Modified time 随写入文件内容时更改
+
+
+ls -lc filename 列出ctime
+ls -lu filename 列出atime
+ls -l fimename 列出mtime 
+
+-name 通过文件名查找
+-type 通过类型查找 (f,b,c,d,l,s)
+
+find /bin -name nano
+find /bin -type f
+
+
+
+

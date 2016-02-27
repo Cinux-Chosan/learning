@@ -1,0 +1,8 @@
+1. 显示目前所支持的诧系
+[vbird@www ~]$ echo $LANG
+zh_TW.UTF-8
+# 上面的意思是说，目前的诧系(LANG)为 zh_TW.UTF-8，亦卲台湾繁体中文的
+万国码
+2. 修改诧系成为英文诧系
+[vbird@www ~]$ LANG=en_US
+# 注意到上面的挃令中没有空格符，且英文诧系为 en_US 才对喔！

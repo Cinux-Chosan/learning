@@ -1,0 +1,106 @@
+利用widechartomultibyte来转换的函数
+通常适合于window平台上使用
+#include
+#include
+int _tmain(int argc, _tchar* argv[])
+{
+wchar_t pwstr[] =l"我是中国人";
+wchar_t pwstr2[20];
+    char *pcstr = (char *)malloc(sizeof(char)*(2 * wcslen(pwstr)+1));
+    memset(pcstr , 0 , 2 * wcslen(pwstr)+1 );
+    w2c(pcstr,pwstr,2 * wcslen(pwstr)+1) ;
+    printf("%s\n",pcstr);
+c2w(pwstr2,20,pcstr);
+wprintf(l"%s",pwstr2);
+    free(pcstr) ;
+return 0;
+}
+//将wchar_t* 转成char*的实现函数如下：
+char *w2c(char *pcstr,const wchar_t *pwstr, size_t len)
+{
+int nlength=wcslen(pwstr);
+//获取转换后的长度
+int nbytes = WideCharToMultiByte( 0, // specify the code page used to perform the conversion
+0,         // no special flags to handle unmapped characters
+pwstr,     // wide character string to convert
+nlength,   // the number of wide characters in that string
+NULL,      // no output buffer given, we just want to know how long it needs to be
+0,
+NULL,      // no replacement character given
+NULL );    // we don't want to know if a character didn't make it through the translation
+// make sure the buffer is big enough for this, making it larger if necessary
+if(nbytes>len)   nbytes=len;
+// 通过以上得到的结果，转换unicode 字符为ascii 字符
+WideCharToMultiByte( 0, // specify the code page used to perform the conversion
+0,         // no special flags to handle unmapped characters
+pwstr,   // wide character string to convert
+nlength,   // the number of wide characters in that string
+pcstr, // put the output ascii characters at the end of the buffer
+nbytes,                           // there is at least this much space there
+NULL,      // no replacement character given
+NULL );
+return pcstr ;
+}
+//将char* 转成wchar_t*的实现函数如下：
+//这是把asii字符转换为unicode字符，和上面相同的原理
+void c2w(wchar_t *pwstr,size_t len,const char *str)
+{
+if(str)
+    {
+      size_t nu = strlen(str);
+      size_t n =(size_t)multibytetowidechar(cp_acp,0,(const char *)str,(int)nu,null,0);
+      if(n>=len)n=len-1;
+      multibytetowidechar(cp_acp,0,(const char *)str,(int)nu,pwstr,(int)n);
+   pwstr[n]=0;
+    }
+}
+或者用此种方法更好一些：============我自已做的
+//把ascii 字符转换为unicode字符
+wchar_t* Cphone_hq::ctow(wchar_t *pwstr, const char *str)
+{
+wchar_t* buffer;
+if(str)
+    {
+      size_t nu = strlen(str);
+      size_t n =(size_t)MultiByteToWideChar(CP_ACP,0,(const char *)str,int(nu),NULL,0);
+   buffer=0;
+      buffer = new wchar_t[n+1];
+      //if(n>=len) n=len-1;
+   ::MultiByteToWideChar(CP_ACP,0,(const char *)str,int(nu),buffer,int(n));    
+   }
+return buffer;
+delete buffer;
+}
+相关知识点：
+Unicode的出现是为了适应软件国际化的需要。Unicode不同于双字节字符集（DBCS）。
+一、相关操作函数
+       1、DBCS使用下面的函数操作字符串：
+             CharNext——获得后一个字符
+            CharPrev——获得前一个字符
+            IsDBCSLeadByte——判断是否为两个字节字符的第一个字节
+            C++运行期库提供了以"_mbs"开头的一系列的函数操作DBCS。类似的函数有_mbscat等。
+       2、ANSI字符集是一个美国标准。C++运行期库提供了以"str"开头的一些列的函数操作此字符集。
+       3、C++运行期库为Unicode字符集提供了一系列以"wcs"开头的函数。
+二、对应的数据类型
+       1、对于ANSI字符定义为char。
+        2、对于Unicode的字符定义为wchar_t。
+三、使用环境
+       1、首先要说明的是Win98对于Unicode的支持是很微弱的，所以如果要在Win98上运行Unicode编译的程序，可能造成运行错误或者失败。
+       2、由于Win2000及以后的OS的内核都是使用Unicode编写的，所以虽然可以在其上运行ANSI编码的程序，但是其运行过程中很多地方都需要将ANSI转换为Unicode以后，调用Unicode版本的函数，因为这个转换的过程存在所以ANSI的程序运行效率不高。在Win2000上最好使用Unicode编写程序。
+四、编写通用的程序
+       1、在编程的时候使用TCHAR数据类型，此类型能够根据预编译宏的定义，将其转换为ANSI或者是Unicode。
+       2、预编译宏_MBCS、_UNICODE和UNICODE。_MBCS是多字节和ANSI字符串的编译宏。此时TCHAR将转换为char。_UNICODE和UNICODE是Unicode编码的预编译宏，TCHAR将转换为wchar_t。
+       3、_UNICODE和UNICODE与_MBCS不能在编译的时候同时被定义。
+       4、_UNICODE宏用于C运行期库的头文件，UNICODE宏用于Windows头文件。一般同时定义这两个宏。
+五、转换函数
+       1、Unicode转换为ANSI使用：MultiByteToWideChar。
+       2、ANSI转换为Unicode使用：WideCharToMultiByte。
+ 
+宽字符转多字符：
+       size_t wcstombs(char *mbstr, const wchar_t *wcstr, size_t count );
+多字符转宽字符：
+       size_t mbstowcs(wchar_t *wcstr, const char *mbstr, size_t count );
+       另：L"ab"是C/C++标准宏，使用上是没有问题的
+ 
+      1、client 里有些函数接口需要unicode，这些由于资源也在本地，可以直接使用MultiByteToWideChar或者mbstowcs+setlocale 转换
+       2、对于需要从 中文client->服务器->韩文client的方式下，在传文本的情况下，需要将文字的语言代码一起传出去，在接受端可以使用指定的代码，转换。服务器如有必要的话，也可以使用该代码转换，这样就可以在client上同时显示多国语言了
