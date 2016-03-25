@@ -10,6 +10,9 @@
       justify-content: flex-end;
       flex-wrap: wrap;
       align-content:flex-end;
+	  position:relative;
+	  left: 100px;
+	  top:100px;
     }
 
 
@@ -24,6 +27,7 @@
       background: blue;
       height: 50px;
       width: 200px;
+	  position:absolute;
     }
 
 
@@ -51,7 +55,20 @@
 
 
 
+<script>
+document.onmousemove=function (ev)
+{
+    var oEvent=ev||event;
+    var oDiv=document.getElementsByClassName('child-second')[0];
+     
+    oDiv.style.left= oEvent.pageX-100+'px';
+    oDiv.style.top= oEvent.pageY-100+'px';
+};
+</script>
+<script src="http://code.jquery.com/jquery-2.2.2.js">
 
+
+</script>
 
 </body>
 

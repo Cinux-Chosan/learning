@@ -1,42 +1,87 @@
 <!DOCTYPE HTML>
 <html>
   <head>
+  	<script src="http://code.jquery.com/jquery-2.2.2.js">
+	</script>
     <style>
       #div1{
         width: 200px;
         height: 200px;
         background: black;
+		width:100px;
       }
 
       #drag1 {
         width: 100px;
         height: 100px;
         background: red;
+		min-width: 250px;
+		width:150px;
       }
+	  
+	  #drag0{
+	    width:0px;
+		heigth:0px;
+	  }
+	  #container{
+	    display: flex;
+		width: 500px;
+		height: 500px;
+		position: relative;
+		left:100px;
+		top: 100px;
+	  }
+	  
+	  .abs{
+	    position:absolute;
+	  }
     </style>
     <script type="text/javascript">
       function allowDrop(ev) {
         console.log("ondragover");
+		ev.dataTransfer.dropEffect = "move";
        ev.preventDefault();
       }
 
       function drag(ev) {
         console.log("ondragstart");
-       ev.dataTransfer.setData("Text",ev.target.id);
+		 console.log(ev);
+		
+		 window.x = ev.pageX - $(ev.currentTarget).offset().left;
+		 window.y = ev.pageY - $(ev.currentTarget).offset().top;
+		 ev.dataTransfer.effectAllowed = "move";
+         ev.dataTransfer.setData("Text",ev.target.id);
+	   ev.dataTransfer.setDragImage(document.getElementById('drag0'),0,0);
+
       }
 
+	   
+	   function draging(ev){
+	   console.log(window.x);
+	    let x = ev.pageX - window.x - document.getElementById('container').offsetLeft;
+	    let y = ev.pageY - window.y -  document.getElementById('container').offsetTop;
+	    $(ev.currentTarget).css({'left':x+'px','top':y+'px'}).addClass('abs');
+	
+		
+	   }
       function drop(ev) {
         console.log("drop");
         ev.preventDefault();
         var data=ev.dataTransfer.getData("Text");
-        ev.target.appendChild(document.getElementById(data));
+     //   ev.target.appendChild(document.getElementById(data));
       }
     </script>
   </head>
+  
   <body>
+  <div id="drag0"></div>
+  <div id="container">
     <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
     </div>
-    <div id="drag1" draggable="true" ondragstart="drag(event)">
+    <div id="drag1" draggable="true" ondragstart="drag(event)" ondrag="draging(event)">
     </div>
+	</div>
+	<a href="http://www.baidu.com">百度</a>
+
   </body>
 </html>
