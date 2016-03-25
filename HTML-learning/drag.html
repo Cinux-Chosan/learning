@@ -5,18 +5,15 @@
 	</script>
     <style>
       #div1{
-        width: 200px;
-        height: 200px;
+        
         background: black;
-		width:100px;
+		flex:1.5;
       }
 
       #drag1 {
-        width: 100px;
-        height: 100px;
+        
         background: red;
-		min-width: 250px;
-		width:150px;
+		flex:1;
       }
 	  
 	  #drag0{
@@ -60,7 +57,14 @@
 	   console.log(window.x);
 	    let x = ev.pageX - window.x - document.getElementById('container').offsetLeft;
 	    let y = ev.pageY - window.y -  document.getElementById('container').offsetTop;
-	    $(ev.currentTarget).css({'left':x+'px','top':y+'px'}).addClass('abs');
+		let width = ev.currentTarget.offsetWidth;
+		let height = ev.currentTarget.offsetHeight;
+		ev.currentTarget.left = x;
+		ev.currentTarget.top = y;
+		ev.currentTarget.height = height;
+		ev.currentTarget.width = width;
+		ev.currentTarget.className = 'abs';
+	   // $(ev.currentTarget).css({'left':x+'px','top':y+'px','width':width+'px','height': height+'px'}).addClass('abs');
 	
 		
 	   }
@@ -70,6 +74,14 @@
         var data=ev.dataTransfer.getData("Text");
      //   ev.target.appendChild(document.getElementById(data));
       }
+	  
+	  function dragend(ev){
+	  
+	   let x = ev.pageX - window.x - document.getElementById('container').offsetLeft;
+	    let y = ev.pageY - window.y -  document.getElementById('container').offsetTop;
+	    $(ev.currentTarget).css({'left':x+'px','top':y+'px'});
+	  }
+	  
     </script>
   </head>
   
@@ -78,7 +90,7 @@
   <div id="container">
     <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
     </div>
-    <div id="drag1" draggable="true" ondragstart="drag(event)" ondrag="draging(event)">
+    <div id="drag1" draggable="true" ondragstart="drag(event)" ondrag="draging(event)" ondragend="dragend(event)">
     </div>
 	</div>
 	<a href="http://www.baidu.com">百度</a>
