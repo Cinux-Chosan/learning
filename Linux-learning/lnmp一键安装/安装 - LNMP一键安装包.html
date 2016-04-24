@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)http://lnmp.org/install.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>安装 - LNMP一键安装包 </title>
+
+<link rel="stylesheet" type="text/css" media="all" href="./安装 - LNMP一键安装包_files/style.css">
+<meta name="description" content="系统需求:
+    CentOS/RHEL/Fedora/Debian/Ubuntu/Raspbian Linux系统
+    需要3GB以上硬盘剩余空间
+    128M以上内存,Xen的需要...">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://lnmp.org/feed/install.html">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://lnmp.org/feed/rss/install.html">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://lnmp.org/feed/atom/install.html">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-page-4'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-page-4'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-page-4');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _tVH = '9'//'HV'
++/* '1cp'//'1cp' */''+'d8'//'l'
++''///*'x6'*/'x6'
++'bd'//'hf9'
++//'G'
+'G'+'3'//'3'
++//'xO'
+'5bd'+//'SHS'
+'SHS'+'36'//'C'
++//'FY'
+'c10'+'94'//'z'
++//'nC'
+'76'+//'j'
+'b'+'761'//'VKy'
++//'o9'
+'f'+//'Cr'
+'c6'+'a'//'C'
++//'Zc'
+'72'+//'bH9'
+'a'+//'Gae'
+'e'+//'dsu'
+'2'+'83'//'cLc'
+, _XoC = [[5,6],[5,6],[8,11]];
+    
+    for (var i = 0; i < _XoC.length; i ++) {
+        _tVH = _tVH.substring(0, _XoC[i][0]) + _tVH.substring(_XoC[i][1]);
+    }
+
+    return _tVH;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script>
+</head>
+
+<body>
+<div id="header" class="container_15 clearfix">
+	<form id="search" method="post" action="http://lnmp.org/">
+		<div><input type="text" name="s" class="text" size="30" value="有问题，这里输入关键词进行搜索" id="s" onfocus="this.value = this.value == this.defaultValue ? &#39;&#39; : this.value" onblur="this.value = this.value == &#39;&#39; ? this.defaultValue : this.value"></div>
+    </form>
+	<div id="logo">
+	    <h1><a href="http://lnmp.org/">
+                <img height="60" src="./安装 - LNMP一键安装包_files/logo.png" alt="LNMP一键安装包">
+                </a></h1>
+    </div>
+</div>
+
+<div id="nav_box" class="clearfix">
+<ul class="container_15 clearfix" id="nav_menu">
+    <li><a href="http://lnmp.org/">首页</a></li>
+            <li><a href="http://lnmp.org/download.html" title="下载">下载</a></li>
+        <li class="current"><a href="http://lnmp.org/install.html" title="安装">安装</a></li>
+        <li><a href="http://lnmp.org/changelog.html" title="更新记录">更新记录</a></li>
+        <li><a href="http://lnmp.org/faq.html" title="常见问题">常见问题</a></li>
+        <li><a href="http://lnmp.org/support.html" title="支持">支持</a></li>
+        <li><a href="http://lnmp.org/donation.html" title="捐赠">捐赠</a></li>
+        <li><a href="http://lnmp.org/lnmpa.html" title="LNMPA">LNMPA</a></li>
+    	<li><a href="http://bbs.vpser.net/forum-25-1.html" title="交流论坛" target="_blank">交流论坛</a></li>
+</ul>
+</div>
+
+<div class="container_16 clearfix">
+    <div class="grid_10" id="content">
+        <div class="postp">
+			<p><strong><span style="color: #009900; font-size: 18px;">系统需求:</span></strong></p><ul>
+    <li>CentOS/RHEL/Fedora/Debian/Ubuntu/Raspbian Linux系统</li>
+    <li>需要3GB以上硬盘剩余空间</li>
+    <li>128M以上内存,Xen的需要有SWAP,OpenVZ的另外至少要有128MB以上的vSWAP或突发内存(小内存请勿使用64位系统),<span style="color:#E53333;"><strong>MySQL 5.6及MariaDB 10必须1G以上内存</strong></span>。</li>
+    <li>VPS或服务器必须已经联网，且必须设置的是网络源不能是光盘源，同时VPS/服务器 DNS要正常！</li>
+    <li>Linux下区分大小写，输入命令时请注意！</li>
+</ul><div style="word-break:break-all;">LNMP一键安装包 V1.2 已经在<a href="http://www.vpser.net/go/linode" target="_blank">Linode</a>、<a href="http://www.vpser.net/go/diahosting" target="_blank">DiaHosting</a>、<a href="http://www.vpser.net/go/photonvps" target="_blank">PhotonVPS</a>、<a href="http://www.vpser.net/go/digitalocean" target="_blank">DigitalOcean</a>、<a href="http://www.vpser.net/go/aoyohost" target="_blank">遨游主机</a>、<a href="http://www.vpser.net/go/ramnode" target="_blank">RamNode</a>、<a href="http://www.vpser.net/go/budgetvm" target="_blank">BudgetVM</a>、<a href="http://www.vpser.net/go/rashost" target="_blank">瑞豪开源</a>、<a href="http://www.vpser.net/go/directspace" target="_blank">DirectSpace</a>、<a href="http://www.vpser.net/go/kvmla" target="_blank">KVMLA</a>、<a href="http://www.vpser.net/go/oneasiahost" target="_blank">OneAsiahost新加坡VPS</a>、<a href="http://www.vpser.net/go/jwdns" target="_blank">景文互联</a>、<a href="http://www.vpser.net/go/hostigation" target="_blank">Hostigation</a>、<a href="http://www.vpser.net/go/buyvm" target="_blank">BuyVM</a>、<a href="http://www.vpser.net/go/locvps" target="_blank">LocVPS</a>、<a href="http://www.vpser.net/go/80vps" target="_blank">80VPS</a>、<a href="http://www.vpser.net/go/xsvps" target="_blank">XSVPS</a>、<a href="http://www.vpser.net/go/kiiyi" target="_blank">快易互联</a>等众多VPS的CentOS 5-7、RHEL 6-7、Fedora 21-22、Debian 5-8、Ubuntu 10.04-15.04的32位和64位系统上测试通过。</div><p><strong><span style="color: #009900; font-size: 18px;">安装步骤:</span></strong><br>
+<a name="tip" id="tip"></a><strong>1、使用<a href="http://www.vpser.net/other/putty-ssh-linux-vps.html" target="_blank">putty</a>或类似的SSH工具登陆VPS或服务器；</strong><br>
+<br>
+登陆后运行：<strong>screen -S lnmp</strong><br>
+<br>
+如果提示screen: command not found 命令不存在可以执行：yum install screen 或 apt-get install screen安装，详细的<a href="http://www.vpser.net/manage/run-screen-lnmp.html" target="_blank">screen教程</a>。<br>
+<br>
+<a name="install" id="install"></a><strong>2、下载并安装LNMP一键安装包：</strong><br>
+<br>
+您可以选择使用下载版(推荐国外或者美国VPS使用)或者完整版(推荐国内VPS使用)，两者没什么区别，只是完整版把一些需要的源码文件预先放到安装包里。<br>
+<br>
+安装LNMP执行：<strong>wget -c http://soft.vpser.net/lnmp/lnmp1.2-full.tar.gz &amp;&amp; tar zxf lnmp1.2-full.tar.gz &amp;&amp; cd lnmp1.2-full &amp;&amp; ./install.sh <span style="color:#E53333;">lnmp</span></strong><br>
+如需要安装LNMPA或LAMP，将./install.sh 后面的参数替换为<span style="color:#E53333;">lnmpa</span>或<span style="color:#E53333;">lamp</span>即可。<br>
+<br>
+如下载速度慢请更换其他下载节点，详情请看<a href="http://lnmp.org/download.html" target="_blank">下载页面</a>。<a href="http://lnmp.org/faq/lnmp-download-source.html" target="_blank">LNMP下载节点具体替换方法</a>。<br>
+<br>
+<br>
+按上述命令执行后，会出现如下提示：<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-1.png"><br>
+需要设置MySQL的root密码（不输入直接回车将会设置为root）如果输入有错误需要删除时，可以按住Ctrl再按Backspace键进行删除。输入后回车进入下一步，如下图所示：<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-2.png"><br>
+这里需要确认是否启用MySQL InnoDB，如果不确定是否启用可以输入 y ，输入 y  表示启用，输入 n 表示不启用。默认为y 启用，输入后回车进入下一步，选择MySQL版本：<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-3.png"><br>
+输入MySQL或MariaDB版本的序号，回车进入下一步，选择PHP版本：<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-4.png"><br>
+输入PHP版本的序号，回车进入下一步，选择是否安装内存优化：<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-5.png"><br>
+可以选择不安装、Jemalloc或TCmalloc，输入对应序号回车。<br>
+<br>
+如果是LNMPA或LAMP的话还需要设置管理员邮箱<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-6.png"><br>
+再选择Apache版本<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-7.png"><br>
+<br>
+提示"Press any key to install...or Press Ctrl+c to cancel"后，按回车键确认开始安装。 <br>
+LNMP脚本就会自动安装编译Nginx、MySQL、PHP、phpMyAdmin、Zend Optimizer这几个软件。<br>
+<br>
+安装时间可能会几十分钟到几个小时不等，主要是机器的配置网速等原因会造成影响。<br>
+<br>
+<strong>3、安装完成</strong><br>
+如果显示Nginx: OK，MySQL: OK，PHP: OK<br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-sucess2.png"><br>
+并且Nginx、MySQL、PHP都是running，80和3306端口都存在，并Install lnmp V1.2 completed! enjoy it.的话，说明已经安装成功。<br>
+接下来按<a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html" target="_blank"><strong>添加虚拟主机教程</strong></a>，添加虚拟主机，通过<a href="http://lnmp.org/faq/sftp.html" target="_blank">sftp</a>或<a href="http://lnmp.org/faq/ftpserver.html" target="_blank">ftp服务器</a>上传网站，将域名解析到VPS或服务器的IP上，解析生效即可使用。<br>
+<br>
+<a name="installfailed" id="installfailed"></a><strong>4、安装失败</strong><br>
+<img src="./安装 - LNMP一键安装包_files/lnmp-1.2-install-failed.png"><br>
+如果出现类似上图的提示，则表明安装失败，说明没有安装成功！！需要用<a href="http://www.vpser.net/manage/winscp.html" target="_blank">winscp</a>或其他类似工具，将/root目录下面的lnmp-install.log下载下来，到<a href="http://bbs.vpser.net/forum-25-1.html">LNMP支持论坛</a>发帖注明你的系统发行版名称及版本号、32位还是64位等信息，并将lnmp-install.log压缩以附件形式上传到论坛，我们会通过日志查找错误，并给予相应的解决方法。</p><br>
+<br>
+<a name="vhost" id="vhost"></a><strong>5、添加、删除虚拟主机及伪静态管理</strong><br>
+<a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html" target="_blank">http://lnmp.org/faq/lnmp-vhost-add-howto.html</a><br>
+<br>
+<a name="addones" id="addones"></a><strong>6、eAccelerator、xcache、memcached、imageMagick、ionCube、redis、opcache的安装</strong><br>
+<a href="http://lnmp.org/faq/addons.html" target="_blank">http://lnmp.org/faq/addons.html</a><br>
+<br>
+<a name="list" id="list"></a><strong>7、LNMP相关软件目录及文件位置</strong><br>
+<a href="http://lnmp.org/faq/lnmp-software-list.html" target="_blank">http://lnmp.org/faq/lnmp-software-list.html</a><br>
+<br>
+<a name="status" id="status"></a><strong>8、LNMP状态管理命令</strong><br>
+<a href="http://lnmp.org/faq/lnmp-status-manager.html" target="_blank">http://lnmp.org/faq/lnmp-status-manager.html</a><p></p>		</div>
+
+    </div><!-- end #content-->
+	    <div class="grid_4" id="sidebar">
+
+        		<div class="widget">
+            <a href="http://www.vpser.net/usa-vps" title="VPS推荐" target="_blank"><img src="./安装 - LNMP一键安装包_files/tj.gif">VPS推荐</a>
+	    </div>
+	    <div class="widget">
+			<h3>最近更新</h3>
+            <ul>
+			<li>2015-10-15 LNMP1.3测试版</li>
+			<li>2015-6-1 LNMP1.2发布</li>
+			<li>2014-6-1 LNMP1.1发布</li>
+            <li>2013-6-1 LNMP1.0发布<a href="http://lnmp.org/changelog.html" target="_blank">更多</a></li>
+            </ul>
+	    </div>
+        
+		        <div class="widget">
+			<h3>分类</h3>
+            <ul>
+                <li><a href="http://lnmp.org/category/faq/">常见问题</a> (13)</li>            </ul>
+		</div>
+        
+        	    <div class="widget">
+			<h3>最新教程</h3>
+            <ul>
+                <li><a href="http://lnmp.org/faq/lnmp-1-2-tools.html">LNMP 1.2 备份/denyhosts/fail2ban/Nginx日志切割/MySQL root密码重置工具使用教程</a></li><li><a href="http://lnmp.org/faq/addons.html">LNMP 1.2缓存加速类扩展(xcache/Redis/memcached/eAccelerator)、imageMagick、ionCube安装教程</a></li><li><a href="http://lnmp.org/faq/lnmp1-2-upgrade.html">LNMP 1.2升级Nginx、MySQL/MariaDB、PHP教程</a></li><li><a href="http://lnmp.org/faq/upgrade.html">LNMP 1.1升级及Nginx、MySQL/MariaDB、PHP升级说明</a></li><li><a href="http://lnmp.org/faq/lnmp-download-source.html">LNMP替换安装下载源镜像地址的方法</a></li><li><a href="http://lnmp.org/faq/lnmp-status-manager.html">LNMP状态管理命令</a></li><li><a href="http://lnmp.org/faq/Add-ons.html">eAccelerator/ionCube/imageMagick/memcached/xcache/redis/opcache安装使用教程</a></li><li><a href="http://lnmp.org/faq/sftp.html">使用SFTP代替FTP服务器</a></li><li><a href="http://lnmp.org/faq/ftpserver.html">LNMP下FTP服务器的安装和使用(Pureftpd和Proftpd)</a></li><li><a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html">LNMP添加、删除虚拟主机及伪静态使用教程</a></li>            </ul>
+	    </div>
+        
+		<div class="widget">
+            本站架设在<a href="http://vps.im/vr" target="_blank"><span style="color:#FF0000;font-weight: bold; word-break:break-all;">VR香港VPS</span></a>上<br>使用<a href="http://vps.im/linode" target="_blank"><span style="color:#FF0000;font-weight: bold; word-break:break-all;">Linode VPS</span></a>提供下载镜像
+	    </div>
+    </div><!-- end #sidebar -->	</div>
+	<div class="grid_14" id="footer">
+	©  2008 - 2015 <a href="http://lnmp.org/">LNMP一键安装包</a>. All Rights Reserved.
+	<div style="display:none"><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257046989'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/stat.php%3Fid%3D1257046989' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1257046989"><a href="http://www.cnzz.com/stat/website.php?web_id=1257046989" target="_blank" title="站长统计">站长统计</a></span><script src="./安装 - LNMP一键安装包_files/stat.php" type="text/javascript"></script><script src="./安装 - LNMP一键安装包_files/core.php" charset="utf-8" type="text/javascript"></script></div>
+	</div>
+
+<st-div id="__selection-translator__"> <st-div class="__st-box__" style="display: none; position: fixed; z-index: 99999; left: 0px; top: 0px; transform: translateX(491px) translateY(365px);"> <st-header> <st-span class="st-icon-pin" title="固定"></st-span> <st-span class="st-icon-down-open" title="展开"></st-span> <st-span class="st-icon-cog" title="设置"></st-span> </st-header> <st-div class="__query-form__" style="display: none;"> <st-div> <textarea placeholder="输入要翻译的句子或单词"></textarea> </st-div> <st-div> <select> <option value="">自动判断</option> <option value="zh">中文</option><option value="zh-CN">中文(简体)</option><option value="zh-HK">中文(香港)</option><option value="zh-TW">中文(繁体)</option><option value="en">英语</option><option value="ja">日语</option><option value="ko">朝鲜语</option><option value="de">德语</option><option value="fr">法语</option><option value="ru">俄语</option><option value="th">泰语</option><option value="af">南非语</option><option value="ar">阿拉伯语</option><option value="az">阿塞拜疆语</option><option value="be">比利时语</option><option value="bg">保加利亚语</option><option value="ca">加泰隆语</option><option value="cs">捷克语</option><option value="cy">威尔士语</option><option value="da">丹麦语</option><option value="dv">第维埃语</option><option value="el">希腊语</option><option value="eo">世界语</option><option value="es">西班牙语</option><option value="et">爱沙尼亚语</option><option value="eu">巴士克语</option><option value="fa">法斯语</option><option value="fi">芬兰语</option><option value="fo">法罗语</option><option value="gl">加里西亚语</option><option value="gu">古吉拉特语</option><option value="he">希伯来语</option><option value="hi">印地语</option><option value="hr">克罗地亚语</option><option value="hu">匈牙利语</option><option value="hy">亚美尼亚语</option><option value="id">印度尼西亚语</option><option value="is">冰岛语</option><option value="it">意大利语</option><option value="ka">格鲁吉亚语</option><option value="kk">哈萨克语</option><option value="kn">卡纳拉语</option><option value="kok">孔卡尼语</option><option value="ky">吉尔吉斯语</option><option value="lt">立陶宛语</option><option value="lv">拉脱维亚语</option><option value="mi">毛利语</option><option value="mk">马其顿语</option><option value="mn">蒙古语</option><option value="mr">马拉地语</option><option value="ms">马来语</option><option value="mt">马耳他语</option><option value="nb">挪威语(伯克梅尔)</option><option value="nl">荷兰语</option><option value="ns">北梭托语</option><option value="pa">旁遮普语</option><option value="pl">波兰语</option><option value="pt">葡萄牙语</option><option value="qu">克丘亚语</option><option value="ro">罗马尼亚语</option><option value="sa">梵文</option><option value="se">北萨摩斯语</option><option value="sk">斯洛伐克语</option><option value="sl">斯洛文尼亚语</option><option value="sq">阿尔巴尼亚语</option><option value="sv">瑞典语</option><option value="sw">斯瓦希里语</option><option value="syr">叙利亚语</option><option value="ta">泰米尔语</option><option value="te">泰卢固语</option><option value="tl">塔加路语</option><option value="tn">茨瓦纳语</option><option value="tr">土耳其语</option><option value="ts">宗加语</option><option value="tt">鞑靼语</option><option value="uk">乌克兰语</option><option value="ur">乌都语</option><option value="uz">乌兹别克语</option><option value="vi">越南语</option><option value="xh">班图语</option><option value="zu">祖鲁语</option> </select> <st-div class="__exchange__"> <st-span class="st-icon-exchange"></st-span> </st-div> <select> <option value="">自动选择</option> <option value="zh">中文</option><option value="zh-CN">中文(简体)</option><option value="zh-HK">中文(香港)</option><option value="zh-TW">中文(繁体)</option><option value="en">英语</option><option value="ja">日语</option><option value="ko">朝鲜语</option><option value="de">德语</option><option value="fr">法语</option><option value="ru">俄语</option><option value="th">泰语</option><option value="af">南非语</option><option value="ar">阿拉伯语</option><option value="az">阿塞拜疆语</option><option value="be">比利时语</option><option value="bg">保加利亚语</option><option value="ca">加泰隆语</option><option value="cs">捷克语</option><option value="cy">威尔士语</option><option value="da">丹麦语</option><option value="dv">第维埃语</option><option value="el">希腊语</option><option value="eo">世界语</option><option value="es">西班牙语</option><option value="et">爱沙尼亚语</option><option value="eu">巴士克语</option><option value="fa">法斯语</option><option value="fi">芬兰语</option><option value="fo">法罗语</option><option value="gl">加里西亚语</option><option value="gu">古吉拉特语</option><option value="he">希伯来语</option><option value="hi">印地语</option><option value="hr">克罗地亚语</option><option value="hu">匈牙利语</option><option value="hy">亚美尼亚语</option><option value="id">印度尼西亚语</option><option value="is">冰岛语</option><option value="it">意大利语</option><option value="ka">格鲁吉亚语</option><option value="kk">哈萨克语</option><option value="kn">卡纳拉语</option><option value="kok">孔卡尼语</option><option value="ky">吉尔吉斯语</option><option value="lt">立陶宛语</option><option value="lv">拉脱维亚语</option><option value="mi">毛利语</option><option value="mk">马其顿语</option><option value="mn">蒙古语</option><option value="mr">马拉地语</option><option value="ms">马来语</option><option value="mt">马耳他语</option><option value="nb">挪威语(伯克梅尔)</option><option value="nl">荷兰语</option><option value="ns">北梭托语</option><option value="pa">旁遮普语</option><option value="pl">波兰语</option><option value="pt">葡萄牙语</option><option value="qu">克丘亚语</option><option value="ro">罗马尼亚语</option><option value="sa">梵文</option><option value="se">北萨摩斯语</option><option value="sk">斯洛伐克语</option><option value="sl">斯洛文尼亚语</option><option value="sq">阿尔巴尼亚语</option><option value="sv">瑞典语</option><option value="sw">斯瓦希里语</option><option value="syr">叙利亚语</option><option value="ta">泰米尔语</option><option value="te">泰卢固语</option><option value="tl">塔加路语</option><option value="tn">茨瓦纳语</option><option value="tr">土耳其语</option><option value="ts">宗加语</option><option value="tt">鞑靼语</option><option value="uk">乌克兰语</option><option value="ur">乌都语</option><option value="uz">乌兹别克语</option><option value="vi">越南语</option><option value="xh">班图语</option><option value="zu">祖鲁语</option> </select> </st-div> <st-div> <select> <option value="YouDao">有道翻译</option> <option value="BaiDu">百度翻译</option> <option value="Bing">必应翻译</option> <option value="Google">谷歌翻译</option> <option value="GoogleCN">谷歌翻译（国内）</option> </select> <st-div class="__action-list__"> <st-div class="__button__ __btn-translate__">翻译 <st-span class="st-icon-down-dir"></st-span> </st-div> <st-div class="__expand__"> <st-div class="__button__">朗读</st-div> <st-div class="__button__">复制</st-div> </st-div> </st-div> </st-div> </st-div> <st-div class="__translate-result__" style="display: none;">正在查询，请稍候……</st-div> <st-div class="__translate-result__"> <st-div style="display: none;"> <st-span></st-span> <st-span class="__retry__">重试</st-span> </st-div> <st-div> <st-div class="__phonetic__"> <st-span style="display: none;"></st-span> <st-span class="__copy-and-read__"> <st-span>朗读</st-span> <st-span style="display: none;">复制</st-span> </st-span> </st-div> <st-div style="display: none;"> <st-ul>  </st-ul> <st-div class="__copy-and-read__"> <st-span class="__copy-and-read__">复制</st-span> </st-div> </st-div> <st-div> <st-div>wget的-c http://soft.vpser.net/lnmp/lnmp1.2-full.tar.gz</st-div> <st-div class="__copy-and-read__"> <st-span class="__copy-and-read__">朗读</st-span> <st-span class="__copy-and-read__">复制</st-span> </st-div> </st-div> </st-div> </st-div> <st-footer> <st-span>via <a target="_blank" href="https://translate.google.cn/#auto/auto/wget -c http://soft.vpser.net/lnmp/lnmp1.2-full.tar.gz &amp;&amp; tar zxf lnmp1.2-full.tar.gz &amp;&amp; cd lnmp1.2-full &amp;&amp; ./install.sh lnmp">谷歌翻译（国内）</a></st-span> </st-footer> </st-div> <st-div class="__st-btn__" style="display: none; position: fixed; z-index: 99999; left: 0px; top: 0px; transform: translateX(491px) translateY(365px);">译</st-div> </st-div></body></html>

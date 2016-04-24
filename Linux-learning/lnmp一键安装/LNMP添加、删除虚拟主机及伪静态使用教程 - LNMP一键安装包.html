@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://lnmp.org/faq/lnmp-vhost-add-howto.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包 </title>
+
+<link rel="stylesheet" type="text/css" media="all" href="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/style.css">
+<meta name="description" content="一般情况下每个虚拟主机就是一个网站，网站一般通过域名进行访问。
+LNMP 1.2的网站添加过程和LNMP 1.1的基本类似，但是增加了FTP和数据库的创建。LNMP1.2的防跨目录也由原来在ph...">
+<meta name="keywords" content="虚拟主机,伪静态,添加虚拟主机,删除虚拟主机,LNMP伪静态">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://lnmp.org/feed/faq/lnmp-vhost-add-howto.html">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://lnmp.org/feed/rss/faq/lnmp-vhost-add-howto.html">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://lnmp.org/feed/atom/faq/lnmp-vhost-add-howto.html">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-11'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-11'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-11');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _j6M = /* 'aKz'//'aKz' */''+/* 'AH'//'AH' */''+'f0e'//'gK'
++''///*'k'*/'k'
++'79'//'7'
++'1d2'//'Cl2'
++''///*'U1'*/'U1'
++'6'//'H'
++'ec'//'XU'
++'4b1'//'wkK'
++//'giQ'
+'138'+'55'//'P4d'
++'43'//'8Ox'
++//'3O'
+'3O'+//'Ge'
+'f0'+/* 'C'//'C' */''+//'hlG'
+'ab'+//'5V'
+'5V'+'9'//'jNF'
++'6'//'Q9x'
++//'urB'
+'urB'+/* 'UoF'//'UoF' */''+//'gJ'
+'gJ'+//'k6'
+'f'+'4'//'rBq'
++//'Z'
+'3a'+//'z'
+'b', _rRkyrI = [[21,23],[25,27],[27,30],[27,29]];
+    
+    for (var i = 0; i < _rRkyrI.length; i ++) {
+        _j6M = _j6M.substring(0, _rRkyrI[i][0]) + _j6M.substring(_rRkyrI[i][1]);
+    }
+
+    return _j6M;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script>
+</head>
+
+<body>
+<div id="header" class="container_15 clearfix">
+	<form id="search" method="post" action="http://lnmp.org/">
+		<div><input type="text" name="s" class="text" size="30" value="有问题，这里输入关键词进行搜索" id="s" onfocus="this.value = this.value == this.defaultValue ? &#39;&#39; : this.value" onblur="this.value = this.value == &#39;&#39; ? this.defaultValue : this.value"></div>
+    </form>
+	<div id="logo">
+	    <h1><a href="http://lnmp.org/">
+                <img height="60" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/logo.png" alt="LNMP一键安装包">
+                </a></h1>
+    </div>
+</div>
+
+<div id="nav_box" class="clearfix">
+<ul class="container_15 clearfix" id="nav_menu">
+    <li><a href="http://lnmp.org/">首页</a></li>
+            <li><a href="http://lnmp.org/download.html" title="下载">下载</a></li>
+        <li><a href="http://lnmp.org/install.html" title="安装">安装</a></li>
+        <li><a href="http://lnmp.org/changelog.html" title="更新记录">更新记录</a></li>
+        <li><a href="http://lnmp.org/faq.html" title="常见问题">常见问题</a></li>
+        <li><a href="http://lnmp.org/support.html" title="支持">支持</a></li>
+        <li><a href="http://lnmp.org/donation.html" title="捐赠">捐赠</a></li>
+        <li><a href="http://lnmp.org/lnmpa.html" title="LNMPA">LNMPA</a></li>
+    	<li><a href="http://bbs.vpser.net/forum-25-1.html" title="交流论坛" target="_blank">交流论坛</a></li>
+</ul>
+</div>
+
+<div class="container_16 clearfix">
+    <div class="grid_10" id="content">
+        <div class="post">
+			<h2 class="entry_title"><a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html">LNMP添加、删除虚拟主机及伪静态使用教程</a></h2>
+			<p class="entry_data">
+				<span>作者：licess</span>
+				<span>发布时间：2013年04月16日</span>
+				分类：<a href="http://lnmp.org/category/faq/">常见问题</a>			</p>
+			<p>一般情况下每个虚拟主机就是一个网站，网站一般通过域名进行访问。<br>
+LNMP 1.2的网站添加过程和LNMP 1.1的基本类似，但是增加了FTP和数据库的创建。LNMP1.2的防跨目录也由原来在php.ini中设置移至网站根目录下的<a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#user.ini">.user.ini 进行控制</a>。<br>
+LNMP 1.1及之前的版本采用/root/vhost.sh 进行添加虚拟主机。<br>
+<br>
+LNMP 1.2开始使用lnmp命令进行管理，具体可以参看<a href="http://lnmp.org/changelog.html" target="_blank">更新记录</a><br>
+虚拟主机管理基本命令介绍：lnmp vhost {add|list|del}<br>
+<br>
+<a name="add" id="add"></a></p><h3><strong>##添加网站(虚拟主机)##</strong></h3><p><!--more--><br>
+如果输入有错误需要删除时，可以按住Ctrl再按Backspace键进行删除。<br>
+<br>
+执行：<strong>lnmp vhost add</strong> 出现如下界面：<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-1.png"><br>
+这里要输入要添加网站的域名，我们已添加www.vpser.net域名为例，如上图提示后输入域名 www.vpser.net 回车后提示<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-2.png"><br>
+这里询问是否添加更多域名，输入 y 回车后添加，如不添加输入 n 会有如下提示：<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-3.png"><br>
+<br>
+如果需要添加更多域名或加上 vpser.net ，输入后回车确认。</p><blockquote>(注：带www和不带www的是不同的域名，如需带www和不带的www的域名都访问同一个网站需要同时都绑定)。</blockquote><p>下面需要设置网站的目录，网站目录不存在的话会创建目录。也可以输入已经存在的目录或要设置的目录（<strong>注意如要输入必须是全路径即以/开头的完整路径！！！</strong>）。不输入直接回车的话，采用默认目录：/home/wwwroot/域名<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-4.png"><br>
+<br>
+伪静态可以使URL更加简洁也利于SEO，如程序支持并且需要设置伪静态的话，如启用输入 y ，不启用输入 n 回车。<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-5.png"><br>
+默认已经有了discuz、discuzx、discuzx2(Discuz X二级目录)、wordpress、wp2(WordPress二级目录)、typecho、typecho2(Typecho二级目录)、sablog、emlog、dabr、phpwind、、dedecms、drupal、ecshop、shopex等常用的Nginx伪静态配置文件，可以直接输入名称进行使用，如果是二级目录则需要对应配置文件里的二级目录的名称。<br>
+<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-6.png"><br>
+这一步是设置日志，如启用日志输入 y ，不启用输入 n 回车。<br>
+<br>
+再输入要设置的日志的名称，默认目录为：/home/wwwlogs/ 默认文件名为：域名.log 回车确认后，会询问是否添加数据库和数据库用户。<br>
+<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-7.png"><br>
+如果需要启用输入 y ，不启用输入 n 回车。<br>
+<br>
+需要验证MySQL的root密码<br>
+提示Enter database name: 后输入要创建的数据库名称，要创建的数据库用户名会和数据库同名，回车确认。<br>
+<br>
+提示Please enter password for mysql user 数据库名: 后输入要设置的密码，回车确认。<br>
+<br>
+如果安装了FTP服务器会询问是否添加FTP账号<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-8.png"><br>
+如果需要添加输入 y ，不添加输入 n 回车。<br>
+<br>
+提示Enter ftp account name: 后输入要创建的FTP账号名称，回车确认。<br>
+<br>
+提示Enter password for ftp account FTP账号: 后输入要设置的密码，回车确认。<br>
+<br>
+提示 Press any key to start create virtul host... 后，回车确认便会开始创建虚拟主机。<br>
+<br>
+添加成功会提示添加的域名、目录、伪静态、日志、数据库、FTP等相关信息，如下图：<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-add-9.png"><br>
+<br>
+<a name="rewrite" id="rewrite"></a></p><h3><strong>##伪静态管理##</strong></h3><p>LNMPA或LAMP可以直接使用网站根目录下放.htaccess 来设置伪静态规则(具体规则可以去程序官网网站找google百度)，但是在LNMP下，需要使用Nginx伪静态规则。<br>
+伪静态可以随时添加或删除，如果添加完虚拟主机后忘记或没有添加伪静态，可以通过修改配置文件来添加伪静态。<br>
+虚拟主机配置文件在：/usr/local/nginx/conf/vhost/域名.conf<br>
+<br>
+伪静态规则文件需要放在/usr/local/nginx/conf/ 下面。<br>
+编辑虚拟主机配置文件，可以使用<a href="http://www.vpser.net/manage/vi.html" target="_blank">vi</a>、<a href="http://www.vpser.net/manage/nano.html" target="_blank">nano</a>或<a href="http://www.vpser.net/manage/winscp.html" target="_blank">winscp</a>，后2个工具对新手来说简单些。<br>
+<br>
+例如前面我们添加的虚拟主机，打开后前半部分配置会显示如下：<br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-rewrite-modify.png"><br>
+在root /home/wwwroot/www.vpser.net;这一行下面添加：<br>
+include wordpress.conf;<br>
+上面的wordpress.conf为伪静态文件，如需要其他伪静态文件自己创建个并上传到/usr/local/nginx/conf/ 下面并include 伪静态.conf;  加完保存，执行：<strong>/etc/init.d/nginx restart</strong> 重启生效，如果报错可能是添加有误或伪静态规则有误。<br>
+<br>
+<a name="upload" id="upload"></a></p><h3><strong>##上传网站程序##</strong></h3><p>如果已经<a href="http://lnmp.org/faq/ftpserver.html" target="_blank">安装FTP服务器</a>可以直接使用ftp客户端通过你的FTP信息登录后上传网站或<a href="http://lnmp.org/faq/sftp.html" target="_blank">sftp</a>等软件上传网站，设置好相关权限开始安装即可。<br>
+上传网站后建议执行：chown www:www -R /path/to/dir  对网站目录进行权限设置，/path/to/dir替换为你网站目录。<br>
+为了安全可以将一些不需要PHP运行的上传文件之类的目录去掉执行权限，参考：http://www.vpser.net/security/lnmp-remove-nginx-php-execute.html<br>
+<br>
+<a name="list" id="list"></a></p><h3><strong>##列出网站(虚拟主机)##</strong></h3><p>执行：<strong>lnmp vhost list</strong><br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-list.png"><br>
+<br>
+<a name="del" id="del"></a></p><h3><strong>##删除网站(虚拟主机)##</strong></h3><p>执行：<strong>lnmp vhost del</strong><br>
+<img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/lnmp-1.2-vhost-del.png"><br>
+<br>
+删除网站会先列出当前已有虚拟主机，按提示输入要删除的虚拟主机域名 回车确认。<br>
+<br>
+这里只是删除虚拟主机配置文件，网站文件并不会删除需要自己删除。<br>
+LNMP 1.2下需要执行：chattr -i /网站目录/.user.ini 后才能删除网站目录。<br>
+<br>
+当执行chown或chmod对网站目录属主属组或权限进行操作时可能会提示chown: changing ownership of `/home/wwwroot/default/.user.ini': Operation not permitted，不需要理会，如果有强迫症可以参考前面先进行chattr -i的操作。</p><h3><strong>##默认网站(虚拟主机)##</strong></h3><p>LNMP默认网站配置文件：/usr/local/nginx/conf/nginx.conf<br>
+LNMPA默认网站配置文件：/usr/local/nginx/conf/nginx.conf 和 /usr/local/apache/conf/extra/httpd-vhosts.conf<br>
+LAMP默认网站配置文件：/usr/local/apache/conf/extra/httpd-vhosts.conf<br>
+<br>
+<a name="user.ini" id="user.ini"></a></p><h3><strong>##其他事项##</strong></h3><p>LNMP 1.1及之前的版本使用php.ini里面，<a href="http://www.vpser.net/security/lnmp-cross-site-corss-dir-security.html">open_basedir设置</a><br>
+<br>
+LNMP 1.2及更高版本防跨目录功能使用.user.ini，该文件在网站根目录下，可以修改open_basedir的值来设置限制目录的访问。<br>
+.user.ini文件无法直接修改，而且是隐藏文件可能在winscp下可能无法看到，建议使用<a href="http://www.vpser.net/manage/vi.html" target="_blank">vim编辑器</a>或<a href="http://www.vpser.net/manage/nano.html" target="_blank">nano编辑器</a>进行修改。<br>
+如要修或删除需要先执行：chattr -i /网站目录/.user.ini<br>
+修改完成后再执行：chattr +i /网站目录/.user.ini<br>
+.user.ini不需要重启一般5分钟左右生效。<br>
+<strong>如果要更改网站目录必须要按上述方法修改防跨目录的设置，否则肯定报错！！</strong><br>
+<br>
+LNMPA或LAMP 1.2上的防跨目录的设置使用的对应apache虚拟主机配置文件里的php_admin_value open_basedir参数进行设置。如果不需要设置可以在前面加 # 进行注释，或自行修改目录的限制。<br>
+重启apache生效。</p>			<p class="tags">标签: <a href="http://lnmp.org/tag/%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">虚拟主机</a>, <a href="http://lnmp.org/tag/rewrite/">伪静态</a>, <a href="http://lnmp.org/tag/%E6%B7%BB%E5%8A%A0%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">添加虚拟主机</a>, <a href="http://lnmp.org/tag/%E5%88%A0%E9%99%A4%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">删除虚拟主机</a>, <a href="http://lnmp.org/tag/LNMP%E4%BC%AA%E9%9D%99%E6%80%81/">LNMP伪静态</a></p>
+		</div>
+
+		<div id="comments">
+                        			<h4>已有 34 条评论 »</h4>
+            
+                        
+            <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-141" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/78ef693c0afcd25be2bc293544039d92" alt="choufeng" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://cf.com/" rel="external nofollow">choufeng</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-141"><time itemprop="commentTime" datetime="2013-06-29T23:49:07+08:00">2013-06-29 23:49</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>Please input the rewrite of programme :<br>
+wordpress,discuz,typecho,sablog,dabr rewrite was exist.<br>
+(Default rewrite: other):wordpress<br>
+===========================<br>
+You choose rewrite=wordpress<br>
+===========================<br>
+===========================<br>
+Allow access_log? (y/n)<br>
+===========================<br>
+y<br>
+Type access_log name(Default access log file:choufeng.com.log):</p><p>===========================<br>
+You access log file=choufeng.com.log<br>
+===========================</p><p>Press any key to start create virtul host...<br>
+Create Virtul Host directory......<br>
+set permissions of Virtual Host directory......<br>
+You select the exist rewrite rule:/usr/local/nginx/conf/wordpress.conf<br>
+Gracefully shutting down php-fpm . done<br>
+Starting php-fpm</p><p>卡着不动了，阿里云服务器，系统版本centos 6.3.<br>
+[root@ppt vhost]# /etc/init.d/php-fpm restart<br>
+Gracefully shutting down php-fpm . done<br>
+Starting php-fpm  done</p><p>请指教！谢谢。</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-144" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-144"><time itemprop="commentTime" datetime="2013-07-01T11:02:17+08:00">2013-07-01 11:02</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>在某些系统下这个版本的php有问题，升级一下php版本</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-129" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/ffbf9647b64c0513b168403ae605e1c9" alt="小小" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">小小</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-129"><time itemprop="commentTime" datetime="2013-06-25T12:29:52+08:00">2013-06-25 12:29</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>你好 安装后 我添加域名并设置静态规则为wordpress 随后我在子目录h下安装了dedecms 后台打不开请问如何设置呢</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-145" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-145"><time itemprop="commentTime" datetime="2013-07-01T11:05:55+08:00">2013-07-01 11:05</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>需要在按教程include 一个二级目录的dede伪静态</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-121" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/3d0050b3b61bb544f1e3cb3b3409e119" alt="Lance" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">Lance</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-121"><time itemprop="commentTime" datetime="2013-06-22T01:41:35+08:00">2013-06-22 01:41</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>安装完毕之后，添加虚拟主机，绑定域名，结果发现绑定的域名无论如何都指向wwwroot而不指向我设定的目录，怎么办。。。</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-146" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-146"><time itemprop="commentTime" datetime="2013-07-01T11:07:32+08:00">2013-07-01 11:07</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>添加时报错，或这个域名已经帮到了/home/wwwroot 上，只有这2中可能。你自己检查一下配置文件看看</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-100" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/f5d0ea5e8732a1daa77c2bf8d38b1d9f" alt="Lyndon Sherman" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://www.topbestreviews.org/" rel="external nofollow">Lyndon Sherman</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-100"><time itemprop="commentTime" datetime="2013-06-15T17:02:19+08:00">2013-06-15 17:02</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>弄了两天，看了这个简单教程，才把WEB服务器配置成功，能不能再弄个PHPMYADMIN安装，方便管理</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-104" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-104"><time itemprop="commentTime" datetime="2013-06-16T16:38:19+08:00">2013-06-16 16:38</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>phpmyadmin就是一个php的程序，只有找一个放网站目录就能用</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-98" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/5b80b28b6949eb74d5e0458528587fa7" alt="飞梦园" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">飞梦园</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-98"><time itemprop="commentTime" datetime="2013-06-14T21:46:02+08:00">2013-06-14 21:46</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>为什么我/etc/init.d/nginx restart这个操作完之后，VPS里的所有网站都上不了了，要怎样处理啊？求帮助，谢谢！</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-103" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-103"><time itemprop="commentTime" datetime="2013-06-16T16:34:44+08:00">2013-06-16 16:34</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>nginx配置文件可能有错误</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-87" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/80faca50ece758d8e6e62501390552c8" alt="yinet" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">yinet</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-87"><time itemprop="commentTime" datetime="2013-06-11T19:59:01+08:00">2013-06-11 19:59</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>之前在添加一个虚拟主机，如a.abc.com，网站目录为a.abc.com，现在想绑定一个新的域名123.com到a.abc.com，要如何设置？谢谢</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-89" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-89"><time itemprop="commentTime" datetime="2013-06-12T16:17:29+08:00">2013-06-12 16:17</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>编辑/usr/local/nginx/conf/vhost/域名.conf 按前面“三、伪静态”实例截图里的格式添加</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-70" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/563d092dd7a7b1e2010d4781c1b0ac76" alt="Andrei" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://www.szns.org/" rel="external nofollow">Andrei</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-70"><time itemprop="commentTime" datetime="2013-06-07T20:43:39+08:00">2013-06-07 20:43</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>一些框架的伪静态建议加上 如CI Symfony的</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-63" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/5b94cf517cd9d8d27f087317917a01a2" alt=".t" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">.t</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-63"><time itemprop="commentTime" datetime="2013-06-07T11:15:05+08:00">2013-06-07 11:15</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>怎样修改这个？/usr/local/nginx/conf/discuzx.conf   提示 Permission denied</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-69" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-69"><time itemprop="commentTime" datetime="2013-06-07T20:21:18+08:00">2013-06-07 20:21</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>vi，nano，winscp都可以文中有提到</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-71" class="comment-body comment-child comment-level-even comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/5b94cf517cd9d8d27f087317917a01a2" alt=".t" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">.t</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-71"><time itemprop="commentTime" datetime="2013-06-08T10:06:48+08:00">2013-06-08 10:06</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>感谢军歌回复啊。我用winscp了。  另外出了个问题：在浏览器输入： http://你的ip/ftp/  及phpmyadmin 目录都访问不了？</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-75" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-75"><time itemprop="commentTime" datetime="2013-06-08T20:49:12+08:00">2013-06-08 20:49</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>/usr/local/nginx/sbin/nginx -t测试配置看看，不能访问按常见问题里的看看</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-72" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/5b94cf517cd9d8d27f087317917a01a2" alt=".t" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">.t</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-72"><time itemprop="commentTime" datetime="2013-06-08T10:52:46+08:00">2013-06-08 10:52</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>/ftp 可以访问了。应该是配置conf文件时不会用nano的保存命令弄了好几个confyy结尾的配置引起的出错。另另外，验证码又只有图片没有里边的文字，囧</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-38" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/76f13541a018b801380124227fd5fcfb" alt="hinetnet" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">hinetnet</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-38"><time itemprop="commentTime" datetime="2013-06-02T23:28:00+08:00">2013-06-02 23:28</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>我用新版本的安装后 为什么访问不了php的  默认的可以访问 但是新加的不可以访问</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-45" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-45"><time itemprop="commentTime" datetime="2013-06-03T10:40:51+08:00">2013-06-03 10:40</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>有错误信息不</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-37" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/ff5816812ef7a27df96faf11b3163b70" alt="优酷豆" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://youkudou.com/" rel="external nofollow">优酷豆</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-37"><time itemprop="commentTime" datetime="2013-06-02T21:58:39+08:00">2013-06-02 21:58</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>是啊，原来一个页面就能找见所有的东西，现在还得找来找去</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-36" class="comment-body comment-parent comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-36"><time itemprop="commentTime" datetime="2013-06-02T19:54:54+08:00">2013-06-02 19:54</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>ctrl+c 终止，然后/etc/init.d/php-fpm restart 看一下能正常重启服务不</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-57" class="comment-body comment-child comment-level-odd comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/50de9606fc7022293191fa56b5bf6778" alt="Dmoo" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">Dmoo</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-57"><time itemprop="commentTime" datetime="2013-06-05T10:00:47+08:00">2013-06-05 10:00</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>同上...</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-39" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/31821f9326d46489a5eb3daa2900935a" alt="aray" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">aray</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-39"><time itemprop="commentTime" datetime="2013-06-03T00:48:17+08:00">2013-06-03 00:48</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>和这位朋友同样问题</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-31" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/ff5816812ef7a27df96faf11b3163b70" alt="优酷豆" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://youkudou.com/" rel="external nofollow">优酷豆</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-31"><time itemprop="commentTime" datetime="2013-06-02T15:06:03+08:00">2013-06-02 15:06</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>ip直接指向default这个目录？</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-35" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-35"><time itemprop="commentTime" datetime="2013-06-02T19:53:31+08:00">2013-06-02 19:53</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>嗯</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-30" class="comment-body comment-parent comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-30"><time itemprop="commentTime" datetime="2013-06-02T14:11:57+08:00">2013-06-02 14:11</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>状态管理是最重要的命令不可能删，更没删</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-24" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/6f546b542b47ca5f6e9d191cb7206aac" alt="OneManIDC" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://www.onemanidc.com/" rel="external nofollow">OneManIDC</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-24"><time itemprop="commentTime" datetime="2013-06-02T10:36:11+08:00">2013-06-02 10:36</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>最后一个配图是不是有误啊？</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-25" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-25"><time itemprop="commentTime" datetime="2013-06-02T11:13:05+08:00">2013-06-02 11:13</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>感谢指正，已更新</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-21" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/9842a95b994da7a4daaa878c66421802" alt="无线网" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://www.bbbbb.me/" rel="external nofollow">无线网</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-21"><time itemprop="commentTime" datetime="2013-06-01T16:41:51+08:00">2013-06-01 16:41</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>军哥估计没考虑过面板 其实面板不面板也无所谓</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-23" class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-23"><time itemprop="commentTime" datetime="2013-06-01T20:51:32+08:00">2013-06-01 20:51</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>没考虑过做面板</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-10" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/6d947e4379832c1f144163174d71ed97" alt="^" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">^</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-10"><time itemprop="commentTime" datetime="2013-06-01T09:59:09+08:00">2013-06-01 09:59</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>1.0更新了些什么</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-11" class="comment-body comment-child comment-level-odd comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/6d947e4379832c1f144163174d71ed97" alt="^" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">^</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-11"><time itemprop="commentTime" datetime="2013-06-01T10:01:42+08:00">2013-06-01 10:01</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>请问如何升级==</p>    </div>
+    <div class="comment-reply">
+            </div>
+        <div class="comment-children" itemprop="discusses">
+        <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-15" class="comment-body comment-child comment-level-even comment-odd comment-by-author">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/753f33ace778c66caf18fa218f37a529" alt="licess" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://lnmp.org/" rel="external nofollow">licess</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html#comment-15"><time itemprop="commentTime" datetime="2013-06-01T10:06:16+08:00">2013-06-01 10:06</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>更新记录查看：http://lnmp.org/changelog.html</p><p>如果原来版本用这没问题不需要升级</p>    </div>
+    <div class="comment-reply">
+            </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>    </div>
+    </li>
+</ol>            
+            
+                        <h4>评论已关闭</h4>
+            		</div>
+    </div><!-- end #content-->
+	    <div class="grid_4" id="sidebar">
+
+                <div class="widget">
+            <a href="http://www.vpser.net/usa-vps" title="VPS推荐" target="_blank"><img src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/tj.gif">VPS推荐</a>
+        </div>
+	    <div class="widget">
+			<h3>最新文章</h3>
+            <ul>
+                <li><a href="http://lnmp.org/faq/lnmp-1-2-tools.html">LNMP 1.2 备份/denyhosts/fail2ban/Nginx日志切割/MySQL root密码重置工具使用教程</a></li><li><a href="http://lnmp.org/faq/addons.html">LNMP 1.2缓存加速类扩展(xcache/Redis/memcached/eAccelerator)、imageMagick、ionCube安装教程</a></li><li><a href="http://lnmp.org/faq/lnmp1-2-upgrade.html">LNMP 1.2升级Nginx、MySQL/MariaDB、PHP教程</a></li><li><a href="http://lnmp.org/faq/upgrade.html">LNMP 1.1升级及Nginx、MySQL/MariaDB、PHP升级说明</a></li><li><a href="http://lnmp.org/faq/lnmp-download-source.html">LNMP替换安装下载源镜像地址的方法</a></li><li><a href="http://lnmp.org/faq/lnmp-status-manager.html">LNMP状态管理命令</a></li><li><a href="http://lnmp.org/faq/Add-ons.html">eAccelerator/ionCube/imageMagick/memcached/xcache/redis/opcache安装使用教程</a></li><li><a href="http://lnmp.org/faq/sftp.html">使用SFTP代替FTP服务器</a></li><li><a href="http://lnmp.org/faq/ftpserver.html">LNMP下FTP服务器的安装和使用(Pureftpd和Proftpd)</a></li><li><a href="http://lnmp.org/faq/lnmp-vhost-add-howto.html">LNMP添加、删除虚拟主机及伪静态使用教程</a></li>            </ul>
+	    </div>
+        
+                <div class="widget">
+			<h3>文章分类</h3>
+            <ul>
+                <li><a href="http://lnmp.org/category/faq/">常见问题</a> (13)</li>            </ul>
+		</div>
+        
+                <div class="widget">
+			<h3>归档</h3>
+            <ul>
+                <li><a href="http://lnmp.org/2015/07/">2015年07月</a></li><li><a href="http://lnmp.org/2015/05/">2015年05月</a></li><li><a href="http://lnmp.org/2014/05/">2014年05月</a></li><li><a href="http://lnmp.org/2013/06/">2013年06月</a></li><li><a href="http://lnmp.org/2013/05/">2013年05月</a></li><li><a href="http://lnmp.org/2013/04/">2013年04月</a></li><li><a href="http://lnmp.org/2013/03/">2013年03月</a></li><li><a href="http://lnmp.org/2013/02/">2013年02月</a></li>            </ul>
+		</div>
+        
+        		<div class="widget">
+			<h3>其它</h3>
+            <ul>
+                <li><a href="http://lnmp.org/feed/">文章 RSS</a></li>
+                <li><a href="http://lnmp.org/feed/comments/">评论 RSS</a></li>
+            </ul>
+		</div>
+        
+        <div class="widget">
+            本站架设在<a href="http://vps.im/photonvps" target="_blank"><span style="color:#FF0000;font-weight: bold; word-break:break-all;">PhotonVPS</span></a>上<br><a href="http://vps.im/linode" target="_blank"><span style="color:#FF0000;font-weight: bold; word-break:break-all;">Linode</span></a>提供下载镜像
+        </div>
+
+    </div><!-- end #sidebar -->	</div>
+	<div class="grid_14" id="footer">
+	©  2008 - 2015 <a href="http://lnmp.org/">LNMP一键安装包</a>. All Rights Reserved.
+	<div style="display:none"><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257046989'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/stat.php%3Fid%3D1257046989' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1257046989"><a href="http://www.cnzz.com/stat/website.php?web_id=1257046989" target="_blank" title="站长统计">站长统计</a></span><script src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/stat.php" type="text/javascript"></script><script src="./LNMP添加、删除虚拟主机及伪静态使用教程 - LNMP一键安装包_files/core.php" charset="utf-8" type="text/javascript"></script></div>
+	</div>
+
+<st-div id="__selection-translator__"> <st-div class="__st-box__" style="display: none; position: fixed; z-index: 99999; left: 0px; top: 0px; transform: translateX(700px) translateY(423px);"> <st-header> <st-span class="st-icon-pin" title="固定"></st-span> <st-span class="st-icon-down-open" title="展开"></st-span> <st-span class="st-icon-cog" title="设置"></st-span> </st-header> <st-div class="__query-form__" style="display: none;"> <st-div> <textarea placeholder="输入要翻译的句子或单词"></textarea> </st-div> <st-div> <select> <option value="">自动判断</option> <option value="zh">中文</option><option value="zh-CN">中文(简体)</option><option value="zh-HK">中文(香港)</option><option value="zh-TW">中文(繁体)</option><option value="en">英语</option><option value="ja">日语</option><option value="ko">朝鲜语</option><option value="de">德语</option><option value="fr">法语</option><option value="ru">俄语</option><option value="th">泰语</option><option value="af">南非语</option><option value="ar">阿拉伯语</option><option value="az">阿塞拜疆语</option><option value="be">比利时语</option><option value="bg">保加利亚语</option><option value="ca">加泰隆语</option><option value="cs">捷克语</option><option value="cy">威尔士语</option><option value="da">丹麦语</option><option value="dv">第维埃语</option><option value="el">希腊语</option><option value="eo">世界语</option><option value="es">西班牙语</option><option value="et">爱沙尼亚语</option><option value="eu">巴士克语</option><option value="fa">法斯语</option><option value="fi">芬兰语</option><option value="fo">法罗语</option><option value="gl">加里西亚语</option><option value="gu">古吉拉特语</option><option value="he">希伯来语</option><option value="hi">印地语</option><option value="hr">克罗地亚语</option><option value="hu">匈牙利语</option><option value="hy">亚美尼亚语</option><option value="id">印度尼西亚语</option><option value="is">冰岛语</option><option value="it">意大利语</option><option value="ka">格鲁吉亚语</option><option value="kk">哈萨克语</option><option value="kn">卡纳拉语</option><option value="kok">孔卡尼语</option><option value="ky">吉尔吉斯语</option><option value="lt">立陶宛语</option><option value="lv">拉脱维亚语</option><option value="mi">毛利语</option><option value="mk">马其顿语</option><option value="mn">蒙古语</option><option value="mr">马拉地语</option><option value="ms">马来语</option><option value="mt">马耳他语</option><option value="nb">挪威语(伯克梅尔)</option><option value="nl">荷兰语</option><option value="ns">北梭托语</option><option value="pa">旁遮普语</option><option value="pl">波兰语</option><option value="pt">葡萄牙语</option><option value="qu">克丘亚语</option><option value="ro">罗马尼亚语</option><option value="sa">梵文</option><option value="se">北萨摩斯语</option><option value="sk">斯洛伐克语</option><option value="sl">斯洛文尼亚语</option><option value="sq">阿尔巴尼亚语</option><option value="sv">瑞典语</option><option value="sw">斯瓦希里语</option><option value="syr">叙利亚语</option><option value="ta">泰米尔语</option><option value="te">泰卢固语</option><option value="tl">塔加路语</option><option value="tn">茨瓦纳语</option><option value="tr">土耳其语</option><option value="ts">宗加语</option><option value="tt">鞑靼语</option><option value="uk">乌克兰语</option><option value="ur">乌都语</option><option value="uz">乌兹别克语</option><option value="vi">越南语</option><option value="xh">班图语</option><option value="zu">祖鲁语</option> </select> <st-div class="__exchange__"> <st-span class="st-icon-exchange"></st-span> </st-div> <select> <option value="">自动选择</option> <option value="zh">中文</option><option value="zh-CN">中文(简体)</option><option value="zh-HK">中文(香港)</option><option value="zh-TW">中文(繁体)</option><option value="en">英语</option><option value="ja">日语</option><option value="ko">朝鲜语</option><option value="de">德语</option><option value="fr">法语</option><option value="ru">俄语</option><option value="th">泰语</option><option value="af">南非语</option><option value="ar">阿拉伯语</option><option value="az">阿塞拜疆语</option><option value="be">比利时语</option><option value="bg">保加利亚语</option><option value="ca">加泰隆语</option><option value="cs">捷克语</option><option value="cy">威尔士语</option><option value="da">丹麦语</option><option value="dv">第维埃语</option><option value="el">希腊语</option><option value="eo">世界语</option><option value="es">西班牙语</option><option value="et">爱沙尼亚语</option><option value="eu">巴士克语</option><option value="fa">法斯语</option><option value="fi">芬兰语</option><option value="fo">法罗语</option><option value="gl">加里西亚语</option><option value="gu">古吉拉特语</option><option value="he">希伯来语</option><option value="hi">印地语</option><option value="hr">克罗地亚语</option><option value="hu">匈牙利语</option><option value="hy">亚美尼亚语</option><option value="id">印度尼西亚语</option><option value="is">冰岛语</option><option value="it">意大利语</option><option value="ka">格鲁吉亚语</option><option value="kk">哈萨克语</option><option value="kn">卡纳拉语</option><option value="kok">孔卡尼语</option><option value="ky">吉尔吉斯语</option><option value="lt">立陶宛语</option><option value="lv">拉脱维亚语</option><option value="mi">毛利语</option><option value="mk">马其顿语</option><option value="mn">蒙古语</option><option value="mr">马拉地语</option><option value="ms">马来语</option><option value="mt">马耳他语</option><option value="nb">挪威语(伯克梅尔)</option><option value="nl">荷兰语</option><option value="ns">北梭托语</option><option value="pa">旁遮普语</option><option value="pl">波兰语</option><option value="pt">葡萄牙语</option><option value="qu">克丘亚语</option><option value="ro">罗马尼亚语</option><option value="sa">梵文</option><option value="se">北萨摩斯语</option><option value="sk">斯洛伐克语</option><option value="sl">斯洛文尼亚语</option><option value="sq">阿尔巴尼亚语</option><option value="sv">瑞典语</option><option value="sw">斯瓦希里语</option><option value="syr">叙利亚语</option><option value="ta">泰米尔语</option><option value="te">泰卢固语</option><option value="tl">塔加路语</option><option value="tn">茨瓦纳语</option><option value="tr">土耳其语</option><option value="ts">宗加语</option><option value="tt">鞑靼语</option><option value="uk">乌克兰语</option><option value="ur">乌都语</option><option value="uz">乌兹别克语</option><option value="vi">越南语</option><option value="xh">班图语</option><option value="zu">祖鲁语</option> </select> </st-div> <st-div> <select> <option value="YouDao">有道翻译</option> <option value="BaiDu">百度翻译</option> <option value="Bing">必应翻译</option> <option value="Google">谷歌翻译</option> <option value="GoogleCN">谷歌翻译（国内）</option> </select> <st-div class="__action-list__"> <st-div class="__button__ __btn-translate__">翻译 <st-span class="st-icon-down-dir"></st-span> </st-div> <st-div class="__expand__"> <st-div class="__button__">朗读</st-div> <st-div class="__button__">复制</st-div> </st-div> </st-div> </st-div> </st-div> <st-div class="__translate-result__" style="display: none;">正在查询，请稍候……</st-div> <st-div class="__translate-result__"> <st-div style="display: none;"> <st-span></st-span> <st-span class="__retry__">重试</st-span> </st-div> <st-div> <st-div class="__phonetic__"> <st-span style="display: none;"></st-span> <st-span class="__copy-and-read__"> <st-span>朗读</st-span> <st-span style="display: none;">复制</st-span> </st-span> </st-div> <st-div style="display: none;"> <st-ul>  </st-ul> <st-div class="__copy-and-read__"> <st-span class="__copy-and-read__">复制</st-span> </st-div> </st-div> <st-div> <st-div>后输入要设置的密码，回车确认。</st-div> <st-div class="__copy-and-read__"> <st-span class="__copy-and-read__">朗读</st-span> <st-span class="__copy-and-read__">复制</st-span> </st-div> </st-div> </st-div> </st-div> <st-footer> <st-span>via <a target="_blank" href="https://translate.google.cn/#auto/auto/后输入要设置的密码，回车确认。">谷歌翻译（国内）</a></st-span> </st-footer> </st-div> <st-div class="__st-btn__" style="display: none; position: fixed; z-index: 99999; left: 0px; top: 0px; transform: translateX(700px) translateY(423px);">译</st-div> </st-div></body></html>
