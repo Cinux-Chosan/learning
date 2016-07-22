@@ -1,0 +1,6 @@
+alias bc="rm -fr dist/ tmp/;ember b --prod;svn up g:/BOSS/dist;rm -fr g:/BOSS/dist/* g:/BOSS/dist/.[!svn.]*;cp -fr dist/* g:/BOSS/dist/;svn st | grep ^! | awk '{a=\"@\";print \" --force \"$2a}'| xargs svn rm;svn st | grep ^? | awk '{a=\"@\";print $2a}' | xargs svn add;svn ci g:/BOSS/dist -m 'ci from bc, zhangjianjun-laptop'"
+
+
+svn st | grep ^! | awk '{a="@";print " --force "$2a}'| xargs svn rm;
+
+svn st | grep ^? | awk '{a="@";print $2a}' | xargs svn add;
