@@ -1,0 +1,3 @@
+查询之前加上：
+
+mysqli_query($dbc,"set names 'utf8'");
