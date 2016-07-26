@@ -5,7 +5,7 @@ var http = require('http');
 
 var server = http.createServer(function(req, res) {
   res.write("<h1>Get connected</h1>");
-  util.readObj(req, res);
+  util.readObj(req.headers, res);
 });
 
-server.listen(8080);
+server.listen(80);

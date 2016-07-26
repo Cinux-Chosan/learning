@@ -1,0 +1,3 @@
+var OX_b45b7011 = '';
+OX_b45b7011 += "<"+"a href=\'//gg3.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3687__zoneid=460__cb=b1144d8d1c__oadest=http%3A%2F%2Fx.51cto.com\' target=\'_blank\'><"+"div style=\" color:red;font-family:微软雅黑 \">CTO训练营开营倒计时，仅限5个名额！<"+"/div><"+"/a><"+"div id=\'beacon_b1144d8d1c\' style=\'position: absolute; left: 0px; top: 0px; visibility: hidden;\'><"+"img src=\'//gg.51cto.com/www/delivery/lg.php?bannerid=3687&amp;campaignid=804&amp;zoneid=460&amp;loc=1&amp;referer=http%3A%2F%2F1163739403.blog.51cto.com%2F11663406%2F1808782&amp;cb=b1144d8d1c\' width=\'0\' height=\'0\' alt=\'\' style=\'width: 0px; height: 0px;\' /><"+"/div>\n";
+document.write(OX_b45b7011);
