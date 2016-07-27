@@ -1,0 +1,5 @@
+npm install supervisor -g
+
+启动：　supervisor　app.js
+
+对ａｐｐ．ｊｓ的修改不用每次都重新启动服务
