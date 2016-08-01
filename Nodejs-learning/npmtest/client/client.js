@@ -7,6 +7,7 @@ var data = JSON.stringify({
   age: '100'
 });
 var opt = {
+  port: 8088,
   headers: {
     'Content-Type':'application/x-www-form-urlencoded'
     ,'Content-Length': data.length
@@ -24,13 +25,12 @@ var req = http.request(opt, function(res) {
 });
 
 req.on('error', function(e) {
-  console.log('Error :' + e.message);
-}).on('response', function(res) {
-  console.log('Enter client req.response');
-  console.log('Leave client req.response');
+  console.log('Error is :' + e.message);
+}).on('connect', () => {
+  console.log("Connecting");
 });
 
 //req.writeHeaders();
-req.write('data\n');
+//req.write('data\n');
 // req.write('more data\n');
-//req.end(data);
+req.end(data);
