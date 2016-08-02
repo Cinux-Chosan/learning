@@ -1,3 +1,4 @@
+require('babel-register');
 var http = require('http');
 var util = require('../myLib').util;
 
@@ -7,11 +8,12 @@ var data = JSON.stringify({
   age: '100'
 });
 var opt = {
+//  url: 'http://localhost/decision/getadminDecisionList',
   headers: {
     'Content-Type':'application/x-www-form-urlencoded'
     ,'Content-Length': data.length
   }
-  ,agent: new http.Agent({keepAlive: false})
+//  ,agent: new http.Agent({keepAlive: false})
 }
 //util.readObj(opt.agent, 0);
 var req = http.request(opt, function(res) {
@@ -28,9 +30,15 @@ req.on('error', function(e) {
 }).on('response', function(res) {
   console.log('Enter client req.response');
   console.log('Leave client req.response');
+}).on('abort',function() {
+  console.log('abort');
+}).on('connect', function(res, socket, head) {
+  console.log('connect');
 });
 
 //req.writeHeaders();
-req.write('data\n');
+//req.write('data\n');
+setTimeout(function(){req.emit('abort');});
+
 // req.write('more data\n');
-//req.end(data);
+req.end(data);

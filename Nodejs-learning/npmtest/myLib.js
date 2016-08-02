@@ -1,7 +1,7 @@
 exports.util =  {
     readObj: function readObj(obj, res) {
       res = res ? res : {
-        write: function(data) {
+        write: function (data) {
         console.log(data);
       }
     };
