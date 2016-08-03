@@ -38,11 +38,28 @@
 >> __server.listen(options[, callback])__
 >>> options <Object> : {port<Number>, host<String>, backlog<Number>, path<String>, exclusive<Boolean>}。
 >>> path可选项可用于指定一个UNIX socket。如果exclusive为false，则集群会使用相同的handle进行工作，允许共享连接句柄的任务
->>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[linkto](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback "Linkto") 
+>>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[Linkto](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback "官方文档对应部分")
 
+>> __server.listen(path[, backlog][, callback])__
+>>> 在UNIX系统上，本地domain与UNIX domain采用相同的命名方式和权限检查，所以path与文件系统的path一样。
+>>> 在windows系统上，本地domain使用pipe实现，所以path必须参考 \\\\?\\pipe\\ 或者 \\\\.\\pipe\\. 。
+>>> 任何字符都可以，但是后者会处理一下pipe names，就像处理 ..。pipe不会长期存在，他们会在最后一个引用它们的引用关闭的时候被移除。。
 
+>> __server.listen(port[, hostname][, backlog][, callback])__
+>>> 如果缺省hostname参数，server会在IPv6可用的时候接收任何IPv6地址（：：），或者IPv4地址（0.0.0.0）。如果port为0则会被分配一个随机端口号。
+>>> 一种可能的错误是EADDRINUSE，即端口被占用。e.code == 'EADDRINUSE'
 
+>> server.maxConnections
+>>> 当server的连接数比较高的时候，可以设置该属性来拒绝其他连接
+>>> 当socket通过child_process.fork()被发送到child的时候，不推荐使用该方法。
 
+>> __server.unref()__
+>>> 在server上调用该方法将允许该程序在它作为事件系统上唯一活动的server时退出。如果server已经掉用过该函数，再次调用不会有影响。返回值为该server
+
+>> __server.ref()__
+>>> 与unref相反，调用该方法在一个已经unref的server上，将不会让该程序在作为唯一一个server的时候退出。重复调用不会有影响。返回值为该server
+
+[Class: net.Socket](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_class_net_socket)
 
 
 
