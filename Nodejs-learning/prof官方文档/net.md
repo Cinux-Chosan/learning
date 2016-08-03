@@ -16,28 +16,28 @@
 
 >> __server.address()__
 >>> 返回包含绑定的ip,协议，端口号的对象 e.g.:{ port: 12346, family: 'IPv4', address: '127.0.0.1' }
->>> \< NOTE: 不要在listening之前调用该函数 \>
+>>> ＜ NOTE: 不要在listening之前调用该函数 ＞
 
 >> __server.close([callback])__
 >>> 停止接收新的连接请求，并保持现有连接。该函数等待关闭所有连接，然后触发close事件，回调函数会在触发close事件过后被调用。
 >>> 回调函数的唯一参数就是一个错误，如果调用close的时候server并没有开启，则会产生该错误
 
 >> server.connections
->>> \<已废弃\>： 当前的连接数
+>>> ＜已废弃＞： 当前的连接数
 
 >> __server.getConnections(callback)__
 >>> 异步获取当前连接数，主要用于在socket被发送到子进程的时候（works when sockets were sent to forks）。
 >>> 回调函数获取两个参数 err 和 count
 
 >> __server.listen(handle[, backlog][, callback])__
->>> handle \<Object\> : 可以是一个server或者socket（任何属于底层_handle句柄的成员）或则{fd:\<n\>}的对象。  
+>>> handle ＜Object＞ : 可以是一个server或者socket（任何属于底层_handle句柄的成员）或则{fd:＜n＞}的对象。  
 >>> 该函数会让server在指定handle上接收连接。但是它会假定fd或者handle已经绑定到了某个端口或者domain socket。  
 >>> windows不支持在fd上监听（listening），该函数是异步的，server被绑定完成过后，会触发listening事件。最后的callback会被当做listening的监听函数。  
->>> backlog \<Number\> : 该参数表示处于等待连接中的最大数，默认值是511，非512。  
+>>> backlog ＜Number＞ : 该参数表示处于等待连接中的最大数，默认值是511，非512。  
 
 
 >> __server.listen(options[, callback])__
->>> options \<Object\> : {port\<Number\>, host\<String\>, backlog\<Number\>, path\<String\>, exclusive\<Boolean\>}。
+>>> options ＜Object＞ : {port＜Number＞, host＜String＞, backlog＜Number＞, path＜String＞, exclusive＜Boolean＞}。
 >>> path可选项可用于指定一个UNIX socket。如果exclusive为false，则集群会使用相同的handle进行工作，允许共享连接句柄的任务
 >>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[Linkto](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback "官方文档对应部分")
 
@@ -72,13 +72,13 @@
 >>> fd用于指定已经存在的socket的文件描述符。 readable和writable可以设置为true或者false来允许读写该socket。
 >>> allowHalfOpen请参考createServer()和 end 事件。
 
->> close （参数：had_error<Boolean>）
+>> close （参数：had_error ＜Boolean＞）
 >>> 当socket完全关闭的时候会被触发。had_error表示由于transmission 错误导致socket关闭
 
 >> connect
 >>> 当成功建立起socket连接时触发
 
->> data（参数：chunk<Buffer>）
+>> data（参数：chunk ＜Buffer＞）
 >>> 当接受到数据的时候触发该事件。参数可以是Buffer或者String。通过socket.setEncoding()设置编码。如果当数据到达的时候没有监听该事件，则数据丢失
 
 >> drain
@@ -89,10 +89,10 @@
 >>> 默认情况下allowHalfOpen为false，一旦在等待中的数据被全部写完，socket在默认情况下会摧毁它的文件描述符。
 >>> 通过将allowHalfOpen设置为true，socket就不会自动 end()，而允许用于写入任意数量的数据，但是用户需要自己 end()。
 
->> error （参数：error <Error>）
+>> error （参数：error ＜Error＞）
 >>> 发生错误时触发
 
->> lookup (参数：err <Error> || <Null>, address <String>, family <String> || <Null> )
+>> lookup (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )
 >>> 在已经有了主机名（hostname）之后，在连接（connecting）之前被触发。UNIX socket下不起作用。参数address为IP地址，参数err ，family参考 dns.lookup()
 
 >> timeout
@@ -101,15 +101,15 @@
 >> __socket.address()__
 >>> 同server.address()，返回地址信息，e.g. { port: 12346, family: 'IPv4', address: '127.0.0.1' }
 
->> socket.bufferSize （prop）
+>> socket.bufferSize ＜prop＞
 >>> net.Socket具有该属性的时候，socket.write()会一直工作。这样做的目的是帮助用户更快的运行程序。 因为有可能网络情况不佳，此时电脑并不能保持大量的数据写入socket。nodejs会在内部将需要写入的数据保存为队列，在可以发送的时候将这些数据发送出去。（当socket为可写的时候，nodejs内部会在socket的文件描述符上进行轮询）
 >>> 因为nodejs会缓存要发送的数据，所以会导致消耗的内存变多。该属性可以反映当前被缓存的字符数量。某些情况下该数目可以表示字节数，但是由于String是懒编码的，所以此时字节数未知。
 >>>　当出现bufferSize变得较大的时候，应该使用pause()和resume()来调节数据的发送。
 
->> socket.bytesRead <prop>
+>> socket.bytesRead ＜prop＞
 >>> 接收到的字节数
 
->> socket.bytesWritten <prop>
+>> socket.bytesWritten ＜prop＞
 >>> 发送的字节数
 
 >> __socket.connect(options[, connectListener])__
@@ -138,10 +138,10 @@
 >>> 发送FIN包，关闭socket。 It is possible the server will still send some data.
 >>> 如果指定了data参数，就相当于调用 socket.write(data, encoding)然后调用socket.end()。
 
->> socket.localAddress <prop>
+>> socket.localAddress ＜prop＞
 >>> 该属性为一个表示与远程客户端所连接的本地IP。例如，如果你正在监听 "0.0.0.0" 并且 client 连接在 "192.168.1.1"上，那么这个值就是 "192.168.1.1"。
 
->> socket.localPort <prop>
+>> socket.localPort ＜prop＞
 >>> 代表本地端口号的整数
 
 >> __socket.pause()__
@@ -150,13 +150,13 @@
 >> __socket.ref()__
 >>> 同 server.ref()，不同的是该返回值为socket
 
->> socket.remoteAddress <prop>
+>> socket.remoteAddress ＜prop＞
 >>> 代表远程IP地址的字符串。在客户端关闭连接等导致socket被摧毁的情况下，该值可能为undefined
 
->> socket.remoteFamily <prop>
+>> socket.remoteFamily ＜prop＞
 >>> 代表远程IP协议版本的字符串，“IPv4”或者“IPv6”之一。
 
->> socket.remotePort <prop>
+>> socket.remotePort ＜prop＞
 >>> 代表远程端口的整数
 
 >> __socket.resume()__
