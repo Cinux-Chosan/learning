@@ -62,7 +62,7 @@
 
 [Class: net.Socket](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_class_net_socket)
 
-+++++
+===
 
 ##net.Socket类
 > TCP 或者本地socket的抽象。实现了可读可写流的接口。可以被用来做客户端程序，或者被nodejs创建并传递给server的connection事件。
