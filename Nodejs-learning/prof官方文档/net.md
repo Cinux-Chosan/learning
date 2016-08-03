@@ -38,7 +38,7 @@
 >> __server.listen(options[, callback])__
 >>> options <Object> : {port<Number>, host<String>, backlog<Number>, path<String>, exclusive<Boolean>}。
 >>> path可选项可用于指定一个UNIX socket。如果exclusive为false，则集群会使用相同的handle进行工作，允许共享连接句柄的任务
->>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[linkto]:https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback
+>>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[linkto]: https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback "Linkto"
 
 
 
