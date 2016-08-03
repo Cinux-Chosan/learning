@@ -47,4 +47,4 @@
 >> 与deepEqual相反
 
 <h1>ddddd</h1>
-\<scr\ipt src="//cdn.bootcss.com/jquery/3.1.0/core.js">\</\scr\i\pt>
+\<script src="//cdn.bootcss.com/jquery/3.1.0/core.js">\<\/script>
