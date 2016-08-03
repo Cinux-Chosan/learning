@@ -45,6 +45,3 @@
 
 ##assert.notDeepEqual(actual, expected[, message])
 >> 与deepEqual相反
-
-##assert.ifError(value)
->>
