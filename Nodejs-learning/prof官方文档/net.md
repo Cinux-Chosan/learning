@@ -18,7 +18,7 @@
 >>> 返回包含绑定的ip,协议，端口号的对象 e.g.:{ port: 12346, family: 'IPv4', address: '127.0.0.1' }
 >>> < NOTE: 不要在listening之前调用该函数 >
 
->> server.close([callback])
+>> __server.close([callback])__
 >>> 停止接收新的连接请求，并保持现有连接。该函数等待关闭所有连接，然后触发close事件，回调函数会在触发close事件过后被调用。
 >>> 回调函数的唯一参数就是一个错误，如果调用close的时候server并没有开启，则会产生该错误
 
@@ -33,7 +33,7 @@
 >>> handle <Object> : 可以是一个server或者socket（任何属于底层_handle句柄的成员）或则{fd:<n>}的对象。
 >>> 该函数会让server在指定handle上接收连接。但是它会假定fd或者handle已经绑定到了某个端口或者domain socket。
 >>> windows不支持在fd上监听（listening），该函数是异步的，server被绑定完成过后，会触发listening事件。最后的callback会被当做listening的监听函数  
->>> backlog <Number> : 该参数表示处于等待连接中的最大数，默认值是511，非512
+>>> backlog <Number> : 该参数表示处于等待连接中的最大数，默认值是511，非512  
 
 >> __server.listen(options[, callback])__
 >>> options <Object> : {port<Number>, host<String>, backlog<Number>, path<String>, exclusive<Boolean>}。
