@@ -46,4 +46,5 @@
 ##assert.notDeepEqual(actual, expected[, message]) ：
 >> 与deepEqual相反
 
-<script src="//cdn.bootcss.com/jquery/3.1.0/core.js"></script>
+<h1>ddddd</h1>
+\<scr\ipt src="//cdn.bootcss.com/jquery/3.1.0/core.js">\</\scr\i\pt>
