@@ -97,7 +97,7 @@
 
 > 设置时间值：
 >> 在stat对象中，有如下类型的时间值：
->>> atime "Access Time" —— 文件最后通过 mknod(2)、utimes(2)、read(2) 这几个系统调用所 *进入* 或 *改变* 的时间。
+>>> atime "Access Time" —— 文件最后通过 mknod(2)、utimes(2)、read(2) 这几个系统调用所 **进入** 或 **改变** 的时间。
 
 >>> mtime "Modified Time" —— 文件最后通过 mknod(2)、 utimes(2)、write(2)这几个系统调用所改变的时间。
 
