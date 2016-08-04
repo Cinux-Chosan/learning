@@ -12,7 +12,7 @@
 
 >> ------
 
->> ###error### (参数：Error:错误对象)###
+>> ###error (参数：Error:错误对象)###
 >>> 当发生错误的时候触发该事件，当该事件触发后会立即触发close事件。
 
 >> ------
@@ -117,7 +117,7 @@
 
 >> ------
 
->> ###close### （参数：had_error ＜Boolean＞）
+>> ###close （参数：had_error ＜Boolean＞）###
 >>> 当socket完全关闭的时候会被触发。had_error表示由于transmission 错误导致socket关闭
 
 >> ------
@@ -127,7 +127,7 @@
 
 >> ------
 
->> ###data###（参数：chunk ＜Buffer＞）
+>> ###data（参数：chunk ＜Buffer＞）###
 >>> 当接受到数据的时候触发该事件。参数可以是Buffer或者String。通过socket.setEncoding()设置编码。如果当数据到达的时候没有监听该事件，则数据丢失
 
 >> ------
@@ -146,12 +146,12 @@
 
 >> ------
 
->> ###error### （参数：error ＜Error＞）
+>> ###error （参数：error ＜Error＞）###
 >>> 发生错误时触发
 
 >> ------
 
->> ###lookup### (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )
+>> ###lookup (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )###
 >>> 在已经有了主机名（hostname）之后，在连接（connecting）之前被触发。UNIX socket下不起作用。参数address为IP地址，参数err ，family参考 dns.lookup()
 
 >> ------
@@ -166,7 +166,7 @@
 
 >> ------
 
->> ###socket.bufferSize### ＜prop＞
+>> ###socket.bufferSize ＜prop＞###
 >>> net.Socket具有该属性的时候，socket.write()会一直工作。这样做的目的是帮助用户更快的运行程序。 因为有可能网络情况不佳，此时电脑并不能保持大量的数据写入socket。nodejs会在内部将需要写入的数据保存为队列，在可以发送的时候将这些数据发送出去。（当socket为可写的时候，nodejs内部会在socket的文件描述符上进行轮询）  
 
 >>> 因为nodejs会缓存要发送的数据，所以会导致消耗的内存变多。该属性可以反映当前被缓存的字符数量。某些情况下该数目可以表示字节数，但是由于String是懒编码的，所以此时字节数未知。  
@@ -175,12 +175,12 @@
 
 >> ------
 
->> ###socket.bytesRead### ＜prop＞
+>> ###socket.bytesRead ＜prop＞###
 >>> 接收到的字节数
 
 >> ------
 
->> ###socket.bytesWritten### ＜prop＞
+>> ###socket.bytesWritten ＜prop＞###
 >>> 发送的字节数
 
 >> ------
@@ -229,10 +229,10 @@
 
 >> ------
 
->> ###socket.localAddress### ＜prop＞
+>> ###socket.localAddress ＜prop＞###
 >>> 该属性为一个表示与远程客户端所连接的本地IP。例如，如果你正在监听 "0.0.0.0" 并且 client 连接在 "192.168.1.1"上，那么这个值就是 "192.168.1.1"。
 
->> ###socket.localPort### ＜prop＞
+>> ###socket.localPort ＜prop＞###
 >>> 代表本地端口号的整数
 
 >> ------
@@ -247,17 +247,17 @@
 
 >> ------
 
->> ###socket.remoteAddress### ＜prop＞
+>> ###socket.remoteAddress ＜prop＞###
 >>> 代表远程IP地址的字符串。在客户端关闭连接等导致socket被摧毁的情况下，该值可能为undefined
 
 >> ------
 
->> ###socket.remoteFamily### ＜prop＞
+>> ###socket.remoteFamily ＜prop＞###
 >>> 代表远程IP协议版本的字符串，“IPv4”或者“IPv6”之一。
 
 >> ------
 
->> ###socket.remotePort### ＜prop＞
+>> ###socket.remotePort ＜prop＞###
 >>> 代表远程端口的整数
 
 >> ------
