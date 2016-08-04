@@ -7,12 +7,12 @@
 
 >> ------
 
->> ###connection### （参数：net.Socket:连接对象）
+>> ###connection （参数：net.Socket:连接对象）###
 >>> 当新连接被建立时触发，会传递一个net.Socket的实例socket
 
 >> ------
 
->> ###error### (参数：Error:错误对象)
+>> ###error### (参数：Error:错误对象)###
 >>> 当发生错误的时候触发该事件，当该事件触发后会立即触发close事件。
 
 >> ------
