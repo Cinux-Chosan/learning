@@ -101,7 +101,7 @@
 
 >>> mtime "Modified Time" —— 文件最后通过 mknod(2)、 utimes(2)、write(2)这几个系统调用所改变的时间。
 
-
+[进度保留](https://nodejs.org/dist/latest-v4.x/docs/api/fs.html#fs_stat_time_values)
 
 
 
