@@ -2,7 +2,7 @@
 
 
 var opt = {
-  url: 'http://localhost:80',
+  url: 'http://localhost:8888',
   data: { name: 'Zhang Jianjun'}
 }
 
