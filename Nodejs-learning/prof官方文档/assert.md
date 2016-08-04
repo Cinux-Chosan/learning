@@ -1,4 +1,4 @@
-#assert模块被锁住，不允许修改。
+#[assert模块](https://nodejs.org/dist/latest-v4.x/docs/api/assert.html)被锁住，不允许修改。
 
 
 ##assert(value[, message]) ：
