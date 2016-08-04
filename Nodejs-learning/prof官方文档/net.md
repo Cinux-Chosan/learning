@@ -62,14 +62,14 @@
 >> ###__server.listen(options[, callback])__###
 >>> options ＜Object＞ : {port＜Number＞, host＜String＞, backlog＜Number＞, path＜String＞, exclusive＜Boolean＞}。  
 
->>> path可选项可用于指定一个UNIX socket。如果exclusive为false，则集群会使用相同的handle进行工作，允许共享连接句柄的任务。  
+>>> path可选项可用于指定一个 *UNIX* socket。如果exclusive为false，则集群会使用相同的handle进行工作，允许共享连接句柄的任务。  
 
 >>> 如果exclusive为true，则handle不能被共享，企图共享端口会造成错误。[Linkto](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_server_listen_options_callback "官方文档对应部分")。
 
 >> ------
 
 >> ###__server.listen(path[, backlog][, callback])__###
->>> 在UNIX系统上，本地domain与UNIX domain采用相同的命名方式和权限检查，所以path与文件系统的path一样。  
+>>> 在 *UNIX* 系统上，本地domain与 *UNIX* domain采用相同的命名方式和权限检查，所以path与文件系统的path一样。  
 
 >>> 在windows系统上，本地domain使用pipe实现，所以path必须参考 \\\\?\\pipe\\ 或者 \\\\.\\pipe\\. 。  
 
@@ -152,7 +152,7 @@
 >> ------
 
 >> ###lookup (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )###
->>> 在已经有了主机名（hostname）之后，在连接（connecting）之前被触发。UNIX socket下不起作用。参数address为IP地址，参数err ，family参考 dns.lookup()
+>>> 在已经有了主机名（hostname）之后，在连接（connecting）之前被触发。*UNIX* socket下不起作用。参数address为IP地址，参数err ，family参考 dns.lookup()
 
 >> ------
 
@@ -374,7 +374,7 @@
 >> ###__net.createServer([options][, connectionListener])__###
 >>> 创建一个新的 server，connectionListener 会被自动设置为 connection 事件的处理函数。options 默认如下：{allowHalfOpen: false, pauseOnConnect: false}  
 
->>> 如果 allowHalfOpen 为 true，则当 socket 的另一端发送 FIN 包的时候，该 socket 不i会自动发送 FIN 包。该 socket 变为不可读状态，但是仍然可写。所以需要显示调用 end()。  
+>>> 如果 allowHalfOpen 为 true，则当 socket 的另一端发送 FIN 包的时候，该 socket 不会自动发送 FIN 包。该 socket 变为不可读状态，但是仍然可写。所以需要显示调用 end()。  
 
 >>> 如果 pauseOnConnect 为 true，则与该 socket相关的每一个即将到来的连接都会被暂停。并且没有数据被读取。这将会允许与之相关的连接在数据没有被源进程读取的情况下，在不同的进程之间进行传递。如果需要从暂停的socket读取数据，需要条用 resume()。  
 
