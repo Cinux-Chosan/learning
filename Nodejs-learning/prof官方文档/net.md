@@ -84,19 +84,19 @@
 
 >> ------
 
->> server.maxConnections
+>> ###server.maxConnections###
 >>> 当server的连接数比较高的时候，可以设置该属性来拒绝其他连接。  
 
 >>> 当socket通过child_process.fork()被发送到child的时候，不推荐使用该方法。
 
 >> ------
 
->> __server.unref()__
+>> ###__server.unref()__###
 >>> 在server上调用该方法将允许该程序在它作为事件系统上唯一活动的server时退出。如果server已经掉用过该函数，再次调用不会有影响。返回值为该server。
 
 >> ------
 
->> __server.ref()__
+>> ###__server.ref()__###
 >>> 与unref相反，调用该方法在一个已经unref的server上，将不会让该程序在作为唯一一个server的时候退出。重复调用不会有影响。返回值为该server。
 
 [Class: net.Socket](https://nodejs.org/dist/latest-v4.x/docs/api/net.html#net_class_net_socket)
@@ -108,7 +108,7 @@
 
 >> ------
 
->> __net.Socket([options])__
+>> ###__net.Socket([options])__###
 >>> options有如下默认值 {fd: null, allowHalfOpen: false ,readable: false, writable: false};  
 
 >>> fd用于指定已经存在的socket的文件描述符。 readable和writable可以设置为true或者false来允许读写该socket。  
@@ -117,27 +117,27 @@
 
 >> ------
 
->> close （参数：had_error ＜Boolean＞）
+>> ###close### （参数：had_error ＜Boolean＞）
 >>> 当socket完全关闭的时候会被触发。had_error表示由于transmission 错误导致socket关闭
 
 >> ------
 
->> connect
+>> ###connect###
 >>> 当成功建立起socket连接时触发
 
 >> ------
 
->> data（参数：chunk ＜Buffer＞）
+>> ###data###（参数：chunk ＜Buffer＞）
 >>> 当接受到数据的时候触发该事件。参数可以是Buffer或者String。通过socket.setEncoding()设置编码。如果当数据到达的时候没有监听该事件，则数据丢失
 
 >> ------
 
->> drain
+>> ###drain###
 >>> 当write buffer被清空时触发。可以用于调节上传程序。返回值为 socket.write()的返回值
 
 >> ------
 
->> end
+>> ###end###
 >>> 当socket的另一端发送FIN包（断开连接）时触发。  
 
 >>> 默认情况下allowHalfOpen为false，一旦在等待中的数据被全部写完，socket在默认情况下会摧毁它的文件描述符。  
@@ -146,27 +146,27 @@
 
 >> ------
 
->> error （参数：error ＜Error＞）
+>> ###error### （参数：error ＜Error＞）
 >>> 发生错误时触发
 
 >> ------
 
->> lookup (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )
+>> ###lookup### (参数：err ＜Error＞ || ＜Null＞, address ＜String＞, family ＜String＞ || ＜Null＞ )
 >>> 在已经有了主机名（hostname）之后，在连接（connecting）之前被触发。UNIX socket下不起作用。参数address为IP地址，参数err ，family参考 dns.lookup()
 
 >> ------
 
->> timeout
+>> ###timeout###
 >>> 当socket超时时触发。但是该事件只是为了提醒用户socket处于空转状态。用户需要手动关闭连接，可以参考 socket.setTimeout()
 
 >> ------
 
->> __socket.address()__
+>> ###__socket.address()__###
 >>> 同server.address()，返回地址信息，e.g. { port: 12346, family: 'IPv4', address: '127.0.0.1' }
 
 >> ------
 
->> socket.bufferSize ＜prop＞
+>> ###socket.bufferSize### ＜prop＞
 >>> net.Socket具有该属性的时候，socket.write()会一直工作。这样做的目的是帮助用户更快的运行程序。 因为有可能网络情况不佳，此时电脑并不能保持大量的数据写入socket。nodejs会在内部将需要写入的数据保存为队列，在可以发送的时候将这些数据发送出去。（当socket为可写的时候，nodejs内部会在socket的文件描述符上进行轮询）  
 
 >>> 因为nodejs会缓存要发送的数据，所以会导致消耗的内存变多。该属性可以反映当前被缓存的字符数量。某些情况下该数目可以表示字节数，但是由于String是懒编码的，所以此时字节数未知。  
@@ -175,17 +175,17 @@
 
 >> ------
 
->> socket.bytesRead ＜prop＞
+>> ###socket.bytesRead### ＜prop＞
 >>> 接收到的字节数
 
 >> ------
 
->> socket.bytesWritten ＜prop＞
+>> ###socket.bytesWritten### ＜prop＞
 >>> 发送的字节数
 
 >> ------
 
->> __socket.connect(options[, connectListener])__
+>> ###__socket.connect(options[, connectListener])__###
 >>> 在某个指定的socket上建立连接  
 
 >>> 如果是TCP socket，options应该是一个具有如下属性的对象：  
@@ -210,69 +210,69 @@
 
 >> ------
 
->> __socket.connect(path[, connectListener])__  
+>> ###__socket.connect(path[, connectListener])__###  
 
->> __socket.connect(port\[, host][, connectListener])__
+>> ###__socket.connect(port\[, host][, connectListener])__###
 >>> 同socket.connect(options[, connectListener])。参数可以是{port: port, host: host} 或者 {path: path}。
 
 >> ------
 
->> __socket.destroy()__
+>> ###__socket.destroy()__###
 >>> 确保该socket不会发生更多的 I/O 操作。只有在发生错误的时候需要这么做。
 
 >> ------
 
->> __socket.end(\[data][, encoding])__
+>> ###__socket.end(\[data][, encoding])__###
 >>> 发送FIN包，关闭socket。 It is possible the server will still send some data.  
 
 >>> 如果指定了data参数，就相当于调用 socket.write(data, encoding)然后调用socket.end()。
 
 >> ------
 
->> socket.localAddress ＜prop＞
+>> ###socket.localAddress### ＜prop＞
 >>> 该属性为一个表示与远程客户端所连接的本地IP。例如，如果你正在监听 "0.0.0.0" 并且 client 连接在 "192.168.1.1"上，那么这个值就是 "192.168.1.1"。
 
->> socket.localPort ＜prop＞
+>> ###socket.localPort### ＜prop＞
 >>> 代表本地端口号的整数
 
 >> ------
 
->> __socket.pause()__
+>> ###__socket.pause()__###
 >>> 暂停读取数据。即 data 事件不会再被触发。在调节文件上传的过程中会比较有用
 
 >> ------
 
->> __socket.ref()__
+>> ###__socket.ref()__###
 >>> 同 server.ref()，不同的是该返回值为socket
 
 >> ------
 
->> socket.remoteAddress ＜prop＞
+>> ###socket.remoteAddress### ＜prop＞
 >>> 代表远程IP地址的字符串。在客户端关闭连接等导致socket被摧毁的情况下，该值可能为undefined
 
 >> ------
 
->> socket.remoteFamily ＜prop＞
+>> ###socket.remoteFamily### ＜prop＞
 >>> 代表远程IP协议版本的字符串，“IPv4”或者“IPv6”之一。
 
 >> ------
 
->> socket.remotePort ＜prop＞
+>> ###socket.remotePort### ＜prop＞
 >>> 代表远程端口的整数
 
 >> ------
 
->> __socket.resume()__
+>> ###__socket.resume()__###
 >>> 唤醒因socket.pause()导致休眠的socket继续读取数据。
 
 >> ------
 
->> __socket.setEncoding([encoding])__
+>> ###__socket.setEncoding([encoding])__###
 >>> 设置socket数据的编码，（Set the encoding for the socket as a Readable Stream.），参阅[Linkto](https://nodejs.org/dist/latest-v4.x/docs/api/stream.html#stream_readable_setencoding_encoding)
 
 >> ------
 
->> __socket.setKeepAlive([enable][, initialDelay])__
+>> ###__socket.setKeepAlive([enable][, initialDelay])__###
 >>> 启用/禁用 keep-alive 功能。有选择的设置在第一个keep-alive帧被发送到一个空闲ssocket之前的初始延迟时间。enable的默认值为false。  
 
 >>> 设置 initialDelay（毫秒为单位）来设置介于第一个keep-alive探针被发送到最后一个数据包被接收的延时。设置为 0 将会保持该值与默认值不变。默认值为 0.  
@@ -281,14 +281,14 @@
 
 >> ------
 
->> __socket.setNoDelay([noDelay])__
+>> ###__socket.setNoDelay([noDelay])__###
 >>> 禁用[Nagle算法](http://baike.baidu.com/link?url=2Z2PwTi0I5gVX-KKp3-25IhBmNRLmQWOcAB--uLbJhHKyOHJnWbMKzdsYarSRJDWSZU2jsJM1P-_qcGSn2ZUKq)。默认情况下，TCP连接使用Nagle算法，该算法在发送数据前缓存数据。将noDelay设置为true将会在每次调用socket.write()的时候立即发送数据。noDelay默认值为 true。  
 
 >>> 返回值为 socket。
 
 >> ------
 
->> __socket.setTimeout(timeout[, callback])__
+>> ###__socket.setTimeout(timeout[, callback])__###
 >>> 当该socket 在 timeout 毫秒内一直处于不活跃的状态时，将 socket 设置为 timeout 。默认情况下 net.Socket 没有 timeout  
 
 >>> 当空闲超时时间被触发，socket会收到 timeout 事件，但是连接仍然不会被中断。用户必须手动 end() 或者 destroy() 该socket。  
@@ -301,12 +301,12 @@
 
 >> ------
 
->> __socket.unref()__
+>> ###__socket.unref()__###
 >>> 同 server.socket,不同的是返回值为该 socket。
 
 >> ------
 
->> __socket.write(data[, encoding][, callback])__
+>> ###__socket.write(data[, encoding][, callback])__###
 >>> 在该socket上面发送数据。encoding指定数据编码格式，默认为 "utf8"。  
 
 >>> 如果返回true，表示所有数据全部被成功推入内核缓存区（kernel buffer）。  
@@ -317,7 +317,7 @@
 
 >> ------
 
->> __net.connect(options[, connectListener])__
+>> ###__net.connect(options[, connectListener])__###
 >>> 工厂函数，返回一个 net.Socket 并且根据options进行自动连接。  
 
 >>> 该options 会被传递给 net.Socket的构造函数和 socket.connect方法。  
@@ -328,14 +328,14 @@
 
 >> ------
 
->> __net.connect(path[, connectListener])__
+>> ###__net.connect(path[, connectListener])__###
 >>> 工厂函数，返回一个 *UNIX* net.Socket并且根据path参数进行自动连接  
 
 >>> connectListener将会作为 connect 事件的一次性函数。
 
 >> ------
 
->> net.connect(port\[, host][, connectListener])
+>> ###__net.connect(port\[, host][, connectListener])__###
 >>> 工厂函数，返回一个 net.Socket 并且根据 port 和 host 自动连接。  
 
 >>> 如果host缺省，则会被赋值为 "localhost"。  
@@ -344,7 +344,7 @@
 
 >> ------
 
->> __net.createConnection(options[, connectListener])__
+>> ###__net.createConnection(options[, connectListener])__###
 >>> 工厂函数，返回一个 net.Socket 并且根据 options进行自动连接。  
 
 >>> options 会被传递给 net.Socket的构造函数和 socket.connect方法。  
@@ -355,14 +355,14 @@
 
 >> ------
 
->> __net.createConnection(path[, connectListener])__
+>> ###__net.createConnection(path[, connectListener])__###
 >>> 工厂函数，返回一个 *UNIX* net.Socket 并且根据 path进行自动连接  
 
 >>> connectListener将会被作为 conncet 事件的一次性函数。
 
 >> ------
 
->> __net.createConnection(port[, host][, connectListener])__
+>> ###__net.createConnection(port[, host][, connectListener])__###
 >>> 工厂函数，返回一个 net.Socket ，并且根据 port 和 host 进行自动连接。  
 
 >>> 如果 host 参数缺省，则会被赋值为 "localhost"。
@@ -371,7 +371,7 @@
 
 >> ------
 
->> __net.createServer([options][, connectionListener])__
+>> ###__net.createServer([options][, connectionListener])__###
 >>> 创建一个新的 server，connectionListener 会被自动设置为 connection 事件的处理函数。options 默认如下：{allowHalfOpen: false, pauseOnConnect: false}  
 
 >>> 如果 allowHalfOpen 为 true，则当 socket 的另一端发送 FIN 包的时候，该 socket 不i会自动发送 FIN 包。该 socket 变为不可读状态，但是仍然可写。所以需要显示调用 end()。  
@@ -382,15 +382,15 @@
 
 >> ------
 
->> __net.isIP(input)__
+>> ###__net.isIP(input)__###
 >>> 测试参数input是否是一个IP地址，如果返回 0 则代表该输入并非IP地址，返回 4 表示 IPv4，返回 6 则代表该地址为 IPv6。
 
 >> ------
 
->> __net.isIPv4(input)__
+>> ###__net.isIPv4(input)__###
 >>> 测试参数input代表的字符串是否是一个有效的IPv4地址。返回true为有效。
 
 >> ------
 
->> __net.isIPv6(input)__
+>> ###__net.isIPv6(input)__###
 >>> 测试参数input代表的字符串是否是一个有效的IPv6地址。返回true为有效。
