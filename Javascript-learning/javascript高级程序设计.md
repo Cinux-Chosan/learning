@@ -46,4 +46,512 @@
         people.indexOf(person); // -1 , 两个不同对象使用 == 或者 === 均返回false,此处使用 ===
         morePeople.indexOf(person);  //0 , 自身相等
 
-p96 迭代方法未看。
+>> 基本的迭代方法有：every(), filter(), forEach(), map(), some()。它们都接受两个参数，function(item, index, array){...} 和函数作用域对象（即影响this的值）。
+
+>> 归并方法：reduce()和reduceRight()。接受参数为函数function(前一个值，当前值，索引，数组对象)，迭代执行直到访问完数组所有项。首次执行从第二项开始，所以当前值是第二个，前一个值是第一个，以后每次的前一个值是上一次该函数调用的返回值。
+
+
+> [Date类型](p98 "javascript高级程序设计") 、 [regExp类型](p103 "javascript高级程序设计")  
+
+> Function类型
+>> 函数是对象，var sum = new Function(...params, string body);即最后一个参数始终是代表函数体的字符串。
+
+>> 直接声明的函数，解析器在执行环境中加载数据时，率先读取函数声明，并使其在执行任何代码之前可用。但是使用var f1 = function() {...} 这样方式声明的函数，只有等到执行到该行代码，才会被解释执行。
+
+>> 函数作为返回值：（在根据对象属性排序中非常有用）
+        function createComparisonFunction(propertyName) {
+          return function(obj1, obj2) {
+            var value1 = obj1[propertyName];
+            var value2 = obj2[propertyName];
+            return value1 - value2;
+          }
+        }
+        arr.sort(createComparisonFunction('name'));
+
+>> 函数内部属性：arguments 和 this。
+>>> 其中arguments有callee属性，该属性为指向拥有arguments对象的函数指针。另外，还有一个是caller，它保存着调用当前函数的函数的引用，如果是全局作用域中调用当前函数，它的值为 null，也可以使用 arguments.callee.caller，因为 callee指向的也是当前函数。
+
+>>> 严格模式中，访问arguments.callee和arguments.caller都会报错，也不能给函数的caller赋值。非严格模式中访问arguments.caller始终返回undefined。这些规则都是为了加强语言的安全性，这样第三方代码就不能在相同的环境里窥探其他代码了。
+
+>> 函数的属性和方法： length，
+>>> length表示函数定义时的参数个数。
+
+>>> prototype：不可枚举，所以通过 for...in无法发现该属性。
+
+>>> 每个函数都包含两个非继承而来地方法： apply() 和 call()。它们的作用可以用于传递参数和扩充函数的作用域。
+>>>> apply()接受2个参数：作用域 和 参数数组，第二个参数可以是Array实例，也可以是arguments对象：
+        function sum(num1, num2) {
+          return num1 + num2;
+        }
+        function callSum1(num1, num2) {
+          return sum.apply(this, arguments);
+        }
+        function callSum2(num1, num2) {
+          return sum.apply(this, [num1, num2]);
+        }
+        alert(callSum1(10, 10));   // 20
+        alert(callSum2(10, 10));   // 20
+
+>>>> call()与apply()的不同之处在于参数形式不同，但是结果都是一样。call需要明确传入参数，即第一个参数还是this，后面的参数会直接原样传递给函数。
+
+>>>> bind()：该方法会创建并返回一个函数实例，该函数实例的this被绑定到传入bind()的参数上。
+        window.color = "red";
+        var o = { color: "blue"};
+        function sayHello() {
+          alert(this.color);
+        }
+        var objSayHello = sayHello.bind(o);
+        objSayHello(); // blue  ，原因是通过bind返回的新函数实例objSayHello的this值为传入的参数 o，所以不管在哪里调用，都会显示 "blue"
+
+>>> 函数继承的 toString()和toLocalString()都会返回函数代码的字符串。而继承的valueOf()则返回函数代码，非字符串。
+
+>> 基本包装类型：在读取基本数据类型的值的时候，会在后台创建相应的基本包装类型，以方便调用一些方法来操作数据，比如 var str1 = "xxx"; var str2 = str1.subString(2);当读取数据的时候，后台会自动完成如下处理：
+    (1):创建一个类型的实例； var str1 = new String("xxx");
+    (2):在实例上调用指定方法；  var str2 = str1.subString(2);
+    (3):销毁实例。   str1 = null;
+>> 引用类型与基本包装类型的区别在于生命周期，使用 new 创建的引用类型实例，在离开当前作用于前，一直存在于内存中，而自动创建的包装类型则只会存在于一行代码的执行瞬间，而后立即被销毁。
+
+>> Object构造函数会根据传入的值的类型，返回相应的包装类型的实例：
+        var obj = new Object("xxx");
+        obj instanceof String;   // true
+
+>> 需要注意：使用 new 调用基本包装类型的构造函数，与直接调用转型函数不一样：
+        var value = "25";
+        var number = Number(value);  //转型函数
+        typeof number;  // "number"
+//
+        var obj = new Number(value);  //构造函数
+        typeof obj;  // "object"   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+。
