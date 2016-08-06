@@ -4,12 +4,12 @@
 >> 基本数据类型： Number
 >>> 可以通过给其toString()传入参数来表示按什么进制返回数据：
 
-        var n = 12;
-        n.toString(2);  // "1100"
+                var n = 12;
+                n.toString(2);  // "1100"
 >>> 可以通过 toFixed() 来按指定小数位数返回数值的字符串表示：
 
-        var num = 10;
-        num.toFixed(2);  // "10.00"
+                var num = 10;
+                num.toFixed(2);  // "10.00"
 
 >> 基本数据类型： string
 >>> charAt() , charCodeAt() 。 fromCharCode()根据提供的编码还原成字符或字符串，与charCodeAt()相反。
@@ -65,11 +65,11 @@
 >> indexOf() 和 lastIndexOf()：
 >>> 使用 === ，所以会有如下注意事项：
 
-        var person = { name: "zjj" };
-        var people = [ {name: "zjj"} ];
-        var morePeople = [person];
-        people.indexOf(person); // -1 , 两个不同对象使用 == 或者 === 均返回false,此处使用 ===
-        morePeople.indexOf(person);  // 0 , 自身相等
+                var person = { name: "zjj" };
+                var people = [ {name: "zjj"} ];
+                var morePeople = [person];
+                people.indexOf(person); // -1 , 两个不同对象使用 == 或者 === 均返回false,此处使用 ===
+                morePeople.indexOf(person);  // 0 , 自身相等
 
 >> 基本的迭代方法有：every(), filter(), forEach(), map(), some()。它们都接受两个参数，function(item, index, array){...} 和函数作用域对象（即影响this的值）。
 
@@ -85,14 +85,14 @@
 
 >> 函数作为返回值：（在根据对象属性排序中非常有用）
 
-        function createComparisonFunction(propertyName) {
-          return function(obj1, obj2) {
-            var value1 = obj1[propertyName];
-            var value2 = obj2[propertyName];
-            return value1 - value2;
-          }
-        }
-        arr.sort(createComparisonFunction('name'));
+                function createComparisonFunction(propertyName) {
+                  return function(obj1, obj2) {
+                    var value1 = obj1[propertyName];
+                    var value2 = obj2[propertyName];
+                    return value1 - value2;
+                  }
+                }
+                arr.sort(createComparisonFunction('name'));
 
 >> 函数内部属性：arguments 和 this。
 >>> 其中arguments有callee属性，该属性为指向拥有arguments对象的函数指针。另外，还有一个是caller，它保存着调用当前函数的函数的引用，如果是全局作用域中调用当前函数，它的值为 null，也可以使用 arguments.callee.caller，因为 callee指向的也是当前函数。
@@ -107,29 +107,29 @@
 >>> 每个函数都包含两个非继承而来地方法： apply() 和 call()。它们的作用可以用于传递参数和扩充函数的作用域。
 >>>> apply()接受2个参数：作用域 和 参数数组，第二个参数可以是Array实例，也可以是arguments对象：
 
-        function sum(num1, num2) {
-          return num1 + num2;
-        }
-        function callSum1(num1, num2) {
-          return sum.apply(this, arguments);
-        }
-        function callSum2(num1, num2) {
-          return sum.apply(this, [num1, num2]);
-        }
-        alert(callSum1(10, 10));   // 20
-        alert(callSum2(10, 10));   // 20
+                function sum(num1, num2) {
+                  return num1 + num2;
+                }
+                function callSum1(num1, num2) {
+                  return sum.apply(this, arguments);
+                }
+                function callSum2(num1, num2) {
+                  return sum.apply(this, [num1, num2]);
+                }
+                alert(callSum1(10, 10));   // 20
+                alert(callSum2(10, 10));   // 20
 
 >>>> call()与apply()的不同之处在于参数形式不同，但是结果都是一样。call需要明确传入参数，即第一个参数还是this，后面的参数会直接原样传递给函数。
 
 >>>> bind()：该方法会创建并返回一个函数实例，该函数实例的this被绑定到传入bind()的参数上。
 
-        window.color = "red";
-        var o = { color: "blue"};
-        function sayHello() {
-          alert(this.color);
-        }
-        var objSayHello = sayHello.bind(o);
-        objSayHello(); // blue  ，原因是通过bind返回的新函数实例objSayHello的this值为传入的参数 o，所以不管在哪里调用，都会显示 "blue"
+                window.color = "red";
+                var o = { color: "blue"};
+                function sayHello() {
+                  alert(this.color);
+                }
+                var objSayHello = sayHello.bind(o);
+                objSayHello(); // blue  ，原因是通过bind返回的新函数实例objSayHello的this值为传入的参数 o，所以不管在哪里调用，都会显示 "blue"
 
 >>> 函数继承的 toString()和toLocalString()都会返回函数代码的字符串。而继承的valueOf()则返回函数代码，非字符串。
 
@@ -141,27 +141,27 @@
 
 >> Object构造函数会根据传入的值的类型，返回相应的包装类型的实例：
 
-        var obj = new Object("xxx");
-        obj instanceof String;   // true
+                var obj = new Object("xxx");
+                obj instanceof String;   // true
 
 >> 需要注意：使用 new 调用基本包装类型的构造函数，与直接调用转型函数不一样：
 
-        var value = "25";
-        var number = Number(value);  //转型函数
-        typeof number;  // "number"
+                var value = "25";
+                var number = Number(value);  //转型函数
+                typeof number;  // "number"
 
-        var obj = new Number(value);  //构造函数
-        typeof obj;  // "object"   
+                var obj = new Number(value);  //构造函数
+                typeof obj;  // "object"   
 
 > Global对象
 >> URI编码：
 >>> encodeURI()和 encodeURIComponent()：encodeURI不会对本身属于URI特殊字符进行编码，如冒号，斜线，而encodeURIComponent会编码任何非标准字符。例如：
 
-        var uri = "https://github.com/Cinux-Chosan/no data"
-        encodeURI(uri)
-        "https://github.com/Cinux-Chosan/no%20data"
-        encodeURIComponent(uri)
-        "https%3A%2F%2Fgithub.com%2FCinux-Chosan%2Fno%20data"
+                var uri = "https://github.com/Cinux-Chosan/no data"
+                encodeURI(uri)
+                "https://github.com/Cinux-Chosan/no%20data"
+                encodeURIComponent(uri)
+                "https%3A%2F%2Fgithub.com%2FCinux-Chosan%2Fno%20data"
 >>> 所以encodeURI可以用于整个URI，而encodeURIComponent只能用于URI后面的附加字符串。
 
 >>> 与之对应的是 decodeURI()和decodeURIComponent()
@@ -170,15 +170,15 @@
 
 >>> window承担了Global对象的角色，如果需要获取Global对象，可以使用如下代码：
 
-        var global = function(){return this;}();
+                var global = function(){return this;}();
 >>> 因为没有给函数明确指定this的情况下，this的值都等于Global对象。（call(),apply()或者将函数添加为对象方法）
 
 > Math对象：Math是个对象，不是一个类。
 >> min() 和 max() ; 传入一组值，返回对应值： var max = Math.max(1,2,3); // 3。
 >>> 要找数组中的最大最小值，使用apply()，否则会返回 NaN：
 
-        var arr = [1,2,3,4];
-        var max = Math.max.apply(Math, arr);
+                var arr = [1,2,3,4];
+                var max = Math.max.apply(Math, arr);
 
 >> ceil() , floor() , round()
 
