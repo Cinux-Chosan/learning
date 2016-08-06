@@ -169,6 +169,7 @@
 >>> eval()：非严格模式下，eval()中的代码会被解析并且插入原位置，所以它能访问外部作用域，外部作用域也能访问它里面的变量和函数。但是严格模式下会报错。
 
 >>> window承担了Global对象的角色，如果需要获取Global对象，可以使用如下代码：
+
         var global = function(){return this;}();
 >>> 因为没有给函数明确指定this的情况下，this的值都等于Global对象。（call(),apply()或者将函数添加为对象方法）
 
