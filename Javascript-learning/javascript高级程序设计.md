@@ -59,6 +59,7 @@
 >> 直接声明的函数，解析器在执行环境中加载数据时，率先读取函数声明，并使其在执行任何代码之前可用。但是使用var f1 = function() {...} 这样方式声明的函数，只有等到执行到该行代码，才会被解释执行。
 
 >> 函数作为返回值：（在根据对象属性排序中非常有用）
+
         function createComparisonFunction(propertyName) {
           return function(obj1, obj2) {
             var value1 = obj1[propertyName];
@@ -80,6 +81,7 @@
 
 >>> 每个函数都包含两个非继承而来地方法： apply() 和 call()。它们的作用可以用于传递参数和扩充函数的作用域。
 >>>> apply()接受2个参数：作用域 和 参数数组，第二个参数可以是Array实例，也可以是arguments对象：
+
         function sum(num1, num2) {
           return num1 + num2;
         }
@@ -95,6 +97,7 @@
 >>>> call()与apply()的不同之处在于参数形式不同，但是结果都是一样。call需要明确传入参数，即第一个参数还是this，后面的参数会直接原样传递给函数。
 
 >>>> bind()：该方法会创建并返回一个函数实例，该函数实例的this被绑定到传入bind()的参数上。
+
         window.color = "red";
         var o = { color: "blue"};
         function sayHello() {
@@ -112,14 +115,16 @@
 >> 引用类型与基本包装类型的区别在于生命周期，使用 new 创建的引用类型实例，在离开当前作用于前，一直存在于内存中，而自动创建的包装类型则只会存在于一行代码的执行瞬间，而后立即被销毁。
 
 >> Object构造函数会根据传入的值的类型，返回相应的包装类型的实例：
+
         var obj = new Object("xxx");
         obj instanceof String;   // true
 
 >> 需要注意：使用 new 调用基本包装类型的构造函数，与直接调用转型函数不一样：
+
         var value = "25";
         var number = Number(value);  //转型函数
         typeof number;  // "number"
-//
+
         var obj = new Number(value);  //构造函数
         typeof obj;  // "object"   
 
