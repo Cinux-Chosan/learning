@@ -1,7 +1,20 @@
 
 
 
-##char 4
+>> 基本数据类型： Number
+>>> 可以通过给其toString()传入参数来表示按什么进制返回数据：
+
+        var n = 12;
+        n.toString(2);  // "1100"
+>>> 可以通过 toFixed() 来按指定小数位数返回数值的字符串表示：
+
+        var num = 10;
+        num.toFixed(2);  // "10.00"
+
+>> 基本数据类型： string
+>>>
+
+##char 4 —— 变量、作用域和内存问题
 >> typeof null 为 "object"
 
 >> js的5种基本类型： undefined, null, boolean, number, string。
@@ -17,7 +30,7 @@
 >> 为了消除循环引用带来的负面效果，最好手动断开原声JavaScript对象与DOM元素之间的连接，即 myObj.element = null;主要是解除全局对象、全局对象的属性、循环引用变量的引用。
 
 ---
-##char 5
+##char 5 —— 引用类型
 > 数组：
 >> 数组的toString()返回以逗号间隔的字符串，valueOf()返回的还是数组。但是在使用console.log等来输出数组的时候，会自动调用数组的toString()来构造字符串，实际上是调用了数组中每一项的toString()。
 
@@ -44,7 +57,7 @@
         var people = [ {name: "zjj"} ];
         var morePeople = [person];
         people.indexOf(person); // -1 , 两个不同对象使用 == 或者 === 均返回false,此处使用 ===
-        morePeople.indexOf(person);  //0 , 自身相等
+        morePeople.indexOf(person);  // 0 , 自身相等
 
 >> 基本的迭代方法有：every(), filter(), forEach(), map(), some()。它们都接受两个参数，function(item, index, array){...} 和函数作用域对象（即影响this的值）。
 
