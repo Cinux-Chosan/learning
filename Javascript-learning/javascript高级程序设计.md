@@ -173,9 +173,9 @@
         var global = function(){return this;}();
 >>> 因为没有给函数明确指定this的情况下，this的值都等于Global对象。（call(),apply()或者将函数添加为对象方法）
 
-> Math对象：
+> Math对象：Math是个对象，不是一个类。
 >> min() 和 max() ; 传入一组值，返回对应值： var max = Math.max(1,2,3); // 3。
->>> 要找数组中的最大最小值，使用apply()：
+>>> 要找数组中的最大最小值，使用apply()，否则会返回 NaN：
 
         var arr = [1,2,3,4];
         var max = Math.max.apply(Math, arr);
@@ -186,14 +186,59 @@
 >>> 值 = Math.floor(Math.random() * 可能的总值 + 第一个可能的值)
 
 
+##char 6 —— 面向对象的程序设计
+> 属性类型： 内部属性，是为了实现javascript引擎用的，因此在javascript中不能直接访问它们。为了表示属性是内部值，ECMA-262规范将它们放在两对方括号中，例如：[[Enumerable]]。
+>> 数据属性：数据属性包含一个数据值，它有4个描述其行为的特性：
+>>> [[Configurable]]：表示能否通过delete删除属性从而可以重新定义属性，能否修改属性的特性或者能否把属性修改成为访问器属性，默认为 true。
 
+>>> [[Enumerable]]：表示能否通过for-in循环返回该属性。默认为 true。
 
+>>> [[Writable]]：表示能否修改属性的值。默认为 true。
 
+>>> [[Value]]：包含属性的值，读取和写入都操作该值，默认为 undefined。
 
+>>> 修改以上属性，使用 Object.defineProperty()方法。接受三个参数：属性所在的对象、属性的名字，描述符对象(包含上面四个属性中一个或多个属性的对象)。在调用该方法的时候，如果不指定，除了[[Value]]，其它三个都为false。但是直接在对象上定义的属性(obj.propertyName = value)的特性默认为true。
 
+>>> [[Configurable]]一旦被设置为false，就不能再设置为true了。
 
+>> 访问器属性：不包含数据值，但是包含一对 getter和setter。它们负责在读取和写入数据前的一些操作和转换。也有4个特性：
+>>> [[Configurable]]: 表示能否通过delete删除属性从而重新定义属性，或者能否修改属性的特性，或者能否把属性修改为数据属性。对于直接在对象上定义的属性，默认为true。
 
+>>> [[Enumerable]]: 表示能否通过for-in循环返回属性。对于直接在对象上定义的属性，默认为true。
 
+>>> [[Get]]: 在读取该属性时调用的函数，默认undefined。
+
+>>> [[Set]]:　在写入该属性时调用的函数，默认为undefined。
+
+>>> 访问其属性不能直接定义，必须使用Object.defineProperty()来定义，示例如下：
+
+    var book = {
+      \_year: 2004,
+      edition: 1
+    };
+    Object.defineProperty(book, 'year', {
+      get: function() {
+        return this.\_year;
+      },
+      get: function(newValue) {
+        if (newValue > 2004) {
+          this.\_year = newValue;
+          this.edition += newValue - 2004;
+        }
+      }
+      });
+
+      book.year = 2005;
+      book.edition;  // 2
+>>> 如上例所示，属性以下环线(\_)开头，说明该属性需要通过对象的方法来访问，相当于是私有属性，不能直接调用（但是在浏览器中测试，可以直接取值和设置值）。例中的_year是数据属性，而通过Object.defineProperty定义的year则为访问器属性。只指定get意味着不能写入，只指定set则意味着不能读取，非严格模式下，只有set会返回undefined，严格模式会报错。
+
+>>> 在使用该方法之前，如果要定义访问器属性，一般都是用两个非标准的方法： \__defineGetter__() 和 \__defineSetter__()。如：
+
+        book.\__defineGetter__("year", function() {
+          return this.\_year;
+          });
+
+P142 定义多个属性
 
 
 
