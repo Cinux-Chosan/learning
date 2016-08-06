@@ -213,16 +213,16 @@
 >>> 访问其属性不能直接定义，必须使用Object.defineProperty()来定义，示例如下：
 
     var book = {
-      \_year: 2004,
+      _year: 2004,
       edition: 1
     };
     Object.defineProperty(book, 'year', {
       get: function() {
-        return this.\_year;
+        return this._year;
       },
       get: function(newValue) {
         if (newValue > 2004) {
-          this.\_year = newValue;
+          this._year = newValue;
           this.edition += newValue - 2004;
         }
       }
@@ -234,8 +234,8 @@
 
 >>> 在使用该方法之前，如果要定义访问器属性，一般都是用两个非标准的方法： \__defineGetter__() 和 \__defineSetter__()。如：
 
-        book.\__defineGetter__("year", function() {
-          return this.\_year;
+        book.__defineGetter__("year", function() {
+          return this._year;
           });
 
 P142 定义多个属性
