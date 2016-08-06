@@ -12,6 +12,18 @@
         num.toFixed(2);  // "10.00"
 
 >> 基本数据类型： string
+>>> charAt() , charCodeAt() 。 fromCharCode()根据提供的编码还原成字符或字符串，与charCodeAt()相反。
+
+>>> concat() 连接，不修改原字符串
+
+>>> slice()，substring()，substr():不修改原字符串。第一个参数为起始位置，前两者的第二个参数是表示最后一个字符之后的位置，而substr()的第二个参数表示从第一个字符开始的长度。
+
+>>> indexOf() , lastIndexOf()
+
+>>> toLowerCase() , toLocalLowerCase(), tuUpperCase() , toLocalUpperCase()
+
+>>> match(), search(), replace() 关于字符串的正则表达式，参考《javascript高级程序设计》p126
+
 >>>
 
 ##char 4 —— 变量、作用域和内存问题
@@ -141,10 +153,16 @@
         var obj = new Number(value);  //构造函数
         typeof obj;  // "object"   
 
+> Global对象
+>> URI编码：
+>>> encodeURI()和 encodeURIComponent()：encodeURI不会对本身属于URI特殊字符进行编码，如冒号，斜线，而encodeURIComponent会编码任何非标准字符。例如：
 
-
-
-
+        var uri = "https://github.com/Cinux-Chosan/no data"
+        encodeURI(uri)
+        "https://github.com/Cinux-Chosan/no%20data"
+        encodeURIComponent(uri)
+        "https%3A%2F%2Fgithub.com%2FCinux-Chosan%2Fno%20data"
+>>> 所以encodeURI可以用于整个URI，而encodeURIComponent只能用于URI后面的附加字符串。
 
 
 
