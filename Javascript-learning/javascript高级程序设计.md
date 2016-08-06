@@ -164,9 +164,25 @@
         "https%3A%2F%2Fgithub.com%2FCinux-Chosan%2Fno%20data"
 >>> 所以encodeURI可以用于整个URI，而encodeURIComponent只能用于URI后面的附加字符串。
 
+>>> 与之对应的是 decodeURI()和decodeURIComponent()
 
+>>> eval()：非严格模式下，eval()中的代码会被解析并且插入原位置，所以它能访问外部作用域，外部作用域也能访问它里面的变量和函数。但是严格模式下会报错。
 
+>>> window承担了Global对象的角色，如果需要获取Global对象，可以使用如下代码：
+        var global = function(){return this;}();
+>>> 因为没有给函数明确指定this的情况下，this的值都等于Global对象。（call(),apply()或者将函数添加为对象方法）
 
+> Math对象：
+>> min() 和 max() ; 传入一组值，返回对应值： var max = Math.max(1,2,3); // 3。
+>>> 要找数组中的最大最小值，使用apply()：
+
+        var arr = [1,2,3,4];
+        var max = Math.max.apply(Math, arr);
+
+>> ceil() , floor() , round()
+
+>> random()返回 [0, 1) 的随机数。
+>>> 值 = Math.floor(Math.random() * 可能的总值 + 第一个可能的值)
 
 
 
