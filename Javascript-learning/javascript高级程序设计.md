@@ -402,25 +402,108 @@
                     person.sayName();  // 这里只能通过sayName来访问传入的属性
 
 > 继承：通过原型链，让原型链保存父类的实例。
-p164
+
+> 默认原型链： 默认所有引用类型都是继承自 Object。所以默认会有Object.prototype属性作为最底层的父类Object用于保存toString()、valueOf() 方法的地方。
+
+> 确定原型和实例的关系： instanceOf 和 isPrototypeOf(); 只要是原型链出现过的构造函数，都会返回true。
+
+> 借用构造函数（最常用的一种方式）：在子类构造函数中调用超类的构造函数。函数只是在特定环境中执行的对象，因此通过使用apply()和call()方法也可以在新创建的对象上执行构造函数。比如超类的构造函数中有一句 this.isShow = false;通过在子类的构造函数中调用 SuperType.call(this);相当于在子类的该部分插入了 this.isShow = false;从而实现继承。
+
+                    function SuperType() {
+                      this.colors = ["red", "blue", "green"];
+                    }
+
+                    function SubType() {
+                      SuperType.call(this);
+                    }
+
+                    // instance1.hasOwnProperty('colors');返回true
+                    var instance1 = new SubType();    
+                    instance1.colors.push("black");
+                    instance1.colors;  // "red,blue,green,black"
+
+                    var instance2 = new SubType();
+                    instance2.colors;  // "red,blue,green"
 
 
+> 组合继承：由于借用构造函数执行了所有父类构造函数的代码，方法在构造函数中定义，函数复用就无从谈起，数据也会被共享，考虑到种种问题，所以将原型链和借用构造函数结合 —— 在父类的构造函数中定义属性（这样就不会共享属性），在父类的原型（prototype）上定义方法（将方法共享）。
+
+                    function SuperType(name) {
+                      this.name = name;
+                      this.colors = ["red", "blue", "green"];
+                    }
+
+                    SuperType.prototype.sayName = function() {
+                      alert(this.name);
+                    };
+
+                    function SubType(name, age) {
+                      // 继承属性
+                      SuperType.call(this, name);
+                      this.age = age;
+                    }
+
+                    // 继承方法
+                    SubType.prototype = new SuperType();
+                    SubType.prototype.constructor = SubType;
+                    SubType.prototype.sanAge = function() {
+                      alert(this.age);
+                    };
+
+                    var instance1 = new SubType("Nicholas", 29);
+                    instance1.colors.push("black");
+                    instance1.colors;   // "red,blue,green,black"
+                    instance1.sayName();   // "Nicholas"
+                    instance1.sanAge();   // 29
+
+                    var instance2 = new SubType("Greg", 29);
+                    instance2.colors;   // "red,blue,green"
+                    instance2.sayName();   // "Greg"
+                    instance2.sayAge();   // 27
 
 
+> 原型式继承 《javascript高级程序设计P169》,传入一个对象作为原型对象，如果继承自它的对象没有覆盖它的属性，就会以它的属性作为默认值（因为搜索该属性的时候，如果子类实例没有覆盖对应属性，就会搜索到它上面）。
 
+                      function obj(o) {
+                        function F(){};
+                        F.prototype = o;
+                        return new F();
+                      }
 
+                      var person = {
+                        name: "Nicholas",
+                        friends: ["Shelby", "Court", "Van"]
+                      };
 
+                      var anotherPerson = obj(person);
+                      anotherPerson.name = "Greg";   // 覆盖原型上的name属性
+                      anotherPerson.friends.push("Rob");
 
+                      var yetAnotherPerson = obj(person);
+                      yetAnotherPerson.name = "Linda";
+                      yetAnotherPerson.friends.push("Barbie");
 
+                      person.friends;   // "Shelby,Court,Van,Rob,Barbie"
+                      anotherPerson.name;   // "Greg"
+                      yetAnotherPerson.name;   // "Linda"
 
+>> ES5新增了 Object.create()方法规范化了原型式继承。该方法接受两个参数，一个是用作新对象原型的对象，一个是为新对象定义额外属性的对象（可选）。在传入一个参数的情况下，Object.create() 和上面的 obj()相同。 第二个参数与Object.defineProperties()的第二个参数格式相同，每个属性都是通过自己的描述符定义的，会覆盖原型对象上的同名属性：
 
+                      var person = {
+                        name: "Nicholas",
+                        friends: ["Shelby", "Court", "Van"]
+                      };
 
+                      var anotherPerson = Object.create(person, {
+                        name: {
+                          value: "Greg"
+                        }
+                      });
 
+                      anotherPerson.name;   // "Greg"
 
-
-
-
-
+> 寄生式继承
+>>
 
 
 
