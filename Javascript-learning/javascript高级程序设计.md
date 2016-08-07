@@ -238,25 +238,90 @@
                               return this._year;
                               });
 
-P142 定义多个属性
+
+>>> 定义多个属性，使用Object.defineProperties()：
+
+        var book = {};
+        Object.defineProperties(book, {
+          _year: {
+            value: 2004
+          },
+          edition: {
+            value: 1
+          },
+          year: {
+            get: function() {
+              return this._year;
+            },
+            set: function(newValue) {
+              if (newValue > 2004) {
+                this._year = newValue;
+                this.edition += newValue - 2004;
+              }
+            }
+          }
+        });
 
 
+>>> 读取属性的特性，使用 Object.getOwnPropertyDescriptor()方法，可以取得给定属性的描述符。接收两个参数：属性所依附的对象和属性名称，返回值为一个对象。如果是数据属性，该对象属性有 configurable, enumerable, writable, value；如果是访问器属性，该对象属性有 configurable, enumerable, get, set。
+
+                var book = {};
+                Object.defineProperties(book, {
+                  _year: {
+                    value: 2004
+                  },
+
+                  edition: {
+                    value: 1
+                  },
+
+                  year: {
+                    get: function() {
+                      return this._year;
+                    },
+
+                    set: function(newValue) {
+                      if (newValue > 2004) {
+                        this._year = newValue;
+                        this.edition += newValue - 2004;
+                      }
+                    }
+                  }
+                });
+
+                var descriptor = Object.getOwnPropertyDescriptor(book, "_year");
+                descriptor.value;  // 2004
+                descriptor.configurable;  // false ,不可配置。
+                typeof descriptor.get;  // "undefined"
+
+                var descriptor = Object.getOwnPropertyDescriptor(book, "year");
+                descriptor.value;  // undefined
+                descriptor.enumerable;  // false
+                typeof descriptor.get;  // function
 
 
+> 创建对象：
 
+>> 使用 new 创建对象新实例，会经历 4 个步骤：
+>>> 创建一个新对象；
 
+>>> 将构造函数的作用域赋值给新对象（因此this就指向了这个新对象）；如constructor.call(o);
 
+>>> 执行构造函数代码。
 
+>>> 返回新对象。
 
+>> 对象都有一个constructor属性，指向其构造函数。
 
+>> 对于没有使用new 操作符而直接使用构造函数，该函数内部并没有创建新对象并返回该对象，而是调用 this创建属性，那么所有属性会被赋值给window，因为此时函数的this是window。
 
+>> 对于没有使用new操作符，可以使用 var o = new Object(); constructor.call(o, params);的形式来创建对象。
 
+>> 继承：每个函数都有一个 prototype属性，该属性为一个指针，指向一个对象。这个对象的用途就是包含可以由特定类型的所有实例共享的属性和方法，说简单一点，就是所有对象共享原型对象上的方法和属性。
 
+>> 无论什么时候，创建一个新函数，就会根据一组特定的规则成为该函数创建一个 prototype属性，这个属性指向函数的原型对象。在默认情况下，所有原型对象都会自动获得一个 constructor属性，这个属性包含一个指向 prototype 属性所在函数的指针。如：Person.prototype.constructor === Person;
 
-
-
-
-
+>> 创建一个自定义的构造函数过后，其原型对象默认只会取得 constructor 属性。至于其它方法，都是从 Object继承而来的。当调用构造函数创建一个新实例后，该实例的内部将包含一个指针[[Prototype]]，指向构造函数的原型对象，注意：这个连接时存在于实例与构造函数的原型对象之间，而不是实例与构造函数之间。[[Prototype]]没有标准的访问方式，但是Firefox, Safari和 Chrome在每个对象上都支持一个__proto__属性。
 
 
 
