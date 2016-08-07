@@ -438,13 +438,13 @@
                     };
 
                     function SubType(name, age) {
-                      // 继承属性
-                      SuperType.call(this, name);
+                      // 继承属性，由于是第二次调用超类构造函数，所以是屏蔽超类属性
+                      SuperType.call(this, name);   // 第二次调用超类构造函数
                       this.age = age;
                     }
 
                     // 继承方法
-                    SubType.prototype = new SuperType();
+                    SubType.prototype = new SuperType();   // 第一次调用超类构造函数
                     SubType.prototype.constructor = SubType;
                     SubType.prototype.sanAge = function() {
                       alert(this.age);
@@ -502,8 +502,44 @@
 
                       anotherPerson.name;   // "Greg"
 
-> 寄生式继承
->>
+> 寄生式继承：创建一个用于封装的继承过程的函数，该函数内部以某种方式来增强对象，最后再像真的做了所有工作一样返回对象。
+
+                      function createAnother(origin) {
+                        var clone = obj(origin);   // obj为原型式继承中的示例函数
+                        clone.sayHi = function() {
+                          alert("Hi");
+                        };
+                        return clone;
+                      }
+
+> 寄生组合式继承：避免调用两次SuperType，还避免了在SubType.prototype上面创建不必要的多余的属性。与此同时，还能保持原型链不变，因此还能够正常使用instanceOf和isPrototypeOf()，被认为是最理想的继承方式。
+
+                      function inheritPrototype(subType, superType) {
+                        // obj为原型式继承中的示例函数
+                        var prototype = obj(superType.prototype);
+                        prototype.constructor = subType;
+                        subType.prototype = prototype;
+                      }
+
+                      function SuperType(name) {
+                        this.name = name;
+                        this.colors = ["red", "blue", "green"];
+                      }
+
+                      SuperType.prototype.sayName = function() {
+                        alert(this.name);
+                      };
+
+                      function SubType(name, age) {
+                        SuperType.call(this, name);
+                        this.age = age;
+                      };
+
+                      inheritPrototype(SubType, SuperType);
+
+                      SubType.prototype.sayAge = function() {
+                        alert(this.age);
+                      };
 
 
 
