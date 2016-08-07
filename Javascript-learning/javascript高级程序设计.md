@@ -373,7 +373,7 @@
 >> 手动恢复的constructor的[[Enumerable]]为true ,而默认情况下原生的constructor的值应该是 false，此时可以通过 Object.defineProperty()来配置该constructor。
 
 
->> 寄生模式： 在函数内通过 new Object()创建一个新对象实例，然后在对象实例上进行操作，最后返回该对象。在外部调用该函数的时候，通过new操作符调用。（如果函数没有返回内容，则new操作符会创建一个对象实例，如果有返回值，则会返回该返回值）
+>> **寄生模式：** 在函数内通过 new Object()创建一个新对象实例，然后在对象实例上进行操作，最后返回该对象。在外部调用该函数的时候，通过new操作符调用。（如果函数没有返回内容，则new操作符会创建一个对象实例，如果有返回值，则会返回该返回值）
 
                       function Person(name, age) {
                         var o = new Object();
@@ -388,7 +388,7 @@
                       friend.sayName();  // "Nicholas"
 >> 寄生模式带来的问题就是，返回的对象与构造函数的原型属性之间没有关系，不能用instanceOf来确定类型
 
->> 稳妥的构造函数：禁止或者不使用this和new。通过方法调用传入构造函数的属性。
+>> **稳妥的构造函数：** 禁止或者不使用this和new。通过方法调用传入构造函数的属性。
 
                     function Person(name, age) {
                       var o = new object();  
@@ -403,11 +403,11 @@
 
 > 继承：通过原型链，让原型链保存父类的实例。
 
-> 默认原型链： 默认所有引用类型都是继承自 Object。所以默认会有Object.prototype属性作为最底层的父类Object用于保存toString()、valueOf() 方法的地方。
+> **默认原型链：** 默认所有引用类型都是继承自 Object。所以默认会有Object.prototype属性作为最底层的父类Object用于保存toString()、valueOf() 方法的地方。
 
 > 确定原型和实例的关系： instanceOf 和 isPrototypeOf(); 只要是原型链出现过的构造函数，都会返回true。
 
-> 借用构造函数（最常用的一种方式）：在子类构造函数中调用超类的构造函数。函数只是在特定环境中执行的对象，因此通过使用apply()和call()方法也可以在新创建的对象上执行构造函数。比如超类的构造函数中有一句 this.isShow = false;通过在子类的构造函数中调用 SuperType.call(this);相当于在子类的该部分插入了 this.isShow = false;从而实现继承。
+> **借用构造函数（一种常用方式）：** 在子类构造函数中调用超类的构造函数。函数只是在特定环境中执行的对象，因此通过使用apply()和call()方法也可以在新创建的对象上执行构造函数。比如超类的构造函数中有一句 this.isShow = false;通过在子类的构造函数中调用 SuperType.call(this);相当于在子类的该部分插入了 this.isShow = false;从而实现继承。
 
                     function SuperType() {
                       this.colors = ["red", "blue", "green"];
@@ -426,7 +426,7 @@
                     instance2.colors;  // "red,blue,green"
 
 
-> 组合继承：由于借用构造函数执行了所有父类构造函数的代码，方法在构造函数中定义，函数复用就无从谈起，数据也会被共享，考虑到种种问题，所以将原型链和借用构造函数结合 —— 在父类的构造函数中定义属性（这样就不会共享属性），在父类的原型（prototype）上定义方法（将方法共享）。
+> **组合继承：** 由于借用构造函数执行了所有父类构造函数的代码，方法在构造函数中定义，函数复用就无从谈起，数据也会被共享，考虑到种种问题，所以将原型链和借用构造函数结合 —— 在父类的构造函数中定义属性（这样就不会共享属性），在父类的原型（prototype）上定义方法（将方法共享）。
 
                     function SuperType(name) {
                       this.name = name;
@@ -462,7 +462,7 @@
                     instance2.sayAge();   // 27
 
 
-> 原型式继承 《javascript高级程序设计P169》,传入一个对象作为原型对象，如果继承自它的对象没有覆盖它的属性，就会以它的属性作为默认值（因为搜索该属性的时候，如果子类实例没有覆盖对应属性，就会搜索到它上面）。
+> **原型式继承** 《javascript高级程序设计P169》,传入一个对象作为原型对象，如果继承自它的对象没有覆盖它的属性，就会以它的属性作为默认值（因为搜索该属性的时候，如果子类实例没有覆盖对应属性，就会搜索到它上面）。
 
                       function obj(o) {
                         function F(){};
@@ -487,7 +487,7 @@
                       anotherPerson.name;   // "Greg"
                       yetAnotherPerson.name;   // "Linda"
 
->> ES5新增了 Object.create()方法规范化了原型式继承。该方法接受两个参数，一个是用作新对象原型的对象，一个是为新对象定义额外属性的对象（可选）。在传入一个参数的情况下，Object.create() 和上面的 obj()相同。 第二个参数与Object.defineProperties()的第二个参数格式相同，每个属性都是通过自己的描述符定义的，会覆盖原型对象上的同名属性：
+>> ES5新增了 **Object.create()** 方法规范化了原型式继承。该方法接受两个参数，一个是用作新对象原型的对象，一个是为新对象定义额外属性的对象（可选）。在传入一个参数的情况下，Object.create() 和上面的 obj()相同。 第二个参数与Object.defineProperties()的第二个参数格式相同，每个属性都是通过自己的描述符定义的，会覆盖原型对象上的同名属性：
 
                       var person = {
                         name: "Nicholas",
@@ -502,7 +502,7 @@
 
                       anotherPerson.name;   // "Greg"
 
-> 寄生式继承：创建一个用于封装的继承过程的函数，该函数内部以某种方式来增强对象，最后再像真的做了所有工作一样返回对象。
+> **寄生式继承：** 创建一个用于封装的继承过程的函数，该函数内部以某种方式来增强对象，最后再像真的做了所有工作一样返回对象。
 
                       function createAnother(origin) {
                         var clone = obj(origin);   // obj为原型式继承中的示例函数
@@ -512,7 +512,7 @@
                         return clone;
                       }
 
-> 寄生组合式继承：避免调用两次SuperType，还避免了在SubType.prototype上面创建不必要的多余的属性。与此同时，还能保持原型链不变，因此还能够正常使用instanceOf和isPrototypeOf()，被认为是最理想的继承方式。
+> **寄生组合式继承：** 避免调用两次SuperType，还避免了在SubType.prototype上面创建不必要的多余的属性。与此同时，还能保持原型链不变，因此还能够正常使用instanceOf和isPrototypeOf()，被认为是最理想的继承方式。
 
                       function inheritPrototype(subType, superType) {
                         // obj为原型式继承中的示例函数
