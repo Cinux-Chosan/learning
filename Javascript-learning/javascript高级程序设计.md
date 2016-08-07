@@ -325,7 +325,7 @@
 
 >> **注意注意注意：对于构造函数，其属性为prototype，对于对象实例，其属性为 [[Prototype]]，[[Prototype]]通过对象的属性__proto__访问。其实他们都是同一个东西**
 
->> 通过prototype（或者[[Prototype]]，即__proto__）的属性isPrototypeOf()方法可以来确定两个对象的 [[Prototype]] 或者 对象的[[Prototype]]与构造函数的prototype属性是否是同一个：
+>> 通过prototype（或者[[Prototype]]，即\__proto__）的属性isPrototypeOf()方法可以来确定两个对象的 [[Prototype]] 或者 对象的[[Prototype]]与构造函数的prototype属性是否是同一个：
 
                 Person.prototype.isPrototypeOf(person1);  // true
                 person1.__proto__.isPrototypeOf(person2);  // true
