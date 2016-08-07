@@ -323,14 +323,14 @@
 
 >> 创建一个自定义的构造函数过后，其原型对象默认只会取得 constructor 属性。至于其它方法，都是从 Object继承而来的。当调用构造函数创建一个新实例后，该实例的内部将包含一个指针[[Prototype]]，指向构造函数的原型对象，注意：这个连接时存在于实例与构造函数的原型对象之间，而不是实例与构造函数之间。[[Prototype]]没有标准的访问方式，但是Firefox, Safari和 Chrome在每个对象上都支持一个__proto__属性。
 
->> 注意注意注意：对于构造函数，其属性为prototype，对于对象实例，其属性为 [[Prototype]]，[[Prototype]]通过对象的属性__proto__访问。
+>> **注意注意注意：对于构造函数，其属性为prototype，对于对象实例，其属性为 [[Prototype]]，[[Prototype]]通过对象的属性__proto__访问。其实他们都是同一个东西**
 
 >> 通过prototype（或者[[Prototype]]，即__proto__）的属性isPrototypeOf()方法可以来确定两个对象的 [[Prototype]] 或者 对象的[[Prototype]]与构造函数的prototype属性是否是同一个：
 
                 Person.prototype.isPrototypeOf(person1);  // true
                 person1.__proto__.isPrototypeOf(person2);  // true
 
-
+>> ES5 还新增了一个方法叫 Object.getPrototypeOf()用来返回 [[Prototype]]的值。
 
 
 
