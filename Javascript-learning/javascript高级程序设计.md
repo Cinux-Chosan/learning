@@ -332,26 +332,77 @@
 
 >> ES5 还新增了一个方法叫 Object.getPrototypeOf()用来返回 [[Prototype]]的值。
 
+>> 原型最初只有一个constructor属性，而该属性也是共享的，因此可以通过对象实例访问。
+
+>> 可以通过对象实例访问原型链中的值，但是却无法通过对象实例修改原型中的值，因为在当前对象上调用原型链上的同名属性，会在当前对象上创建该属性，因此会覆盖原型链上的同名属性，即在查找属性的时候，在本对象上找到了该属性，就不会再继续查找原型链，相当于把原型链上的该属性屏蔽掉了，但是只限于当前对象实例。这样做只是限制我们直接在对象上读取该属性，但是还是可以通过原型链访问，因为该属性并没有被修改。通过delete操作符删除当前对象的同名属性过后，又可以恢复我们在该对象上直接访问原型链上的属性，如果name属性在原型链上，delete person.name并不会操作到原型链上的name属性。
+
+>> 检测一个属性是实例属性，还是原型链属性，使用从Object继承而来的hasOwnProperty()方法。只有当实例上存在该属性，而非原型链上存在该属性，该函数才会返回true。同理，要取得原型对象上的属性描述符，需要在原型对象上调用 Object.getOwnPropertyDescriptor()。
+
+>> in操作符：单独使用时，如果对象能访问到某个属性，无论是在当前对象实例中还是原型链中，只要能访问到，就返回true。
+
+                // 检测函数是否属于原型链上的函数
+                function hasPrototypeProperty(obj, propName) {
+                  return !obj.hasOwnProperty(name) && (name in obj);
+                }
+
+>> 在使用 for-in 循环时，返回的所有能够通过对象访问的（无论实例中的属性还是原型链中的属性）、可枚举的属性（即[[Enumerable]] 为 false）。根据规定，所有开发人员定义的属性都是可枚举的属性（IE8即更早的版本是例外）。
+
+>> 要获取对象上的所有可枚举实例属性，可以使用ES5的 Object.keys()方法。如果想要获得所有实例属性，无论是否可枚举，使用 Object.getOwnPropertyNames()。
+
+>> 更简单的原型语法：由于每次添加一个属性就需要敲一遍 Person.prototype。为了减少不必要的输入，常见的做法是使用一个包含所有属性和方法的对象字面量来重写原型对象：
+
+                        function Person(){};
+                        Person.prototype = {
+                          name: 'Nicholas',
+                          age: 23,
+                          sayName: function() {
+                            alert(this.name);
+                          }
+                        };
+>> 但是这样做的话，prototype上的constructor不等于Person，而是创建它的 Object。此时虽然通过instanceof还能返回正确结果，但是无法通过constructor确定对象的类型了。如果constructor的值非常重要，可以手动将它恢复成Person:
+
+                        function Person(){};
+                        Person.prototype = {
+                          constructor: Person,
+                          name: 'Nicholas',
+                          age: 23,
+                          sayName: function() {
+                            alert(this.name);
+                          }
+                        };
+>> 手动恢复的constructor的[[Enumerable]]为true ,而默认情况下原生的constructor的值应该是 false，此时可以通过 Object.defineProperty()来配置该constructor。
 
 
+>> 寄生模式： 在函数内通过 new Object()创建一个新对象实例，然后在对象实例上进行操作，最后返回该对象。在外部调用该函数的时候，通过new操作符调用。（如果函数没有返回内容，则new操作符会创建一个对象实例，如果有返回值，则会返回该返回值）
 
+                      function Person(name, age) {
+                        var o = new Object();
+                        o.name = name;
+                        o.age = age;
+                        o.sayName = function() {
+                          alert(this.name);
+                        };
+                        return o;
+                      }
+                      var friend = new Person("Nicholas", 29);  // 如果Person内部没有返回值，new操作符会返回一个对象实例，如果有返回值，使用new将得到该返回值
+                      friend.sayName();  // "Nicholas"
+>> 寄生模式带来的问题就是，返回的对象与构造函数的原型属性之间没有关系，不能用instanceOf来确定类型
 
+>> 稳妥的构造函数：禁止或者不使用this和new。通过方法调用传入构造函数的属性。
 
+                    function Person(name, age) {
+                      var o = new object();  
+                      o.sayName = function() {
+                        alert(name);
+                      };
+                      return o;   
+                    }
 
+                    var person = Person("Nicholas", 23);
+                    person.sayName();  // 这里只能通过sayName来访问传入的属性
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+> 继承：通过原型链，让原型链保存父类的实例。
+p164
 
 
 
