@@ -31,7 +31,7 @@
 
 >> js的5种基本类型： undefined, null, boolean, number, string。
 
->> 检测对象用 variable instanceof constructor，如 arr instanceof Array。但是由于可能存在多个框架，所以可能存在多个Array构造函数，所以使用Array.isArray()来判断比较好。
+>> 检测对象用 variable instanceof constructor，如 arr instanceof Array。但是 **由于可能存在多个框架，所以可能存在多个Array构造函数，所以使用Array.isArray()来判断比较好。**
 
 >> 每个执行环境都有一个与之对应的变量对象，环境中定义的所有变量和函数都保存在这个对象中，虽然我们编码的时候无法访问到它，但是解析器处理数据时会使用它。最开始只有一个arguments对象。函数的作用域链至少包含两个对象，即arguments和全局对象。
 
