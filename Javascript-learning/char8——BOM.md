@@ -26,7 +26,39 @@
 >> 另外，由于每个window对象都包含原生类型的构造函数，因此每个框架都有一套自己的构造函数并且一一对应，但并不相等。如：top.Object == top.frames[0].Object;返回false。这个问题会影响到对跨框架传递的对象使用 instanceof 操作符。
 
 
-> window.open：P199
+> window.open()：既可以导航到一个特定的URL，也可以打开一个新的浏览器窗口，返回指向新窗口的引用。
+>> 参数1： 要加载的URL
+
+>> 参数2： 目标窗口，如果是框架名称，就会在该框架下加载第一个参数指向的URL，即 target属性值，如 <a href="http://www.baidu.com" target="topFrame"></a>在如果有窗口或者框架名叫 topFrame的情况下在该窗口加载参数1的URL，该参数还可以是_self或者_parent或者_top或者_blank。
+
+>> 参数3： 特性字符串，包含了新建窗口或标签的属性，如高度宽度，以逗号分隔，但是整个字符串中不允许有空格，以下是一些默认设置：
+>>> fullscreen: yes/no  是否最大化，仅限IE
+
+>>> height: numeric  新窗口高度，不能小于100
+
+>>> width: numeric  新窗口宽度，不能小于100
+
+>>> left: numeric  非负值，新窗口左坐标
+
+>>> top: numeric  非负值，新窗口上坐标
+
+>>> loaction:  yes/no  是否在浏览器窗口显示地址栏，如果为no，地址栏可能被隐藏或者禁用
+
+>>> menubar:  yes/no  是否在浏览器中显示菜单栏，默认no
+
+>>> resizable:  yes/no  是否可改变新窗口大小，默认no
+
+>>> scrollbars: yes/no   如果内容在视口内显示不下，是否允许滚动，默认no
+
+>>> status:  yes/no  是否在浏览器窗口显示状态栏，默认no
+
+>>> toolbar:  yes/no  是否在浏览器中显示工具栏，默认no
+
+
+
+>> 参数4： 布尔值，代表是否取代浏览器历史记录中的当前加载页面，只在不打开新窗口的情况下使用
+
+
 
 
 
