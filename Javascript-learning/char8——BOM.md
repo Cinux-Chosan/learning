@@ -80,7 +80,7 @@
 
 >> 大多数浏览器都内置弹出窗口屏蔽程序，也有部分是第三方插件。如果是内置程序，大多数情况 window.open会返回null，使用以下方式检测：
 
-                  var wroxWin = window.open("http://www.wrox.com", "\_blank");
+                  var wroxWin = window.open("http://www.wrox.com", "_blank");
                   if (wroxWin == null) {
                     alert("The popup was blocked!");
                   }
@@ -88,7 +88,7 @@
 
                   var blocked = false;
                   try{
-                    var wroxWin = window.open("http://www.wrox.com", "\_blank");
+                    var wroxWin = window.open("http://www.wrox.com", "_blank");
                     if (wroxWin == null) {
                       blocked = true;
                     }
