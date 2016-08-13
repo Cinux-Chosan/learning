@@ -179,29 +179,93 @@
 >>>> 将URL修改为 "http://www.yahoo.com:8080/WileyCDA/"
 >>>>> location.port = 8080;
 
->>> IE8,FireFox1,Safari 2+,Opera 9+,Chrome修改hash值会在浏览器中生成一条新纪录
->>> **当通过上述任一方式修改URL后，浏览器历史纪录中会生成一条新纪录，因此用户通过点击“后退”按钮都会导航到前一个页面，要禁用这种行为，可以使用replace()方法，这个方法只接受一个参数，即要导航到的URL，结果虽然会导致浏览器的位置改变，但不会在历史纪录中生成新纪录。调用replace()方法过后，用户不能返回到前一个页面。**
+>>> IE8,FireFox1,Safari 2+,Opera 9+,Chrome修改hash值会在浏览器中生成一条新纪录。
+>>> **当通过上述任一方式修改URL后，浏览器历史纪录中会生成一条新纪录，因此用户通过点击“后退”按钮都会导航到前一个页面，要禁用这种行为，可以使用location.replace()方法，这个方法只接受一个参数，即要导航到的URL，结果虽然会导致浏览器的位置改变，但不会在历史纪录中生成新纪录。调用replace()方法过后，用户不能返回到前一个页面。**
 
+>>> 最后一个与位置有关的函数是location.reload()，如果不传递任何参数，则会以最有效的方式重载当前页面，即如果自上次请求以来并没有改变，页面就会从浏览器缓存中重新加载页面，如果要强制从服务器重新加载页面，就需要传递参数true。位于reload()之后的代码可能会也可能不会执行，这取决于网络延迟或者系统资源等因素，为此，最好将reload()放在代码的最后一行。
 
+> navigator对象，用于识别客户端浏览器的属性。具体属性参考《javascript高级程序设计》P210，下列罗列出所有浏览器支持的属性：
+>>> appCodeName: 浏览器的名称，通常都是Mozilla，即使在非Mozilla浏览器中也是如此。
 
+>>> appName: 完整的浏览器名称。
 
+>>> appVersion: 浏览器的版本，一般不与实际浏览器的版本对应。
 
+>>> cookieEnabled: cookie是否可用。
 
+>>> javaEnabled: 当前浏览器是否支持java。
 
+>>> mimeTypes: 浏览器中注册的MIME类型数组。
 
+>>> platform: 浏览器所在系统平台。
 
+>>> plugins: 浏览器中安装的插件信息的数组，其中包括每一个插件的信息。
 
+>>> userAgent: 浏览器的用户代理字符串。
 
+>> 插件检测：检测浏览器是否安装了特定的插件，在非IE浏览器中，可以使用plugins数组来达到目的，该数组的每一项包含：
+>>> name: 插件名字，一般来说name属性会包含检测插件必需的所有信息，但也不完全如此。
 
+>>> description: 插件的描述
 
+>>> filename: 插件的文件名
 
+>>> length: 插件所处理的MIME类型的数量。
 
+                  // 检测插件（IE无效）
+                  function hasPlugin(name) {
+                    name = name.toLowerCase();
+                    for (var i = 0; i < navigator.plugins.length; ++i) {
+                      if (navigator.plugins[i].name.toLowerCase().indexOf(name) > -1) {
+                        return true;
+                      }
+                    }
+                    return false;
+                  }
 
+>>>> 每个插件对象本身也是一个MimeType对象数组，这些对象可以通过方括号来访问，每个MimeType对象有4个属性，包括MIME类型的描述description、回指插件对象的enabledPlugin、表示与MIME类型对应的文件扩展名的字符串suffixes(以逗号分隔)和表示完整MIME类型字符串的type。
 
+>>> IE不支持Netscape式的插件，在IE中检车插件的唯一方式就是使用专有的ActiveXObject类型，并尝试创建一个特定的插件实例，IE是以COM对象的方式实现插件的，而COM对象使用唯一标识符。因此要想检查特定的插件，就必须知道其COM标识符。例如Flash标识符是ShockwaveFlash.ShockwaveFlash：
 
+                    // IE中检测插件
+                    function hasIEPlugin(name) {
+                      try {
+                        new ActiveXObject(name);
+                        return true;
+                      } catch (e) {
+                        return false;
+                      }
+                    }
 
+                    hasIEPlugin("ShockwaveFlash.ShockwaveFlash");   // true
 
+>>> 用于检测所有浏览器的插件:
 
+                    function hasXPlugin(name) {
+                      var result = hasPlugin(name);   // 先检测非IE
+                      if (!result) {
+                        result = hasIEPlugin(name + '.' + name);   // 貌似IE标识符都是以.号连接的两个相同名称
+                      }
+                      return result;
+                    }
+
+>> 注册处理程序，navigator中新增的registerContentHandler()和registerProtocolHandler()方法可以让一个站点指明它可以处理特定的类型信息。具体参考《javascript高级程序设计》P213
+
+> screen对象，具体参考《javascript高级程序设计》P214
+
+> history对象：保存着用户从窗口打开那一刻起的上网历史纪录。因为它是window的属性，所以每个窗口、标签页、框架都有自己的history对象与特定的window对象关联。出于安全方面的考虑，开发人员无法得知用户浏览过的URL，不过借由用户访问过的页面列表，同样可以在不知道实际URL的情况下实现 前进/后退
+>> go(): 在用户的历史纪录中任意跳转，
+>>> 参数表示跳转方向和跳转的页数，正数为向前（前进），负数为后退（后退），如 history.go(-2)表示后退两页。
+
+>>> 参数可以为一个字符串，此时浏览器会跳转到历史记录中包含该字符串的第一个位置，可能后退也可能前进。具体要看哪个位置离得更近。如果历史纪录中不包含该字符串，则什么都不做。
+
+>>> 可以使用back()和forward()来代替go()函数。
+
+>>> history的length属性保存着历史纪录的数量，包括所有历史纪录，即所有向前向后的记录。对于加载到窗口、标签页或者框架中的第一个页面而言，history.length为0，所以可以通过该属性检查用户是否是一开始就打开了该页面：
+
+                        if (history.length == 0) {
+                          // 这应该是用户打开窗口后的第一个页面
+                        }
 
 
 
