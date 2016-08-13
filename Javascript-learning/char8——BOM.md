@@ -120,15 +120,64 @@
 >> find()启动查找窗口
 
 
-location对象P207
+> location 对象：提供与当前窗口中加载的文档有关的信息，还提供一些导航功能。
+>> location对象既是window对象的属性，也是document对象的属性。
+>> 属性：
+>>> hash: 返回URL中的hash值，即#号后跟的0或多个字符，如果URL不包含散列值，则返回空字符串，如 "#contents"
 
+>>> host: 返回服务器名称和端口号，如 "www.wrox.com:80"
 
+>>> hostname: 返回不带端口号的服务器名称
 
+>>> href: 返回当前加载页面的完URL，location.toString()也返回该值。
 
+>>> pathname: 返回URL中的目录和文件名，如 "/WileyCDA/"
 
+>>> port: 返回URL中指定的端口号，如果无则返回空字符串
 
+>>> protocol: 返回页面使用的协议，如 "http:"
 
+>>> search: 返回URL中的查询字符串，以？开头，如 "?q=javascript"
 
+>> 尽管location给出的属性能够访问大多数信息，但是对于访问查询字符串的具体信息并不方便。所以可以封装函数，处理单独的查询数据：
+
+                    function getQueryStringArgs() {
+                      var qstr = (location.search.length > 0 ? location.search.substring(1) : ""),
+                        args = {},
+                        items = qstr.length ? qstr.split("&") : [],
+                        item = null,
+                        name = null,
+                        value = null,
+                        i = 0,
+                        len = items.length;
+
+                        for (i = 0, i < len; ++i) {
+                          item = items[i].splic("=");
+                          name = decodeURIComponent(item[0]);
+                          value = decodeURIComponent(item[1]);
+                          if (name.length) {
+                            args[name] = value;
+                          }
+                        }
+                        return args;
+                    }
+
+>> 位置操作：每次修改除hash之外的location属性都会以新的URL重新加载页面。URL值如果不带协议类型（如 http://）则会直接加在当前URL后面。
+>>> 常用的是使用　location.assign()来改变浏览器位置，
+
+>>> 直接将location.href或者location设置为一个URL值，也会调用assign()。
+
+>>> 假设初始URL为 http://www.wrox.com/WileyCDA/
+>>>> 将URL修改为 "http://www.wrox.com/WileyCDA/#section1"
+>>>>> location.hash = "#section1";
+>>>> 将URL修改为 "http://www.wrox.com/WileyCDA/?q=javascript"
+>>>>> location.search = "?q=javascript";
+>>>> 将URL修改为 "http://www.yahoo.com/WileyCDA/"
+>>>>> location.hostname = "www.yahoo.com";
+>>>> 将URL修改为 "http://www.yahoo.com/mydir/"
+>>>>> location.pathname = "mydir";
+>>>> 将URL修改为 "http://www.yahoo.com:8080/WileyCDA/"
+>>>>> location.port = 8080;
 
 
 
