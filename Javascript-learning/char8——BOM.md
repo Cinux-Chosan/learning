@@ -58,10 +58,46 @@
 
 >> 参数4： 布尔值，代表是否取代浏览器历史记录中的当前加载页面，只在不打开新窗口的情况下使用
 
+>> 用例1：
 
+                window.open("http://www.wrox.com", "wroxWindow", "height=400,width=400,top=100,left=100,risizable=yes");
 
+>> 用例2：
 
+                var wroxWin = window.open("http://www.wrox.com", "wroxWindow", "height=400,width=400,top=100,left=100,risizable=yes");
 
+                wroxWin.resizeTo(500,500);
+
+                wroxWin.moveTo(200,200);
+
+                wroxWin.close();   // 主窗口在没有用户同意的情况下是不能关闭的，但是弹出窗口可以。关闭之后，不再有其他用处，唯一的用处是检测其是否关闭：  wroxWin.closed; 返回true
+
+>> 新创建的window对象又一个opener属性，其中用于保存打开它的原始窗口对象：wroxWin.opener == window; // true
+
+>> 某些浏览器会在独立的进程中运行每个标签页，如果一个标签页打开另一个标签页时，两个window对象之间需要彼此通信，那么新标签页就不能运行在独立进程中，在chrome中将新标签页的opener设置为null即表示需要在单独的进程中运行新标签页。
+
+                wroxWin.opener = null;   // 切断标签页之间的联系过后，无法恢复
+
+>> 大多数浏览器都内置弹出窗口屏蔽程序，也有部分是第三方插件。如果是内置程序，大多数情况 window.open会返回null，使用以下方式检测：
+
+                  var wroxWin = window.open("http://www.wrox.com", "\_blank");
+                  if (wroxWin == null) {
+                    alert("The popup was blocked!");
+                  }
+>> 第三方插件可能会抛出错误，所以处理方式如下：
+
+                  var blocked = false;
+                  try{
+                    var wroxWin = window.open("http://www.wrox.com", "\_blank");
+                    if (wroxWin == null) {
+                      blocked = true;
+                    }
+                  } catch (e) {
+                    blocked = true;
+                  }
+                  if (blocked) {
+                    alert("The popup was blocked!");
+                  }
 
 > setTimeout():
 >> 参数1：可以是一段javascript字符串（类似eval执行的字符串）或一个函数。该段代码在全局作用域中执行，因此函数中的this在飞严格模式为window对象，严格模式为undefined。
