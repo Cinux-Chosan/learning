@@ -53,6 +53,15 @@
 
 >>> 2 个参数，则返回从参数1到参数2（不包括参数2，即[1,2)）的新数组。
 
+>>> 具有length属性，并且采用 index: value 这种键值对方式的对象，可以通过 Array.prototype.slice.call(obj, 0)将对象obj转换成数组。
+
+                      var obj = {
+                        length: 2,
+                        0: 'zzz',
+                        1: 18
+                      },
+                      arrObj = Array.prototype.slice.call(obj, 0);
+
 >> splice()：splice的英文意思是 粘接，而slice是切片。
 >>> 删除： 2个参数。删除的位置和项数
 
