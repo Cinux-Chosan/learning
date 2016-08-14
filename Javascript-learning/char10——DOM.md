@@ -72,18 +72,26 @@
 >>>> 以上三个属性，只有domain可以设置，但是只能将子域名往上设置，如p2p.wrox.com可以设置为wrox.com但是不能从wrox.com设置为p2p.wrox.com
 >>>>> **当页面中包含其他子域的框架或者内嵌框架的时候，可以通过设置document.domain来相互访问对方包含的javascript对象，否则由于安全限制，来自不同子域的页面无法通过javascript通信。例如，如果页面加载自www.wrox.com，其中包含一个内嵌框架，框架内的页面加载自p2p.wrox.com，由于document.domain字符串不一样，内外两个页面之间无法相互访问对方的javascript对象，但是如果将这两个页面的document.domain都设置为wrox.com，则他们之间就可以通信了。**
 
+>> 查找元素：通过document.getElementById()、getElementsByTagName()和 getElementsByName()：
+>>> getElementById()接收一个ID字符串作为参数，如果没有id属性为该参数的元素，则返回null。
 
+>>> getElementsByTagName()接收一个代表所要选取的标签名的参数，如果要取得所有元素，通过传入"*"即可，返回值类似于NodeList，该函数返回的是一个HTMLCollection对象，作为一个动态集合，同样可以使用下标或者item()来获取其中的项。
+>>>> HTMLCollection对象中还有一个方法namedItem()，接收一个参数，如果HTMLCollection对象中某项的name属性与该参数对应，则返回该项。通过下标访问的时候，在HTMLCollection实现的内部，如果是数值索引，则调用item()，如果是字符串索引则调用namedItem()；
 
+>>> getElementsByName()返回带有给定name属性的所有元素，对于单选按钮比较方便，因为多个单选按钮的name属性相同。
 
+>> 特殊集合（它们都是HTMLCollection对象的实例）：document.anchors，document.links，document.applets，document.forms，document.images:
+>>> document.anchors: 包含文档中所有带有name属性的＜ａ＞元素；
 
+>>> document.links: 包含文档中所有带href的＜a＞元素。
 
+>>> document.applets:　文档中所有的＜applet＞元素，因为不再推荐使用＜applet＞所以也不推荐使用这个集合。
 
+>>> document.forms: 返回文档中所有的＜form＞元素，与document.getElementsByTagName("form")得到的结果相同。
 
+>>> document.images: 包含文档中所有的＜img＞元素，与document.getElementsByTagName("img")得到的结果相同。
 
-
-
-
-
+P259 —— DOM一致性检测
 
 
 
