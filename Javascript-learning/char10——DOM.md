@@ -98,7 +98,7 @@
 >>> document.implementation.hasFeature('XML', '1.0'); 与此同时还有Core, HTML, Views, StyleSheets, CSS, CSS2, Events等。参考《javascript高级程序设计》P259
 
 >> 文档写入： document对象提供方法 write(), writeln(), open(), close()。
->>> write()原样写入，writeln()会在末尾添加一个 '\n'；还可以使用它们来动态包含外部资源，但是字符串中不能直接包含＜/script＞，这样会导致字符串被解析为脚本块的结束，它会与前面的非字符串＜script＞标签闭合。解决办法为"\＜script＞"。
+>>> write()原样写入，writeln()会在末尾添加一个 '\n'；还可以使用它们来动态包含外部资源，但是字符串中不能直接包含＜/script＞，这样会导致字符串被解析为脚本块的结束，它会与前面的非字符串＜script＞标签闭合。解决办法为"＜\/script＞"。
 
 >>> 如果文档加载结束过后调用write()和writeln()则会重写整个页面，因为直接写入＜body＞
 
