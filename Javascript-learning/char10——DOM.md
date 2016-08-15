@@ -91,16 +91,16 @@
 
 >>> document.images: 包含文档中所有的＜img＞元素，与document.getElementsByTagName("img")得到的结果相同。
 
-## DOM一致性检测：
-> 由于DOM分为多个级别和多个部分，所以需要检测浏览器实现了DOM的哪些部分，document.implementation属性就是为此提供相应信息和功能的对象，与浏览器对DOM的实现直接对应。DOM1级只为它规定了一个 hasFeature()方法。
+>> DOM一致性检测：
+>>>由于DOM分为多个级别和多个部分，所以需要检测浏览器实现了DOM的哪些部分，document.implementation属性就是为此提供相应信息和功能的对象，与浏览器对DOM的实现直接对应。DOM1级只为它规定了一个 hasFeature()方法。
 
->> document.implementation.hasFeature(): 接受两个参数，即要检测的DOM功能的名称和版本号。如果浏览器支持，则返回true。
->>> document.implementation.hasFeature('XML', '1.0'); 与此同时还有Core, HTML, Views, StyleSheets, CSS, CSS2, Events等。参考《javascript高级程序设计》P259
+>>>> document.implementation.hasFeature(): 接受两个参数，即要检测的DOM功能的名称和版本号。如果浏览器支持，则返回true。
+>>>> document.implementation.hasFeature('XML', '1.0'); 与此同时还有Core, HTML, Views, StyleSheets, CSS, CSS2, Events等。参考《javascript高级程序设计》P259
 
->> 文档写入： document对象提供方法 write(), writeln(), open(), close()。
->>> write()原样写入，writeln()会在末尾添加一个 '\n'；还可以使用它们来动态包含外部资源，但是字符串中不能直接包含＜/script＞，这样会导致字符串被解析为脚本块的结束，它会与前面的非字符串＜script＞标签闭合。解决办法为"＜\/script＞"。
+>>> 文档写入： document对象提供方法 write(), writeln(), open(), close()。
+>>>> write()原样写入，writeln()会在末尾添加一个 '\n'；还可以使用它们来动态包含外部资源，但是字符串中不能直接包含＜/script＞，这样会导致字符串被解析为脚本块的结束，它会与前面的非字符串＜script＞标签闭合。解决办法为"＜\/script＞"。
 
->>> 如果文档加载结束过后调用write()和writeln()则会重写整个页面，因为直接写入＜body＞
+>>>> 如果文档加载结束过后调用write()和writeln()则会重写整个页面，因为直接写入＜body＞
 
 ## Element类型
 > Element类型用于表现XML或HTML元素，提供了对元素标签名，子节点及其特性的访问，它具有如下特征：
