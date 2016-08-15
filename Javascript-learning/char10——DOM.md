@@ -144,7 +144,7 @@
 
 > getAttribute()，setAttrbute()，removeAttribute():
 
-                    div.getAttribute('id');  // class, title, lang, dir
+                    div.getAttribute('id');  // 还有class, title, lang, dir
 
 >> getAttribute()也可以取得自定义属性，如：
 var value = div.getAttribute('my_special_attr');   // 返回元素的该属性，但是由于HTML5规定自定义特性应该加上   data- 前缀
@@ -160,10 +160,26 @@ var value = div.getAttribute('my_special_attr');   // 返回元素的该属性�
 
 
 ## attributes 属性：
+> Element类型是使用attributes属性的唯一一个DOM节点类型。attributes属性包含一个NamedNodeMap，与NodeList类似，也属于动态集合。元素的每一个特性都由一个Attr节点表示，每个节点都被保存于NamedNodeMap中：
+>> getNamedItem(name): 返回nodeName属性等于name的节点
 
+>> removeNamedItem(name): 从列表移除nodeName等于name的节点，返回被移除属性的Attr节点
 
+>> setNamedItem(node): 向列表中添加节点并以nodeName作为索引
 
+>> item(pos): 返回位于pos处的节点
 
+>> attributes中的每个节点的nodeName为属性名，nodeValue为属性值。
+
+                      someNode.attributes.getNamedItem('id').nodeValue;   // 取得someNode节点的id属性值
+                      someNode.attributes['id'].nodeValue;   // 同上
+                      someNode.attributes['id'].nodeValue = value;   // 设置 id 值
+
+                      var oldAttr = someNode.attributes.removeNamedItem('id');
+
+每个特性节点都有一个名为specified的属性，如果该属性为true，则表示要么是在HTML中指定了相应特性，或者是通过setAttrbute()方法设置了该特性。IE中所有未设置过的特性的该值都为false，而其他浏览器根本不会为这类特性生成相应的特性节点。所以都返回true
+
+## 创建元素
 
 
 
