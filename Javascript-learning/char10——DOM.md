@@ -91,29 +91,95 @@
 
 >>> document.images: 包含文档中所有的＜img＞元素，与document.getElementsByTagName("img")得到的结果相同。
 
-P259 —— DOM一致性检测
+>> DOM一致性检测：
+>>>由于DOM分为多个级别和多个部分，所以需要检测浏览器实现了DOM的哪些部分，document.implementation属性就是为此提供相应信息和功能的对象，与浏览器对DOM的实现直接对应。DOM1级只为它规定了一个 hasFeature()方法。
+
+>>>> document.implementation.hasFeature(): 接受两个参数，即要检测的DOM功能的名称和版本号。如果浏览器支持，则返回true。
+>>>> document.implementation.hasFeature('XML', '1.0'); 与此同时还有Core, HTML, Views, StyleSheets, CSS, CSS2, Events等。参考《javascript高级程序设计》P259
+
+>>> 文档写入： document对象提供方法 write(), writeln(), open(), close()。
+>>>> write()原样写入，writeln()会在末尾添加一个 '\n'；还可以使用它们来动态包含外部资源，但是字符串中不能直接包含＜/script＞，这样会导致字符串被解析为脚本块的结束，它会与前面的非字符串＜script＞标签闭合。解决办法为"＜\/script＞"。
+
+>>>> 如果文档加载结束过后调用write()和writeln()则会重写整个页面，因为直接写入＜body＞
+
+## Element类型
+> Element类型用于表现XML或HTML元素，提供了对元素标签名，子节点及其特性的访问，它具有如下特征：
+>> nodeType为 1
+
+>> nodeName为元素的标签名
+
+>> nodeValue为null
+
+>> parentNode可能是 Document或者Element
+
+>> 子节点可能是Element, Text, Comment, ProcessingInstruction， CDATASection，EntityReference
+
+>> 节点的tagName与nodeName返回相同值。
+
+                    <div id="myDiv"></div>
+
+                    var div = document.getElementById('myDiv');
+                    div.tagName == div.nodeName;   // true
+
+## HTMLElement类型
+> 所有HTML元素都由HTMLElement类型直接或其子类型间接表示，该类型直接继承自Element并添加了一些属性。
+>> id：元素的id标识符
+
+>> title：元素的附加说明信息
+
+>> lang：元素的语言代码
+
+>> dir：语言方向，"ltr"(left-to-right)或"rtl"(right-to-left)
+
+>> className：元素的class特性，即CSS类。
+
+                    <div id="myDiv" class="bd" title="body text" lang="en" dir="ltr"></div>
+                    var div = document.getElementById('myDiv');
+                    div.id;   // "myDiv"
+                    div.className;   // "bd"
+                    div.title;   // "body text"
+                    div.lang;   // "en"
+                    div.dir;   // "ltr"
+>> 可以取值，也可以为它们设置值。
+
+> getAttribute()，setAttrbute()，removeAttribute():
+
+                    div.getAttribute('id');  // 还有class, title, lang, dir
+
+>> getAttribute()也可以取得自定义属性，如：
+var value = div.getAttribute('my_special_attr');   // 返回元素的该属性，但是由于HTML5规定自定义特性应该加上   data- 前缀
+
+>>> 有两个属性比较特殊：style 和 事件处理程序（如 onclick）
+>>>> 虽然有对应的属性名，但是通过  someNode.style与 someNode.getAttribute('style')得到的值并不一样，直接通过  someNode.getAttribute('style')得到的直接是一个元素标签里面的属性的字符串值，而通过  someNode.style 得到的是一个对象，它包含了所有的css属性以及它们的值，如果在标签中的style属性有的值，会在这个对象中通过数字作为key，属性名作为value组成键值对。
+
+>>>> 事件处理程序，直接通过 名字访问，得到的是函数代码，通过 getAttribute() 访问得到的是字符串。
+
+>>> setAttrbute()：接收两个参数，属性名和属性值。 如果已经存在，则会替换原有值。
+
+>>> removeAttribute()：接受一个参数，即要删除的特性名
 
 
+## attributes 属性：
+> Element类型是使用attributes属性的唯一一个DOM节点类型。attributes属性包含一个NamedNodeMap，与NodeList类似，也属于动态集合。元素的每一个特性都由一个Attr节点表示，每个节点都被保存于NamedNodeMap中：
+>> getNamedItem(name): 返回nodeName属性等于name的节点
 
+>> removeNamedItem(name): 从列表移除nodeName等于name的节点，返回被移除属性的Attr节点
 
+>> setNamedItem(node): 向列表中添加节点并以nodeName作为索引
 
+>> item(pos): 返回位于pos处的节点
 
+>> attributes中的每个节点的nodeName为属性名，nodeValue为属性值。
 
+                      someNode.attributes.getNamedItem('id').nodeValue;   // 取得someNode节点的id属性值
+                      someNode.attributes['id'].nodeValue;   // 同上
+                      someNode.attributes['id'].nodeValue = value;   // 设置 id 值
 
+                      var oldAttr = someNode.attributes.removeNamedItem('id');
 
+每个特性节点都有一个名为specified的属性，如果该属性为true，则表示要么是在HTML中指定了相应特性，或者是通过setAttrbute()方法设置了该特性。IE中所有未设置过的特性的该值都为false，而其他浏览器根本不会为这类特性生成相应的特性节点。所以都返回true
 
-
-
-
-
-
-
-
-
-
-
-
-
+## 创建元素
 
 
 
