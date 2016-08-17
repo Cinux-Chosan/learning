@@ -30,6 +30,7 @@
 >>> 这里我们可以看到公钥存放在.ssh/authorized_keys文件中。所以我们在/home/git下创建.ssh目录，然后创建authorized_keys文件，并将刚生成的公钥导入进去。每个公钥占一行
 
 - 禁用git用户的shell登陆
+
 > 出于安全考虑，第二步创建的git用户不允许登录shell，这可以通过编辑/etc/passwd文件完成。找到类似下面的一行：
 >> git：x:1001:1001:,,,:/home/git:/bin/bash  
 
