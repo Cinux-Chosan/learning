@@ -180,31 +180,69 @@ var value = div.getAttribute('my_special_attr');   // 返回元素的该属性�
 每个特性节点都有一个名为specified的属性，如果该属性为true，则表示要么是在HTML中指定了相应特性，或者是通过setAttrbute()方法设置了该特性。IE中所有未设置过的特性的该值都为false，而其他浏览器根本不会为这类特性生成相应的特性节点。所以都返回true
 
 ## 创建元素
+> document.createElement():
+>> 传入参数可以是标签名，也可以是完整的标签，传入完整的标签可以避免一些问题，比如不能设置动态创建的＜iframe＞的name属性，以及动态创建的一批name相同但是却毫无关系的单选标签，和动态创建表单按钮的reset方法或者类型等。
 
+                      var div1 = document.createElement("div");   
+                      div1.id = "myDiv";
+                      // 下面的方法可以避免一些问题，但相对来说比较麻烦。
+                      var div2 = document.createElement("<div id=\"myDiv\"></div>");
 
+## 元素的子节点
+> 不同浏览器对待子节点的处理不同，
 
+                      <ul id="myList">
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                        <li>Item 3</li>
+                      </ul>
+> 以上代码，IE会返回3个子节点，其他浏览器返回7个子节点（3个li和4个文本节点，4个文本节点为不同标签之间的空格，即第一个为ul与第一个li之间，第二个为第一个li与第二个li之间）
+            <ul id="myList"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>
+> 上述代码则在任何浏览器中都返回3个子节点，因为标签之间没有空格
 
+# Text 类型
+> nodeType: 3
 
+> nodeName: #text
 
+> nodeValue: 文本内容，与 data 属性返回相同的值
 
+> parentNode: Element
 
+> length: 等于nodeValue.length和data.length
 
+> appendData(text): 添加文本text
 
+> deleteData(offset, count):
 
+> insertData(offset, text):
 
+> replaceData(offset, count, text):
 
+> splitText(offset): 从offset位置将当前文本节点分成两个文本节点
 
+> substringData(offset, count):
 
+## 创建文本节点 document.createTextNode(text)
 
+> element.normalize()合并多个文本节点；（进行DOM操作的时候可能插入多个文本节点，虽然视觉上看不到，但是通过父元素的childNodes.length并不一定为 1）
 
+> element.firstChild.splitText() 与nomalize()相反，切分文本节点为多个文本节点。参数为切分的位置。
 
+## Comment 注释类型
+> nodeType: 8
 
+> nodeName: "#comment"
 
+> nodeValue: 注释内容
 
+> parentNode: Document 或 Element
 
+> 无子节点
 
+> 与Text继承自相同基类。可以通过 document.createComment()创建注释节点。IE8中将注释节点视为标签名为 "!" 的元素，即意味着IE8中可以通过getElementsByTagName来取得注释节点。IE9则没有将它视为元素，但可以通过HTMLCommentElement的构造函数来表示注释。
 
-
+P275 documentFragment类型
 
 
 
