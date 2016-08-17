@@ -7,9 +7,9 @@ var express = require('express'),
         encodingAESKey: wechatInfo.msgApp.encodingAESKey,
         corpId: wechatInfo.cropId
     };
-    bodyParser = require("body-parser");
+  var  bodyParser = require("body-parser");
 
-app.use(bodyParser.urlencoded({ extended: false }));  
+app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/get-wx-service', function(req, res) {
     var msg_signature = req.query.msg_signature;
     var timestamp = req.query.timestamp;
