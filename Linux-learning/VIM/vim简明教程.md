@@ -128,7 +128,7 @@
 
 >> *: 下一个
 
->> #: 上一个
+>> ＃: 上一个
 
 > ＜satrt_position＞ ＜command＞ ＜end_position＞
 >> e.g.: 0y$
