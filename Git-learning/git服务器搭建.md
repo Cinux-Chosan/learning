@@ -1,5 +1,8 @@
 # CentOS
 
+## 注： git init --bare [yourName.git] 生成的仓库为原始仓库，不包含具体的文件目录，可以从它clone出一个带.git的仓库，但是该目录本身不带.git，所有的提交数据被放在目录下的Objects，所以最好是从该目录拉取一个.git仓库
+
+## git init 则生成一个带有自己文件和目录的仓库，用于向 git init --bare生成的原始仓库提交数据，不能向git init生成的仓库直接提交数据。
 
 - 首先需要安装Git，可以使用yum源在线安装：
 > yum install -y git
@@ -21,6 +24,7 @@
 
 - Git服务器打开RSA认证
 > 然后就可以去Git服务器上添加你的公钥用来验证你的信息了。在Git服务器上首先需要将/etc/ssh/sshd_config中将RSA认证打开，即：
+
 >> 1.RSAAuthentication yes     
 
 >> 2.PubkeyAuthentication yes     

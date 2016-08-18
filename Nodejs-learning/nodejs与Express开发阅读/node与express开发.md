@@ -1,7 +1,14 @@
 # Node与Express开发
 
 有用的网址：
+[express-API](http://expressjs.com/api.html)
+
+[前端模板引擎选择](http://garann.github.io/template-chooser/)
+
+[Twitter Bootstrap](http://getbootstrap.com)
+
 https://html5boilerplate.com/
+
 >非常出色的 HTML5
 18 ｜ 第 3 章
 Boilerplate（http://html5boilerplate.com/） ，它能生成一个很不错的空白 HTML5 网站。最近
@@ -22,6 +29,17 @@ Node 模块的官方文档（http://nodejs.org/api/modules.html）
 nodemon（https://npmjs.org/package/nodemon）非常受欢迎，并且它还有一个 Grunt 插件
 （https://www.npmjs.org/package/grunt-nodemon）
 
+
+---
+
+          使用第三方主题。像 Themeforest（http://themeforest.net/category/site-
+          templates）和 WrapBootstrap（https://wrapbootstrap.com/）这样的网站有几百种 HTML5 即
+          Handlebars 模板引擎 ｜ 73
+          用模板，它们可以用来开发你的第一个模板。使用第三方主题要从考虑主文件（通常是
+          index.html）入手，将它重命名为 main.handlebars（也可以任意命名你的布局文件） ，将静
+          态资源（CSS 样式文件、JavaScript 脚本、图片）放在公共目录下。然后，你需要编辑模
+          板文件并指出在什么地方放置 {{{body}}} 表达式
+
 ---
 
 首先我们需要一个测试框架，这里用的是 Mocha。我们先把这个包添加到项目中：
@@ -41,6 +59,28 @@ cp node_modules/mocha/mocha.css public/vendor
 npm install --save-dev chai
 cp node_modules/chai/chai.js public/vendor
 
+---
+
+          如果你需要的信息没在文档中，有时就不得不深入研究 Express 源码（https://github.com/
+          visionmedia/express/tree/master） 。我鼓励你这么做，它并没有想象中那么可怕。下面是
+          Express 源码的路径说明。
+          lib/application.js •
+          Express 主接口。如果想了解中间件是如何接入的，或视图是如何被渲染的，可以看
+          这里。
+          lib/express.js •
+          这是一个相对较短的 shell，是 lib/application.js 中 Connect 的功能性扩展，它返回一个
+          函数，可以用 http.createServer 运行 Express 应用。
+          lib/request.js •
+          扩展了 Node 的 http.IncomingMessage 对象，提供了一个稳健的请求对象。关于请求对
+          象属性和方法的所有信息都在这个文件里。
+          lib/response.js •
+          扩展了 Node 的 http.ServerReponse 对象，提供响应对象。关于响应对象的所有属性和
+          方法都在这个文件里。
+          lib/router/route.js •
+          提供基础路由支持。尽管路由是应用的核心，但这个文件只有不到 200 行，你会发现它
+          非常地简单优雅。
+          在你深入研究 Express 源码时，或许需要参考 Node 文档（http://nodejs.org/api/http.html） ，
+          尤其是 HTTP 模块部分。
 
 ---
 
@@ -175,3 +215,39 @@ cp node_modules/chai/chai.js public/vendor
 
 
 ---
+
+## 使用 body-parser
+
+> 引入中间件: npm insall --save body-parser
+
+> app.use(require('body-parser')());
+
+> 一旦引入了 body-parser ，你会发现 req.body 变为可用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.
