@@ -118,7 +118,7 @@ cp node_modules/chai/chai.js public/vendor
           req.acceptedLanguages •
           一个简便方法，用来返回客户端首选的一组（人类的）语言。这些信息是从请求报头中
           解析而来的。
-          6.9　响应对象
+# 响应对象
           响应对象（通常传递到回调方法，这意味着你可以随意命名它，通常命名为 res 、 resp 或
           response ）的生命周期始于 Node 核心对象 http.ServerResponse 的实例。Express 添加了一
           些附加功能。我们来看看响应对象中最有用的属性和方法（所有这些方法都是由 Express
@@ -134,7 +134,6 @@ cp node_modules/chai/chai.js public/vendor
           res.redirect([status],url) •
           重定向浏览器。默认重定向代码是 302（建立） 。通常，你应尽量减少重定向，除非永
           久移动一个页面，这种情况应当使用代码 301（永久移动） 。
-          54 ｜ 第 6 章
           res.send(body),res.send(status,body) •
           向客户端发送响应及可选的状态码。Express 的默认内容类型是 text/html 。如果你想改
           为 text/plain ，需要在 res.send 之前调用 res.set('Content-Type','text/plain\') 。如
