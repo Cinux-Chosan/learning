@@ -54,4 +54,5 @@
 	   
 ### 注意事项
 - xml2js 默认会封装一个顶层节点为名为 root，即你的数据被包裹在外层的 ＜root＞＜/root＞ 里面，但是微信识别xml，所以需要配置xml2js的Builder方法:
+
       var xmlBuilder = new xml2js.Builder({ cdata: true, rootName: 'xml' });
