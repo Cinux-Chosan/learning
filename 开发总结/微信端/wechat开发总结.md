@@ -31,7 +31,8 @@
 > 返回数据亦是相同格式，数据封装为XML形式，然后加密，存入父XML的Encrypt内。将父XML返回给微信:
 
 
-
+      var retData = {};
+      var retDataContent = {};
       retDataContent.ToUserName = data.xml.FromUserName[0] ;
       retDataContent.FromUserName = data.xml.FromUserName[0] ;
       retDataContent.CreateTime = data.xml.CreateTime[0];
