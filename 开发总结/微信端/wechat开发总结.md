@@ -1,8 +1,14 @@
 # 微信端企业号开发总结
 
 ## 开启回调模式
-
-
+      
+      app.get('/get-wx-service', function(req, res) {
+          var echostr = req.query.echostr;
+          var cryptor = new WXBizMsgCrypt(config.token, config.encodingAESKey, config.corpId);
+          var echoStr = cryptor.decrypt(echostr);
+          res.send(echoStr.message);
+      });
+      
 
 
 ## 回调模式数据处理
