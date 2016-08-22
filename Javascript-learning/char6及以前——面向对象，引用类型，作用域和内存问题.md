@@ -330,9 +330,9 @@
 
 >> 无论什么时候，创建一个新函数，就会根据一组特定的规则成为该函数创建一个 prototype属性，这个属性指向函数的原型对象。在默认情况下，所有原型对象都会自动获得一个 constructor属性，这个属性包含一个指向 prototype 属性所在函数的指针。如：Person.prototype.constructor === Person;
 
->> 创建一个自定义的构造函数过后，其原型对象默认只会取得 constructor 属性。至于其它方法，都是从 Object继承而来的。当调用构造函数创建一个新实例后，该实例的内部将包含一个指针[[Prototype]]，指向构造函数的原型对象，注意：这个连接时存在于实例与构造函数的原型对象之间，而不是实例与构造函数之间。[[Prototype]]没有标准的访问方式，但是Firefox, Safari和 Chrome在每个对象上都支持一个__proto__属性。
+>> 创建一个自定义的构造函数过后，其原型对象默认只会取得 constructor 属性。至于其它方法，都是从 Object继承而来的。当调用构造函数创建一个新实例后，该实例的内部将包含一个指针[[Prototype]]，指向构造函数的原型对象，注意：这个连接时存在于实例与构造函数的原型对象之间，而不是实例与构造函数之间。[[Prototype]]没有标准的访问方式，但是Firefox, Safari和 Chrome在每个对象上都支持一个\__proto__属性。
 
->> **注意注意注意：对于构造函数，其属性为prototype，对于对象实例，其属性为 [[Prototype]]，[[Prototype]]通过对象的属性__proto__访问。其实他们都是同一个东西**
+>> **注意注意注意：对于构造函数，其属性为prototype，对于对象实例，其属性为 [[Prototype]]，[[Prototype]]通过对象的属性\__proto__访问。其实他们都是同一个东西**
 
 >> 通过prototype（或者[[Prototype]]，即\__proto__）的属性isPrototypeOf()方法可以来确定两个对象的 [[Prototype]] 或者 对象的[[Prototype]]与构造函数的prototype属性是否是同一个：
 
@@ -354,7 +354,7 @@
                   return !obj.hasOwnProperty(name) && (name in obj);
                 }
 
->> 在使用 for-in 循环时，返回的所有能够通过对象访问的（无论实例中的属性还是原型链中的属性）、可枚举的属性（即[[Enumerable]] 为 false）。根据规定，所有开发人员定义的属性都是可枚举的属性（IE8即更早的版本是例外）。
+>> 在使用 for-in 循环时，返回的所有能够通过对象访问的（无论实例中的属性还是原型链中的属性）、可枚举的属性（即[[Enumerable]] 为 true）。根据规定，所有开发人员定义的属性都是可枚举的属性（IE8即更早的版本是例外）。
 
 >> 要获取对象上的所有可枚举实例属性，可以使用ES5的 Object.keys()方法。如果想要获得所有实例属性，无论是否可枚举，使用 Object.getOwnPropertyNames()。
 
