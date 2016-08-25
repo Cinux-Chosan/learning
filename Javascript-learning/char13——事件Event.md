@@ -20,7 +20,7 @@
 > IE中的事件对象，如果是DOM0方式添加的事件处理程序，则event对象作为window对象的一个属性存在，即   var event = window.event; 如果是通过attachEvent()添加的，则会有一个event对象作为参数传入。也可以通过window.event来访问
 
 > UI事件
->> load: 页面完全加载后在window上面触发，所有框架加载完成时在框架上面触发，图像加载完成时在＜img＞元素上触发，或者当嵌入的内容加载完毕时在＜object＞元素上面触发。可以通过addEventListener给window添加load事件，或者通过＜body onload="funcName"＞来添加，一般来说window上面的任何事件都可以在＜body＞中通过相应特性来添加，因为HTML中无法访问window元素。
+>> load: 页面完全加载后在window上面触发，所有框架加载完成时在框架上面触发，图像加载完成时在＜img＞元素上触发，或者当嵌入的内容加载完毕时在＜object＞元素上面触发。可以通过addEventListener给window添加load事件，或者通过＜body onload="funcName"＞来添加，一般来说window上面的任何事件都可以在＜body＞中通过相应特性来添加，因为HTML中无法访问window元素。  **＜img＞不一定要加到文档后才开始下载，而是只要设置了src属性就会开始下载，而＜script＞则需要在添加了src属性并且被添加到文档中才会开始下载**
 
 > unload: 与load相反
 
@@ -43,5 +43,9 @@
 
 
 
+> clientX和clientY是相对于视口的事件坐标，而pageX和pageY则是相对于页面来说，所以pageX和pageY是从页面的边缘开始算。而screenX和screenY则是相对于整个屏幕的坐标。
 
-p365
+> 修改键：shiftKey, ctrlKey, altKey, metaKey。即如果有按下shift键，则event.shiftKey === true
+
+
+> P373
