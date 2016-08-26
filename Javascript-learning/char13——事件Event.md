@@ -47,5 +47,40 @@
 
 > 修改键：shiftKey, ctrlKey, altKey, metaKey。即如果有按下shift键，则event.shiftKey === true
 
+> mouseover和mouseout的事件对象有一个相关元素属性relatedTarget，如果某一个元素触发了mouseout事件，则与之同时触发mouseover事件的元素就是相关元素，即relatedTarget所指的元素,IE中则是fromElement(mouseover)和toElement(mouseout)中保存着相关元素。
 
-> P373
+> mousedown 和 mouseup的event对象中存在一个button属性。
+
+> DOM2规范在event对象中还提供了detail属性，它表示在给定属性上面单击了多少次，同一元素上相继发生mousedown和mouseup为一次单击，每次单击detail都会递增，mousedown和mouseup之间移动了鼠标，则detail被重置为0
+
+> 鼠标滚轮事件：
+>> mousewheel：任何元素上都能触发，并且最终会冒泡到document或者window对象上。它的event除了包含鼠标事件的所有信息，还包含wheelDelta属性，该属性是120的倍数，正负表示方向。
+
+> keydown -> keypress -> keyup
+>> 触发顺序如上
+
+>> 如果按下一个字符不放，会重复触发keydown和keypress直到松开为止，如果按下的为非字符键不放，则触发的是keydown，松开则是keyup
+
+>> keydown和keyup的event事件包含keyCode，而charCode只有在keypress事件才会有。使用的时候，应该先检查是否有charCode，如果没有再使用keyCode，得到字符编码后可以使用String.fromCharCode()将其转换成实际字符。
+
+>> DOM3不再包含charCode，取而代之的是key和char，key为对应按键的文本字符，如'k'，如果是功能键则为'Shift'或者'Down'之类的，char在按下功能键时返回null
+
+> textInput：文本框有内容插入的时候触发。
+>> event.data：用户输入的实际字符，如's','S'等
+
+>> event.inputMethod（IE支持）：
+- 0：浏览器不确定是怎么输入的
+- 1：键盘输入
+- 2：粘贴
+- 3：拖放
+- 4：IME输入
+- 5：通过表单中选择某一项输入的
+- 6：手写输入
+- 7：语音输入
+- 8：多种方法组合输入
+- 9：通过脚本输入
+
+
+
+
+> P384t
