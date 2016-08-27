@@ -96,6 +96,21 @@
 
 >> DOMCharacterDataModified: 在文本节点值发生变化时触发
 
+> contextmenu事件：给页面添加右键菜单，该事件会冒泡，可以给document指定事件处理程序，在处理程序中调用 event.preventDefault()可以阻止打开默认的右键菜单，使用html代码写一个自定义菜单#myDiv，然后通过右键点击触发该事件从而显示或隐藏菜单。
+    var div = document.getElementById('myDiv');
+    document.addEventListener('contextmenu', function(e){
+      e.preventDefault();
+      var menu = document.getElementById('myMenu');
+      menu.style.visibility = 'visible';
+      menu.style.left = event.clientX+'px';
+      menu.style.top = event.clientY+'px';
+    });
+
+
+> beforeunload事件：该事件发生在window对象上，在页面卸载前触发，可以用来取消或阻止页面卸载，如果需要显示一个弹窗，需要将event.returnValue设置为要显示给用户的字符串（IE及firefox），同时作为函数的返回值（safari和chrome）
+
+> DOMContentLoaded事件：window的load事件会在一切都加载完毕时触发，而DOMContentLoaded事件则是在形成完整的DOM树之后就会触发，不理会图像，javascript文件，css文件或其它资源是否已经加载完毕，所以该事件始终先于window的load事件触发，支持在页面下载的早期执行js添加事件代码，从而用户可以更早的与页面进行交互。对于不支持该事件的浏览器，可以添加一个0毫秒超时调用，即setTimeout的超时为0。
 
 
 > P384t
+
