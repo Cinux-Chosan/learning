@@ -81,6 +81,21 @@
 - 9：通过脚本输入
 
 
+> 变动事件：DOM中某一部分发生变化时触发：
+>> DOMSubtreeModified: DOM结构中任何变化都会触发，其他任何事件出发后也会触发
+
+>> DOMNodeInserted: 有节点插入时触发
+
+>> DOMNodeRemoved: 有节点从父元素移除时触发
+
+>> DOMNodeInsertedIntoDocument: 在一个节点被直接插入document或者通过子树间接插入之后触发，该事件在DOMNodeInserted之后触发
+
+>> DOMNodeRemovedFromDocument: 节点被直接从document移除或者间接从文档中移除之前触发，该事件在DOMNodeRemoved之后触发
+
+>> DOMAttrModified: 特性被修改之后触发
+
+>> DOMCharacterDataModified: 在文本节点值发生变化时触发
+
 
 
 > P384t
