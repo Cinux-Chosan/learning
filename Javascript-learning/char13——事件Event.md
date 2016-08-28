@@ -111,6 +111,30 @@
 
 > DOMContentLoaded事件：window的load事件会在一切都加载完毕时触发，而DOMContentLoaded事件则是在形成完整的DOM树之后就会触发，不理会图像，javascript文件，css文件或其它资源是否已经加载完毕，所以该事件始终先于window的load事件触发，支持在页面下载的早期执行js添加事件代码，从而用户可以更早的与页面进行交互。对于不支持该事件的浏览器，可以添加一个0毫秒超时调用，即setTimeout的超时为0。
 
+> readystatechange：最好使用DOMContentLoaded事件来处理，因为DOMContentLoaded事件支持率更高。p390
+
+> pageshow && pagehide
+>> pageshow在页面显示时触发，无论是否来自bfcache（firefox的back-forward cache，将整个页面连同js的执行状态压栈到内存，为了加快“前进”“倒退”的速度），重新加载页面时，pageshow会在load之后，事件目标虽然是document，但是必须将事件处理程序加在window。
+
+>> pagehide在页面卸载时触发，先于unload，如同pageshow一样，也需要将它的事件添加到window上
+
+>> pageshow 和 pagehide的事件对象都具有 persisted，在pageshow中，该属性代表是否保存在bfcache中，或者是否在被卸载过后将会保存在bfcache中。
+
+
+> hashchange：当URL中#后面的hash值改变的时候，会触发该事件。该事件必须添加在window对象上。检测该对象是否支持：
+
+    var isSupported = ('onhashchange' in window) && (document.documentMode === undefined || document.documentMode > 7);
+
+# 移动设备事件
+> p395
+
+> deviceorientation：加速计检查到设备方向变化时，在window上触发。告诉开发人员设备移动方向。
+
+> devicemotion：告诉开发人员设备什么时候移动，而不仅仅是方向的变化。例如可以通过该事件检测移动设备是不是正在往吓掉或者是否被移动的人拿在手里。
+
+> 触摸事件
+
+> 
 
 > P384t
 
