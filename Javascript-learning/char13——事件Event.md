@@ -1,6 +1,6 @@
 # Event
 
-> 事件分为事件捕获、目标阶段、事件冒泡，它们的顺序也是如此
+> 事件分为事件捕获、目标阶段、事件冒泡，它们的顺序也是如此，事件冒泡的前提是目标元素还存在于文档中，如果在事件处理程序中删除目标元素也能阻止事件冒泡。
 >> 默认情况下是在冒泡阶段处理父级元素的事件
 
 >> 元素的addEventListener接受三个参数：事件名，事件函数，布尔值（true表示捕获阶段处理，false表示冒泡阶段处理），事件函数的this为该Dom元素
@@ -134,7 +134,31 @@
 
 > 触摸事件
 
-> 
+> 事件委托：由于每个事件都会在内存中添加一个对象，这样数量越多，性能就越低，由于大部分事件都会冒泡到document对象，而且访问document对象又特别快，所以给document对象绑定事件处理程序来处理它内部的对象事件是非常高效的一种做法：
+    
+    var list = document.getElementById("myLinks");
+    EventUtil.addHandler(list, "click", function(event){
+      event = EventUtil.getEvent(event);
+      var target = EventUtil.getTarget(event);
+      switch(target.id){
+        case "doSomething":
+          document.title = "I changed the document's title";
+        break;
+        case "goSomewhere":
+          location.href = "http://www.wrox.com";
+        break;
+        case "sayHi":
+          alert("hi");
+        break;
+      }
+    });
+    
+> 由于页面操作可能删除页面中某些带有事件的元素，所以可能导致事件对象残留在内存中，尤其是使用innerHTML来替换了页面中这些带有事件的页面元素，所以在移除之前最好将事件置空，如 btn.onclick = null;另外就是在页面卸载的时候，也可能造成内存中带有空事件的情况，可以在onunload事件中将它们移除。
 
-> P384t
+> 《JavaScript高级程序设计》P405: 模拟事件：通过createEvent()方法创建event对象，事件分为UIEvents, MouseEvents, MutaionEvents, HTMLEvents，创建了事件对象之后，通过dispatchEvent()方法触发事件。具体几种事件的模拟，参考P406
+
+
+
+
+
 
