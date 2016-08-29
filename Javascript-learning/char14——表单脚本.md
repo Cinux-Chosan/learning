@@ -87,6 +87,14 @@
 - beforepaste ：在发生粘贴操作前触发。
 - paste ：在发生粘贴操作时触发。
 
+> beforecopy、beforecut、beforepaste可以在向剪切板发送或者接收数据的时候修改数据，如果要阻止相应的操作，需要取消copy、cut、paste事件。
+
+> 如果要访问剪切板中数据，使用clipboardData对象，IE中该对象为window对象的属性，而 Firefox、Safari、Chrome中，这个对象是相应的event对象的属性，不过在这三个浏览器中，只有在处理剪切板事件期间访问该对象才有效，这是为了防止对剪切板的未授权访问。
+>> clipboardData对象有三个方法：getData()，setData()，clearData()
+- getData()用于向剪切板获取数据，参数为需要获得的数据的格式
+- setData()用于向剪切板中写数据，第一个参数也是数据类型，第二个参数为文本
+
+更多具体用例，参考《javascript高级程序设计》P424操作剪切板
 
 
 p425  
