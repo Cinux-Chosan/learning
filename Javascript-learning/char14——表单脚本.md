@@ -97,7 +97,44 @@
 更多具体用例，参考《javascript高级程序设计》P424操作剪切板
 
 
-p425  
+## HTML5约束验证API
+> 约束验证API可以在完全不用javascript插手的情况下验证数据，即浏览器会根据规则进行验证，为了使用验证，需要在HTML中的特定字段指定一些约束，然后浏览器根据约束进行验证。
+
+>> 必填：required
+    
+    <input type="text" name="username" required />
+    
+    // 检测
+    var isUsernameRequired = document.forms[0].elements["username"].required
+
+    // 检测是否支持
+    var isRequiredSupported = "required" in document.createElement("input");
+
+参考《javascript高级程序设计》p430
+
+## 选择框脚本
+通过select和option创建。是HTMLSelectElement类的实例。
+- add(newOption, relOption) ：向控件中插入新 ＜option＞ 元素，其位置在相关项（ relOption ）之前。
+- multiple ：布尔值，表示是否允许多项选择；等价于 HTML 中的 multiple 特性。
+- options ：控件中所有 ＜option＞ 元素的 HTMLCollection 。
+- remove(index) ：移除给定位置的选项。
+- selectedIndex ：基于 0 的选中项的索引，如果没有选中项，则值为 -1 。对于支持多选的控件，只保存选中项中第一项的索引。
+- size ：选择框中可见的行数；等价于 HTML 中的 size 特性。
+
+> 选择框的 type 属性不是 "select-one" ，就是 "select-multiple" ，这取决于 HTML 代码中有
+
+> 没有 multiple 特性。选择框的 value 属性由当前选中项决定，相应规则如下。
+- 如果没有选中的项，则选择框的 value 属性保存空字符串。
+- 如果有一个选中项，而且该项的 value 特性已经在 HTML 中指定，则选择框的 value 属性等于选中项的 value 特性。即使 value 特性的值是空字符串，也同样遵循此条规则。
+- 如果有一个选中项，但该项的 value 特性在 HTML 中未指定，则选择框的 value 属性等于该的文本。
+- 如果有多个选中项，则选择框的 value 属性将依据前两条规则取得第一个选中项的值。
+
+
+## 表单序列化程序 《javascript高级程序设计》P436
+
+## 富文本操作  《javascript高级程序设计》P438
+
+
   
   
   
