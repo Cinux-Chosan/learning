@@ -10,6 +10,7 @@
 - willRender
 - didInsertElement
 - didRender
+
 ### On Re-Render
 - didUpdateAttrs
 - didReceiveAttrs
@@ -17,6 +18,7 @@
 - willRender
 - didUpdate
 - didRender
+
 ### On Component Destroy
 - willDestroyElement
 - willClearRender
