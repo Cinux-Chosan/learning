@@ -143,3 +143,124 @@
           title: null,
           attributeBindings: ['title'],
         });
+
+### Using Block Params
+- 从组建返回参数到外部
+
+        // 在组件blog-post.hbs中使用 yield 返回三个参数
+        {{yield post.title post.body post.author}}
+
+        // 在外部使用传出参数 title, body, author
+        {{#blog-post post=model as |title body author|}}
+          <h2>{{title}}</h2>
+          <p class="author">by {{author}}</p>
+          <div class="post-body">{{body}}</p>
+        {{/blog-post}}
+
+### Supporting both block and non-block component usage in one template
+- 组件的 hasBlock 属性，自动根据组件的调用方式来确定值，在组件被调用的时候是使用 block 方式（带有 # 的块调用）为true，在使用内联方式调用时为 false
+
+
+## Handling Events 处理事件
+- 在组件中，需要处理的事件，直接在js中写对应的属性函数即可（controller中无效）：
+
+        export default Ember.Component.extend({
+          doubleClick() {
+            alert("DoubleClickableComponent was clicked!");
+            return true;    // 默认禁止冒泡，return true允许冒泡
+          }
+        });
+
+
+### Sending Actions
+
+- 直接通过参数传递
+
+        {{drop-target action=(action "didDrop")}}
+
+- 将action传递给浏览器默认事件
+
+        <button onclick={{action 'signUp'}}>Sign Up</button>
+
+- 获取浏览器event对象的方式有
+
+> 1.定义浏览器默认事件，即直接在component.js中定义Ember默认支持的事件方法
+
+> 2.将事件处理程序传递给标签元素的事件处理属性
+
+[Ember事件处理方法](https://guides.emberjs.com/v2.8.0/components/handling-events/#toc_event-names)
+
+###
+- 向 action 多次传入参数
+
+        // 组件的hbs：组件内部向外抛出 confirmValue
+        {{yield confirmValue}}
+
+        // 调用组件的父级的hbs：外部使用组件所抛出变量
+        {{#button-with-confirmation
+            text="Click to send your message."
+            onConfirm=(action "sendMessage" "info")    // 传入sendMessage的第一个参数
+            as |confirmValue|}}
+          {{input value=confirmValue}}    // 使用组件抛出的值与input进行绑定
+        {{/button-with-confirmation}}
+
+        // 组件的js：组件内部再次向 sendMessage 传入第二个参数
+        submitConfirm() {
+           //call onConfirm with the value of the input field as an argument
+           const promise = this.get('onConfirm')(this.get('confirmValue'));
+           promise.then(() => {
+             this.set('confirmShown', false);
+           });
+         }
+
+         // 调用组件的父级的js：
+         actions: {
+            sendMessage(messageType, messageText) {    // 经过两次传参，分别接收两个参数
+              //send message here and return a promise
+            }
+          }
+
+
+### 使用 service 的 action 步骤：
+- 在组件中注入对应service
+- 在hbs中传入action的时候，加上 target属性，target为对应的 service
+- 在service中实现对应的action
+
+### action 的 value 属性：
+- value属性会自动取参数中对应的属性值，如 {{action 'act1' value="id"}}，传入参数为 {id: 10000}; 则 act1(param) { } 中的 param 为 10000；如果params是一个{id: 500, name: 'ZJJ'}，则 {{action 'act1' params value="name"}}，则act1的参数为params.name即"ZJJ"
+
+### action绑定到父级（节约js代码）
+- {{action}}中，如果指向函数的参数名带有引号，则会在 actions:{} 中去匹配对应处理方法，如果不带引号，则会在属性中去查找，即该属性可能是父级传入的一个action
+
+          // 调用组件的父级：
+        {{sub-comp onConfirm=(action 'act1')}}
+          // 组件 {{sub-comp}} 中可以直接使用：
+        <button {{action onConfirm}}></button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.
