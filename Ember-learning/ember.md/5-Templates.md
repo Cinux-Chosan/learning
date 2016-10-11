@@ -61,6 +61,15 @@
 
 - link-to 中可以使用 replace=true 来覆盖浏览器的历史纪录
 
+## Input helper
+- 直接给helper添加事件：
+
+        // 测试发现，该写法对某些事件无效，如 click, double-click
+        {{input value=firstName key-press="updateFirstName"}}
+
+      　// 测试发现，该写法（使用action helper）能够正确响应 click, double-click 事件等，因此此方法更好
+        {{input value=firstName click=(action "updateFirstName")}}
+
 ## Action
 
 - 默认情况下，响应 click 事件，如果需要响应其它事件，使用 on="mouseUp"，事件名使用驼峰
