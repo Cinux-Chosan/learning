@@ -50,3 +50,36 @@
 
 
 总结： initializers 中定义方法，注册对象，注入全局中，instance-initializers 会在initializers中注册的类型自动加载的时候执行，instance-initializers中可以lookup。
+
+## Services
+- Ember.Service 是一个存在于应用程序整个生命周期的Ember对象
+> - User/session authentication.
+
+> - Geolocation.
+
+> - WebSockets.
+
+> - Server-sent events or notifications.
+
+> - Server-backed API calls that may not fit Ember Data.
+
+> - Third-party APIs.
+
+> - Logging.
+
+- 创建 service：ember generate service shopping-cart
+- 如同所有Ember对象一样，Service能够有自己的属性和方法
+- 在任何容器对象（如component和其它的service）中获取某个service可以通过 Ember.inject.service 方法：
+> 方法 1（不带参）：会默认使用键名的带中划线的结构
+
+        // load the shopping-cart service
+        shoppingCart: Ember.inject.service()
+
+> 方法 2（带参）：带参数作为需要加载的service名
+
+        // load the shopping-cart service as cart property
+        cart: Ember.inject.service('shopping-cart')
+
+- 使用 inject 注入的属性为懒加载属性，以上面的service为例，如果没有调用该属性，则该service不会被实例化，因此需要使用 this.get()获取该注入的service属性，否则会得到undefined
+- service一旦载入，就会一直存在于application中直到application结束
+- service一旦注入，就可以在模板中如同属性一样调用，可以访问service中的属性
