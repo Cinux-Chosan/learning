@@ -250,7 +250,6 @@
 
         // load the shopping-cart service
         shoppingCart: Ember.inject.service()
-
 > 方法 2（带参）：带参数作为需要加载的service名
 
         // load the shopping-cart service as cart property
