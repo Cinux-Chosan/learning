@@ -222,10 +222,10 @@
         };
 
 - 需要注意的是，顺序限定只会在相同类型的初始化器中起作用，即 Application initializers 只会对 Application initializers 起作用， instance-initializers 只会对 instance-initializers 起作用。
+
 ----
 
-
-总结： initializers 中定义方法，注册对象，注入全局中，instance-initializers 会在initializers中注册的类型自动加载的时候执行，instance-initializers中可以lookup。
+总结： application initializers 中定义一些特定的类、对象、方法的注册，并可注入全局或其它工厂类型中，application instance-initializers 会在initializers中注册的类型自动加载的时候执行，instance-initializers中可以lookup。
 
 ## Services
 - Ember.Service 是一个存在于应用程序整个生命周期的Ember对象
