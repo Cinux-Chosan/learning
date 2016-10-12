@@ -229,6 +229,7 @@
 
 ## Services
 - Ember.Service 是一个存在于应用程序整个生命周期的Ember对象
+
 > - User/session authentication.
 
 > - Geolocation.
