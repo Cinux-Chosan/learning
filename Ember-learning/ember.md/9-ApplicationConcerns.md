@@ -2,7 +2,7 @@
 - Application：声明和和配置组成该网页应用的objects，单个Application的配置可以在多个ApplicationInstance之间共享。
 - ApplicationInstance：由application创建，用于管理应用的状态，该实例作为应用中那些实例化对象的拥有者。
 
-- 开场总结语：每个Ember应用程序都继承自 Ember.Application ，在它启动的时候，它会创建一个 Ember.ApplicationInstance 用于管理它的各方面状态，Ember.ApplicationInstance 作为程序中实例化对象的拥有者。##程序的声明和配置发生在 Ember.Application 中，管理状态发生在 Ember.ApplicationInstance 中。##
+- 开场总结语：每个Ember应用程序都继承自 Ember.Application ，在它启动的时候，它会创建一个 Ember.ApplicationInstance 用于管理它的各方面状态，Ember.ApplicationInstance 作为程序中实例化对象的拥有者。 --程序的声明和配置发生在 Ember.Application 中，管理状态发生在 Ember.ApplicationInstance 中。--
 ## Dependency Injection
 -
 
