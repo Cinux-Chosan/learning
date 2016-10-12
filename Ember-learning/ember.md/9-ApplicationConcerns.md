@@ -9,6 +9,7 @@
 ## Initializers （初始化器）
 - Initializers：当application启动的时候，可以通过 Initializers 来配置它
 - 初始化器分为两种： 应用初始化器（ application initializers ） 和 应用实例初始化器（ application instance initializers）
+
 > 应用初始化器在application启动的时候运行，它是为 application 配置依赖注入（ dependency injections ）的主要手段。
 
 > 应用实例初始化器（Application instance initializers）在 应用实例配加载的时候运行。它提供了配置application初始状态的方法，也用于建立应用程序实例本地的
