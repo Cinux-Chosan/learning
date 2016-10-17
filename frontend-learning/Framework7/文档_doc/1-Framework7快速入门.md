@@ -1,6 +1,6 @@
 # Framework7快速入门
 
-## 给页面添加js初始化代码
+## 给页面添加js初始化代码的三种方式：
 - 推荐方式：直接在myApp对象上给about页面进行初始化
 
         myApp.onPageInit('about', function (page) {
