@@ -37,13 +37,12 @@
 ### Common Usage
 - yarn init
 - yarn add [package] [@version / @tag]
+
 > options:  
 - default: add to dependencies
 - --dev: add to devDependencies
 - --peer: add to peerDependencies
 - --optional: add to optionalDependencies
-
-
 
 
 - yarn upgrade [package] [@version / @tag]
