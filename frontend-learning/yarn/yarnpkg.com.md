@@ -90,3 +90,7 @@
 - yarn info \<package> [\<field>]   ###
 
 > 查看某个包的信息，可以指定版本号，或者信息中的某个字段， field 即为单个字段， --json 返回 JSON 数据
+
+- yarn licenses ls  ###
+
+> 列出按字母排序的包和每个包的 license，参数 yarn licenses generate-disclaimer 返回单个及 license 信息
