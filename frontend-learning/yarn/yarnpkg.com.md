@@ -35,7 +35,7 @@
 ## Usage
 
 ### Common Usage
-- yarn init
+- yarn init [--yes / -y]
 - yarn add [package] [@version / @tag]
 
 > options:
@@ -67,9 +67,26 @@
 
 ## [命令参考](https://yarnpkg.com/en/docs/cli)
 
-- yarn cache clean  ### yarn 会在全局 cache 中保存每一个安装过的包，在 yarn 或者 yarn install 之后与运行可以清除本地缓存文件文件，相关命令： yarn cache ls；  yarn cache dir
-- yarn check  ### 检查已安装的包与package.json里面所指定的版本是否一致，参数 --integrity 会检查 hash 值来确定该包是否被篡改
-- yarn clean  ### 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 yarn install 或者 yarn add 的时候会自动执行
+- yarn cache clean  ###
+
+> yarn 会在全局 cache 中保存每一个安装过的包，在 yarn 或者 yarn install 之后与运行可以清除本地缓存文件文件，相关命令： yarn cache ls；  yarn cache dir
+
+- yarn check  ###
+
+> 检查已安装的包与package.json里面所指定的版本是否一致，参数 --integrity 会检查 hash 值来确定该包是否被篡改
+
+- yarn clean  ###
+
+> 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 yarn install 或者 yarn add 的时候会自动执行
+
 - yarn config  ###
+
 >
 - yarn config set <key> <value> [-g|--global]
+- yarn config get <key>
+- yarn config delete <key>
+- yarn config list   ### 显示当前配置信息
+
+- yarn info <package> [<field>]   ###
+
+> 查看某个包的信息，可以指定版本号，或者信息中的某个字段， field 即为单个字段， --json 返回 JSON 数据
