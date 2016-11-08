@@ -139,6 +139,26 @@
 
 > 如果 scripts 中没有指定命令，运行 yarn run 将会列出可以执行的所有 scripts 命令
 
-- yarn self-update
+- yarn self-update   ###
 
 > 将 yarn 更新到最新版本
+
+- yarn tag   ###
+
+> 添加，移除或者罗列某个包的 tags
+- yarn tag add \<package>@\<version> <tag>   ### 给某个版本添加 tag
+- yarn tag rm \<package> \<tag>   ### 移除包的 tag
+- yarn tag ls [\<package>]   ###  罗列包的所有 tag，如果没指定包，则罗列当前目录的包
+
+- yarn team   ###
+
+> 管理团队组织，更改团队成员，可通过配置 --registry = \<registry url> 使该命令会直接操作当前注册库，
+- yarn team create <scope:team>   ### 创建一个新团队
+- yarn team destroy <scope:team>   ### 销毁一个已经存在的团队
+- yarn team add <scope:team> <user>   ### 给某个已经存在的团队添加成员
+- yarn team rm <scope:team> <user>   ### 移除团队的某个成员
+- yarn team ls <scope>|<scope:team>   ### 如果是在组织(organization)上执行该命令，将会返回组织中的所有团队，如果是团队名(team)，则返回指定团队的所有用户
+
+- yarn run test   ###
+
+> 运行 scripts 的 test 命令，可以简写为 yarn test
