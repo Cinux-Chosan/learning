@@ -82,11 +82,11 @@
 - yarn config  ###
 
 >
-- yarn config set <key> <value> [-g|--global]
-- yarn config get <key>
-- yarn config delete <key>
+- yarn config set \<key> \<value> [-g|--global]
+- yarn config get \<key>
+- yarn config delete \<key>
 - yarn config list   ### 显示当前配置信息
 
-- yarn info <package> [<field>]   ###
+- yarn info \<package> [\<field>]   ###
 
 > 查看某个包的信息，可以指定版本号，或者信息中的某个字段， field 即为单个字段， --json 返回 JSON 数据
