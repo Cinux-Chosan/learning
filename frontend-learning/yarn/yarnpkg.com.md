@@ -113,3 +113,32 @@
 - yarn owner ls \<package>   ###  列出某个包的所有 owner
 - yarn owner add \<user> \<package>  ### 为某个包添加 owner
 - yarn owner rm \<user> \<package>   ### 移除某个包的某个 owner
+
+- yarn pack   ###
+
+> 创建一个依赖的 gzip 压缩包，yarn pack --filename \<filename> 给压缩包指定名称
+
+- yarn publish   ###
+
+> 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎
+- yarn publish   ### 发布在当前目录的 package.json 中定义的包
+- yarn publish [tarball]   ### 发布由gzip过后的 .tgz 包
+- yarn publish [folder]   ### 发布 folder 中的包
+- yarn publish --tag \<tag>   ### 给发布的包打上 tag
+- yarn publish --access \<public|restricted>   ### 指定包发布为public 还是受限制的 restricted
+
+- yarn remove \<package...>
+
+> 移除指定包，并更新 package.json 和 yarn.lock 文件
+
+- yarn run
+
+> 运行 package.json 中的 scripts 对象
+
+> 可以通过 -- 传递额外参数给 scripts 中的命令，如 yarn run test -- -o --watch ，则 -o 和 --watch 会传递给 scripts 中定义的该项目命令
+
+> 如果 scripts 中没有指定命令，运行 yarn run 将会列出可以执行的所有 scripts 命令
+
+- yarn self-update
+
+> 将 yarn 更新到最新版本
