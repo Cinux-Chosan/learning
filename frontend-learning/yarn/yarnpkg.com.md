@@ -120,7 +120,7 @@
 
 - yarn publish   ###
 
-> 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎
+> 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎，从npmjs.com移除发布的包，使用 npm unpublish \<package> [--force]
 - yarn publish   ### 发布在当前目录的 package.json 中定义的包
 - yarn publish [tarball]   ### 发布由gzip过后的 .tgz 包
 - yarn publish [folder]   ### 发布 folder 中的包
