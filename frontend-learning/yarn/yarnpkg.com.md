@@ -1,6 +1,5 @@
 # yarn
 
-
 ## yarn features
 - Ultra Fast (超快)
 > yarn 缓存每一个下载过的包，并且并行化所有操作来最大化资源利用率，比以往都快
@@ -37,7 +36,7 @@
 
 ### Common Usage
 - yarn init
-- yarn add [package][@version / @tag]
-- yarn upgrade [package][@version / @tag]
+- yarn add [package] [@version / @tag]
+- yarn upgrade [package] [@version / @tag]
 - yarn remove [package]
 - yarn / yarn install
