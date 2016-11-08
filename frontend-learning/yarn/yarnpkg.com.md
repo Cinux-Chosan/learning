@@ -38,7 +38,7 @@
 - yarn init
 - yarn add [package] [@version / @tag]
 
-> options:  
+> options:
 - default: add to dependencies
 - --dev: add to devDependencies
 - --peer: add to peerDependencies
@@ -48,3 +48,18 @@
 - yarn upgrade [package] [@version / @tag]
 - yarn remove [package]
 - yarn / yarn install
+
+> options:
+- default: 安装所有依赖
+- --flat: 只安装一个依赖的某一个版本
+- --force: 强制重新下载所有包
+- --production / --prod: 仅安装生产依赖(production devDependencies)
+
+- yarn global
+
+> 与其他命令配合使用
+- yarn global add [package] [@version / @tag] 自动全局安装指定包
+- yarn global bin  显示 yarn 的 bin 目录位置
+- yarn global ls  列出所有已经安装的包
+- yarn global remove  移除当前的某个不再使用的包
+- yarn global upgrade  根据指定范围升级某个包到最新版本
