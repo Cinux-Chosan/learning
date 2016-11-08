@@ -162,3 +162,22 @@
 - yarn run test   ###
 
 > 运行 scripts 的 test 命令，可以简写为 yarn test
+
+- yarn upgrade   ###
+
+> 基于package.json指定的版本范围，升级所有依赖到范围的最新版本，同时也会创建 yarn.lock 文件
+- yarn upgrade [package]   ### 升级某个指定的包
+- yarn upgrade [package@version]   ###
+- yarn upgrade [package@tag]   ###
+- yarn upgrade [package] --ignore-engines   ### 忽略yarn的文件校验
+
+- yarn version   ###
+
+> 根据提示更新你自己创建的包的版本信息，在git仓库中执行该命令将会按照 v0.0.0 的格式创建git tag，你可以根据 yarn config set 来禁止创建git tag，参考[Git tags](https://yarnpkg.com/en/docs/cli/version#toc-git-tags)
+- yarn version --new-version \<version>   ### 根据 version 创建一个新的版本
+- yarn version --no-git-tag-version   ### 仅创建一个新版本，不创建 git tag
+
+- yarn why \<query>
+
+> 指明某个包为何被安装，是因为其他包依赖与它，或是因为它被列在了 package.json 清单中。
+- 参数 \<query> 可以是 包名， 包目录 或者是 包目录下面的某个文件
