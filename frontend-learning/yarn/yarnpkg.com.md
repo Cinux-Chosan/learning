@@ -94,3 +94,22 @@
 - yarn licenses ls  ###
 
 > 列出按字母排序的包和每个包的 license，参数 yarn licenses generate-disclaimer 返回单个及 license 信息
+
+- yarn link \<package>  ###
+
+> 创建包的软链接，取消链接  yarn unlink \<package>
+
+- yarn login   ###
+
+> 登陆  npm rigistry，退出 yarn logout
+
+- yarn outdated   ###
+
+> 列出所有依赖的版本信息，包括当前版本，需要的版本和最新版本，yarn outdated [package...]
+
+- yarn owner   ###
+
+> 指定包的管理者，一个包可能有多个管理者，
+- yarn owner ls \<package>   ###  列出某个包的所有 owner
+- yarn owner add \<user> \<package>  ### 为某个包添加 owner
+- yarn owner rm \<user> \<package>   ### 移除某个包的某个 owner
