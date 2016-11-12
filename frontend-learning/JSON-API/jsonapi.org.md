@@ -18,7 +18,7 @@
 - included: 与 data 有关的资源对象（resource object）的数组 Array （次属性必须在有data的情况下才可能有）
 - links: 与 data 有关的连接对象 Object
 
-> links 可能包含如下成员：
+>> links 可能包含如下成员：
 - self: 生成当前响应文档的链接
 - related: 当 data 代表一个资源关系的时候，该属性为相关资源的链接
 - pagination: data 的分页链接
