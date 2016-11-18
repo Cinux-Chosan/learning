@@ -54,4 +54,18 @@
           console.log(dogs); // woof
         });
 
--
+- Statics (自定义静态方法)
+
+        // assign a function to the "statics" object of our animalSchema
+        animalSchema.statics.findByName = function(name, cb) {
+          return this.find({ name: new RegExp(name, 'i') }, cb);
+        };
+
+        var Animal = mongoose.model('Animal', animalSchema);
+        Animal.findByName('fido', function(err, animals) {
+          console.log(animals);
+        });
+
+- Query Helpers ()
+
+
