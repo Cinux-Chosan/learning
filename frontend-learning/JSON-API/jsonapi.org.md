@@ -3,6 +3,7 @@
 - JSON API 需要使用 JSON API 媒体类型来交换数据(application/vnd.api+json)
 
 ## 规则
+### 顶层 Top level
 - 最外层必须为 Object，它为文档的顶级
 - 最外层必须包含至少以下之一（顶层属性）：
 
@@ -27,3 +28,28 @@
 - self: 生成当前响应文档的链接
 - related: 当 data 代表一个资源关系的时候，该属性为相关资源的链接
 - pagination: data 的分页链接
+
+### 二层
+- data 资源对象必须包含如下两个成员：
+
+>
+- id: 当数据从客户端发送到服务端的时候，不需要id，它代表一条需要在服务端创建的资源
+- type
+
+- data 资源对象可以包含一下属性
+
+>
+- attributes: 代表资源的数据  Object
+- relationships: 描述本资源与其它JSON API 资源的关系  Object
+- links: 包含本资源的引用链接  Object
+- meta: 不能用来代表attributes和relationships的非标准元数据
+
+#### 字段(fields)：attributes 和 relationships 共同被称为字段
+
+#### 属性(attributes) 不能包含 relationships 和 links
+
+#### 关系(Relationships) 可能是一对一或者一对多
+关系必须至少包含以下之一
+- links: links 至少包含 self 和 related
+- data: 资源链接
+- meta: 关于关系的非标准元数据 Object
