@@ -325,7 +325,7 @@ Vinyl.isVinyl(notAFile); // false
 
 #### `Vinyl.isCustomProp(property)`
 
-该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl](#/扩展-vinyl-extending-vinyl)
+该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl](#/extending-vinyl)
 
 参数 `property`　为字符串，如果该property 在内部未使用，则返回 `true`，否则返回 `false`
 
@@ -355,7 +355,7 @@ console.log(file.path);
 ```
  注意：不要使用 `\`连接，因为在 POSIX 系统这是一个有效的文件名字符
 
-### 扩展 Vinyl (Extending Vinyl)
+### <a name="extending-vinyl">扩展 Vinyl (Extending Vinyl)</a>
 
 当你需要将 Vinyl 扩展到你自己的类中，你需要考虑以下事情：
 
@@ -385,68 +385,3 @@ class SuperFile extends Vinyl {
 上例使得属性 foo 和 \_foo 在克隆时被忽略，当在传递给构造函数的 options 时他们不会被分配给新对象
 
 `clone()` 亦是如此，如果你在内部有自己的东西需要克隆中做特殊处理的，也应该在扩展的时候这样做。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-``
