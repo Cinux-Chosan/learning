@@ -37,3 +37,17 @@ glob("**/*.js", options, function (er, files) {
 - `*(a|b|c)` 匹配 0个或 更多
 - `@(pattern|pat*|pat?erN)` 完全匹配其中某个模式
 - `**` 如果 "globstar" 是路径的一部分，它匹配 0个或 多个目录或者子目录，不会查询软连接目录进行匹配
+
+#### 点号 (Dot)
+如果文件或者目录的第一个字符为 `.` ，则除非模式中第一个字符也为 `.`，否则该文件或目录不会与任何模式匹配
+
+例如，模式 `a/.*/c` 可以匹配文件 `a/.b/c`，但是模式 `a/*/c` 不能与之匹配，因为 `*` 不能以 `.` 开始
+
+如果需要将 `.` 作为常规字符看待，可以通过在option中设置 `dot:true`
+
+#### 相对路径根节点匹配 (Basename Matching)
+
+如果在option中设置 `matchBase:true` 并且模式中没有斜线 `/`，则会搜索该目录树下面的任何地方的任何文件进行匹配，例如 `*.js` 会匹配 `test/simple/basic.js`
+
+
+[下一节：](https://github.com/isaacs/node-glob#empty-sets)
