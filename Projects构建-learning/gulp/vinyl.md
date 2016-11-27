@@ -355,7 +355,7 @@ console.log(file.path);
 ```
  注意：不要使用 `\`连接，因为在 POSIX 系统这是一个有效的文件名字符
 
-### <a name="extending-vinyl">扩展 Vinyl (Extending Vinyl)</a>
+### <a name="extending-vinyl" id="extending-vinyl">扩展 Vinyl (Extending Vinyl)</a>
 
 当你需要将 Vinyl 扩展到你自己的类中，你需要考虑以下事情：
 
