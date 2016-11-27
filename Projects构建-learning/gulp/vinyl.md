@@ -325,7 +325,7 @@ Vinyl.isVinyl(notAFile); // false
 
 #### `Vinyl.isCustomProp(property)`
 
-该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl](#/extending-vinyl)
+该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl](#user-content-extending-vinyl)
 
 参数 `property`　为字符串，如果该property 在内部未使用，则返回 `true`，否则返回 `false`
 
