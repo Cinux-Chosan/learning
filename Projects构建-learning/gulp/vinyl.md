@@ -325,7 +325,7 @@ Vinyl.isVinyl(notAFile); // false
 
 #### `Vinyl.isCustomProp(property)`
 
-该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl]('/Extending Vinyl')
+该静态方法被 Vinyl 用于在 constructor 中设置值或者当在 `file.clone()` 中复制属性的时候自动调用。参考 [Extending Vinyl](#/扩展-vinyl-extending-vinyl)
 
 参数 `property`　为字符串，如果该property 在内部未使用，则返回 `true`，否则返回 `false`
 
@@ -353,7 +353,7 @@ console.log(file.path);
 // posix => /test/foo.bar
 // win32 => \\test\\foo.bar
 ```
- 注意：不要使用 `\\`连接，因为在 POSIX 系统这是一个有效的文件名字符
+ 注意：不要使用 `\`连接，因为在 POSIX 系统这是一个有效的文件名字符
 
 ### 扩展 Vinyl (Extending Vinyl)
 
