@@ -49,5 +49,6 @@ glob("**/*.js", options, function (er, files) {
 
 如果在option中设置 `matchBase:true` 并且模式中没有斜线 `/`，则会搜索该目录树下面的任何地方的任何文件进行匹配，例如 `*.js` 会匹配 `test/simple/basic.js`
 
+####
 
 [下一节：](https://github.com/isaacs/node-glob#empty-sets)
