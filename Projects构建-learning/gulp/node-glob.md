@@ -27,7 +27,7 @@ glob("**/*.js", options, function (er, files) {
 
 在将 path 解析成模式之前，大括号里面的部分会被扩展进一个集合，使用 `,` 分隔，其中支持 `/`符号，所以 `a{/b/c, bcd}`能扩展为 `a/b/c` 和 `abcd`
 
-以下字符有特殊含义：
+以下字符有特殊含义(magic pattern)：
 - `*` 匹配0个 或 0个以上字符
 - `?` 匹配一个字符
 - `[...]` 匹配某个范围内的字符，如果第一个字符是 `!`或者　`^` 则匹配任何不在该范围内的字符
@@ -36,7 +36,7 @@ glob("**/*.js", options, function (er, files) {
 - `+(pattern|pattern|pattern)` 匹配 1个或 更多
 - `*(a|b|c)` 匹配 0个或 更多
 - `@(pattern|pat*|pat?erN)` 完全匹配其中某个模式
-- `**` 如果 "globstar" 是路径的一部分，它匹配 0个或 多个目录或者子目录，不会查询软连接目录进行匹配
+- `**` 递归查询文件，它匹配 0个或 多个目录或者子目录，不会查询软连接目录进行匹配
 
 #### 点号 (Dot)
 如果文件或者目录的第一个字符为 `.` ，则除非模式中第一个字符也为 `.`，否则该文件或目录不会与任何模式匹配
@@ -49,6 +49,51 @@ glob("**/*.js", options, function (er, files) {
 
 如果在option中设置 `matchBase:true` 并且模式中没有斜线 `/`，则会搜索该目录树下面的任何地方的任何文件进行匹配，例如 `*.js` 会匹配 `test/simple/basic.js`
 
-####
+#### 空集合 (Empty Sets)
 
-[下一节：](https://github.com/isaacs/node-glob#empty-sets)
+如果没有匹配的文件，则返回空数组，这与 shell 的表现不同，shell 直接返回匹配模式 (pattern)。
+
+如果需要表现得跟 bash 一样，则需要在 options 中设置 `nonull:true`
+
+
+#### glob.hasMagic(pattern, [options])
+
+如果pattern中有上述通配符则返回 `true`，否则返回 `false`
+
+注意：此返回结果受 options 参数影响。 如果设置了 `noext:true`，则 `+(a|b)` 不会被当做通配模式字符(magic pattern)。  如果模式中有 `{` `}` ，如 `a/{b/c,x/y}` ，则不会被当做通配模式字符，除非 设置了 `nobrace:true`
+
+#### glob(pattern, [options], cb)
+
+异步方式查找匹配的文件名
+
+- `pattern` 为 `String` 类型，用于匹配文件
+- `options` 为 `Object`
+- `cb` 为 `Function`，回调函数，当发生错误的时候或者文件匹配完成时会被调用
+    - `err` 为 `{Error | null}`
+    - `matches` 为 `{Array<String>}`，与模式匹配成功的文件名集合
+
+#### glob.sync(pattern, [options])
+
+同步方式查找文件
+
+参数与 glob() 同
+
+#### Class: glob.Glob
+
+通过实例化 glob.Glob 类来创建 Glob 对象
+
+```
+var Glob = require("glob").Glob
+var mg = new Glob(pattern, options, cb)
+```
+
+它是一个事件触发器，会立即出发文件系统开始查找匹配的文件
+
+#### new glob.Glob(pattern, [options], [cb])
+
+参数同 glob()
+
+注意：如果在options中设置了 `sync` 标志，则 `matches`(匹配的文件名数组，cb的第二个参数) 立即可以在 `g.found` 成员中获取。
+
+
+[Property](https://github.com/isaacs/node-glob#properties)
