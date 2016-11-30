@@ -64,4 +64,89 @@ var mm = new Minimatch(pattern, options)
 
 所有其它方法都是内部调用方法，并且会在必要的时候被调用
 
-[minimatch](https://github.com/isaacs/minimatch#minimatchpath-pattern-options)
+#### minimatch(path, pattern, options)
+
+main export。
+
+根据options参数，用模式匹配路径，返回是否匹配成功
+
+```
+var isJS = minimatch(file, "*.js", { matchBase: true })
+```
+
+#### minimatch.filter(pattern, options)
+
+返回一个能够用于测试的函数，适合与 `Array.filter` 配合使用
+
+```
+var javascripts = fileList.filter(minimatch.filter("*.js", {matchBase: true}))
+```
+
+#### minimatch.match(list, pattern, options)
+
+使用 fnmatch 或者 glob 形式匹配list里面的文件，如果没有文件匹配上，并且设置了 options.nonull 参数，则返回一个包含模式本身的 list
+
+```
+var javascripts = minimatch.match(fileList, "*.js", {matchBase: true}))
+```
+
+#### minimatch.makeRe(pattern, options)
+
+根据模式创建一个正则表达式对象
+
+### 参数
+
+所有选项默认为 `false`
+
+#### debug
+
+打印错误到 stderr
+
+#### nobrace
+
+不扩展 `{a,b}`和`{1..3}` 这种括号集
+
+#### noglobstar
+
+关闭 `**` 匹配多个文件夹名
+
+#### dot
+
+允许模式匹配以 `.` 号开头的文件名，即便是模式中并没有以 `.` 开头。
+
+默认情况下 `a/**/b` 不会匹配 `a/.d/b`，除非设置了 `dot` 选项
+
+#### noext
+
+关闭模式的 "extglob" 形式，如 `+(a|b)`
+
+#### nocase
+
+不区分大小写
+
+#### nonull
+
+当 `minimatch.match` 找不到匹配项时，如果设置了 `nonull`，则返回一个包含模式本身的list。如果没有设置该选项，则如果没有匹配项，则返回空 list
+
+#### matchBase
+
+如果设置该选项，则不带 `/` 的模式将与带有 `/` 的目录路径(basename)进行匹配，
+
+例如： `a?b` 能够匹配 `/xyz/123/acb`但是不能匹配 `/xyz/acb/123`
+
+#### nocomment
+
+如果设置该选项，则以 `#` 开头的模式不会被当做注释
+
+#### nonegate
+
+如果设置该选项，则以 `!` 开头的模式不会被当做非选项
+
+#### flipNegate
+
+Returns from negate expressions the same as if they were not negated. (Ie, true on a hit, false on a miss.)
+
+### [与其他fnmatch / glob实现的比较](https://github.com/isaacs/minimatch#comparisons-to-other-fnmatchglob-implementations)
+
+摘：
+If brace expansion is not disabled, then it is performed before any other interpretation of the glob pattern. Thus, a pattern like `+(a|{b),c)}`, which would not be valid in bash or zsh, is expanded first into the set of `+(a|b)` and `+(a|c)`, and those patterns are checked for validity. Since those two are valid, matching proceeds.
