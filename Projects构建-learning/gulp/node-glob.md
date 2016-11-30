@@ -95,5 +95,19 @@ var mg = new Glob(pattern, options, cb)
 
 注意：如果在options中设置了 `sync` 标志，则 `matches`(匹配的文件名数组，cb的第二个参数) 立即可以在 `g.found` 成员中获取。
 
+### Properties
 
-[Property](https://github.com/isaacs/node-glob#properties)
+- `minimatch` glob 使用的 minimatch 对象
+- `options` 传入的 options
+- `aborted` 当调用 `abort()` 方法的时候该属性会被设置为 `true`。当 abort 之后没有方法可以让 glob 继续执行搜索匹配，但是你可以重复使用 statCache 属性来避免多次系统调用。
+- `cache` Convenience object。每个字段有如下可能的值：
+  - `false` 路径不存在
+  - `true` 路径存在
+  - `FILE` 路径存在，并且它不是一个文件夹
+  - `DIR` 路径存在，并且它是一个文件夹
+  - `[file, entries, ...]` 路径存在，并且是一个文件夹，数组的值为 `fs.readdir` 的返回值
+- `statCache` `fs.stat` 结果的缓存，用于防止同一路径多次调用
+- `symlinks` 与 `**` 模式相关，用于记录哪些路径是软连接
+- `realpathCache` 传入 `fs.realpath` 的包含可选项的对象，用于最小化不必要的系统调用。它被存放在实例化过后的 Glob 对象上，可能被多次重复使用。
+
+[Events](https://github.com/isaacs/node-glob#events)
