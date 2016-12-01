@@ -95,7 +95,7 @@ var mg = new Glob(pattern, options, cb)
 
 注意：如果在options中设置了 `sync` 标志，则 `matches`(匹配的文件名数组，cb的第二个参数) 立即可以在 `g.found` 成员中获取。
 
-### Properties
+### 属性成员
 
 - `minimatch` glob 使用的 minimatch 对象
 - `options` 传入的 options
@@ -110,4 +110,47 @@ var mg = new Glob(pattern, options, cb)
 - `symlinks` 与 `**` 模式相关，用于记录哪些路径是软连接
 - `realpathCache` 传入 `fs.realpath` 的包含可选项的对象，用于最小化不必要的系统调用。它被存放在实例化过后的 Glob 对象上，可能被多次重复使用。
 
-[Events](https://github.com/isaacs/node-glob#events)
+### 事件
+
+- `end` 当匹配完成会出发该事件，如果设置了 `nonull`，则 `matches` 包含了原始模式， matches 为已序数组，除非设置了 `nosrot`
+- `watch` 每当匹配一个文件，就会触发该事件。
+- `error` 发生错误的时候会触发该事件，或者当设置了 `options.strict`并且发生文件系统错误的时候也会被触发
+- `abort` 当调用`abort()` 的时候触发
+
+### 方法
+
+- `pause` 暂时停止搜索
+- `resume` 重启搜索
+- `abort` 永远停止搜索
+
+### 可选项参数
+
+所有可以传入 Minimatch 的参数都可以传入 Glob 来改变模式的匹配行为
+
+所有选项默认都为 `false`除非另有说明
+
+所有选项都被加入到 Glob 对象上
+
+如果你正在运行多个 `glob` 操作，你可以传入一个 Glob 对象作为 `options` 参数给随后的操作来作为 `stat` 和 `readdir` 调用的捷径(to shortcut some `stat` and `readdir` calls)，至少你可以传入共享的 `symlinks`、`statCache`、`realpathCache`和 `cache`选项，因此并行的 glob　操作将会因为共享文件系统信息而得到加速。
+
+　- `cwd` 当前搜索目录，默认为 `process.cwd()`
+　- `root` 模式以 `/` 开始挂载的目录。默认为 `path.resolve(options.cwd(), "/")` 在Unix系统上是`/`，在Windows上为 `C:\`
+　- `dot` 在正常的匹配中和 `**` 匹配中包含 `.dot`文件。注意，模式中的 `.` 会匹配带点的文件
+　- `nomount`默认情况下，以正斜线开始的模式会被挂在到根上，以便返回有效的文件系统路径，设置该选项可以禁用此行为
+　- `mark` 为匹配的文件夹添加一个 `/` 字符，注意此操作需要额外的 stat 调用
+　- `nosort` 对结果不排序，默认会排序
+　- `stat`
+
+[options](https://github.com/isaacs/node-glob#options)
+
+### 在Windows上的差异
+
+请仅在 glob 表达式中使用正斜线 `/`
+
+尽管Windows使用 `/` 或者 `\` 作为路径分隔符，但是在 glob表达式中仅使用　`/` 。反斜线`\`将始终被当做转义字符而非路径分隔符。
+
+从模式匹配的绝对路径的结果会使用 `path.join`挂载到根目录上，如 `/foo/*`。但是在Windows上，默认情况下 `/foo/*` 会匹配到 `C:\foo\bar.txt`
+
+### Race Conditions
+
+由于其本质，Glob 搜索依赖于目录的遍历，所以在文件变动非常快的时候会有一定影响。当 Glob 搜寻并返回结果的时候，文件存在，但是在这之后可能文件已被迅速删除或者改变，并且为了减少系统开销，缓存了文件的状态和 readdir 调用的结果等，这些都可能在文件会经常发生迅速变化的场景造成影响，但是在大部分情况下不会有问题。
