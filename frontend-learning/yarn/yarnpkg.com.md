@@ -48,21 +48,20 @@
 - yarn upgrade [package] [@version / @tag]
 - yarn remove [package]
 - yarn / yarn install
-
-> options:
-- default: 安装所有依赖
-- --flat: 只安装一个依赖的某一个版本
-- --force: 强制重新下载所有包
-- --production / --prod: 仅安装生产依赖(production devDependencies)
+  - options:
+    - default: 安装所有依赖
+    - --flat: 只安装一个依赖的某一个版本
+    - --force: 强制重新下载所有包
+    - --production / --prod: 仅安装生产依赖(production devDependencies)
 
 - yarn global
 
-> 与其他命令配合使用
-- yarn global add [package] [@version / @tag] 自动全局安装指定包
-- yarn global bin  显示 yarn 的 bin 目录位置
-- yarn global ls  列出所有已经安装的包
-- yarn global remove  移除当前的某个不再使用的包
-- yarn global upgrade  根据指定范围升级某个包到最新版本
+  - 与其他命令配合使用
+    - yarn global add [package] [@version / @tag] 自动全局安装指定包
+    - yarn global bin  显示 yarn 的 bin 目录位置
+    - yarn global ls  列出所有已经安装的包
+    - yarn global remove  移除当前的某个不再使用的包
+    - yarn global upgrade  根据指定范围升级某个包到最新版本
 
 
 ## [命令参考](https://yarnpkg.com/en/docs/cli)
@@ -107,10 +106,10 @@
 
 - yarn owner   ###
 
-> 指定包的管理者，一个包可能有多个管理者，
-- yarn owner ls \<package>   ###  列出某个包的所有 owner
-- yarn owner add \<user> \<package>  ### 为某个包添加 owner
-- yarn owner rm \<user> \<package>   ### 移除某个包的某个 owner
+  - 指定包的管理者，一个包可能有多个管理者，
+    - yarn owner ls \<package>   ###  列出某个包的所有 owner
+    - yarn owner add \<user> \<package>  ### 为某个包添加 owner
+    - yarn owner rm \<user> \<package>   ### 移除某个包的某个 owner
 
 - yarn pack   ###
 
@@ -118,12 +117,12 @@
 
 - yarn publish   ###
 
-> 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎，从npmjs.com移除发布的包，使用 npm unpublish \<package> [--force]
-- yarn publish   ### 发布在当前目录的 package.json 中定义的包
-- yarn publish [tarball]   ### 发布由gzip过后的 .tgz 包
-- yarn publish [folder]   ### 发布 folder 中的包
-- yarn publish --tag \<tag>   ### 给发布的包打上 tag
-- yarn publish --access \<public|restricted>   ### 指定包发布为public 还是受限制的 restricted
+  - 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎，从npmjs.com移除发布的包，使用 npm unpublish \<package> [--force]
+    - yarn publish   ### 发布在当前目录的 package.json 中定义的包
+    - yarn publish [tarball]   ### 发布由gzip过后的 .tgz 包
+    - yarn publish [folder]   ### 发布 folder 中的包
+    - yarn publish --tag \<tag>   ### 给发布的包打上 tag
+    - yarn publish --access \<public|restricted>   ### 指定包发布为public 还是受限制的 restricted
 
 - yarn remove \<package...>
 
@@ -143,19 +142,19 @@
 
 - yarn tag   ###
 
-> 添加，移除或者罗列某个包的 tags
-- yarn tag add \<package>@\<version> <tag>   ### 给某个版本添加 tag
-- yarn tag rm \<package> \<tag>   ### 移除包的 tag
-- yarn tag ls [\<package>]   ###  罗列包的所有 tag，如果没指定包，则罗列当前目录的包
+  - 添加，移除或者罗列某个包的 tags
+    - yarn tag add \<package>@\<version> <tag>   ### 给某个版本添加 tag
+    - yarn tag rm \<package> \<tag>   ### 移除包的 tag
+    - yarn tag ls [\<package>]   ###  罗列包的所有 tag，如果没指定包，则罗列当前目录的包
 
 - yarn team   ###
 
-> 管理团队组织，更改团队成员，可通过配置 --registry = \<registry url> 使该命令会直接操作当前注册库，
-- yarn team create <scope:team>   ### 创建一个新团队
-- yarn team destroy <scope:team>   ### 销毁一个已经存在的团队
-- yarn team add <scope:team> <user>   ### 给某个已经存在的团队添加成员
-- yarn team rm <scope:team> <user>   ### 移除团队的某个成员
-- yarn team ls <scope>|<scope:team>   ### 如果是在组织(organization)上执行该命令，将会返回组织中的所有团队，如果是团队名(team)，则返回指定团队的所有用户
+  - 管理团队组织，更改团队成员，可通过配置 --registry = \<registry url> 使该命令会直接操作当前注册库，
+    - yarn team create <scope:team>   ### 创建一个新团队
+    - yarn team destroy <scope:team>   ### 销毁一个已经存在的团队
+    - yarn team add <scope:team> <user>   ### 给某个已经存在的团队添加成员
+    - yarn team rm <scope:team> <user>   ### 移除团队的某个成员
+    - yarn team ls <scope>|<scope:team>   ### 如果是在组织(organization)上执行该命令，将会返回组织中的所有团队，如果是团队名(team)，则返回指定团队的所有用户
 
 - yarn run test   ###
 
@@ -163,17 +162,17 @@
 
 - yarn upgrade   ###
 
-> 基于package.json指定的版本范围，升级所有依赖到范围的最新版本，同时也会创建 yarn.lock 文件
-- yarn upgrade [package]   ### 升级某个指定的包
-- yarn upgrade [package@version]   ###
-- yarn upgrade [package@tag]   ###
-- yarn upgrade [package] --ignore-engines   ### 忽略yarn的文件校验
+  - 基于package.json指定的版本范围，升级所有依赖到范围的最新版本，同时也会创建 yarn.lock 文件
+    - yarn upgrade [package]   ### 升级某个指定的包
+    - yarn upgrade [package@version]   ###
+    - yarn upgrade [package@tag]   ###
+    - yarn upgrade [package] --ignore-engines   ### 忽略yarn的文件校验
 
 - yarn version   ###
 
-> 根据提示更新你自己创建的包的版本信息，在git仓库中执行该命令将会按照 v0.0.0 的格式创建git tag，你可以根据 yarn config set 来禁止创建git tag，参考[Git tags](https://yarnpkg.com/en/docs/cli/version#toc-git-tags)
-- yarn version --new-version \<version>   ### 根据 version 创建一个新的版本
-- yarn version --no-git-tag-version   ### 仅创建一个新版本，不创建 git tag
+  - 根据提示更新你自己创建的包的版本信息，在git仓库中执行该命令将会按照 v0.0.0 的格式创建git tag，你可以根据 yarn config set 来禁止创建git tag，参考[Git tags](https://yarnpkg.com/en/docs/cli/version#toc-git-tags)
+    - yarn version --new-version \<version>   ### 根据 version 创建一个新的版本
+    - yarn version --no-git-tag-version   ### 仅创建一个新版本，不创建 git tag
 
 - yarn why \<query>
 
