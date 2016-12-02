@@ -201,7 +201,7 @@ gulp.task('somename', function(cb) {
 
 ```
 gulp.task('somename', function() {
-  var stream = gulp.src('client/**/*.js')
+  var stream = gulp.src('client/**/*.js').
     .pipe(minify())
     .pipe(gulp.dest('build'));
   return stream;
@@ -230,5 +230,93 @@ gulp.task('somename', function() {
 - and give it a hint that a task depends on completion of another.
 
 例如，现在有两个任务"one" 和 "two" 需要按如下顺序执行：
-1. 在任务 one 上添加一种提醒来通知任务执行完成。接受一个回调函数并且在完成的时候执行它 或者 返回一个 promise 或者 stream
-https://github.com/gulpjs/gulp/blob/master/docs/API.md#gulpdestpath-options
+1. 在任务 one 上添加一种提醒来通知任务执行完成。接受一个回调函数并且在完成的时候执行它 或者 返回一个 promise 或者 stream ，它们会等待被 resolve 或者 end
+2. 在任务 two 中你添加一个提示告诉程序它依赖于第一个任务完成
+
+所以有如下示例：
+
+```
+var gulp = require('gulp');
+
+// takes in a callback so the engine knows when it'll be done
+gulp.task('one', function(cb) {
+    // do stuff -- async or otherwise
+    cb(err); // if err is not null and not undefined, the run will stop, and note that it failed
+});
+
+// identifies a dependent task must be complete before this one begins
+gulp.task('two', ['one'], function() {
+    // task 'one' is done now
+});
+
+gulp.task('default', ['one', 'two']);
+```
+
+### gulp.watch(glob [, opts], tasks) 或 gulp.watch(glob [, opts, cb])
+
+观察文件，当文件改变的时候执行相应操作。该函数总会返回一个触发 `change`事件的事件触发器
+
+#### gulp.watch(glob[, opts], tasks)
+
+##### glob
+
+type: `String` 或者 `Array`
+
+单个 glob　或者　glob 数组用于表示哪些文件会被观察
+
+##### opts
+
+type: `Object`
+
+options 参数，会被传给 [`gaze`](https://github.com/shama/gaze)
+
+##### tasks
+
+type: `Array`
+
+当文件发生改变的时候需要执行的任务名数组。它们需要被 `gulp.task()`添加过
+
+```
+var watcher = gulp.watch('js/**/*.js', ['uglify','reload']);
+watcher.on('change', function(event) {
+  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+});
+```
+
+#### gulp.watch(glob[, opts, cb])
+
+##### glob
+
+type: `String` 或者 `Array`
+
+单个 glob　或者　glob 数组用于表示哪些文件会被观察
+
+##### opts
+
+options 参数，会被传给 [`gaze`](https://github.com/shama/gaze)
+
+##### cb(event)
+
+type: `Function`
+
+每个改变发生的时候会被调用的函数
+
+```
+gulp.watch('js/**/*.js', function(event) {
+  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+});
+```
+
+该回调函数会接受一个 `event` 对象作为参数。该 `event` 对象用于描述改变信息
+
+##### event.type
+
+type: `String`
+
+发生改变的事件类型，它们是 `added`、`changed`、`deleted`、`renamed`
+
+##### event.path
+
+type: `String`
+
+触发事件发生的文件的文件路径
