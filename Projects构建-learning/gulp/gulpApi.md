@@ -149,3 +149,86 @@ gulp.task('build', ['array', 'of', 'task', 'names']);
 ```
 
 注意： 任务将会并行运行一次，因此不要假设任务将按顺序完成运行
+
+#### fn
+
+type: `Function`
+
+该函数为该任务任务需要执行的操作，通常如下形式：
+
+```
+gulp.task('buildStuff', function() {
+  // Do something that "builds stuff"
+  var stream = gulp.src(/*some source path*/)
+  .pipe(somePlugin())
+  .pipe(someOtherPlugin())
+  .pipe(gulp.dest(/*some destination*/));
+
+  return stream;
+  });
+```
+
+#### 异步任务
+
+如果 `fn` 遵循如下规则，则任务可以异步执行：
+
+- 接受回调函数
+
+```
+// run a command in a shell
+var exec = require('child_process').exec;
+gulp.task('jekyll', function(cb) {
+  // build Jekyll
+  exec('jekyll build', function(err) {
+    if (err) return cb(err); // return error
+    cb(); // finished task
+  });
+});
+
+// use an async result in a pipe
+gulp.task('somename', function(cb) {
+  getFilesAsync(function(err, res) {
+    if (err) return cb(err);
+    var stream = gulp.src(res)
+      .pipe(minify())
+      .pipe(gulp.dest('build'))
+      .on('end', cb);
+  });
+});
+```
+
+- 返回 stream
+
+```
+gulp.task('somename', function() {
+  var stream = gulp.src('client/**/*.js')
+    .pipe(minify())
+    .pipe(gulp.dest('build'));
+  return stream;
+});
+```
+
+- 返回 promise
+
+```
+var Q = require('q');
+
+gulp.task('somename', function() {
+  var deferred = Q.defer();
+
+  // do async stuff
+  setTimeout(function() {
+    deferred.resolve();
+  }, 1);
+
+  return deferred.promise;
+});
+```
+
+注意：默认情况下，任务以最大并发数运行。例如，它会立即启动所有任务并且不会等待。如果需要创建一系列按序执行的任务，遵循如下两点：
+- give it a hint to tell it when the task is done,
+- and give it a hint that a task depends on completion of another.
+
+例如，现在有两个任务"one" 和 "two" 需要按如下顺序执行：
+1. 在任务 one 上添加一种提醒来通知任务执行完成。接受一个回调函数并且在完成的时候执行它 或者 返回一个 promise 或者 stream
+https://github.com/gulpjs/gulp/blob/master/docs/API.md#gulpdestpath-options
