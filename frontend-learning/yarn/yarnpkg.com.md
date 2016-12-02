@@ -68,7 +68,7 @@
 
 - `yarn cache clean`
 
-  - yarn 会在全局 cache 中保存每一个安装过的包，在 `yarn` 或者 `yarn install` 之后与运行可以清除本地缓存文件文件，相关命令： `yarn cache ls`；  `yarn cache dir`
+  - yarn 会在全局 cache 中保存每一个安装过的包，在 `yarn` 或者 `yarn install` 之后与运行可以清除本地缓存文件文件，相关命令： `yarn cache ls`、  `yarn cache dir`
 
 - `yarn check`
 
