@@ -79,12 +79,12 @@
   - 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 `yarn install` 或者 `yarn add` 的时候会自动执行
 
 - `yarn config`  ###
-  - `yarn config set \<key> \<value> [-g|--global]`
-  - `yarn config get \<key>`
-  - `yarn config delete \<key>`
+  - `yarn config set <key> <value> [-g|--global]`
+  - `yarn config get <key>`
+  - `yarn config delete <key>`
   - `yarn config list`   ### 显示当前配置信息
 
-- `yarn info \<package> [\<field>]`   ###
+- `yarn info <package> [<field>]`   ###
 
   - 查看某个包的信息，可以指定版本号，或者信息中的某个字段， `field` 即为单个字段， `--json` 返回 JSON 数据
 
@@ -92,9 +92,9 @@
 
   - 列出按字母排序的包和每个包的 license，参数 `yarn licenses generate-disclaimer` 返回单个及 license 信息
 
-- `yarn link \<package>`  ###
+- `yarn link <package>`  ###
 
-  - 创建包的软链接，取消链接  `yarn unlink \<package>`
+  - 创建包的软链接，取消链接  `yarn unlink <package>`
 
 - `yarn login`   ###
 
@@ -107,24 +107,24 @@
 - `yarn owner`   ###
 
   - 指定包的管理者，一个包可能有多个管理者，
-    - `yarn owner ls \<package>`   ###  列出某个包的所有 owner
-    - `yarn owner add \<user> \<package>`  ### 为某个包添加 owner
-    - `yarn owner rm \<user> \<package>`   ### 移除某个包的某个 owner
+    - `yarn owner ls <package>`   ###  列出某个包的所有 owner
+    - `yarn owner add <user> <package>`  ### 为某个包添加 owner
+    - `yarn owner rm <user> <package>`   ### 移除某个包的某个 owner
 
 - `yarn pack`   ###
 
-  - 创建一个依赖的 gzip 压缩包，`yarn pack --filename \<filename>` 给压缩包指定名称
+  - 创建一个依赖的 gzip 压缩包，`yarn pack --filename <filename>` 给压缩包指定名称
 
 - `yarn publish`   ###
 
-  - 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎，从npmjs.com移除发布的包，使用 `npm unpublish \<package> [--force]`
+  - 一旦包被发布，你将永远不能改变它的版本号，所以在发布之前需谨慎，从npmjs.com移除发布的包，使用 `npm unpublish <package> [--force]`
     - `yarn publish`   ### 发布在当前目录的 package.json 中定义的包
     - `yarn publish [tarball]`   ### 发布由gzip过后的 .tgz 包
     - `yarn publish [folder]`   ### 发布 folder 中的包
-    - `yarn publish --tag \<tag>`   ### 给发布的包打上 tag
-    - `yarn publish --access \<public|restricted>`   ### 指定包发布为public 还是受限制的 restricted
+    - `yarn publish --tag <tag>`   ### 给发布的包打上 tag
+    - `yarn publish --access <public|restricted>`   ### 指定包发布为public 还是受限制的 restricted
 
-- `yarn remove \<package...>`
+- `yarn remove <package...>`
 
   - 移除指定包，并更新 package.json 和 yarn.lock 文件
 
@@ -143,13 +143,13 @@
 - `yarn tag`   ###
 
   - 添加，移除或者罗列某个包的 tags
-    - `yarn tag add \<package>@\<version> <tag>`   ### 给某个版本添加 tag
-    - `yarn tag rm \<package> \<tag>`   ### 移除包的 tag
-    - `yarn tag ls [\<package>]`   ###  罗列包的所有 tag，如果没指定包，则罗列当前目录的包
+    - `yarn tag add <package>@<version> <tag>`   ### 给某个版本添加 tag
+    - `yarn tag rm <package> <tag>`   ### 移除包的 tag
+    - `yarn tag ls [<package>]`   ###  罗列包的所有 tag，如果没指定包，则罗列当前目录的包
 
 - `yarn team`   ###
 
-  - 管理团队组织，更改团队成员，可通过配置 `--registry = \<registry url>` 使该命令会直接操作当前注册库，
+  - 管理团队组织，更改团队成员，可通过配置 `--registry = <registry url>` 使该命令会直接操作当前注册库，
     - `yarn team create <scope:team>`   ### 创建一个新团队
     - `yarn team destroy <scope:team>`   ### 销毁一个已经存在的团队
     - `yarn team add <scope:team> <user>`   ### 给某个已经存在的团队添加成员
@@ -171,10 +171,10 @@
 - `yarn version`   ###
 
   - 根据提示更新你自己创建的包的版本信息，在git仓库中执行该命令将会按照 v0.0.0 的格式创建git tag，你可以根据 `yarn config set` 来禁止创建git tag，参考[Git tags](https://yarnpkg.com/en/docs/cli/version#toc-git-tags)
-    - `yarn version --new-version \<version>`   ### 根据 version 创建一个新的版本
+    - `yarn version --new-version <version>`   ### 根据 version 创建一个新的版本
     - `yarn version --no-git-tag-version`  ### 仅创建一个新版本，不创建 git tag
 
-- `yarn why \<query>`
+- `yarn why <query>`
 
   - 指明某个包为何被安装，是因为其他包依赖与它，或是因为它被列在了 package.json 清单中。
-  - 参数 `\<query>` 可以是 包名， 包目录 或者是 包目录下面的某个文件
+  - 参数 `<query>` 可以是 包名， 包目录 或者是 包目录下面的某个文件
