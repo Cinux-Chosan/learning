@@ -76,4 +76,76 @@ gulp.src('client/js/**/*.js', { base: 'client' })
 ```
 
 ### gulp.dest(path[, options])
-https://github.com/gulpjs/gulp/blob/master/docs/API.md#gulpdestpath-options
+
+可以将信息通过管道传输给它，并且它会将信息写入文件。可以多次 pipe 到不同目录，如果目录不存在将会被创建。
+
+```
+gulp.src('./client/templates/*.jade')
+  .pipe(jade())
+  .pipe(gulp.dest('./build/templates'))
+  .pipe(minify())
+  .pipe(gulp.dest('./build/minified_templates'));
+```
+
+上例的写入目录根据当前相对目录加上给定目录来计算。相对目录根据 file base计算，参考 `gulp.src`了解更多
+
+
+#### path
+
+type: `String` or `Function`
+
+代表写入路径的字符串或者返回写入路径字符串的函数。该函数将会被给予一个[vinyl 文件实例](https://github.com/gulpjs/vinyl)
+
+#### options
+
+type: `Object`
+
+##### options.cwd
+
+type: `String` default: `process.cwd()`
+
+写入目录的`cwd`，只有在写入目录为相对路径的时候有影响
+
+##### options.mode
+
+type: `String` default: `0777`
+
+以八进制的形式规定任何需要被创建的写入目录权限
+
+### gulp.task(name[, deps] [,fn])
+
+使用 [Orchestrator](https://github.com/robrich/orchestrator) 定义任务
+
+```
+gulp.task('somename', function() {
+  // Do stuff
+});
+```
+
+#### name
+
+type: `String`
+
+任务名，需要在命令行中运行的任务中不应该有空格
+
+#### deps
+
+type: `Array`
+
+依赖数组，在你的任务开始之前，该数组内的任务将会被执行完成
+
+```
+gulp.task('mytask', ['array', 'of', 'task', 'names'], function() {
+  // Do stuff
+});
+```
+
+注意：你的任务是否依赖于其他依赖的完成，确保你的依赖任务能够正确的使用异步模式：接受回调或者返回一个promise或者事件流
+
+如果你只是为了运行一组依赖任务，你可以忽略回调函数：
+
+```
+gulp.task('build', ['array', 'of', 'task', 'names']);
+```
+
+注意： 任务将会并行运行一次，因此不要假设任务将按顺序完成运行
