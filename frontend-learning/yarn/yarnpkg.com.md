@@ -2,31 +2,31 @@
 
 ## yarn features
 - Ultra Fast (超快)
-> yarn 缓存每一个下载过的包，并且并行化所有操作来最大化资源利用率，比以往都快
+  - yarn 缓存每一个下载过的包，并且并行化所有操作来最大化资源利用率，比以往都快
 
 - Mega Secure (超安全)
-> 在执行代码之前，Yarn使用校验和来验证每个已安装的软件包的完整性。
+  - 在执行代码之前，Yarn使用校验和来验证每个已安装的软件包的完整性。
 
 - Super Reliable (超可靠)
-> 保证各个系统之间的一致性
+  - 保证各个系统之间的一致性
 
 - Offline Mode (离线模式)
-> 之前安装过的包，可以在没有网络的情况下再次安装
+  - 之前安装过的包，可以在没有网络的情况下再次安装
 
 - Deterministic (确定性)
-> 不依赖于包的安装顺序，相同的依赖在不同的机器上也会采用相同的方式安装
+  - 不依赖于包的安装顺序，相同的依赖在不同的机器上也会采用相同的方式安装
 
 - Network Performance (网络性能良好)
-> yarn 高效的将请求列队，避免瀑布效应。
+  - yarn 高效的将请求列队，避免瀑布效应。
 
 - Multiple Registries (多注册库)
-> 不管是从 npm 或者是 bower 安装的包，都保持工作流程相同
+  - 不管是从 npm 或者是 bower 安装的包，都保持工作流程相同
 
 - Network Resilience (具有网络弹性)
-> 单个请求失败不会导致安装失败，在失败过后会重新尝试请求资源
+  - 单个请求失败不会导致安装失败，在失败过后会重新尝试请求资源
 
 - Flat Mode (平面模式)
-> 将不匹配的版本转换为某一个合适版本，避免重复创建
+  - 将不匹配的版本转换为某一个合适版本，避免重复创建
 
 总结： 安全，可靠，快速
 
@@ -69,43 +69,41 @@
 
 - yarn cache clean  ###
 
-> yarn 会在全局 cache 中保存每一个安装过的包，在 yarn 或者 yarn install 之后与运行可以清除本地缓存文件文件，相关命令： yarn cache ls；  yarn cache dir
+  - yarn 会在全局 cache 中保存每一个安装过的包，在 yarn 或者 yarn install 之后与运行可以清除本地缓存文件文件，相关命令： yarn cache ls；  yarn cache dir
 
 - yarn check  ###
 
-> 检查已安装的包与package.json里面所指定的版本是否一致，参数 --integrity 会检查 hash 值来确定该包是否被篡改
+ - 检查已安装的包与package.json里面所指定的版本是否一致，参数 --integrity 会检查 hash 值来确定该包是否被篡改
 
 - yarn clean  ###
 
-> 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 yarn install 或者 yarn add 的时候会自动执行
+  - 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 yarn install 或者 yarn add 的时候会自动执行
 
 - yarn config  ###
-
->
-- yarn config set \<key> \<value> [-g|--global]
-- yarn config get \<key>
-- yarn config delete \<key>
-- yarn config list   ### 显示当前配置信息
+  - yarn config set \<key> \<value> [-g|--global]
+  - yarn config get \<key>
+  - yarn config delete \<key>
+  - yarn config list   ### 显示当前配置信息
 
 - yarn info \<package> [\<field>]   ###
 
-> 查看某个包的信息，可以指定版本号，或者信息中的某个字段， field 即为单个字段， --json 返回 JSON 数据
+  - 查看某个包的信息，可以指定版本号，或者信息中的某个字段， field 即为单个字段， --json 返回 JSON 数据
 
 - yarn licenses ls  ###
 
-> 列出按字母排序的包和每个包的 license，参数 yarn licenses generate-disclaimer 返回单个及 license 信息
+  - 列出按字母排序的包和每个包的 license，参数 yarn licenses generate-disclaimer 返回单个及 license 信息
 
 - yarn link \<package>  ###
 
-> 创建包的软链接，取消链接  yarn unlink \<package>
+  - 创建包的软链接，取消链接  yarn unlink \<package>
 
 - yarn login   ###
 
-> 登陆  npm rigistry，退出 yarn logout
+  - 登陆  npm rigistry，退出 yarn logout
 
 - yarn outdated   ###
 
-> 列出所有依赖的版本信息，包括当前版本，需要的版本和最新版本，yarn outdated [package...]
+  - 列出所有依赖的版本信息，包括当前版本，需要的版本和最新版本，yarn outdated [package...]
 
 - yarn owner   ###
 
@@ -116,7 +114,7 @@
 
 - yarn pack   ###
 
-> 创建一个依赖的 gzip 压缩包，yarn pack --filename \<filename> 给压缩包指定名称
+  - 创建一个依赖的 gzip 压缩包，yarn pack --filename \<filename> 给压缩包指定名称
 
 - yarn publish   ###
 
@@ -129,19 +127,19 @@
 
 - yarn remove \<package...>
 
-> 移除指定包，并更新 package.json 和 yarn.lock 文件
+  - 移除指定包，并更新 package.json 和 yarn.lock 文件
 
 - yarn run
 
-> 运行 package.json 中的 scripts 对象
+  - 运行 package.json 中的 scripts 对象
 
-> 可以通过 -- 传递额外参数给 scripts 中的命令，如 yarn run test -- -o --watch ，则 -o 和 --watch 会传递给 scripts 中定义的该项目命令
+  - 可以通过 -- 传递额外参数给 scripts 中的命令，如 yarn run test -- -o --watch ，则 -o 和 --watch 会传递给 scripts 中定义的该项目命令
 
-> 如果 scripts 中没有指定命令，运行 yarn run 将会列出可以执行的所有 scripts 命令
+  - 如果 scripts 中没有指定命令，运行 yarn run 将会列出可以执行的所有 scripts 命令
 
 - yarn self-update   ###
 
-> 将 yarn 更新到最新版本
+  - 将 yarn 更新到最新版本
 
 - yarn tag   ###
 
@@ -161,7 +159,7 @@
 
 - yarn run test   ###
 
-> 运行 scripts 的 test 命令，可以简写为 yarn test
+  - 运行 scripts 的 test 命令，可以简写为 yarn test
 
 - yarn upgrade   ###
 
@@ -179,5 +177,5 @@
 
 - yarn why \<query>
 
-> 指明某个包为何被安装，是因为其他包依赖与它，或是因为它被列在了 package.json 清单中。
-- 参数 \<query> 可以是 包名， 包目录 或者是 包目录下面的某个文件
+  - 指明某个包为何被安装，是因为其他包依赖与它，或是因为它被列在了 package.json 清单中。
+  - 参数 \<query> 可以是 包名， 包目录 或者是 包目录下面的某个文件
