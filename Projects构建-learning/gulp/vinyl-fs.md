@@ -82,4 +82,26 @@ type: `Boolean` default: `false`
 
 ##### `options.sourcemaps`
 
-对通过流传递的文件启用源映射支持。加载sourcemaps并且解析文件的sourcemaps映射关系，使用 
+对通过流传递的文件启用源映射支持。加载sourcemaps并且解析文件的sourcemaps映射关系，使用 [ gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps)
+
+type: `Boolean` default: `false`
+
+##### `options.followSymlinks`
+
+Whether or not to recursively resolve symlinks to their targets. Setting to false to preserve them as symlinks and make file.symlink equal the original symlink's target path.
+
+type: `Boolean` default: `true`
+
+##### `options.dot`
+
+是否允许 glob 匹配点号开头的文件（如 `.gitignore`）
+
+type: `Boolean` default: `false`
+
+##### 其它
+
+任何 glob　相关的参数在　[lob-stream](https://github.com/gulpjs/glob-stream) 和 [node-glob](https://github.com/isaacs/node-glob)中， 任何与 through2 相关的选项在 [through2](https://github.com/rvagg/through2) 中。 Those options are forwarded verbatim.
+
+
+### `dest(folder[, options])`
+https://github.com/gulpjs/vinyl-fs#destfolder-options
