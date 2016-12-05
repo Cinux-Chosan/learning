@@ -58,7 +58,7 @@ type: `Boolean`  default: `true`
 
 ##### `options.read`
 
-是否将文件设置为可读。在移除未见的时候会比较有用。设置为 `false` 将会使 `file.contents`变为 `null` 并且禁止通过 `.dest()` 方法将文件内容写入磁盘
+是否将文件设置为可读。在移除文件的时候会比较有用。设置为 `false` 将会使 `file.contents`变为 `null` 并且禁止通过 `.dest()` 方法将文件内容写入磁盘
 
 type: `Boolean` default:`true`
 
