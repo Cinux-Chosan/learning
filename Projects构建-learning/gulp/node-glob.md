@@ -132,32 +132,32 @@ var mg = new Glob(pattern, options, cb)
 所有选项都被加入到 Glob 对象上
 
 如果你正在运行多个 `glob` 操作，你可以传入一个 Glob 对象作为 `options` 参数给随后的操作来作为 `stat` 和 `readdir` 调用的捷径(to shortcut some `stat` and `readdir` calls)，至少你可以传入共享的 `symlinks`、`statCache`、`realpathCache`和 `cache`选项，因此并行的 glob　操作将会因为共享文件系统信息而得到加速。
- 　- `cwd` 当前搜索目录，默认为 `process.cwd()`
+　- `cwd` 当前搜索目录，默认为 `process.cwd()`
 　 - `root` 模式以 `/` 开始挂载的目录。默认为 `path.resolve(options.cwd(), "/")` 在Unix系 统上是`/`，在Windows上为 `C:\`
- 　- `dot` 在正常的匹配中和 `**` 匹配中包含 `.dot`文件。注意，模式中的 `.` 会匹配带点的文件
+　- `dot` 在正常的匹配中和 `**` 匹配中包含 `.dot`文件。注意，模式中的 `.` 会匹配带点的文件
 　 - `nomount`默认情况下，以正斜线开始的模式会被挂在到根上，以便返回有效的文件系统路径，设置该选项可以禁用此行为
 　 - `mark` 为匹配的文件夹添加一个 `/` 字符，注意此操作需要额外的 stat 调用
 　 - `nosort` 对结果不排序，默认会排序
- 　- `stat` 如果设置为 `true`则会统计所有结果，某种程度上会降低性能，而且不必要， 除非 `readdir` 可能返回不可信的文件描述符
-   - `silent` 当读取目录遇到异常错误的时候，警告信息会被输出到 stderr，将该选项设置为 `true` 将不会输出警告
-   - `strict` 当读取目录遇到异常错误的时候，进程会继续搜索和匹配，如果将该属性设为 `true` 将在遇到错误的时候抛出错误
-   - `cache` 参考上面的 ceche 属性，传入之前声称的 cache 对象可以节省文件系统调用
-   - `statCache` 该属性为文件系统结果的缓存，用于避免不必要的系统调用。虽然通常不需要设置它，如果你知道在不同的调用期间文件系统不会改变，那么你可以将一个来自 glob() 调用返回的 statCache 传入另一个的 options 参数内。
-   - `symlinks` 缓存已知的软连接。当解析 `**`匹配的时候，你可以传入一个在此之前生成的 `symlinks` 对象来减少 `lstat`调用
-   - `sync` *已废弃* 使用`glob.sync(pattern, options)`代替
-   - `nounique` 在某种情况下， `{ }`模式会导致某些文件在结果集中出现多次。默认情况下该种实现会阻止结果集中出现多次。将该属性设置为 `true` 会禁用去重
-   - `nonull`  设置该选项来禁止返回空集合，如果没有匹配的文件将会返回模式本身的集合
-   - `debug` 在minimatch 和 glob 中开启调试 logging
-   - `nobrace` 不扩展大括号集模式，如 `{a,b}`或者 `{1..3}`不会扩展
-   - `noglobstar` 禁用 `**`，将它看做常规的 `*`
-   - `noext` 不匹配 `extglob` 模式，即 `+(a|b)`
-   - `nocase` 设置匹配不区分大小写。注意（Note: on case-insensitive filesystems, non-magic patterns will match by default, since stat and readdir will not raise errors.）
-   - `matchBase` 如果模式不包含任何斜线字符，则只匹配文件名，也就是说 `*.js`等同于 `**/*.js`，匹配根目录下所有以 `.js`结尾的文件。
-   - `nodir` 不匹配文件夹，仅匹配文件。（提示：如果仅匹配目录，可以在模式尾部加上`/`）
-   - `ignore` 添加一个模式或者glob 模式数组来执行匹配。注意： `ignore` 参数总会使用 `dot:true` 模式
-   - `follow` 当使用 `**`的时候也会采用软连接目录。注意：该选项会导致重复引用
-   - `realpath` 设置为 `true` 的时候会在所有结果上调用 `fs.realpath`。 在无法解析软连接的情况下，将会返回匹配的完整的绝对路径（尽管它通常是一个断开的软连接）
-   - `absolute` 如果该项设置为`true`将总是返回匹配文件的绝对路径。与`realpath`不同的是，该选项会影响 `match` 的返回值
+　- `stat` 如果设置为 `true`则会统计所有结果，某种程度上会降低性能，而且不必要， 除非 `readdir` 可能返回不可信的文件描述符
+ - `silent` 当读取目录遇到异常错误的时候，警告信息会被输出到 stderr，将该选项设置为 `true` 将不会输出警告
+ - `strict` 当读取目录遇到异常错误的时候，进程会继续搜索和匹配，如果将该属性设为 `true` 将在遇到错误的时候抛出错误
+ - `cache` 参考上面的 ceche 属性，传入之前声称的 cache 对象可以节省文件系统调用
+ - `statCache` 该属性为文件系统结果的缓存，用于避免不必要的系统调用。虽然通常不需要设置它，如果你知道在不同的调用期间文件系统不会改变，那么你可以将一个来自 glob() 调用返回的 statCache 传入另一个的 options 参数内。
+ - `symlinks` 缓存已知的软连接。当解析 `**`匹配的时候，你可以传入一个在此之前生成的 `symlinks` 对象来减少 `lstat`调用
+ - `sync` *已废弃* 使用`glob.sync(pattern, options)`代替
+ - `nounique` 在某种情况下， `{ }`模式会导致某些文件在结果集中出现多次。默认情况下该种实现会阻止结果集中出现多次。将该属性设置为 `true` 会禁用去重
+ - `nonull`  设置该选项来禁止返回空集合，如果没有匹配的文件将会返回模式本身的集合
+ - `debug` 在minimatch 和 glob 中开启调试 logging
+ - `nobrace` 不扩展大括号集模式，如 `{a,b}`或者 `{1..3}`不会扩展
+ - `noglobstar` 禁用 `**`，将它看做常规的 `*`
+ - `noext` 不匹配 `extglob` 模式，即 `+(a|b)`
+ - `nocase` 设置匹配不区分大小写。注意（Note: on case-insensitive filesystems, non-magic patterns will match by default, since stat and readdir will not raise errors.）
+ - `matchBase` 如果模式不包含任何斜线字符，则只匹配文件名，也就是说 `*.js`等同于 `**/*.js`，匹配根目录下所有以 `.js`结尾的文件。
+ - `nodir` 不匹配文件夹，仅匹配文件。（提示：如果仅匹配目录，可以在模式尾部加上`/`）
+ - `ignore` 添加一个模式或者glob 模式数组来执行匹配。注意： `ignore` 参数总会使用 `dot:true` 模式
+ - `follow` 当使用 `**`的时候也会采用软连接目录。注意：该选项会导致重复引用
+ - `realpath` 设置为 `true` 的时候会在所有结果上调用 `fs.realpath`。 在无法解析软连接的情况下，将会返回匹配的完整的绝对路径（尽管它通常是一个断开的软连接）
+ - `absolute` 如果该项设置为`true`将总是返回匹配文件的绝对路径。与`realpath`不同的是，该选项会影响 `match` 的返回值
 
 ### [Comparisons to other fnmatch/glob implementations](https://github.com/isaacs/node-glob#comparisons-to-other-fnmatchglob-implementations)
 
