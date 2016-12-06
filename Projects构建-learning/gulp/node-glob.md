@@ -132,7 +132,6 @@ var mg = new Glob(pattern, options, cb)
 所有选项都被加入到 Glob 对象上
 
 如果你正在运行多个 `glob` 操作，你可以传入一个 Glob 对象作为 `options` 参数给随后的操作来作为 `stat` 和 `readdir` 调用的捷径(to shortcut some `stat` and `readdir` calls)，至少你可以传入共享的 `symlinks`、`statCache`、`realpathCache`和 `cache`选项，因此并行的 glob　操作将会因为共享文件系统信息而得到加速。
-
  　- `cwd` 当前搜索目录，默认为 `process.cwd()`
 　 - `root` 模式以 `/` 开始挂载的目录。默认为 `path.resolve(options.cwd(), "/")` 在Unix系 统上是`/`，在Windows上为 `C:\`
  　- `dot` 在正常的匹配中和 `**` 匹配中包含 `.dot`文件。注意，模式中的 `.` 会匹配带点的文件
