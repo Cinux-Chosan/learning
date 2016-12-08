@@ -2,7 +2,7 @@
 
 promise 库(CommonJS/Promises/A,B,D)
 
-<div>
+<div class="text-center">
   <a href="http://promises-aplus.github.com/promises-spec">
     <img src="http://kriskowal.github.io/q/q.png" align="right" alt="Q logo" />
   </a>
