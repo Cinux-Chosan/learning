@@ -5,7 +5,7 @@
 ## 使用
 
 - 获取引用：
-```
+```javascript
 var Orchestrator = require('orchestrator');
 var orchestrator = new Orchestrator();
 ```
