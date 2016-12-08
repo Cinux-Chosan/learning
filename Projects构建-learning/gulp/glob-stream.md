@@ -4,7 +4,7 @@
 
 ## 使用
 
-```
+```javascript
 var gs = require('glob-stream');
 
 var stream = gs('./files/**/*.coffee', { /* options */ });
@@ -41,16 +41,16 @@ stream.on('data', function(file){
 
 ### Glob
 
-```
+```javascript
 var stream = gs(['./**/*.js', '!./node_modules/**/*']);
 ```
 
 Globs 按顺序执行，所以 带有 `!` 的否定形式模式必须在不带 `!` 的模式（正模式）之后，例如：
-```
+```javascript
 gulp.src(['!b*.js', '*.js'])
 ```
 不会执行，但是下面的这个会执行：
-```
+```javascript
 gulp.src(['*.js', '!b*.js'])
 ```
 

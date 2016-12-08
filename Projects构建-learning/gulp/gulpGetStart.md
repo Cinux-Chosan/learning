@@ -19,7 +19,7 @@ npm i -dev gulp
 
 ## 在根目录创建 gulpfile.js
 
-```
+```javascript
 var gulp = require('gulp');
 
 gulp.task('default', function() {

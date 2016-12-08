@@ -9,7 +9,7 @@
 npm i glob
 ```
 
-```
+```javascript
 var glob = require("glob")
 
 // options is optional
@@ -82,7 +82,7 @@ glob("**/*.js", options, function (er, files) {
 
 通过实例化 glob.Glob 类来创建 Glob 对象
 
-```
+```javascript
 var Glob = require("glob").Glob
 var mg = new Glob(pattern, options, cb)
 ```

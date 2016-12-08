@@ -7,7 +7,7 @@
 - 参数2： `Object`，optinons包含 (buffer、read、base)
 - return: 返回 Vinyl 文件类型流(stream of [Vinyl files](https://github.com/gulpjs/vinyl-fs))，可通过管道 (pipe) 传递给其他插件
 - 示例：
-```
+```javascript
 gulp.src('client/templates/*.jade')
   .pipe(jade())
   .pipe(minify())
@@ -33,7 +33,7 @@ client/
 
 以下表达式将会匹配到 `a.js`和　`bad.js`
 
-```
+```javascript
 gulp.src(['client/*.js', '!client/b*.js', 'client/bad.js'])
 ```
 
@@ -65,7 +65,7 @@ type: `String` default: everything before a glob starts (see [glob2base](https:/
 
 例如，假如 `somefile.js` 在 `client/js/somedir`中的情况：
 
-```
+```javascript
 gulp.src('client/js/**/*.js') // Matches 'client/js/somedir/somefile.js' and resolves `base` to `client/js/`
   .pipe(minify())
   .pipe(gulp.dest('build'));  // Writes 'build/somedir/somefile.js'
@@ -79,7 +79,7 @@ gulp.src('client/js/**/*.js', { base: 'client' })
 
 可以将信息通过管道传输给它，并且它会将信息写入文件。可以多次 pipe 到不同目录，如果目录不存在将会被创建。
 
-```
+```javascript
 gulp.src('./client/templates/*.jade')
   .pipe(jade())
   .pipe(gulp.dest('./build/templates'))
@@ -116,7 +116,7 @@ type: `String` default: `0777`
 
 使用 [Orchestrator](https://github.com/robrich/orchestrator) 定义任务
 
-```
+```javascript
 gulp.task('somename', function() {
   // Do stuff
 });
@@ -134,7 +134,7 @@ type: `Array`
 
 依赖数组，在你的任务开始之前，该数组内的任务将会被执行完成
 
-```
+```javascript
 gulp.task('mytask', ['array', 'of', 'task', 'names'], function() {
   // Do stuff
 });
@@ -144,7 +144,7 @@ gulp.task('mytask', ['array', 'of', 'task', 'names'], function() {
 
 如果你只是为了运行一组依赖任务，你可以忽略回调函数：
 
-```
+```javascript
 gulp.task('build', ['array', 'of', 'task', 'names']);
 ```
 
@@ -156,7 +156,7 @@ type: `Function`
 
 该函数为该任务任务需要执行的操作，通常如下形式：
 
-```
+```javascript
 gulp.task('buildStuff', function() {
   // Do something that "builds stuff"
   var stream = gulp.src(/*some source path*/)
@@ -174,7 +174,7 @@ gulp.task('buildStuff', function() {
 
 - 接受回调函数
 
-```
+```javascript
 // run a command in a shell
 var exec = require('child_process').exec;
 gulp.task('jekyll', function(cb) {
@@ -199,7 +199,7 @@ gulp.task('somename', function(cb) {
 
 - 返回 stream
 
-```
+```javascript
 gulp.task('somename', function() {
   var stream = gulp.src('client/**/*.js').
     .pipe(minify())
@@ -210,7 +210,7 @@ gulp.task('somename', function() {
 
 - 返回 promise
 
-```
+```javascript
 var Q = require('q');
 
 gulp.task('somename', function() {
@@ -235,7 +235,7 @@ gulp.task('somename', function() {
 
 所以有如下示例：
 
-```
+```javascript
 var gulp = require('gulp');
 
 // takes in a callback so the engine knows when it'll be done
@@ -276,7 +276,7 @@ type: `Array`
 
 当文件发生改变的时候需要执行的任务名数组。它们需要被 `gulp.task()`添加过
 
-```
+```javascript
 var watcher = gulp.watch('js/**/*.js', ['uglify','reload']);
 watcher.on('change', function(event) {
   console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
@@ -301,7 +301,7 @@ type: `Function`
 
 每个改变发生的时候会被调用的函数
 
-```
+```javascript
 gulp.watch('js/**/*.js', function(event) {
   console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
 });

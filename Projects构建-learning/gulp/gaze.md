@@ -6,7 +6,7 @@
 
 安装模块： `npm i gaze`或者通过修改 `package.json`然后运行 `npm i`
 
-```
+```javascript
 var gaze = require('gaze');
 
 // Watch all .js files/dirs in process.cwd()
@@ -50,7 +50,7 @@ gaze(['stylesheets/*.css', 'images/**/*.png'], function() {
 
 ### Alternate Interface
 
-```
+```javascript
 var Gaze = require('gaze').Gaze;
 
 var gaze = new Gaze('**/*');
@@ -64,7 +64,7 @@ gaze.on('all', function(event, filepath) { });
 
 ### Error
 
-```
+```javascript
 gaze('**/*', function(error, watcher) {
   if (error) {
     // Handle error if it occurred while starting up
@@ -96,7 +96,7 @@ See [isaacs's minimatch](https://github.com/isaacs/minimatch) for more informati
 ### Class: gaze.Gaze
 
 通过实例化 `gaze.Gaze`（gaze模块的Gaze方法）来创建 Gaze 实例
-```
+```javascript
 var Gaze = require('gaze').Gaze;
 var gaze = new Gaze(pattern, options, callback);
 ```

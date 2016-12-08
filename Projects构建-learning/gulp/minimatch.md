@@ -8,7 +8,7 @@ minimatch 是npm 内部使用的用于匹配的库
 
 ## 使用
 
-```
+```javascript
 var minimatch = require("minimatch")
 
 minimatch("bar.foo", "*.foo") // true!
@@ -35,7 +35,7 @@ minimatch("bar.foo", "*.+(bar|foo)", { debug: true }) // true, and noisy!
 
 通过实例化 `minimatch.Minimatch` 类来创建一个 minimatch 对象
 
-```
+```javascript
 var Minimatch = require("minimatch").Minimatch
 var mm = new Minimatch(pattern, options)
 ```
@@ -70,7 +70,7 @@ main export。
 
 根据options参数，用模式匹配路径，返回是否匹配成功
 
-```
+```javascript
 var isJS = minimatch(file, "*.js", { matchBase: true })
 ```
 
@@ -78,7 +78,7 @@ var isJS = minimatch(file, "*.js", { matchBase: true })
 
 返回一个能够用于测试的函数，适合与 `Array.filter` 配合使用
 
-```
+```javascript
 var javascripts = fileList.filter(minimatch.filter("*.js", {matchBase: true}))
 ```
 
@@ -86,7 +86,7 @@ var javascripts = fileList.filter(minimatch.filter("*.js", {matchBase: true}))
 
 使用 fnmatch 或者 glob 形式匹配list里面的文件，如果没有文件匹配上，并且设置了 options.nonull 参数，则返回一个包含模式本身的 list
 
-```
+```javascript
 var javascripts = minimatch.match(fileList, "*.js", {matchBase: true}))
 ```
 
