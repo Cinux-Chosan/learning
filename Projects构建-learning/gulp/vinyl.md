@@ -3,7 +3,7 @@
 vinyl 是一个简单的文件描述对象，包含了文件的各种属性，可用于描述网络文件。
 
 ## 用法
-```
+```javascript
 var Vinyl = require('vinyl');
 
 var jsFile = new Vinyl({
@@ -183,7 +183,7 @@ type: `Array`
 
 Example:
 
-```
+```javascript
 var file = new File({
   cwd: '/',
   base: '/test/',
@@ -203,7 +203,7 @@ type: `String`
 
 Example:
 
-```
+```javascript
 var file = new File({
   cwd: '/',
   base: '/test/',
@@ -228,7 +228,7 @@ type: `String`
 
 Example:
 
-```
+```javascript
 var file = new File({
   cwd: '/',
   base: '/test/',
@@ -253,7 +253,7 @@ type: `String`
 
 Example:
 
-```
+```javascript
 var file = new File({
   cwd: '/',
   base: '/test/',
@@ -278,7 +278,7 @@ type:  `String`
 
 Example:
 
-```
+```javascript
 var file = new File({
   cwd: '/',
   base: '/test/',
@@ -313,7 +313,7 @@ type: `String`
 
 Example:
 
-```
+```javascript
 var Vinyl = require('vinyl');
 
 var file = new Vinyl();
@@ -333,7 +333,7 @@ Vinyl.isVinyl(notAFile); // false
 
 Example:
 
-```
+```javascript
 var Vinyl = require('vinyl');
 
 Vinyl.isCustomProp('sourceMap'); // true
@@ -345,7 +345,7 @@ Vinyl.isCustomProp('path'); // false -> internal getter/setter
 因为所有的属性都被它的 setter 规范化，所以你可以使用 `/` 连接他们。并且规范化在所有平台上正确地处理它。
 
 Example:
-```
+```javascript
 var file = new File();
 file.path = '/' + 'test' + '/' + 'foo.bar';
 
@@ -361,7 +361,7 @@ console.log(file.path);
 
 当你有自己的属性需要在内部做处理时，你需要继承静态方法 `isCustomProp` 来查询该属性是否在 Vinyl 中，返回 `false` 则可以使用该属性。
 
-```
+```javascript
 var Vinyl = require('vinyl');
 
 var builtInProps = ['foo', '_foo'];

@@ -8,7 +8,7 @@ vinyl-fs 是一个用于描述文件的元对象，当谈起一个文件的时�
 
 ## 使用
 
-```
+```javascript
 var map = require('map-stream');
 var vfs = require('vinyl-fs');
 
@@ -36,12 +36,12 @@ vfs.src(['./js/**/*.js', '!./js/vendor/*.js'])
 
 globs 按顺序执行，所以 `!`（negations ，非） 应该在 不带 `!` 的glob 之后，例如：
 
-```
+```javascript
 fs.src(['!b*.js', '*.js'])
 ```
 上例不会排除任何文件，会忽略 `!b*.js` ，下例不会：
 
-```
+```javascript
 fs.src(['*.js', '!b*.js'])
 ```
 
@@ -152,7 +152,7 @@ type: `Boolean` 或者 `Function` default: `true`(总是覆盖已存在的文件
 是否允许通过 stream 传递的文件支持 sourcemap。如果设置为 `true` 则生成内联 sourcemap，如果指定一个字符串则使用该字符串作为文件路径，该引擎使用 [gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps)
 
 示例：
-```
+```javascript
 // Write as inline comments
 vfs.dest('./', {
   sourcemaps: true

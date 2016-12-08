@@ -10,7 +10,7 @@ var Orchestrator = require('orchestrator');
 var orchestrator = new Orchestrator();
 ```
 - 添加要做的事情：
-```
+```javascript
 orchestrator.add('thing1', function(){
   // do stuff
 });
@@ -19,7 +19,7 @@ orchestrator.add('thing2', function(){
 });
 ```
 - 运行任务：
-```
+```javascript
 orchestrator.start('thing1', 'thing2', function (err) {
   // all done
 });
@@ -31,7 +31,7 @@ orchestrator.start('thing1', 'thing2', function (err) {
 
 定义任务
 
-```
+```javascript
 orchestrator.add('thing1', function(){
   // do stuff
 });
@@ -49,7 +49,7 @@ type: `String`
 
 type: `Array`
 
-```
+```javascript
 orchestrator.add('mytask', ['array', 'of', 'task', 'names'], function() {
   // Do stuff
 });
@@ -66,7 +66,7 @@ Note: Are your tasks running before the dependencies are complete? Make sure you
 ##### 示例：
 ###### 接收 callback
 
-```
+```javascript
 orchestrator.add('thing2', function(callback){
   // do stuff
   callback(err);
@@ -75,7 +75,7 @@ orchestrator.add('thing2', function(callback){
 
 ###### 返回 promise
 
-```
+```javascript
 var Q = require('q');
 
 orchestrator.add('thing3', function(){
@@ -92,7 +92,7 @@ orchestrator.add('thing3', function(){
 
 ###### 返回 stream (当流结束的时候任务被标记为完成)
 
-```
+```javascript
 var map = require('map-stream');
 
 orchestrator.add('thing4', function(){
@@ -116,7 +116,7 @@ orchestrator.add('thing4', function(){
 
 代码：
 
-```
+```javascript
 var Orchestrator = require('orchestrator');
 var orchestrator = new Orchestrator();
 
@@ -168,12 +168,12 @@ type: `Function`
 - 任务同时执行，可能不是按顺序完成
 - Orchestrator模块使用 `sequencify` 在运行前解析依赖，因此可能不会按顺序开始执行。监听 Orchestration evnets 来观察任务运行。
 
-```
+```javascript
 orchestrator.start('thing1', 'thing2', 'thing3', 'thing4', function (err) {
   // all done
 });
 ```
-```
+```javascript
 orchestrator.start(['thing1','thing2'], ['thing3','thing4']);
 ```
 
@@ -214,7 +214,7 @@ type: `Function`
 
 接受一个参数 event，描述事件细节
 
-```
+```javascript
 orchestrator.on('task_start', function (e) {
   // e.message is the log message
   // e.task is the task name if the message applies to a task else `undefined`
@@ -240,7 +240,7 @@ type: `Function`
 
 接受一个参数 event，描述事件细节
 
-```
+```javascript
 orchestrator.onAll(function (e) {
   // e is the original event args
   // e.src is event name
