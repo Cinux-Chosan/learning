@@ -498,3 +498,152 @@ function requestOkText(url) {
 }
 ```
 如果 `requestOkText`抛出异常，则返回的promise会使用该异常作为参数，变为 rejected 状态。
+
+
+### The Middle
+
+如果你需要一个函数返回promise，但是仅返回一个值而不需要延迟，你可以使用Q的静态方法
+
+`when` 方法是Q的一个静态方法，等同于`then`
+
+```javascript
+return Q.when(valueOrPromise, function (value) {
+}, function (error) {
+});
+```
+
+所有其它promise方法都有与之同名的静态方法。
+
+下面两个等价：
+```javascript
+return Q.all([a, b]);
+```
+```javascript
+return Q.fcall(function () {
+    return [a, b];
+})
+.all();
+```
+
+当使用其它库提供的promise的时候，需要将它们转化成 Q 的promise：
+
+```javascript
+return Q($.ajax(...))
+.then(function () {
+});
+```
+
+如果碰巧在程序中接收到的其它库提供的promise不是一个Q 的promise，那么就应该使用 Q来包装它。可以使用`Q.invoke`
+
+```javascript
+return Q.invoke($, 'ajax', ...)
+.then(function () {
+});
+```
+
+### 远端代理
+
+promise可以为其它对象（甚至远端对象，例如请求其它接口获取的数据）做代理服务。以下提供了一些可以更好操作数据的方法，所有方法都返回promise，所以它们可以写作链式写法：
+```
+direct manipulation         using a promise as a proxy
+--------------------------  -------------------------------
+value.foo                   promise.get("foo")
+value.foo = value           promise.put("foo", value)
+delete value.foo            promise.del("foo")
+value.foo(...args)          promise.post("foo", [args])
+value.foo(...args)          promise.invoke("foo", ...args)
+value(...args)              promise.fapply([args])
+value(...args)              promise.fcall(...args)
+```
+如果用promise作为远端数据对象的代理，可以使用上面的函数来代替 `then`以减少往返(round-trips)次数。为了更好的使用promise做远端数据代理，访问[Q-Connection](https://github.com/kriskowal/q-connection)
+
+即使在非远程对象的情况下，这些方法也可以简单的用作 fulfillment 处理函数。例如可以将写法1替换成写法2：
+
+- 1
+```javascript
+return Q.fcall(function () {
+    return [{ foo: "bar" }, { foo: "baz" }];
+})
+.then(function (value) {
+    return value[0].foo;
+});
+```
+
+- 2
+```javascript
+return Q.fcall(function () {
+    return [{ foo: "bar" }, { foo: "baz" }];
+})
+.get(0)
+.get("foo");
+```
+
+### Node 适配 (Adapting Node)
+
+如果正在使用Node.js的回调模式，并且回调函数为 `function(err, result)`的格式，那么Q提供了一些有用的工具函数来在它们之间进行转换。最常见的是 `Q.nfcall` 和 `Q.nfapply`（Node 函数 call/apply） 来调用 Node.js 形式的函数并且得到一个 promise：
+```javascript
+return Q.nfcall(FS.readFile, "foo.txt", "utf-8");
+return Q.nfapply(FS.readFile, ["foo.txt", "utf-8"]);
+```
+
+如果用法比较复杂的情况，可能会遇到一个常规的问题，那就是将一个方法传递到另一个方法里面的时候没有将方法绑定到它的宿主上（即绑定this，如 `Q.nfcall`）。为了避免遇到这种问题，可以是用 `Function.prototype.bind` 或者 我们提供的一些简便方法：
+```javascript
+return Q.ninvoke(redisClient, "get", "user:1:id");
+return Q.npost(redisClient, "get", ["user:1:id"]);
+```
+你也可以使用`Q.denodeify`或者`Q.nbind`来创建可复用的包装器：
+```javascript
+var readFile = Q.denodeify(FS.readFile);
+return readFile("foo.txt", "utf-8");
+
+var redisClientGet = Q.nbind(redisClient.get, redisClient);
+return redisClientGet("user:1:id");
+```
+最后，如果你使用原始的 deferred 对象，在 deferred 对象上有一个方便使用的方法`makeNodeResolver`
+```javascript
+var deferred = Q.defer();
+FS.readFile("foo.txt", "utf-8", deferred.makeNodeResolver());
+return deferred.promise;
+```
+
+### 堆栈跟踪 (Long Stack Traces)
+
+Q 提供了长堆栈跟踪，rejection 的参数 `Error` 的属性 `stack` 被重写用于跟踪异步跳转而非停止在最近一个错误提示。例如：
+```javascript
+function theDepthsOfMyProgram() {
+  Q.delay(100).done(function explode() {
+    throw new Error("boo!");
+  });
+}
+
+theDepthsOfMyProgram();
+```
+上例通常会给出一个没有太大帮助的堆栈信息，可能看起来是下面这个样子：
+```
+Error: boo!
+    at explode (/path/to/test.js:3:11)
+    at _fulfilled (/path/to/test.js:q:54)
+    at resolvedValue.promiseDispatch.done (/path/to/q.js:823:30)
+    at makePromise.promise.promiseDispatch (/path/to/q.js:496:13)
+    at pending (/path/to/q.js:397:39)
+    at process.startup.processNextTick.process._tickCallback (node.js:244:9)
+```
+但是，如果开启 Q 的长堆栈追踪，
+```javascript
+Q.longStackSupport = true;
+```
+那么以上错误信息可能是：
+```
+Error: boo!
+    at explode (/path/to/test.js:3:11)
+From previous event:
+    at theDepthsOfMyProgram (/path/to/test.js:2:16)
+    at Object.<anonymous> (/path/to/test.js:7:1)
+```
+这样你就能够得到更有用的信息，在调试的时候也会更加方便。在node.js中，也可以通过 Q_DEBUG这个环境变量来开启这个选项：
+```
+Q_DEBUG=1 node server.js
+```
+这将在每个Q实例中启用长堆栈跟踪。
+
+这个特性会效果过多的内存，性能会降低。一般不需要开启该变量，只有在开发环境可以开启它。
