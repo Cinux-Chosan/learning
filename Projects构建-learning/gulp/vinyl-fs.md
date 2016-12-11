@@ -100,7 +100,7 @@ type: `Boolean` default: `false`
 
 ##### 其它
 
-任何 glob　相关的参数在　[lob-stream](https://github.com/gulpjs/glob-stream) 和 [node-glob](https://github.com/isaacs/node-glob)中， 任何与 through2 相关的选项在 [through2](https://github.com/rvagg/through2) 中。 Those options are forwarded verbatim.
+任何 glob　相关的参数在　[glob-stream](https://github.com/gulpjs/glob-stream) 和 [node-glob](https://github.com/isaacs/node-glob)中， 任何与 through2 相关的选项在 [through2](https://github.com/rvagg/through2) 中。 Those options are forwarded verbatim.
 
 
 ### `dest(folder[, options])`
