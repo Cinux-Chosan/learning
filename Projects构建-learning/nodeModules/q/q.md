@@ -362,9 +362,9 @@ return Q.fcall(function () {
 return Q.fcall(eventualAdd, 2, 2);
 ```
 
-## 使用deferred (Using Deferreds)
+## 使用 deferred
 
-如果你不得不使用基于回调方法而非基于 promise 的异步函数，Q提供了几个方法（如 `Q.nfcall` ）。但是大多数时间，可能使用延迟(Deferreds)。
+如果你不得不使用基于回调方法而非基于 promise 的异步函数，在回调函数内部手动处理 promise 状态，Q提供了几个方法（如 `Q.nfcall` ）。但是大多数时间，该解决方案将使用 deferred。
 
 ```javascript
 var deferred = Q.defer();
@@ -378,7 +378,7 @@ FS.readFile("foo.txt", "utf-8", function (error, text) {
 return deferred.promise;
 ```
 
-注意，deferred 可以使用值或者promise进行解析。`reject`方法能够方便处理 rejected promise。
+注意，deferred 既可以使用值 也可以使用 promise进行解析。deferred 的`reject`方法能够方便处理 rejected promise。
 ```javascript
 // this:
 deferred.reject(new Error("Can't do it"));
