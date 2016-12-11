@@ -362,7 +362,7 @@ return Q.fcall(function () {
 return Q.fcall(eventualAdd, 2, 2);
 ```
 
-## 使用延迟 (Using Deferreds)
+## 使用deferred (Using Deferreds)
 
 如果你不得不使用基于回调方法而非基于 promise 的异步函数，Q提供了几个方法（如 `Q.nfcall` ）。但是大多数时间，可能使用延迟(Deferreds)。
 
@@ -646,4 +646,4 @@ Q_DEBUG=1 node server.js
 ```
 这将在每个Q实例中启用长堆栈跟踪。
 
-这个特性会效果过多的内存，性能会降低。一般不需要开启该变量，只有在开发环境可以开启它。
+这个特性会效果过多的内存，性能会降低。一般不开启该变量，在开发环境可以开启
