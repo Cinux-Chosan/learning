@@ -154,3 +154,104 @@ emitter.emit('someEvent', 'byvoid', 1991);
 listener1 byvoid 1991
 listener2 byvoid 1991
 ```
+
+处理 post 数据：
+对于表单
+```html
+<form method="post" action="http://localhost:3000/">
+<input type="text" name="title" />
+<textarea name="text"></textarea>
+<input type="submit" />
+</form>
+```
+原始 Node代码：
+
+```javascript
+var http = require('http');
+var querystring = require('querystring');
+var server = http.createServer(function(req, res) {
+  var post = '';
+
+  req.on('data', function(chunk) {
+  post += chunk;
+  });
+  req.on('end', function() {
+  post = querystring.parse(post);
+  res.write(post.title);
+  res.write(post.text);
+  res.end();
+  });
+}).listen(3000);
+```
+express 代码：
+```javascript
+var express = require('express');
+var app = express.createServer();
+app.use(express.bodyParser());
+app.all('/', function(req, res) {
+  res.send(req.body.title + req.body.text);
+});
+app.listen(3000);
+```
+
+## 异步陷阱
+- 1.
+
+陷阱代码：
+```javascript
+//forloop.js
+var fs = require('fs');
+var files = ['a.txt', 'b.txt', 'c.txt'];
+for (var i = 0; i < files.length; i++) {
+ fs.readFile(files[i], 'utf-8', function(err, contents) {
+ console.log(files[i] + ': ' + contents);
+ });
+}
+```
+陷阱分析：由于是异步，所以在调用回调函数的时候，i 已经变为3，files[3] 为 undifined
+
+解决方法：
+
+  - 1、建立闭包
+
+```javascript
+//forloopclosure.js
+var fs = require('fs');
+var files = ['a.txt', 'b.txt', 'c.txt'];
+for (var i = 0; i < files.length; i++) {
+ (function(i) {
+ fs.readFile(files[i], 'utf-8', function(err, contents) {
+ console.log(files[i] + ': ' + contents);
+ });
+ })(i);
+}
+```
+
+  - 2、使用数组 forEach 方法：
+```javascript
+//callbackforeach.js
+var fs = require('fs');
+var files = ['a.txt', 'b.txt', 'c.txt'];
+files.forEach(function(filename) {
+ fs.readFile(filename, 'utf-8', function(err, contents) {
+ console.log(filename + ': ' + contents);
+ });
+});
+```
+
+
+- 2. **函数作用域的嵌套关系是定义时决定的，而不是调用时决定的** ，也就
+是说，JavaScript 的作用域是静态作用域，又叫词法作用域，这是因为作用域的嵌套关系可
+以在语法分析时确定，而不必等到运行时确定。下面的例子说明了这一切：
+
+```javascript
+var scope = 'top';
+var f1 = function() {
+  console.log(scope);
+};
+f1(); // 输出 top
+var f2 = function() {
+  var scope = 'f2';
+  f1();
+};
+f2(); // 输出 top
