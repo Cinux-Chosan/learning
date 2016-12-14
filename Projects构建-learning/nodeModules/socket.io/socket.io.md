@@ -284,4 +284,128 @@ io.on('connection', function(socket){
 
 一个Object或者String类型，用于标志 client 的 room。以 room 名称为索引
 
-##
+### Socket#client:client
+
+底层 `Client`对象的引用
+
+### Socket#conn:Socket
+
+底层`Client` 传输连接对象的引用(engine.od `Socket` object)。这允许你能够访问IO传输层，且任然是实习 TCP/IP 套接字的抽象
+
+### Socket#request:Request
+
+一个 getter 代理，用于返回底层 engine.io的`Client`的`request`的引用。对访问请求头中的信息非常有用(如 `Cookie` 或者 `User-Agent`)
+
+### Socket#id:String
+
+来自底层 `Client` 的该session的唯一标识符
+
+### Socket#emit(name:String[, ...]):Socket
+
+向客户端发送一个以 `name` 标志的事件。可以包含其他任何参数
+
+支持所有数据接口，包括`Buffer`。javascript function 不能被序列化和反序列化
+
+```javascript
+var io = require('socket.io')();
+io.on('connection', function(client){
+  client.emit('an event', { some: 'data' });
+});
+```
+
+### Socket#join(name:String[,fn:Function]):Socket
+
+将客户端(client)添加到`room`并且调用回调函数，回调函数接受参数 `err`
+
+客户端(client)自动成为以session id标识的 room 的成员
+
+加入 room 的机制由已配置的 `Adapter` 处理(参考上面的 `Server#adapter`)，默认为 [socket.io-atapter](https://github.com/socketio/socket.io-adapter)
+
+### Socket#leave(name:String[,fn:Function]):Socket
+
+移除 `room` 上的某个 client，并且以`err`作为参数调用 fn
+
+**Rooms are left automatically upon disconnection.**
+
+离开 room 的机制由已配置的 `Adapter` 处理(参考上面的 `Server#adapter`)，默认为 [socket.io-atapter](https://github.com/socketio/socket.io-adapter)
+
+### Socket#to(room:String):Socket
+
+为后续事件触发设置一个修饰器(modifier)，后续事件只会被广播到加入了给定 `room`的客户端(clients)
+
+如果需要触发到多个 room，则可以多次调用 `to`
+
+```javascript
+var io = require('socket.io')();
+io.on('connection', function(client){
+  client.to('others').emit('an event', { some: 'data' });
+});
+```
+
+### Socket#in(room:String):Socket
+
+同 `Socket#to`
+
+### Socket#compress(v:Boolean):Socket
+
+为后续事件的触发设置一个修饰器(modifier)，如果该值为`true`，则这些事件只会被compress。当你不调用该方法时，默认为 `true`
+```javascript
+var io = require('socket.io')();
+io.on('connection', function(client){
+  client.compress(false).emit('an event', { some: 'data' });
+});
+```
+
+### Socket#disconnect(close:Boolean):Socket
+
+断开该客户端的连接。如果close的值为 `true`，则关闭底层连接，否则仅仅只断开该namespace
+
+### Events
+- `disconnect`
+  - 当断开连接的时候触发
+  - 参数
+    - `String`：断开连接的原因(客户端或服务端发起断开)
+- `error`
+  - 当错误发生的时候触发
+  - 参数
+    - `Object`：错误数据
+- `disconnecting`
+  - 当客户端正准备断开连接的时候触发(但是还没有离开它所属于的 `room`)
+  - 参数
+    - `String`: 断开连接的原因（客户端或服务端发起断开）
+
+以上事件(连同`connet`、`newListener`和`removeListener`)被称为保留事件，也就是说不能用它们作为事件名
+
+## Client
+
+`Client` 类代表一个传输(engine.io)连接(incoming transport connection)。`Client`可以与许多属于不同`Namespace`的多路复用`Socket`进行关联。
+
+### Client#conn
+
+底层`engine.io`的`Socket`连接的引用
+
+### Client#request
+
+getter代理，用于返回发起 engine.io 连接的 `request`引用。当需要获取请求头(如`Cookie`或 `User-Agent`)的时候会很有用
+
+## Debug / logging
+
+Socket.IO is powered by debug. In order to see all the debug output, run your app with the environment variable `DEBUG` including the desired scope.
+
+To see the output from all of Socket.IO's debugging scopes you can use:
+
+```
+DEBUG=socket.io* node myapp
+```
+
+## Testing
+
+```
+npm test
+```
+
+使用 `gulp`的`test`任务。默认test会使用在 `lib`目录里面的源码
+
+将环境变量 `TEST_VERSION` 设置为 `compat`来测试转换成 es5兼容 版本的代码(Set the environmental variable TEST_VERSION to compat to test the transpiled es5-compat version of the code.)
+
+`gulp`的 `test`任务将会在运行代码之前将代码转化成 es5 并且导出到`dist`目录
