@@ -246,4 +246,42 @@ io.clients(function(error, clients){
 ```
 
 ### Namespace#use(fn:Function):Namespace
-https://www.npmjs.com/package/socket.io#namespaceusefnfunctionnamespace
+
+注册一个中间件函数，该函数会在每个 `Socket` 上面执行，并且接收socket作为参数和一个稍后会延迟执行的用于传递到下一个中间件去的回调函数next。(Registers a middleware, which is a function that gets executed for every incoming Socket, and receives as parameters the socket and a function to optionally defer execution to the next registered middleware.)
+
+```javascript
+var io = require('socket.io')();
+io.use(function(socket, next){
+  if (socket.request.headers.cookie) return next();
+  next(new Error('Authentication error'));
+});
+```
+
+传递给中间件回调函数的错误会被当做特殊的 `error` 包发送到客户端(clients)
+
+## Socket
+
+`Socket` 是一个作为与客户端浏览器交互的基本的类，它属于一个确定的`Namespace`（默认为`/`），并且使用底层 `Client`进行通信
+
+需要注意的是，`Socekt` 不直接与底层实际的 TCP/IP 套接字相关，它只是类的名字
+
+### Socket#use(fn:Function):Socket
+
+注册一个中间件函数，它会在每个到来的 `Packet` 上执行，并且接收packet 作为参数和一个稍后会延迟执行的用于传递到下一个中间件去的回调函数next。(Registers a middleware, which is a function that gets executed for every incoming Packet and receives as parameter the packet and a function to optionally defer execution to the next registered middleware.)
+
+```javascript
+var io = require('socket.io')();
+io.on('connection', function(socket){
+  socket.use(function(packet, next){
+    if (packet.doge === true) return next();
+    next(new Error('Not a doge error'));
+});
+```
+
+传递给中间件回调函数的错误会被当做特殊的 `error` 包发送到客户端(clients)
+
+### Socket#rooms:Object
+
+一个Object或者String类型，用于标志 client 的 room。以 room 名称为索引
+
+##
