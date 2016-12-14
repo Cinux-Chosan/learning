@@ -1,0 +1,7 @@
+- 参见YouTube上的“JavaScript：你的新霸主”：www.youtube.com/watch?v=Trurfqh_6fQ
+- 参见“Chrome实验”页面上的一些例子：www.chromeexperiments.com/
+- jslinux，JavaScript的一款PC模拟器：http://bellard.org/jslinux/
+- 参见“编译成JS的语言清单”：https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS
+- 要了解ECMAScript标准的详细信息，请参见维基百科：http://en.wikipedia.org/wiki/ECMAScript
+- 事件轮询：http://en.wikipedia.org/wiki/Event_loop
+- 异步IO：http://en.wikipedia.org/wiki/Asynchronous_I/O
