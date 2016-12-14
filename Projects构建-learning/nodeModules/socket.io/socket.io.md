@@ -116,3 +116,134 @@ io.attach(http);
 如果没有传递参数，则返回当前值
 
 ### Server#origins(v:Function):Server
+
+将允许的源设置为动态返回值的函数。函数接收两个参数 `origin:String` 和 `callback(error, success)`，`success`为表明是否允许该源的Boolean
+
+#### 潜在缺点
+- 在某些情况下，当不能确定`origin`的时候它可能是 `*`
+- 该函数会在每次请求的时候调用。所以建议它能够高效
+- 如果`socket.io`与 `Express`一起运行，则 CORS 头部将只会影响 `socket.io`的请求。Express使用 [cors](https://github.com/expressjs/cors)
+
+### Server#sockets:Namespace
+
+默认为namespace `/`
+
+### Server#attach(srv:http#Server,opts:Object):Server
+
+使用提供的 `opts` 将`Server`附加到`srv`的 engine.io 实例上
+
+### Server#attach(port:Number,opts:Object):Server
+
+将`Server`附加到根据`opts`绑定了`port`的engin.io实例上
+
+### Server#listen
+
+同`Server#attach`
+
+### Server#bind(srv:engine#Server):Server
+
+Advanced use only. 将 server 绑定到指定的 engine.io `Server`(或者兼容的API) 实例上
+
+### Server#onconnection(socket:engine#Socket):Server
+
+Advanced use only. 根据传入的 engine.io `socket`创建一个新的 `socket.io` 客户端
+
+### Server#of(nsp:String):Namespace
+
+根据提供的路径名称标识符`nsp`来初始化和检索给定的 `Namespace`
+
+如果namespace 已经初始化，则立即返回它
+
+### Server#emit
+
+给所有连接的客户端发送一个事件。以下两个相同：
+```javascript
+var io = require('socket.io')();
+io.sockets.emit('an event sent to all connected clients');
+
+io.emit('an event sent to all connected clients');
+```
+
+其它可用函数，参考后面的 `Namespace`
+
+### Server#close([fn:Function])
+
+关闭 socket.io server
+
+`fn` 被传递到node.js核心模块 `net` 的 `server.close([callback])`方法 并且 在发生错误或所有连接关闭的时候调用。回调函数 `callback`带参数 `err`
+
+```javascript
+var Server = require('socket.io');
+var PORT   = 3030;
+var server = require('http').Server();
+
+var io = Server(PORT);
+
+io.close(); // Close current server
+
+server.listen(PORT); // PORT is free to use
+
+io = Server(server);
+```
+
+### Server#use
+
+参考后面的`Namespace#use`
+
+## Namespace
+
+Namespace 代表一个根据 pathname区分的 sockets 连接池
+
+默认情况下客户端总是连接到 `/.`
+
+### Events
+
+- `connection`/`connect`： 当链接到来的时候被触发
+
+  参数：
+  - `Socket` 传入的 socket
+
+### Namespace#name:String
+
+该属性为namespace的标识符
+
+
+### Namespace#connected:Object
+
+连接到当前 namespace 下面的`Socket`对象。它由 `id` 进行索引
+
+### Namespace#clients(fn:Function)
+
+得到一个连接到当前namespace 的列表（如果可以将会跨所有节点）
+
+例：
+
+得到当前namespace下的所有客户端
+```javascript
+var io = require('socket.io')();
+io.of('/chat').clients(function(error, clients){
+  if (error) throw error;
+  console.log(clients); // => [PZDoMHjiu8PYfRiKAAAF, Anw2LatarvGVVXEIAAAD]
+});
+```
+
+An example to get all clients in namespace's room:
+```javascript
+var io = require('socket.io')();
+io.of('/chat').in('general').clients(function(error, clients){
+  if (error) throw error;
+  console.log(clients); // => [Anw2LatarvGVVXEIAAAD]
+});
+```
+
+As with broadcasting, the default is all clients from the default namespace ('/'):
+```javascript
+var io = require('socket.io')();
+io.clients(function(error, clients){
+  if (error) throw error;
+  console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
+});
+```
+
+### Namespace#use(fn:Function):Namespace
+https://www.npmjs.com/package/socket.io#namespaceusefnfunctionnamespace
