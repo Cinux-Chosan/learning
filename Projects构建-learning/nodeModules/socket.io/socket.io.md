@@ -68,7 +68,7 @@ var io = new Server();
 - `serveClient` 为 Server#serveClient() 设值
 - `path` 为 Server#path() 设值
 
-传递个 socket.io 的选项总会被传递给 `engine.io`创建的`Server`，参考 [engine.io options](https://github.com/socketio/engine.io#methods-1)
+传递给 socket.io 的选项总会被传递给 `engine.io`创建的`Server`，参考 [engine.io options](https://github.com/socketio/engine.io#methods-1)
 
 ### Server(srv:http#Server, opts:Object)
 
