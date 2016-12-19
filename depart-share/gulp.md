@@ -13,17 +13,17 @@
 
 ## 入门指南
 
-- 全局安装 gulp (为了运行 gulp 命令)
+- 全局安装 gulp (*为了运行 gulp 命令*)
 ```
 npm i -g gulp
 ```
 
-- 作为依赖安装 (为了引入依赖)
+- 作为依赖安装 (*为了引入依赖*)
 ```
 npm i --save-dev gulp
 ```
 
-- 创建 `gulpfile.js` (gulp命令会自动搜索该文件)
+- 创建 `gulpfile.js` (*gulp命令会自动搜索该文件*)
 ```
 const gulp = require('gulp');
 gulp.task('default', () => {
@@ -42,6 +42,9 @@ gulp
 
 - 参数1: type: `String` or `Array`, [`glob`](https://github.com/Cinux-Chosan/learning/blob/master/Projects%E6%9E%84%E5%BB%BA-learning/gulp/node-glob.md) 为文件模式匹配的一种实现方式
 - 参数2: type: `Object`，配置项
+  - `options.buffer`: type: `Boolean` default: `true` 以流形式返回数据，不缓存文件，对大文件较有用
+  - `options.read`: type: `Boolean` default: `true` 设置为 `false` 将无法得到文件数据
+  - `options.base`: type: `String` default: glob starts 之前的所有字符
 - 返回值: [Vinyl](https://github.com/Cinux-Chosan/learning/blob/master/Projects%E6%9E%84%E5%BB%BA-learning/gulp/vinyl.md) 文件流，可通过 pipe 传递给下游。
 
 ```javascript
@@ -80,3 +83,6 @@ gulp.task('somename', function() {
 - cb(event): `Function`
   - `event.type`: 事件类型，为 `added`、`changed`、`deleted`、`renamed`
   - `event.path`: 触发事件的文件路径
+
+
+## 进阶用法
