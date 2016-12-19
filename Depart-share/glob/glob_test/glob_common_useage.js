@@ -1,10 +1,10 @@
 const glob = require('glob');
 
 let str_glob =
-  // "**/*.js",
+  "**/*.js",
   // "**/*.node",    // 无法找到匹配文件，如果设置了 nonull 则返回该模式，否则返回空数组
   // "*.{js,json}",
-  "**/+(*.json|*.js|*.md)",
+  // "**/+(*.json|*.js|*.md)",
   // "**/.*",
   options = {
     // nonull: true,  // 如果为 true,则在没有匹配到文件的情况下，返回模式，否则返回空数组
