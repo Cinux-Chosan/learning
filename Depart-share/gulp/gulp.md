@@ -24,7 +24,7 @@ npm i --save-dev gulp
 ```
 
 - 创建 `gulpfile.js` *(gulp命令会自动搜索该文件)*
-```
+```javascript
 const gulp = require('gulp');
 gulp.task('default', () => {
   // TODO

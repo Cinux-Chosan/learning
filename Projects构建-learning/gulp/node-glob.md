@@ -1,4 +1,4 @@
-# Glob
+# [Glob](https://www.npmjs.com/package/glob)
 
 使用模式匹配文件名，该模块为 JavaScript的 Glob 实现，使用 `minimatch` 库来进行匹配。
 
