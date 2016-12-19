@@ -21,4 +21,4 @@ glob(str_glob, options, (err, files) => {
   console.log(files);
 });
 
-console.log(glob.hasMagic(str_glob, options));
+// console.log(glob.hasMagic(str_glob, options));

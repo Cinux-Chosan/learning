@@ -1,4 +1,4 @@
-# Vinyl
+# [Vinyl](https://www.npmjs.com/package/vinyl)
 
 vinyl 是一个简单的文件描述对象，包含了文件的各种属性，可用于描述网络文件。
 

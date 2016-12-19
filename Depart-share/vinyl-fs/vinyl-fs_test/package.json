@@ -1,0 +1,15 @@
+{
+  "name": "vinyl-fs_test",
+  "version": "1.0.0",
+  "description": "test vinyl-fs",
+  "main": "index.js",
+  "repository": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vinyl-fs": "^2.4.4"
+  }
+}
