@@ -44,7 +44,7 @@ gulp
 - 参数2: type: `Object`，配置项
   - `options.buffer`: type: `Boolean` default: `true` 以流形式返回数据，不缓存文件，对大文件较有用
   - `options.read`: type: `Boolean` default: `true` 设置为 `false` 将无法得到文件数据
-  - `options.base`: type: `String` default: glob starts 之前的所有字符
+  - `options.base`: type: `String` default: glob starts (\*\*)  之前的所有字符
 - 返回值: [Vinyl](https://github.com/Cinux-Chosan/learning/blob/master/Projects%E6%9E%84%E5%BB%BA-learning/gulp/vinyl.md) 文件流，可通过 pipe 传递给下游。
 
 ```javascript
