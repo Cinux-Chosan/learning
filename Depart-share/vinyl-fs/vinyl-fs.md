@@ -37,3 +37,7 @@ vfs.src(['./js/**/*.js', '!./js/vendor/*.js'])
 
 
 ### `symlink(folder[, options])`
+
+将匹配的文件以软连接的方式放入 folder
+
+- 参数2: 参考[symlink options](https://github.com/Cinux-Chosan/learning/blob/master/Projects%E6%9E%84%E5%BB%BA-learning/gulp/vinyl-fs.md#options-2)
