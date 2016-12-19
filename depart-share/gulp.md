@@ -86,3 +86,63 @@ gulp.task('somename', function() {
 
 
 ## 进阶用法
+
+### gulp.task(name[, deps] [, fn])
+
+如果需要该任务支持异步模式，需要遵循以下之一：
+- 接受回调函数，即参数 fn 接受一个参数 cb
+- 返回 promise
+- 返回 stream
+
+#### 示例：
+
+- 接受回调:
+
+```javascript
+// run a command in a shell
+var exec = require('child_process').exec;
+gulp.task('jekyll', function(cb) {
+  // build Jekyll
+  exec('jekyll build', function(err) {
+    if (err) return cb(err); // return error
+    cb(); // finished task
+  });
+});
+
+// use an async result in a pipe
+gulp.task('somename', function(cb) {
+  getFilesAsync(function(err, res) {
+    if (err) return cb(err);
+    var stream = gulp.src(res)
+      .pipe(minify())
+      .pipe(gulp.dest('build'))
+      .on('end', cb);
+  });
+});
+```
+
+- 返回 promise:
+```javascript
+var Q = require('q');
+
+gulp.task('somename', function() {
+  var deferred = Q.defer();
+
+  // do async stuff
+  setTimeout(function() {
+    deferred.resolve();
+  }, 1);
+
+  return deferred.promise;
+});
+```
+
+- 返回 stream:
+```javascript
+gulp.task('somename', function() {
+  var stream = gulp.src('client/**/*.js').
+    .pipe(minify())
+    .pipe(gulp.dest('build'));
+  return stream;
+});
+```
