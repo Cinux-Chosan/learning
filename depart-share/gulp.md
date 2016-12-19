@@ -13,17 +13,17 @@
 
 ## 入门指南
 
-- 全局安装 gulp (*为了运行 gulp 命令*)
+- 全局安装 gulp *(为了运行 gulp 命令)*
 ```
 npm i -g gulp
 ```
 
-- 作为依赖安装 (*为了引入依赖*)
+- 作为依赖安装 *(为了能够引入依赖)*
 ```
 npm i --save-dev gulp
 ```
 
-- 创建 `gulpfile.js` (*gulp命令会自动搜索该文件*)
+- 创建 `gulpfile.js` *(gulp命令会自动搜索该文件)*
 ```
 const gulp = require('gulp');
 gulp.task('default', () => {
