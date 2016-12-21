@@ -180,3 +180,62 @@ setTimeout 设置的延迟是必要的，因为操作系统需要一点时间来
 如果你想创建一个能够 push 任意值而非仅仅是 string或者 buffer的 readable stream时，请这样创建： `Readable({ objectMode: true })`
 
 #### 读取 readable stream
+
+大多数情况下，将 readable stream 的数据 pipe 给其他 stream 或者 [trhough](https://npmjs.org/package/through) 或 [concat-stream](https://npmjs.org/package/concat-stream)模块创建的流是非常容易的，但是偶尔也需要直接从一个 readable stream读取：
+
+```javascript
+process.stdin.on('readable', function () {
+    var buf = process.stdin.read();
+    console.dir(buf);
+});
+```
+
+```
+$ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume0.js
+<Buffer 61 62 63 0a>
+<Buffer 64 65 66 0a>
+<Buffer 67 68 69 0a>
+null
+```
+
+**注：** 以上输出为十六进制，输出也有可能为十进制。 0a 为换行符 LF，在windows中会有回车符，即 CR LF，十六进制为 0d 0a.
+
+当数据可用时，会触发`readable`事件，并且你可以调用`.read()`方法从缓存的buffer获取数据。
+
+当 stream 结束，`.read()`返回`null`，因为没有更多字节可读。
+
+你可以使用带上参数`n`的`.read()`，即`.read(n)`，它可以返回 n 字节数据。读取 n 字节只是提供一个建议和参考，并且对 object stream 无效，但是支持所有其它核心 stream
+
+下例使用 `.read()`从换出去读取3 字节数据：
+```javascript
+process.stdin.on('readable', function () {
+    var buf = process.stdin.read(3);
+    console.dir(buf);
+});
+```
+
+```
+$ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume1.js
+<Buffer 61 62 63>
+<Buffer 0a 64 65>
+<Buffer 66 0a 67>
+```
+**注意，上例并没有返回给我们想要的完整数据**，因为数据中包括了换行符(0a)，因此还有数据留在内部缓冲区里面，我们需要告诉node我们仍然需要超出我们之前读取的3 字节更多的数据。`.read(0)`能够实现：
+
+```javascript
+process.stdin.on('readable', function () {
+    var buf = process.stdin.read(3);
+    console.dir(buf);
+    process.stdin.read(0);
+});
+```
+
+``` sh
+$ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume2.js
+<Buffer 61 62 63>
+<Buffer 0a 64 65>
+<Buffer 66 0a 67>
+<Buffer 68 69 0a>
+```
+
+此时我们的代码就能够正确的按每 3 字节读取完整的数据了。
