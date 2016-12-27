@@ -4,7 +4,7 @@
 
 在node中I/O多为异步，所以在与磁盘或者网络交互的时候，需要传递回调函数。也许你打算这样发送文件内容：
 
-```javascript
+``` javascript
 var http = require('http');
 var fs = require('fs');
 
@@ -21,7 +21,7 @@ server.listen(8000);
 这样的用户体验非常糟糕，因为用户需要等到整个文件被读取到内存之后才可能接受任何内容。
 
 幸运的是`(req, res)`都是stream 类的实例，也就是说你可以使用 `fs.createReadStream()`代替`fs.readFile()`，上面的代码变成这样：
-```javascript
+``` javascript
 var http = require('http');
 var fs = require('fs');
 
@@ -37,7 +37,7 @@ server.listen(8000);
 使用`.pipe()`也有另一个好处，像自动处理背压式数据一样，当与客户端连接变得非常慢速或者高延迟的情况下，node不会将数据片段缓存到内存中，读取多少，发送多少。
 
 想要减少流量？那就压缩吧，咱有适用于流的压缩模块！
-```javascript
+``` javascript
 var http = require('http');
 var fs = require('fs');
 var oppressor = require('oppressor');
@@ -64,17 +64,17 @@ Stream让node的编码变得简单、优雅、易兼容。
 所有的流都使用 `.pipe()` 将输入和输出关联
 
 `.pipe()`是一个将 readable stream 的内容传输到 writable stream 中去的函数，并且该函数返回该 writable stream 以便链式调用:
-```javascript
+``` javascript
 a.pipe(b).pipe(c).pipe(d)
 ```
 还可以这样玩：
-```javascript
+``` javascript
 a.pipe(b);
 b.pipe(c);
 c.pipe(d);
 ```
 其实它们跟在命令行中使用下面的格式一样，只是它们是用在node中而非shell里面
-```
+``` sh
 a | b | c | d
 ```
 
@@ -82,7 +82,7 @@ a | b | c | d
 
 Readable stream 输出数据，并通过`.pipe()`传入其他流
 
-```
+``` javascript
 readableStream.pipe(dest)
 ```
 
@@ -90,7 +90,7 @@ readableStream.pipe(dest)
 
 可读流这样创建：
 
-```javascript
+``` javascript
 var Readable = require('stream').Readable;
 
 var rs = new Readable;
@@ -101,7 +101,7 @@ rs.push(null);
 rs.pipe(process.stdout);
 ```
 
-```
+``` sh
 $ node read0.js
 beep boop
 ```
@@ -116,7 +116,7 @@ beep boop
 
 我们可以通过定义 `._read` 方法，并在该方法内部生成需要的数据。它在其他流请求的时候会被自动调用：
 
-```javascript
+``` javascript
 var Readable = require('stream').Readable;
 var rs = Readable();
 
@@ -129,7 +129,7 @@ rs._read = function () {
 rs.pipe(process.stdout);
 ```
 
-```
+``` sh
 $ node read1.js
 abcdefghijklmnopqrstuvwxyz
 ```
@@ -141,7 +141,7 @@ abcdefghijklmnopqrstuvwxyz
 我们可以使用 `util.inherits()`来继承一个 Readable stream，但是这样并不利于我们当前理解这些例子。
 
 为了表明是仅在有其它流请求数据的时候才会调用`_read()`，我们可以在该例的readable stream 加点延迟效果：
-```javascript
+``` javascript
 var Readable = require('stream').Readable;
 var rs = Readable();
 
@@ -163,7 +163,7 @@ process.on('exit', function () {
 process.stdout.on('error', process.exit);
 ```
 
-```
+``` sh
 $ node read2.js | head -c5
 abcde
 _read() called 5 times
@@ -183,14 +183,14 @@ setTimeout 设置的延迟是必要的，因为操作系统需要一点时间来
 
 大多数情况下，将 readable stream 的数据 pipe 给其他 stream 或者 [trhough](https://npmjs.org/package/through) 或 [concat-stream](https://npmjs.org/package/concat-stream)模块创建的流是非常容易的，但是偶尔也需要直接从一个 readable stream读取：
 
-```javascript
+``` javascript
 process.stdin.on('readable', function () {
     var buf = process.stdin.read();
     console.dir(buf);
 });
 ```
 
-```
+``` sh
 $ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume0.js
 <Buffer 61 62 63 0a>
 <Buffer 64 65 66 0a>
@@ -214,7 +214,7 @@ process.stdin.on('readable', function () {
 });
 ```
 
-```
+``` sh
 $ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume1.js
 <Buffer 61 62 63>
 <Buffer 0a 64 65>
@@ -222,7 +222,7 @@ $ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume1.js
 ```
 **注意，上例并没有返回给我们想要的完整数据**，因为数据中包括了换行符(0a)，因此还有数据留在内部缓冲区里面，我们需要告诉node我们仍然需要超出我们之前读取的3 字节更多的数据。`.read(0)`能够实现：
 
-```javascript
+``` javascript
 process.stdin.on('readable', function () {
     var buf = process.stdin.read(3);
     console.dir(buf);
@@ -239,3 +239,5 @@ $ (echo abc; sleep 1; echo def; sleep 1; echo ghi) | node consume2.js
 ```
 
 此时我们的代码就能够正确的按每 3 字节读取完整的数据了。
+
+你也可以使用 `.unshift()`来
