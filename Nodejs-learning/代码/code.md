@@ -66,3 +66,32 @@ var server = net.createServer(function(client) {
 server.listen(8888);
 
 ```
+
+``` js
+var http = require('http');
+var url = require('url');
+var items = [];
+
+var server = http.createServer((req, res) => {
+  switch (req.method) {
+    case 'POST':
+      var item = '';
+      req.setEncoding('utf8');
+      req.on('data', function(chunk) {
+        item += chunk;
+      });
+      req.on('end', function() {
+        items.push(item);
+        res.end('OK\n');
+      });
+      break;
+    case 'GET':
+    items.forEach(function(item, i) {
+      res.write(i + ') ' + item + '\n');
+    });
+    res.end();
+    break;
+  }
+});
+
+```
