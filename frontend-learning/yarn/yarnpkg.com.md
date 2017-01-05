@@ -76,7 +76,7 @@
 
 - `yarn clean`
 
-  - 移除 node_modules 中不需要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 .yarnclean 文件，并且应该被添加到版本控制器，之后在 `yarn install` 或者 `yarn add` 的时候会自动执行
+  - 移除 node_modules 中不需要的文件，仅保留必要的文件，释放磁盘空间，一旦使用该命令，就会创建一个 `.yarnclean` 文件，`.yarnclean` 文件应该被添加到版本控制器，之后在 `yarn install` 或者 `yarn add` 的时候会自动执行。该命令仅在安装模块的时候遇到一些文件数量问题的时候才使用，否则不建议使用该命令
 
 - `yarn config`
   - `yarn config set <key> <value> [-g|--global]`
@@ -86,7 +86,7 @@
 
 - `yarn info <package> [<field>]`  
 
-  - 查看某个包的信息，可以指定版本号，或者信息中的某个字段， `field` 即为单个字段， `--json` 返回 JSON 数据
+  - 查看某个包的信息，可以指定版本号，或者信息中的某个字段， `field` 即为单个字段， `--json`参数使得结果返回数据为 JSON 格式，参数package所指定的模块并不需要时本地已安装的模块。如查看模块 q 的 description字段，可以运行 `yarn info q description`，由于一般 readme 内容比较多，默认情况下不能查看到 readme，如要查看，可以使用 `yarn info <package> readme`
 
 - `yarn licenses ls`
 
