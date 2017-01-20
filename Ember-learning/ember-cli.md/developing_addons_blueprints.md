@@ -192,3 +192,161 @@ module.exports = {
 ```
 
 #### [Addon ember-cli-build](https://ember-cli.com/extending/#addon-ember-cli-build)
+
+插件的 `ember-cli-build.js` 仅仅是用来配置在 `tests/dummy/` 目录下的虚拟引用程序。它不会引用到包含该插件的外部应用程序。
+
+ 如果你需要使用 `ember-cli-build.js`，你需要制定一个相对于插件根目录的路径。例如，配置 `ember-cli-less` 来在 dummy app 中使用 `app.less`：
+
+ ``` js
+ // ember-cli-build.js
+ var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+
+ var app = new EmberAddon({
+   lessOptions: {
+     paths: ['tests/dummy/app/styles/'],
+     outputFile: 'dummy.css'
+   }
+ });
+
+ module.exports = app.toTree();
+ ```
+
+#### 插件组件
+
+实际上插件的代码在 `addon/components/x-button.js` 中
+
+``` js
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  tagName: 'button',
+
+  setupXbutton: Ember.on('didInsertElement', function() {
+    // ...
+  }),
+
+  teardownXbutton: Ember.on('willDestroyElement', function() {
+    this.get('x-button').destroy();
+  }),
+});
+```
+
+为了让外部应用程序能够直接使用组件提供的模板，你需要通过插件的 `app/components/` 目录来桥接该组件，使之能在外部引用。仅仅是重新 export 你的组件即可：
+
+``` js
+// app/components/x-button.js
+export { default } from 'ember-cli-x-button/components/x-button';
+```
+
+这样的设置允许其他用户在外部应用程序名字空间（app/）里面继承和修改该组件。这就意味着安装过该插件（`x-button`）的用户可以在template中通过`{{x-button}}`来使用该组件而不需要额外的配置。
+
+
+#### 默认的 blueprint
+
+与该插件具有相同名称的blueprint（unless explicitly changed, see above）将会在插件安装的时候自动运行（in development, it must be manually run after linking）。在这里，你需要将你插件的 bower 依赖绑定到客户端应用程序上以便他们能够正常安装。
+
+要创建该 blueprint，需要添加文件 `blueprints/ember-cli-x-button/index.js`。
+
+``` js
+// blueprints/ember-cli-x-button/index.js
+module.exports = {
+  normalizeEntityName: function() {}, // no-op since we're just adding dependencies
+
+  afterInstall: function() {
+    return this.addBowerPackageToProject('x-button'); // is a promise
+  }
+};
+```
+
+#### 使用依赖
+
+你可以通过使用不同的钩子函数来拉取插件、npm包、bower包。他们遵循以下规则：
+  - `addAddon(s)ToProject` 添加插件到项目的 package.json 中并且如果提供了 defaultBlueprint ，则会运行 defaultBlueprint
+  - `addBowerPackage(s)ToProject` 添加一个 package 到项目的 `bower.json`
+  - `addPackage(s)ToProject` 添加一个 package 到项目的 `package.json`
+
+每一项都返回一个 promise，所以它们都可以用promise的then：
+
+``` js
+// blueprints/ember-cli-x-button/index.js
+module.exports = {
+  normalizeEntityName: function() {}, // no-op since we're just adding dependencies
+
+  afterInstall: function() {
+    // Add addons to package.json and run defaultBlueprint
+    return this.addAddonsToProject({
+      // a packages array defines the addons to install
+      packages: [
+        // name is the addon name, and target (optional) is the version
+        {name: 'ember-cli-code-coverage', target: '0.3.9'},
+        {name: 'ember-cli-sass'}
+      ]
+    })
+    .then(() => {
+      // Add npm packages to package.json
+      return this.addPackagesToProject([
+        {name: 'babel-eslint'},
+        {name: 'eslint-plugin-ship-shape'}
+      ]);
+    })
+    .then(() => {
+      return this.addBowerPackagesToProject([
+        {name: 'bootstrap', target: '3.0.0'}
+      ]);
+    });
+  }
+};
+```
+
+#### 导入依赖文件
+
+如前所述，在 build 的过程中，插件主入口（index.js）的钩子函数 `included`会自动运行。在这里你可以使用 `import` 语句来添加依赖文件。Note that this is a separate step from adding the actual dependency itself—done in the default blueprint—which merely makes the dependency available for inclusion.
+
+``` js
+// index.js
+module.exports = {
+  name: 'ember-cli-x-button',
+
+  included: function(app) {
+    this._super.included.apply(this, arguments);
+
+    app.import(app.bowerDirectory + '/x-button/dist/js/x-button.js');
+    app.import(app.bowerDirectory + '/x-button/dist/css/x-button.css');
+  }
+};
+```
+
+上例使用了钩子函数 `included`，该函数被 `EmberApp` 的构造函数调用，并且使其能够通过变量 `app` 访问外部应用程序。当外部程序的 `ember-cli-build.js` 正在被 Ember CLI 用于 build 或者 serve 的时候，插件的 `included` 函数会被调用并传入 `EmberApp` 实例对象。
+
+#### 导入静态文件
+
+导入图片或者字体等静态文件，需要将他们放入 `/public`。外部应用程序通过一个与插件同名的目录进行访问。
+
+例如，如果要添加一张图片，需要将它保存到 `/public/images/foo.png`，然后在外部app通过如下访问：
+
+``` css
+.foo {background: url("/your-addon/images/foo.png");}
+```
+
+#### 内容
+
+如果你想直接添加内容到页面，你可以使用 `content-for` 标签。如 `app/index.html`中的 `{{content-for 'head'}}`，Ember CLI 在build 期间使用它来插入自己的内容。插件可以使用 钩子函数 `contentFor` 来插入插件自己的内容。
+
+``` js
+// index.js
+module.exports = {
+  name: 'ember-cli-display-environment',
+
+  contentFor: function(type, config) {
+    if (type === 'environment') {
+      return '<h1>' + config.environment + '</h1>';
+    }
+  }
+};
+```
+
+这将会替换当前环境下运行的应用程序的 `{{content-for 'environment'}}`部分。 每个在 `index.html` 中的 `{{content-for}}` 标签都会调用 `contentFor` 函数。
+
+#### 写入命令行
+
+每个插件都会被发送一个父级应用程序的命令行输出流。如果你想在插件的 `index.js` 中输出信息到命令行，你应该使用 `this.ui.writeLine` 而不是 `console.log`。
