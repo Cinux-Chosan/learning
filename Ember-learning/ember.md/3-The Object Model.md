@@ -96,7 +96,7 @@
             return this.get('baz.bar');
           },
           set(key, value) {
-            return value;    // 返回所设置的值
+            return value;    // 返回所设置的值, 因为一般情况下通过计算属性的 get 方式来获取需要显示的值，但是如果通过 set 对计算属性设置了值过后，Ember此次会使用该返回值作为该计算属性的值进行显示，而非再次调用get方法，后续如果改变该计算属性的依赖项，还是会自动通过get进行计算（非这种写法直接通过this.set修改计算属性的值将会导致计算属性失效）。
           }
         })
         // 然后其他地方可以调用set修改something的值，而不会导致computed失效
