@@ -42,7 +42,7 @@
 
 ---
 
-        在嵌套的路由中，如果父级路由通过判断某些条件，使用transitionTo()跳转到子路由，这样会经过父级路由，导致重新触发父级路由，但还是会跳转（也许是因为参数transition里面所携带的信息的原因），这样会触发两遍父级路由，并不高效，所以可以使用redirect()来跳转，该方法不会再次触发beforeModel()、model()、afterModel()。
+        在嵌套的路由中，如果父级路由通过判断某些条件，使用transitionTo()跳转到子路由，这样会经过父级路由，导致重新触发父级路由，但还是会跳转（也许是因为参数transition里面所携带的信息的原因），这样会触发两遍父级路由，并不高效，所以可以使用redirect()来跳转，该方法会离开当前transition，不会再次触发beforeModel()、model()、afterModel()。route里面这几个hook的调用顺序为：beforeModel-> model-> afterModel-> redirect。并且如果存在redirect，则redirect每次都会在afterModel调用之后被调用。
 
 ---
 
@@ -66,7 +66,7 @@
         如果没有定义对应的loading函数，则loading事件会冒泡到父级route中。（
         If the loading handler is not defined at the specific route, the event will continue to bubble above a transition's parent route, providing the application route the opportunity to manage it.）
 
-        在route的loading事件中，通过transition可以获取执行完成状态：
+        在route的loading事件中，通过transition可以获取执行完成状态，即能够知道loading何时完成：
 
         actions: {
           loading(transition, originRoute) {

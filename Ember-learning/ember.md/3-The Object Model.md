@@ -109,7 +109,8 @@
 
 ---
 
-        在init中调用set给属性设值，不会触发连锁反应，即computed或者observer都不会检测到，如果需要检测，可以使用如下方法：
+        observer无论如何都不会在对象初始化完成之前执行，所以在init中调用set给属性设值，不会触发连锁反应，即computed或者observer都不会检测到，
+        如果需要在初始化阶段检测并让observer做出变化，可以使用Ember.on()，方法如下：
 
         Person = Ember.Object.extend({
           init() {
@@ -124,6 +125,8 @@
 ---
 
         在页面中没有调用computed属性，则它所对应的函数一直都不会执行，某些情况下，需要检索该计算属性是否改变，而又不需要使用它的值时，可以在init中获取一遍该值。
+
+        如：页面中某个observer仅依赖于一个或多个computed属性，但是这些computed属性一次也没有调用过，则即使computed属性的依赖项发生变化也不会出发computed重新计算，从而也不会触发observer刷新，如果observer还依赖于其它属性，则其他属性变化会处罚observer刷新。（可在init中调用一次computed属性）
 
 ---
 
