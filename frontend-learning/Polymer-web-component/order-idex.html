@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+        div:not([class^="example"]) {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+        }
+
+        div[class^="example"] {
+            margin-top: 30px;
+            margin-left: 50px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+        }
+
+        .div1 {
+            background: red;
+        }
+
+        .div2 {
+            background: green;
+        }
+        /***************** example1 ******************/
+
+        .example1 .div1 {
+            position: relative;
+        }
+
+        .example1 .div2 {
+            left: -50px;
+            position: relative;
+        }
+        /***************** example2 ******************/
+
+        .example2 .div1 {}
+
+        .example2 .div2 {
+            position: relative;
+            left: -50px;
+        }
+        /***************** example3 ******************/
+
+        .example3 .div1 {}
+
+        .example3 .div2 {
+            position: relative;
+            left: -50px;
+        }
+
+        .example3 .div3 {
+            background: orange;
+            float: left;
+            /*opacity: .9;*/
+        }
+
+        .example3 .div4 {
+            width: 500px;
+            height: 30px;
+            background: blue;
+        }
+        /***************** example4 ******************/
+
+        .example4 .div1 {
+            display: block;
+            margin-bottom: -50px;
+        }
+
+        .example4 .div2 {
+            position: relative;
+            left: -50px;
+        }
+
+        .example4 .div3 {
+            background: orange;
+            float: left;
+            /*opacity: .9;*/
+        }
+
+        .example4 .div4 {
+            width: 500px;
+            height: 30px;
+            background: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="example1">
+        <div class="div1">
+            div1
+        </div>
+        <div class="div2">
+            div2
+        </div>
+
+        <dl class="question1">
+            <dt>1、为什么 div1 被 div2 挡住了</dt>
+            <dt>2、如何使 div1 不被 div2 挡住</dt>
+        </dl>
+    </div>
+
+
+    <div class="example2">
+        <div class="div1">
+            div1
+        </div>
+        <div class="div2">
+            div2
+        </div>
+
+        <dl class="">
+            <dt>1、给 div1 添加了大于 0 的 z-index 属性，会发生什么，为什么？</dt>
+            <dt>2、给 div2 添加了小于 0 的 z-index 属性，会发生什么，为什么？</dt>
+        </dl>
+    </div>
+
+
+    <div class="example3">
+        <div class="div1">
+            div1
+        </div>
+        <div class="div2">
+            div2
+        </div>
+        <div class="div3">
+            div3div3div3div3div3div3div3div3div3div3div3div3
+            <div class="div4">
+            </div>
+        </div>
+
+        <dl class="">
+            <dt>1、给 div3 添加 小于 1 的 opacity 属性，会发生什么，为什么</dt>
+        </dl>
+    </div>
+
+
+    <div class="example4">
+        <span class="result4" style="display:none;">
+        <div class="div1">
+            div1
+        </div>
+        <div class="div2">
+            div2
+        </div>
+        <div class="div3">
+            div3div3div3div3div3div3div3div3div3div3div3div3
+            <div class="div4">
+            </div>
+        </div>
+      </span>
+        <dl class="">
+            <dt>1、在前一个的基础上，如果将 div1 的 display 修改为 block，并使之与 div2、div3 叠交，会怎样，为什么？</dt>
+        </dl>
+        <a href="#" id="show-result4">show result </a>
+        <!--  . <a href="#" id="show-answer4"> show answer</a> -->
+
+    </div>
+
+    <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript">
+        $('#show-result4').click(function() {
+            $('.result4').show();
+        });
+    </script>
+
+</body>
+
+</html>

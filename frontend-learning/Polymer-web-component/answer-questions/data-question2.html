@@ -1,0 +1,6 @@
+<dt>1、th-div 和 td-div 的 offsetParent 分别是什么</dt>
+<dd>th-div 和 td-div 的 offsetParent 分别是 th1 和 td1</dd>
+<dt>2、th1 和 td1 的 offsetParent 分别是什么，每个 tr 的 offsetParent 又是什么</dt>
+<dd>th1 和 td1 的 offsetParent 是它的父级 tr， tr 的 offsetParent 是 ＜table＞ 元素</dd>
+<dt>3、结论</dt>
+<dd>如果元素不是定位元素的后代，却是 ＜td＞、＜th＞ 或者 ＜table＞ 元素的后代，则其offsetParent 就是最近的上述元素。</dd>
