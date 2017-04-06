@@ -189,13 +189,16 @@
     <script type="text/javascript">
         $('#show-result4').click(function() {
             $('.result4').show();
+            $(this).hide();
         });
         $('#show-conclusion').click(function() {
+          var self = $(this);
             $.ajax({
               url: 'z-index-conclusion.md',
               contentType: 'application/x-www-form-urlencoded; charset=utf-8'
             }).then(function(data) {
               $('.conclusion').append(marked(data));
+              self.hide();
             });
         });
     </script>
