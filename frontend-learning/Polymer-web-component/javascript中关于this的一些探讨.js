@@ -6,6 +6,7 @@ module.exports = {
 function A() {
     this.name = "aaa";
     global.array_func = () => console.log(this.name);
+    global.func = function() { console.log(this.name)};
     this.fc = function(f) {
         console.log("********************************* BEGIN ************************************");
 
@@ -22,6 +23,7 @@ function A() {
         console.log("********************************* 33333 ************************************");
 
         global.array_func();  // global.array_func 在 A 中定义，所以 this 为 A 中的 this.name
+          global.func()
 
         console.log("********************************* END ************************************");
 
@@ -42,11 +44,19 @@ a.fc(() => console.log(this.name)); // 函数的 this 为动态的，自己的th
 
 console.log("\n------------------------------------------------------------------------------------------");
 
+var tmp = a.fc;
+
 a.fc((function() {
   console.log(this == global);   // true
   this.name = "bbb";   // 由于函数直接调用this会被绑定在 global上，此时this和global为同一个东西。所以这里会覆盖前面的 global.name = "this is glob"，等同于 global.name = "bbb"
   return () => console.log(this.name); // bbb  匿名函数 this为　global，箭头函数没有 this，也不可通过 call 动态绑定this，所以它的 this为它当前上下文环境的 this，即 global
 })());
+
+// tmp((function() {
+//   console.log(this == global);   // true
+//   this.name = "bbb";   // 由于函数直接调用this会被绑定在 global上，此时this和global为同一个东西。所以这里会覆盖前面的 global.name = "this is glob"，等同于 global.name = "bbb"
+//   return () => console.log(this.name); // bbb  匿名函数 this为　global，箭头函数没有 this，也不可通过 call 动态绑定this，所以它的 this为它当前上下文环境的 this，即 global
+// })());
 
 console.log("\n------------------------------------------------------------------------------------------");
 
