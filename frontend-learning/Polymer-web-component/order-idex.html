@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
     <style media="screen">
         div:not([class^="example"]) {
             display: inline-block;
@@ -11,11 +12,21 @@
             height: 100px;
         }
 
-        div[class^="example"] {
+
+
+        div[class^="example"], div[class^="content"] {
             margin-top: 30px;
             margin-left: 50px;
             padding: 20px;
             border: 2px dashed #ddd;
+            display: block;
+            width: auto;
+            height: auto;
+        }
+
+        .conclusion{
+          width: auto !important;
+          height: auto !important;
         }
 
         .div1 {
@@ -161,10 +172,31 @@
 
     </div>
 
+
+    <div class="content">
+      <a href="#" id="show-conclusion">show conclusion </a>
+      <br>
+      <div class="conclusion">
+
+      </div>
+
+    </div>
+
     <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./marked.js">
+
+    </script>
     <script type="text/javascript">
         $('#show-result4').click(function() {
             $('.result4').show();
+        });
+        $('#show-conclusion').click(function() {
+            $.ajax({
+              url: 'z-index-conclusion.md',
+              contentType: 'application/x-www-form-urlencoded; charset=utf-8'
+            }).then(function(data) {
+              $('.conclusion').append(marked(data));
+            });
         });
     </script>
 

@@ -1,0 +1,7 @@
+- 形成堆叠上下文环境的元素的背景与边框
+- 拥有负 z-index 的子堆叠上下文元素 （负的越高越堆叠层级越低）
+- 正常流式布局，非 inline-block，无 position 定位（static除外）的子元素
+- 无 position 定位（static除外）的 float 浮动元素
+- 正常流式布局， inline-block元素，无 position 定位（static除外）的子元素（包括 display:table 和 display:inline ）
+- 拥有 z-index:0 的子堆叠上下文元素
+- 拥有正 z-index: 的子堆叠上下文元素（正的越低越堆叠层级越低）
