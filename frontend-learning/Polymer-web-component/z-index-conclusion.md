@@ -19,8 +19,8 @@
 - opacity 属性值小于 1 的元素（参考 the specification for opacity），
 - transform 属性值不为 "none"的元素，
 - mix-blend-mode 属性值不为 "normal"的元素，
-- filter值不为“none”的元素，
-- perspective值不为“none”的元素，
+- filter值不为"none"的元素，
+- perspective值不为"none"的元素，
 - isolation 属性被设置为 "isolate"的元素，
 - position: fixed
 - 在 will-change 中指定了任意 CSS 属性，即便你没有直接指定这些属性的值

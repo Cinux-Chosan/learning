@@ -18,6 +18,10 @@
             height: 50%;
             background: green;
         }
+        
+        table{
+          margin-top: 40px;
+        }
     </style>
 </head>
 
@@ -71,18 +75,22 @@
 
     <script type="text/javascript">
         $('#show-answer1').click(function() {
+          var self = $(this);
             $.ajax({
                 url: './answer-questions/data-question1.html',
             }).then(function(data) {
                 $('#question1').empty().append(data);
+                self.hide();
             });
         });
 
         $('#show-answer2').click(function() {
+          var self = $(this);
             $.ajax({
                 url: './answer-questions/data-question2.html',
             }).then(function(data) {
                 $('#question2').empty().append(data);
+                self.hide();
             });
         });
     </script>
