@@ -165,13 +165,13 @@ module.exports = {
 };
 ```
 
-导出的对象会继承 `Addon` 类，所以任何在 `Addon` 类上面存在的钩子函数都可能被覆盖重写。
+导出的对象会继承 `Addon` 类，所以任何在 `Addon` 类上面存在的钩子函数都可以被覆盖重写。
 
 #### 配置ember插件属性
 
 默认情况下，`package.json`中的`ember-addon` 具有 `configPath` 属性，用于指定`config` 目录来测试虚拟应用程序。
 
-可选：你可以指定你的插件必须在其他插件运行之前启动还是之后，所有这些属性可以是一个字符串或者字符串数组，字符串代表其它插件在其 package.json 中定义的名称。
+可选：你可以指定你的插件必须在其他插件运行之前（before字段）启动还是之后(after字段)，所有这些属性可以是一个字符串或者字符串数组，字符串代表其它插件在其 package.json 中定义的名称。
 
 可选： 你可以为 `defaultBlueprint` 指定一个不一样的名字。它默认为 `package.json` 中的名字。这个 blueprint 将会在你的插件使用 `ember install` 命令安装的时候自动执行。
 
@@ -193,7 +193,7 @@ module.exports = {
 
 #### [Addon ember-cli-build](https://ember-cli.com/extending/#addon-ember-cli-build)
 
-插件的 `ember-cli-build.js` 仅仅是用来配置在 `tests/dummy/` 目录下的虚拟引用程序。它不会引用到包含该插件的外部应用程序。
+插件的 `ember-cli-build.js` 仅仅是用来配置在 `tests/dummy/` 目录下的虚拟引用程序。它不会被包含它的应用程序所引用到。
 
  如果你需要使用 `ember-cli-build.js`，你需要制定一个相对于插件根目录的路径。例如，配置 `ember-cli-less` 来在 dummy app 中使用 `app.less`：
 
@@ -330,7 +330,7 @@ module.exports = {
 
 #### 内容
 
-如果你想直接添加内容到页面，你可以使用 `content-for` 标签。如 `app/index.html`中的 `{{content-for 'head'}}`，Ember CLI 在build 期间使用它来插入自己的内容。插件可以使用 钩子函数 `contentFor` 来插入插件自己的内容。
+如果你想直接添加内容到页面，你可以使用 `content-for` 标签。如 `app/index.html`中的 `{{content-for 'head'}}`，Ember CLI 在 build 期间使用它来插入自己的内容。插件可以使用 钩子函数 `contentFor` 来插入插件自己的内容。
 
 ``` js
 // index.js

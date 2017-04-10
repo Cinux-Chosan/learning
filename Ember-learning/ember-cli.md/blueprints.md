@@ -241,10 +241,10 @@ module.exports = {
 当使用如下命令的时候：
 
 ```
-ember g controller foo --type=array --dry-run
+ember g controller foo type:array --dry-run   /* 文档此处有错，官方文档上面是 --type=array，但实际测试应该是 type:array */
 ```
 
-传入 `locals` 的object看起来是下面这个样子：
+通过 `--` 传入的参数直接是挂在 `locals` 方法的参数 `options` 上的属性，通过 `type:array` 传入的参数为挂在options.entity.options上的属性。传入 `locals` 的object看起来是下面这个样子：
 
 ```
 {
@@ -268,7 +268,16 @@ ember g controller foo --type=array --dry-run
   - 接受实体名作为第一个参数
 
 返回值：
-  - 返回的字符串将会被用于创建的新实体的名称。
+  - 返回的字符串将会被用于创建的新实体的名称（影响文件名以及模板中使用的 <%= xxxModuleName%>，xxx 为 dasherized、classified、camelized）。
+
+默认代码:
+
+``` js
+normalizeEntityName: function(entityName) {
+    // Normalize and validate entity name here.
+    return entityName;
+  },
+```
 
 ### fileMapTokens
 
