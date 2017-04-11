@@ -260,7 +260,7 @@ module.exports = {
 
 #### 使用依赖
 
-你可以通过使用不同的钩子函数来拉取插件、npm包、bower包。他们遵循以下规则：
+你可以通过使用不同的钩子函数来拉取插件、npm包、bower包，它们会被自动安装并添加到package.json和bower.json里面。他们遵循以下规则：
   - `addAddon(s)ToProject` 添加插件到项目的 package.json 中并且如果提供了 defaultBlueprint ，则会运行 defaultBlueprint
   - `addBowerPackage(s)ToProject` 添加一个 package 到项目的 `bower.json`
   - `addPackage(s)ToProject` 添加一个 package 到项目的 `package.json`
@@ -345,8 +345,178 @@ module.exports = {
 };
 ```
 
-这将会替换当前环境下运行的应用程序的 `{{content-for 'environment'}}`部分。 每个在 `index.html` 中的 `{{content-for}}` 标签都会调用 `contentFor` 函数。
+这将会替换当前环境下运行的应用程序的 `{{content-for 'environment'}}`部分。 每个在 **`index.html`** 中的 `{{content-for}}` 标签都会调用 `contentFor` 函数。
 
 #### 写入命令行
 
-每个插件都会被发送一个父级应用程序的命令行输出流。如果你想在插件的 `index.js` 中输出信息到命令行，你应该使用 `this.ui.writeLine` 而不是 `console.log`。
+每个插件都会收到一个父级应用程序的命令行输出流。如果你想在插件的 `index.js` 中输出信息到命令行，你应该使用 `this.ui.writeLine` 而不是 `console.log`。这将会使得许多Ember命令输出的信息遵循 `--silent` 标志。
+
+``` js
+// index.js
+module.exports = {
+  name: 'ember-cli-command-line-output',
+
+  included: function(app) {
+    this._super.included.apply(this, arguments);
+    this.ui.writeLine('Including external files!');
+  }
+}
+
+```
+
+#### 高级定制（Advanced customization）
+
+如果想超出内置的定制范畴，更灵活的定制组建，则在插件的 index.js 文件里面可以使用以下钩子函数：
+
+```
+includedCommands: function() {},
+blueprintsPath: // return path as String
+preBuild:
+postBuild:
+treeFor:
+contentFor:
+included:
+postprocessTree:
+serverMiddleware:
+lintTree:
+```
+
+它们的文档可以在此处查看: https://ember-cli.com/api/classes/Addon.html
+
+高级定制的使用示例可以在这里查看: https://github.com/poetic/ember-cli-cordova/blob/master/index.js
+
+如果作为服务器的中间件使用，可以查看这里：https://github.com/rwjblue/ember-cli-inject-live-reload/blob/master/index.js
+
+
+#### [Testing the addon with QUnit](https://ember-cli.com/extending/#testing-the-addon-with-qunit)
+
+#### 在 dummy app 测试中创建文件
+
+在 `test/dummy/app`目录中你可以生成大多数 ember-cli 内置的 Blueprint。要在 dummy 中创建文件，需要添加参数 `--dummy`，否则会直接创建在插件的当前 app 目录而非 app/test/dummy/app 目录下面。
+
+`ember g <blueprint-name> <instance-name> --dummy`
+
+如:
+
+`ember g component taco-button --dummy`
+
+会生成如下:
+
+```
+tests/
+  dummy/
+      app/
+        components/
+          taco-button.js
+        templates/
+          components/
+            taco-button.hbs
+```
+
+注意以上示例不会生成 addon-import 和 component-test。 `--dummy` 选项生成 Blueprint 的时候假设处在一个无插件项目中（non-addon project）。
+
+如果要自己创建可以在 dummy 目录中生成的 blueprint，最主要的步骤就是 blueprint 包含 `__root__` 目录的路径。
+
+```
+blueprints/
+  x-button/
+    index.js
+    files/
+      __root__/     <-- normally "app/"
+        components/
+          __name__/
+```
+
+#### 创建 blueprint
+
+blueprint 是一系列模板文件（并非特指template.hbs文件，在blueprint中的所有文件都是模板文件）和可选安装逻辑的集合。它用于根据一些参数和选项来指定生成特定的文件。更多详细信息可以参考 [generators-and-blueprints](https://ember-cli.com/extending/#generators-and-blueprints)。一个插件可以有 1 到 n 个 blueprint。
+
+在插件中生成 blueprint:
+
+`ember generate blueprint <blueprint-name>`
+
+按照惯例，插件的主 blueprint 跟插件具有相同的名称。
+
+`ember g blueprint <addon-name>`
+
+在本例中:
+
+`ember g blueprint x-button`
+
+这将会为插件生成一个 `blueprints/x-button` 目录，你可以在这里为 blueprint 定义你的逻辑和模板。你也可以为单个 addon 定义多个 blueprints，最后加载的 blueprint 将会覆盖与之同名的、来自 Ember 或者其它 addon 的 blueprints（将会根据 package 的加载顺序决定）。
+
+#### blueprints 公约
+
+blueprint 默认在 addon 的 `blueprints` 目录下面。
+
+如果你的 blueprint 在 addon 的其他目录，你需要通过指定 `blueprintsPath` （在上面的高级定制中有出现该属性）告诉 ember-cli 去哪里寻找它们。
+
+blueprint遵循与Yeoman 或者 Rails 的 generator相似的约定和结构。
+
+如果要深入 blueprint 的设计，请参考 [Ember CLI blueprints](https://github.com/ember-cli/ember-cli/tree/master/blueprints)
+
+#### blueprint 目录结构
+
+```
+blueprints/
+  x-button/
+    index.js
+    files/
+      app/
+        components/
+          __name__/
+```
+
+注意：制定 `__name__` 文件或目录将会创建 `__name__` 被替代为你传递给 blueprint 的第一个参数的文件或者目录。
+
+`ember g x-button my-button`
+
+将会在你运行该命令的 application 中创建文件夹 `app/components/my-button`
+
+#### 开发的时候链接到插件
+
+在开发和测试的时候，你可以在 addon 项目的顶层运行 `npm link`，这可以使你的 addon 在本地可以通过名字访问。
+
+然后在运行的应用程序项目顶层运行 `npm link <addon-name>` 来将它链接到项目的 `node_modules` 目录中，并将 addon 添加到 `package.json` 中。此时 addon 的任意改变都会直接反应到链接到该 addon 的项目中。
+
+但是需要注意的是 `npm link` 不会像 `install` 一样运行默认的 blueprint，所以你将不得不手动通过 `ember g` 来执行。
+
+为了在开发过程中对插件文件的修改也能实时反应到页面中（实时刷新页面），则需要使用 `isDevelopingAddon` 这个钩子函数：
+
+``` js
+// addon index.js
+isDevelopingAddon: function() {
+  return true;
+}
+```
+
+当通过 npm link 来测试 addon 的时候，你需要在 `package.json` 中使用 addon name 来添加一个入口，即将 addon 的信息添加到 package.json 中：
+` "<addon-name>":"version"`，本例中使用 `"ember-cli-x-button": "*"`，现在你就可以在项目中运行 `ember g <addon-name>` 了。
+
+#### 发布 addon
+
+使用 npm 或者 git 来发布 addon，方法如同常规的 npm package。
+
+```
+npm version 0.0.1
+git push origin master --follow-tags
+npm publish
+```
+
+#### 使用私有 repository
+
+你可以将 addon 的代码上传到私有的 git 仓库（但是需要有效的 git URL）并使用 `ember install` 来安装。
+
+如果你使用的是 [`bitbucket.org`](https://bitbucket.org/) 则 URL 的格式可以参考[这里](https://confluence.atlassian.com/bitbucket/use-the-ssh-protocol-with-bitbucket-cloud-221449711.html#UsetheSSHprotocolwithBitbucketCloud-RepositoryURLformatsbyconnectionprotocol)。
+
+当使用 `git+ssh` 格式的时候， `ember install` 命令将会需要一个有效的 ssh key来获取读取仓库的权限。可以通过运行下面的代码来测试：
+
+`git clone ssh://git@github.com:user/project.git.`
+
+当使用 `git+https` 格式的时候， `ember install` 命令将会让你提供账号和密码。
+
+#### [安装和使用插件](https://ember-cli.com/extending/#install-and-use-addon)
+
+#### 更新 addon
+
+你可以像通过 `ember init` 来更新 Ember app一样更新 addon。
