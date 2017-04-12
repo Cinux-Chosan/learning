@@ -520,3 +520,10 @@ npm publish
 #### 更新 addon
 
 你可以像通过 `ember init` 来更新 Ember app一样更新 addon。
+
+
+#### 完整的示例
+
+[Creating a DatePicker Ember CLI addon](http://edgycircle.com/blog/2014-creating-a-datepicker-ember-addon)
+
+#### [In-Repo-Addons](https://ember-cli.com/extending/#in-repo-addons)
