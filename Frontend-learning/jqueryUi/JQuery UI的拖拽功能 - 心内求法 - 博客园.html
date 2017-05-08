@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>JQuery UI的拖拽功能 - 心内求法 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/blog-common.css">
+<link type="text/css" rel="stylesheet" href="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/109035.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/holbrook/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/holbrook/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/holbrook/wlwmanifest.xml">
+<script type="text/javascript" async="" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/ga.js"></script><script type="text/javascript" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/encoder.js"></script><script type="text/javascript" async="" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/map.js"></script><script src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'holbrook', cb_enable_mathjax=false;</script>
+<script src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/blog-common.js" type="text/javascript"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script></head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/holbrook/"><img id="blogLogo" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/holbrook/">心内求法</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/holbrook/">首页</a></li>
+<li><a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="MyLinks1_ContactLink" class="menu" rel="nofollow" href="http://msg.cnblogs.com/send/%E5%BF%83%E5%86%85%E6%B1%82%E6%B3%95">联系</a></li>
+<li><a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/holbrook/rss">订阅</a>
+<!--<a id="MyLinks1_XMLLink" class="aHeaderXML" href="http://www.cnblogs.com/holbrook/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			
+<span id="stats_post_count">随笔 - 175&nbsp; </span>
+<span id="stats_article_count">文章 - 0&nbsp; </span>
+<span id="stats-comment_count">评论 - 485</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/JQuery UI的拖拽功能 - 心内求法 - 博客园.html">JQuery UI的拖拽功能</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>JQuery UI是JQuery官方支持的WebUI 代码库，包含底层交互、动画、特效等API，并且封装了一些Web小部件（Widget）。同时，JQuery UI继承了jquery的插件支持，有大量的第三方插件可以丰富JQuery UI的功能。<br>JQuery UI提供的API极大简化了拖拽功能的开发。只需要分别在拖拽源(source)和目标(target)上调用draggable和droppable两个函数即可。</p>
+<h3>拖拽原理</h3>
+<p>首先要明确几个概念。<br>　　ource：拖拽源，要拖动的元素。<br>　　taerget：拖放目标，能够放入source的容器。<br>拖拽的动作分解如下：<br> 　　1. drag start：在拖拽源(source)上按下鼠标并开始移动<br> 　　2. drag move: 移动过程中<br> 　　3. drag enter: &nbsp;移动进入目标(target)容器<br> 　　4. drag leave: 移出目标(target)容器<br> 　　5. drop: 在目标(target)容器上释放鼠标<br> 　　6. drag end: 结束<br>在html5之前，页面元素不直接支持拖拽事件。所以都是通过监听鼠标事件并记录拖拽状态的方式来实现拖拽功能。</p>
+<h3>最简单的例子</h3>
+<p>最简单的拖拽是不改变元素所在的容器，而只改变其位置。例子如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragsource"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>拽我!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> End container </span><span style="color: #008000;">--&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragsource</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable();<br>})<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>拖动到另一个容器</h3>
+<p>更常见的场景是将元素拖动到另一个容器中。这就需要在drop目标(target)容器上应用droppable函数。让我们在上一个例子的基础上，增加一个div作为容器，并应用droppable函数：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragsource"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>拽我!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> End container </span><span style="color: #008000;">--&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="droppalbe"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 300px;height:300px;background-color:gray"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Drop here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragsource</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable();<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#droppable</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).droppable();<br>})<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>事件监听和回显（Feedback）</h3>
+<p>运行上一个例子，你可能会产生疑惑，真的放到目标容器上了吗？用户也会产生同样的疑惑。所以，可以监听拖动过程中发生的一些事件，并用可见的方式让用户知道。这就叫做回显（Feedback）。<br><br>对于源（source)，可以监听的事件包括：</p>
+<p>　　create: 在source上应用draggable函数时触发<br> 　　start：开始拖动时触发<br> 　　drap：拖动过程中触发<br> 　　stop：释放时触发<br>对于目标（target）,可以监听的事件包括：<br> 　　create: 在target上应用droppable函数时触发<br> 　　activate：如果当前拖动的source可以drop到本target，则触发<br> 　　deactivate：如果可以drop到本target的拖拽停止，则触发<br> 　　over：source被拖动到target上面<br> 　　out：source被拖动离开target<br> 　　drop：source被释放到target<br>事件处理函数都是通过draggable和droppable函数的参数传递，在这些事件处理函数中就可以进行Feedback。看一下实际的例子：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragsource"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="targetMsg"</span><span style="color: #0000ff;">&gt;</span>:-|<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="droppable"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:gray;height:300"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Can drop! <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragsource</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable({<br>start: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui) {<br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">).find(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).html(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:-S</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);<br>},<br>stop:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui){<br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">).find(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).html(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:-|</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);<br>}<br>});<br><br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#droppable</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).droppable({<br>activate: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui) {<br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">).find(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).html( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Drop here !</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> );<br>},<br>over: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui) {<br>$( </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;"> ).find( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).html( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Oh, Yeah!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> );<br><br>},<br>out: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui) {<br>$( </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;"> ).find( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).html( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Don't leave me!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> );<br><br>},<br>drop: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">( event, ui ) {<br>$( </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;"> ).find( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).html( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">I've got it!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> );<br>}<br>});<br>})<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>复制拖动</h3>
+<p>前面的例子都是移动元素，另一种常见的场景是复制拖动。比如visio中的从画板中拖动元素到画布。这是通过draggable函数的helper参数设定的。</p>
+<p>helper可以指定为“original”, "clone"，其中"original"是默认值，即拖动自身，而clone表示创建自身的一个克隆用于拖拽。helper还可以指定为函数，该函数返回一个自定义的DOM元素用于拖拽。<br>当不是拖动自身的时候，需要在target上指定drop事件函数，在该函数中将特定的元素添加到target容器上，否则drop的时候什么事情都不会发生。<br>简单复制的例子如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragsource"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>拽我!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:gray;height:300"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> End container </span><span style="color: #008000;">--&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragsource</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable({<br>helper:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">clone</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"><br>});<br><br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#container</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).droppable({<br>drop:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event,ui){<br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">).append($(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p style='position:absolute;left:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"><br>ui.offset.left</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;top:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">ui.offset.top</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">'&gt;clone&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));<br>}<br>});<br>})<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>拖动控制</h3>
+<p>到目前位置，所有的例子中都可以对source随意拖动。在实际应用中经常需要对拖动行为进行控制。下面给出几个例子。</p>
+<h4>拖动方向</h4>
+<p>默认拖动方向为x,y两个方向。通过draggable的axis参数可以限制只能水平或竖直拖动。如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragX"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>－－<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dragY"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>|<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragX</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({axis:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">x</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">});<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#dragY</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({axis:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">y</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">});<br>});<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h4>拖动范围</h4>
+<p>除了方向之外，还可以通过containment参数约束拖动的范围。该参数接受Selector, Element, String, Array类型。其中String可以为parent,document,window，Array是指定一个矩形区域（regin）的四元数组：[x1,y1,x2,y2]。下面的例子分别指定了parent和regin作为范围限制：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:gray;height:300"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable1"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:red;height:20;width:100"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>in parent<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable2"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:green;height:20;width:100"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>in regin<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable1</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable({containment: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">parent</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> });<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable2</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({containment: [</span><span style="background-color: #f5f5f5; color: #000000;">20</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">20</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">300</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">200</span><span style="background-color: #f5f5f5; color: #000000;">] });<br>});<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h4>拖动吸附</h4>
+<p>还可以在拖动的时候吸附到其他元素或网格。使用snap参数指定要吸附到的元素，使用grid参数指定吸附到网格，如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;"><br>.draggable </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">green</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 90px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 80px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 5px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 10px 10px 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> .9em</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;"><br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="background-color:gray;height:300"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="draggable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>吸附到其他可拖拽元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable2"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="draggable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>吸附到容器<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="draggable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>吸附到网格(30x30)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;">container</span><span style="color: #008000;">--&gt;</span><br><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable1</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({ snap: </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;"> });<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable2</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({ snap: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#container</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">});<br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable3</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({grid: [</span><span style="background-color: #f5f5f5; color: #000000;">30</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">30</span><span style="background-color: #f5f5f5; color: #000000;">]});<br>});<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h4>拖动把手（handle）</h4>
+<p>默认是整个元素都可以拖动，也可以指定元素的某个子元素作为拖动的handle，如：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>handle<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br>……<br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).draggable({handle:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">});<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>Drop限制</h3>
+<p>默认的droppable指定元素能够接受所有的drop， 但是可以通过accept参数限定只能接受某些元素的drop。accept参数的类型为一个符合jquery selector的字符串。例如：<br>$(".selector").droppable({ accept: '.special' })<br>表示只接受具有special 样式的元素。</p>
+<h3>增强用户体验</h3>
+<p>前面是实现拖拽的功能，JQueryUI还有一些参数可以增强用户体验。比如，cursor参数可以指定鼠标指针的形状，cursorAt指定鼠标指针在source的相对位置，revert可以指定当drop失败时source“飘”回原来的位置。一个组合的例子如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;"><br>.draggable </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">green</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 90px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 80px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 5px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 10px 10px 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> .9em</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;"><br>.droppable </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;"> width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;"> background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">red</span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;"><br><br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="draggable2"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="draggable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>I revert when I'm not dropped<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="droppable"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="droppable"</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Drop me here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-1.7.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/jquery-ui-1.8.16.custom.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;"><br>$(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#draggable2</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).draggable({ revert: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">invalid</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,cursor: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">move</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, cursorAt: { top: </span><span style="background-color: #f5f5f5; color: #000000;">56</span><span style="background-color: #f5f5f5; color: #000000;">, left: </span><span style="background-color: #f5f5f5; color: #000000;">56</span><span style="background-color: #f5f5f5; color: #000000;"> } });<br>$( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#droppable</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> ).droppable({<br>activeClass: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">ui-state-hover</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,<br>hoverClass: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">ui-state-active</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,<br>drop: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">( event, ui ) {<br>$( </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;"> )<br>.addClass( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">ui-state-highlight</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> )<br>.find( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> )<br>.html( </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Dropped!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> );<br>}<br>});<br>});<br></span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>小结</h3>
+<p>JQuery UI提供了强大的拖拽功能和良好的用户体验，同时又非常容易使用。本文介绍了常用的各种用法。更多的参数还可以参考官方网站的<a href="http://jqueryui.com/demos/droppable">Draggable</a>&nbsp;和 <a href="http://jqueryui.com/demos/draggable/">Droppable</a>&nbsp;。</p></div><div id="MySignature" style="display: block;"><h1 style="color:red;">本人已在github上用Jekyll建立了新的博客：<a href="http://thinkinside.tk/">http://thinkinside.tk/</a>，本站文章会陆续迁移过去</h1>
+<br>
+
+<div id="wumiiRelatedItems"></div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/holbrook/category/425928.html">     技.技术研究</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/holbrook/tag/jquery/">jquery</a></div>
+<div id="blog_post_info"><div id="green_channel">
+<a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(2394111,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+<a id="green_channel_follow" onclick="c_follow();" href="javascript:void(0);">关注我</a>
+<a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a><a id="green_channel_contact" href="http://msg.cnblogs.com/send/%E5%BF%83%E5%86%85%E6%B1%82%E6%B3%95" target="_blank">联系我</a>
+<a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/icon_weibo_24.png" alt=""></a>
+<a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+<div id="author_profile_info" class="author_profile_info">
+<a href="http://home.cnblogs.com/u/holbrook/" target="_blank"><img src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/u376709.jpg" class="author_avatar" alt=""></a>
+<div id="author_profile_detail" class="author_profile_info">
+<a href="http://home.cnblogs.com/u/holbrook/">心内求法</a><br>
+<a href="http://home.cnblogs.com/u/holbrook/followees">关注 - 21</a><br>
+<a href="http://home.cnblogs.com/u/holbrook/followers">粉丝 - 453</a>
+</div>
+</div>
+<div class="clear"></div>
+<div id="author_profile_honor"></div>
+<div id="author_profile_follow">
+    <a href="javascript:void(0);" onclick="c_follow();return false;">+加关注</a>
+</div>
+</div>
+<div id="div_digg">										
+    <div class="diggit" onclick="votePost(2394111,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">5</span>
+    </div>
+	<div class="buryit" onclick="votePost(2394111,&#39;Bury&#39;)"> 
+		<span class="burynum" id="bury_count">0</span>
+	</div>
+	<div class="clear"></div>	
+	<div class="diggword" id="digg_tips">
+    (请您对文章做出评价)
+    </div>	
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/holbrook/archive/2012/03/11/2390715.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/holbrook/archive/2012/03/11/2390715.html" title="发布于2012-03-11 22:54">Django+MongoDB</a><br><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394811.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394811.html" title="发布于2012-03-13 22:56">python多线程编程(5): 条件变量同步</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2012-03-13 17:26</span> <a href="http://www.cnblogs.com/holbrook/">心内求法</a> 阅读(<span id="post_view_count">26975</span>) 评论(<span id="post_comment_count">13</span>)  <a href="http://i.cnblogs.com/EditPosts.aspx?postid=2394111" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#" onclick="AddToWz(2394111);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=109035,cb_entryId=2394111,cb_blogApp=currentBlogApp,cb_blogUserGuid='b849a642-055a-e111-aa3f-842b2b196315',cb_entryCreatedDate='2012/3/13 17:26:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<br>
+<div class="feedback_area_title">评论列表</div>
+<div class="feedbackNoItems"></div>	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334198" class="layer">#1楼</a><a name="2334198" id="comment_anchor_2334198"></a>  <span class="comment_date">2012-03-19 15:26</span> <a id="a_comment_author_2334198" href="http://home.cnblogs.com/u/219298/" target="_blank">我是小菜鸟</a> <a href="http://msg.cnblogs.com/send/%E6%88%91%E6%98%AF%E5%B0%8F%E8%8F%9C%E9%B8%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2334198" class="blog_comment_body">可以给一份js吗？<br>jquery-ui-1.8.16.custom.min.js<br>389398613@qq.com<br>谢谢LZ</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2334198,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2334198,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334476" class="layer">#2楼</a><a name="2334476" id="comment_anchor_2334476"></a>[<span class="louzhu">楼主</span>]  <span class="comment_date">2012-03-19 18:47</span> <a id="a_comment_author_2334476" href="http://www.cnblogs.com/holbrook/" target="_blank">心内求法</a> <a href="http://msg.cnblogs.com/send/%E5%BF%83%E5%86%85%E6%B1%82%E6%B3%95" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2334476" class="blog_comment_body"><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334198" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2334198);">@</a>我是小菜鸟<br><fieldset class="comment_quote"><legend><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334198" title="查看引用原文">引用</a></legend>我是小菜鸟：<br>可以给一份js吗？<br>jquery-ui-1.8.16.custom.min.js<br>389398613@qq.com<br>谢谢LZ</fieldset><br>jqueryui官方的下载地址：<a href="http://jqueryui.com/download" target="_blank">http://jqueryui.com/download</a><br>点击那个又黑又硬的"download"按钮，会得到jquery-ui-1.8.18.custom.zip，解压，其中的js文件夹下面有jquery-1.7.1.min.js和jquery-ui-1.8.18.custom.min.js</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2334476,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2334476,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2334476_avatar" style="display:none;">http://pic.cnblogs.com/face/u376709.jpg?id=18210446</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334827" class="layer">#3楼</a><a name="2334827" id="comment_anchor_2334827"></a>  <span class="comment_date">2012-03-20 08:48</span> <a id="a_comment_author_2334827" href="http://home.cnblogs.com/u/219298/" target="_blank">我是小菜鸟</a> <a href="http://msg.cnblogs.com/send/%E6%88%91%E6%98%AF%E5%B0%8F%E8%8F%9C%E9%B8%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2334827" class="blog_comment_body">!  D:\Downloads\jquery-ui-1.8.18.custom.zip: 这个压缩文件格式未知或者数据已经被损坏</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2334827,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2334827,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334828" class="layer">#4楼</a><a name="2334828" id="comment_anchor_2334828"></a>  <span class="comment_date">2012-03-20 08:49</span> <a id="a_comment_author_2334828" href="http://home.cnblogs.com/u/219298/" target="_blank">我是小菜鸟</a> <a href="http://msg.cnblogs.com/send/%E6%88%91%E6%98%AF%E5%B0%8F%E8%8F%9C%E9%B8%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2334828" class="blog_comment_body"><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334476" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2334476);">@</a>Holbrook<br><br>LZ,我下载的zip文件解压提示<br> D:\Downloads\jquery-ui-1.8.18.custom.zip: 这个压缩文件格式未知或者数据已经被损坏</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2334828,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2334828,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2335069" class="layer">#5楼</a><a name="2335069" id="comment_anchor_2335069"></a>[<span class="louzhu">楼主</span>]  <span class="comment_date">2012-03-20 11:22</span> <a id="a_comment_author_2335069" href="http://www.cnblogs.com/holbrook/" target="_blank">心内求法</a> <a href="http://msg.cnblogs.com/send/%E5%BF%83%E5%86%85%E6%B1%82%E6%B3%95" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2335069" class="blog_comment_body"><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2334828" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2334828);">@</a>我是小菜鸟<br><a href="http://files.cnblogs.com/holbrook/jquery-ui-1.8.18.custom.zip" target="_blank">jquery-ui-1.8.18.custom.zip</a><br><a href="http://files.cnblogs.com/holbrook/jquery-ui-1.8.18.custom.min.js" target="_blank">jquery-ui-1.8.18.custom.min.js</a><br><a href="http://files.cnblogs.com/holbrook/jquery-1.7.1.min.js" target="_blank">jquery-1.7.1.min.js</a></div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2335069,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2335069,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2335069_avatar" style="display:none;">http://pic.cnblogs.com/face/u376709.jpg?id=18210446</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2335208" class="layer">#6楼</a><a name="2335208" id="comment_anchor_2335208"></a>  <span class="comment_date">2012-03-20 13:44</span> <a id="a_comment_author_2335208" href="http://home.cnblogs.com/u/219298/" target="_blank">我是小菜鸟</a> <a href="http://msg.cnblogs.com/send/%E6%88%91%E6%98%AF%E5%B0%8F%E8%8F%9C%E9%B8%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2335208" class="blog_comment_body">楼主好人啊，楼主好人一生平安。。。。已粉</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2335208,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2335208,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2446129" class="layer">#7楼</a><a name="2446129" id="comment_anchor_2446129"></a>  <span class="comment_date">2012-08-10 15:21</span> <a id="a_comment_author_2446129" href="http://www.cnblogs.com/technology/" target="_blank">Create Chen</a> <a href="http://msg.cnblogs.com/send/Create%20Chen" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2446129" class="blog_comment_body">有个id的单词拼错了,写成了droppalbe</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2446129,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2446129,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2446129_avatar" style="display:none;">http://pic.cnblogs.com/face/u70278.jpg?id=18163937</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2520504" class="layer">#8楼</a><a name="2520504" id="comment_anchor_2520504"></a>  <span class="comment_date">2012-10-31 10:49</span> <a id="a_comment_author_2520504" href="http://home.cnblogs.com/u/331175/" target="_blank">qinchengtim</a> <a href="http://msg.cnblogs.com/send/qinchengtim" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2520504" class="blog_comment_body">请问“development-bundle”和CSS两个文件夹下是什么？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2520504,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2520504,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2747950" class="layer">#9楼</a><a name="2747950" id="comment_anchor_2747950"></a>  <span class="comment_date">2013-08-10 13:34</span> <a id="a_comment_author_2747950" href="http://home.cnblogs.com/u/470968/" target="_blank">mz0827</a> <a href="http://msg.cnblogs.com/send/mz0827" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2747950" class="blog_comment_body">楼主，你好，我在用三栏布局，第一栏的span标签(内容横向显示)可以拖动，第二栏可以drop，拖动到第二栏的时候跟着鼠标的内容就变成竖向显示的了。<br>这是怎么回事啊？<br>我用的是复制拖动。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2747950,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2747950,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2835961" class="layer">#10楼</a><a name="2835961" id="comment_anchor_2835961"></a>  <span class="comment_date">2013-12-12 15:43</span> <a id="a_comment_author_2835961" href="http://www.cnblogs.com/junxia/" target="_blank">Bj_junxia</a> <a href="http://msg.cnblogs.com/send/Bj_junxia" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2835961" class="blog_comment_body">hao hao hao</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2835961,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2835961,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2835961_avatar" style="display:none;">http://pic.cnblogs.com/face/u202540.jpg</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#2992212" class="layer">#11楼</a><a name="2992212" id="comment_anchor_2992212"></a>  <span class="comment_date">2014-07-22 11:10</span> <a id="a_comment_author_2992212" href="http://home.cnblogs.com/u/109433/" target="_blank">老刘哈哈</a> <a href="http://msg.cnblogs.com/send/%E8%80%81%E5%88%98%E5%93%88%E5%93%88" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2992212" class="blog_comment_body">gooooooooooooooood!</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2992212,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2992212,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#3034967" class="layer">#12楼</a><a name="3034967" id="comment_anchor_3034967"></a>  <span class="comment_date">2014-09-26 10:01</span> <a id="a_comment_author_3034967" href="http://www.cnblogs.com/bugong/" target="_blank">bugong</a> <a href="http://msg.cnblogs.com/send/bugong" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3034967" class="blog_comment_body">学习下</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3034967,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3034967,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3034967_avatar" style="display:none;">http://pic.cnblogs.com/face/654013/20140724163050.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#3297757" class="layer">#13楼</a><a name="3297757" id="comment_anchor_3297757"></a><span id="comment-maxId" style="display:none;">3297757</span><span id="comment-maxDate" style="display:none;">2015/11/3 10:42:30</span>  <span class="comment_date">2015-11-03 10:42</span> <a id="a_comment_author_3297757" href="http://www.cnblogs.com/jying/" target="_blank">一 定 会 去 旅 行</a> <a href="http://msg.cnblogs.com/send/%E4%B8%80%20%E5%AE%9A%20%E4%BC%9A%20%E5%8E%BB%20%E6%97%85%20%E8%A1%8C" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3297757" class="blog_comment_body">没图不好办事。。。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3297757,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3297757,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3297757_avatar" style="display:none;">http://pic.cnblogs.com/face/u362679.jpg?id=13094732</span>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://www.rongcloud.cn/" target="_blank">【推荐】融云即时通讯云－专注为 App 开发者提供IM云服务</a><br><a href="http://www.ucloud.cn/site/active/new_gift.html?utm_source=cost&amp;utm_campaign=bokeyuan1&amp;utm_medium=display&amp;utm_content=3yuecu" target="_blank">【推荐】UCloud开年大礼，充5000返1000；买云主机送CDN，详情点击</a><br></div>
+<div id="opt_under_post"></div>
+<div id="ad_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/componentone.htm?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=C1&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/24442-20160331135220551-2117417331.gif" alt=""></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/542355/" target="_blank">少年利用BUG绕过Valve发布游戏 官方回应：谢谢啊</a><br> ·  <a href="http://news.cnblogs.com/n/542434/" target="_blank">愚人节恶趣味：Google推出“换唇/变脸”Android应用 代码已开源</a><br> ·  <a href="http://news.cnblogs.com/n/542433/" target="_blank">喜迎愚人节：Gmail推出Mic Drop整蛊工具</a><br> ·  <a href="http://news.cnblogs.com/n/542432/" target="_blank">英特尔发布Broadwell-EP至强E5-2600 v4处理器新品</a><br> ·  <a href="http://news.cnblogs.com/n/542431/" target="_blank">阿里巴巴集团任命张建锋（行癫）为首席技术官</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="ad_c2" class="c_ad_block"><a href="https://www.jpush.cn/?from=cnblogs01" target="_blank"><img width="468" height="60" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/24442-20160307140747632-1210035054.jpg" alt=""></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/541862/" target="_blank">为什么未来是全栈工程师的世界？</a><br> ·  <a href="http://kb.cnblogs.com/page/541805/" target="_blank">程序bug导致了天大的损失，要枪毙程序猿吗？</a><br> ·  <a href="http://kb.cnblogs.com/page/541230/" target="_blank">如何运维千台以上游戏云服务器</a><br> ·  <a href="http://kb.cnblogs.com/page/539160/" target="_blank">架构漫谈（一）：什么是架构？</a><br> ·  <a href="http://kb.cnblogs.com/page/540632/" target="_blank">架构的本质</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+$(function () {
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);    
+});
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><h1 style="color:red;">本人已在github上用Jekyll建立了新的博客：<a href="http://holbrook.github.io/">http://holbrook.github.io</a>，本站文章会陆续迁移过去</h1>
+<br>
+
+<div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/holbrook/">心内求法</a><br>园龄：<a href="http://home.cnblogs.com/u/holbrook/" title="入园时间：2012-02-18">4年1个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/holbrook/followers/">453</a><br>关注：<a href="http://home.cnblogs.com/u/holbrook/followees/">21</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="cnblogs.UserManager.FollowBlogger(&#39;b849a642-055a-e111-aa3f-842b2b196315&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_recentposts" class="sidebar-block">
+<div class="catListEssay">
+<h3 class="catListTitle">最新随笔</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/26/3100474.html">1. 又要说离开了！</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/16/3081331.html">2. R学习笔记(4): 使用外部数据</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/13/3075777.html">3. R学习笔记(3)：绘图</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/09/3068613.html">4. R学习笔记(2)：R中的数据类型和数据结构</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/03/3056211.html">5. R学习笔记(1)：R是什么</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/01/26/2877458.html">6. 技术分析的理论体系</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/01/01/2841307.html">7. 你真的会数钱吗？</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2012/12/30/2839842.html">8. JPA概要</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2012/12/24/2830519.html">9. 理解maven的核心概念</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2012/12/15/2818833.html">10. CXF+JAXB处理复杂数据</a></li>
+</ul>
+</div>
+</div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/holbrook/tag/python/">python</a>(50)</li><li><a href="http://www.cnblogs.com/holbrook/tag/django/">django</a>(37)</li><li><a href="http://www.cnblogs.com/holbrook/tag/flex/">flex</a>(17)</li><li><a href="http://www.cnblogs.com/holbrook/tag/emacs/">emacs</a>(14)</li><li><a href="http://www.cnblogs.com/holbrook/tag/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a>(13)</li><li><a href="http://www.cnblogs.com/holbrook/tag/IT%E7%AE%A1%E7%90%86/">IT管理</a>(11)</li><li><a href="http://www.cnblogs.com/holbrook/tag/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>(9)</li><li><a href="http://www.cnblogs.com/holbrook/tag/%E5%BD%A2%E5%BC%8F%E9%80%BB%E8%BE%91/">形式逻辑</a>(8)</li><li><a href="http://www.cnblogs.com/holbrook/tag/graph/">graph</a>(6)</li><li><a href="http://www.cnblogs.com/holbrook/tag/GraphML/">GraphML</a>(6)</li><li><a href="http://www.cnblogs.com/holbrook/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/holbrook/category/425930.html">        域.业务领域(13)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/holbrook/category/425929.html">       术.解决方案(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/holbrook/category/425928.html">     技.技术研究(51)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/holbrook/category/425926.html">   法.手段方法(12)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/holbrook/category/425924.html">  理.理论学习(15)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/holbrook/category/425923.html"> 器.工具使用(18)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/holbrook/category/363809.html"> 杂.杂七杂八(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/holbrook/category/494912.html">已废弃(29)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/holbrook/category/483870.html">已迁移(20)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_scorerank" class="sidebar-block">
+<div class="catListBlogRank">
+<h3 class="catListTitle">积分与排名</h3>
+<ul>
+	<li class="liScore">
+		积分 -	299559
+	</li>
+	<li class="liRank">
+		排名 -	403
+	</li>
+</ul>
+</div>
+
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+    <li class="recent_comment_title"><a href="http://www.cnblogs.com/holbrook/archive/2012/01/30/2357355.html#3394433">1. Re:Django实战（4）：scaffold生成物分析</a></li>
+    <li class="recent_comment_body">django +1</li>
+    <li class="recent_comment_author">--肖木</li>
+    <li class="recent_comment_title"><a href="http://www.cnblogs.com/holbrook/archive/2013/05/03/3056211.html#3386368">2. Re:R学习笔记(1)：R是什么</a></li>
+    <li class="recent_comment_body">amazing</li>
+    <li class="recent_comment_author">--CainVampire</li>
+    <li class="recent_comment_title"><a href="http://www.cnblogs.com/holbrook/archive/2012/01/29/2357358.html#3365546">3. Re:Django实战（1）：需求分析和设计</a></li>
+    <li class="recent_comment_body">"遗憾的是Django世界中好像没有类似的指引，也许是因为pythoner 不需要具体的例子。"……pythoner们太牛了！</li>
+    <li class="recent_comment_author">--老小鱼</li>
+    <li class="recent_comment_title"><a href="http://www.cnblogs.com/holbrook/archive/2012/03/13/2394111.html#3297757">4. Re:JQuery UI的拖拽功能</a></li>
+    <li class="recent_comment_body">没图不好办事。。。</li>
+    <li class="recent_comment_author">--一 定 会 去 旅 行</li>
+    <li class="recent_comment_title"><a href="http://www.cnblogs.com/holbrook/archive/2012/11/05/2755268.html#3288404">5. Re:如何规划blog的标签（tag）和分类</a></li>
+    <li class="recent_comment_body">学习了  谢谢分享！</li>
+    <li class="recent_comment_author">--root0r3</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/holbrook/archive/2012/04/12/2444992.html">1. Emacs学习笔记(9):org-mode，最好的文档编辑利器，没有之一(43923)</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2012/12/30/2839842.html">2. JPA概要(38166)</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2012/03/04/2378947.html">3. python多线程编程(3): 使用互斥锁同步线程(29102)</a></li><li><a href="http://www.cnblogs.com/holbrook/archive/2013/05/13/3075777.html">4. R学习笔记(3)：绘图(27536)</a></li><li><a href="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/JQuery UI的拖拽功能 - 心内求法 - 博客园.html">5. JQuery UI的拖拽功能(26975)</a></li></ul></div>
+</div>
+</div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2016 心内求法
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+<!--PageEndHtml Block Begin-->
+<div style="align:center">
+<div id="clustrmaps-widget"></div><script type="text/javascript">var _clustrmaps = {'url' : 'http://www.cnblogs.com/holbrook/', 'user' : 985922, 'server' : '3', 'id' : 'clustrmaps-widget', 'version' : 1, 'date' : '2012-02-20', 'lang' : 'zh', 'corners' : 'square' };(function (){ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = 'http://www3.clustrmaps.com/counter/map.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);})();</script><noscript>&lt;a href="http://www3.clustrmaps.com/user/e7bf0b42"&gt;&lt;img src="http://www3.clustrmaps.com/stats/maps-no_clusters/www.cnblogs.com-holbrook--thumb.jpg" alt="Locations of visitors to this page" /&gt;&lt;/a&gt;</noscript>
+</div>
+
+
+
+<iframe scrolling="no" frameborder="0" style="background:transparent !important" width="130" height="130" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/a.html"></iframe><script type="text/javascript" src="./JQuery UI的拖拽功能 - 心内求法 - 博客园_files/2.js" async="async"></script>
+<script type="text/javascript">
+    var wumiiSitePrefix = "http://www.cnblogs.com/holbrook/";
+    var wumiiParams = "&num=5&mode=1&pf=CNBLOGS";
+</script>
+<!--PageEndHtml Block End-->
+
+
+</body></html>

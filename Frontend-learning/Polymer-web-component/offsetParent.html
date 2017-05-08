@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+        #div1 {
+            /*position: relative;*/
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+
+        #div2 {
+            /*display: none;*/
+            width: 50%;
+            height: 50%;
+            background: green;
+        }
+        
+        table{
+          margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1">
+        <div id="div2">
+            div2
+        </div>div1
+    </div>
+
+    <dl id="question1">
+        <dt>1、div2 的 offsetParent 是什么</dt>
+        <dt>2、如何改变div2 的 offsetParent</dt>
+        <dt>3、哪些元素的 offsetParent 为 null，哪些元素的 offsetParent 为 ＜body＞</dt>
+    </dl>
+
+    <a href="#" id="show-answer1">show answers</a>
+
+    <table border="1">
+        <thead id="thead1">
+            <tr id="thead1tr1">
+                <th id="th1" style="background:green">
+                    <div id="th-div" style="background:red;">
+                      th-div
+                    </div>
+                    th1
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tbody1">
+            <tr id=tbody1tr1>
+                <td id="td1" style="background:green">
+                    <div id="td-div" style="background:red;">
+                      td-div
+                    </div>
+                    td1
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <dl id="question2">
+        <dt>1、th-div 和 td-div 的 offsetParent 分别是什么</dt>
+        <dt>2、th1 和 td1 的 offsetParent 分别是什么，每个 tr 的 offsetParent 又是什么</dt>
+        <dt>3、结论</dt>
+    </dl>
+
+    <a href="#" id="show-answer2">show answers</a>
+
+    <script type="text/javascript" src="./jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $('#show-answer1').click(function() {
+          var self = $(this);
+            $.ajax({
+                url: './answer-questions/data-question1.html',
+            }).then(function(data) {
+                $('#question1').empty().append(data);
+                self.hide();
+            });
+        });
+
+        $('#show-answer2').click(function() {
+          var self = $(this);
+            $.ajax({
+                url: './answer-questions/data-question2.html',
+            }).then(function(data) {
+                $('#question2').empty().append(data);
+                self.hide();
+            });
+        });
+    </script>
+</body>
+
+</html>
