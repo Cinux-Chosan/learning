@@ -481,8 +481,28 @@ $("html").velocity("scroll", { offset: "750px", mobileHA: false });
 
 ### Command: [Stop](http://velocityjs.org/#stop) [Demo](http://codepen.io/julianshapiro/pen/xLAfs)
 
+如果需要立即停止某个元素上面当前所有 Velocity 调用（包括通过 queue:false 调用的并行动画）, 则传递 "stop" 作为 Velocity 的第一个参数。该元素动画队列的下一个 Velocity 调用将会立即启动。
 
+如果你正在停止一个[自定义队列](http://velocityjs.org/#queue)，可以传递队列名作为第二个参数，或者如果只停止并行动画（调用的时候使用 queue:false）但是并不停止当前默认队列动画，传递 false 作为自定义队列名。
 
+``` js
+$element.velocity("stop"); // Normal stop
+$element.velocity("stop", "myQueue"); // Custom queue stop
+```
 
+当调用停止，它的 complete 和 display:none 被跳过。
 
-.
+**重要**：注意：循环（looped）Velocity 调用事实上是一系列 Velocity 调用链的组合。因此，如果要完全停止循环中的动画，你必须传入第二个参数来清除该元素上剩余的 Velocity 调用。同样，为了完全停止一个 [UI pack](http://velocityjs.org/#uiPack) 效果（可以由多个 Velocity 调用组成），你需要完全清除该元素上等待的动画队列。请参考下面的如何清除动画队列。
+
+例如，一个正常的模式是通过常规方法停止一个调用然后又通过动画回到它的初始值，可以使用 Velocity 的 reverse 指令。
+
+``` js
+/* Prior Velocity call. */
+$element.velocity({ opacity: 0 });
+/* Later, midway through the call... */
+$element [tab]/* Stop animating opacity. */
+[tab].velocity("stop") [tab]/* Animate opacity back to 1. */
+[tab].velocity("reverse");
+```
+
+#### 清除动画队列
