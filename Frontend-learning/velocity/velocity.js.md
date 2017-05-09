@@ -634,3 +634,167 @@ $element.velocity({
 ### Feature: [SVG](http://velocityjs.org/#svg) [Demo](http://codepen.io/julianshapiro/pen/wmtEH)
 
 ### Feature: Hook [Demo](http://codepen.io/julianshapiro/pen/LFeDB)
+
+Hooks 是多值 CSS 属性的子值。 例如， `textShadow` 有多个值 "0px 0px 0px black"。 Velocity 允许你对这些子值进行动画，例如 `textShadowX`, `textShadowY`, `textShadowBlur`:
+
+``` js
+$element.velocity({ textShadowBlur: "10px" });
+```
+
+同样的，Velocity 允许你对 `boxShadow`、`clip`或者其他多值属性进行动画。参考 [CSS Property Support](http://velocityjs.org/#cssSupport) 获取 Velocity hooks 的完整列表。
+
+由于不可能单独通过 jQuery 的 $.css() 来设置这些值， Velocity 提供了 `hook()` 辅助函数。 它的 API 同 $.css()。它需要一个元素（源生 DOM 元素或者 jQuery 元素）作为第一个参数： `$.Velocity.hook(element,property[,value])`:
+
+设置 hook 值：
+
+``` js
+$.Velocity.hook($element, "translateX", "500px"); // Must provide unit type
+$.Velocity.hook(elementNode, "textShadowBlur", "10px"); // Must provide unit type
+```
+
+得到 hook 值：
+
+``` js
+$.Velocity.hook($element, "translateX");
+$.Velocity.hook(elementNode, "textShadowBlur");
+```
+
+注意： 使用 hook 函数的时候，你必须提供CSS 属性可以接受单位类型（例如 px, deg 等）。
+
+### Feature: Promises [Demo](http://codepen.io/julianshapiro/pen/jIoca/)
+
+如果你还不了解 promise,请看[这里](http://www.html5rocks.com/en/tutorials/es6/promises/)
+
+当同时满足以下两种情况的时候，Velocity 调用会自动返回一个 promise 对象：
+
+- A)、使用[utility function](http://velocityjs.org/#utilityFunction)
+- B)、检测到浏览器支持 promise
+
+否则，当使用 jQuery 的对象语法时（如 $.element.velocity(...)）永远不会返回 promise。
+
+``` js
+/* Using Velocity's utility function... */
+$.Velocity.animate(element, { opacity: 0.5 })
+    /* Callback to fire once the animation is complete. */
+    .then(function(elements) { console.log("Resolved."); })
+    /* Callback to fire if an error occurs. */
+    .catch(function(error) { console.log("Rejected."); });
+```
+
+不管是动画自己完成还是被 $elements.velocity("stop"[,true]) 停止，都会返回一个 resolved 的 promise。 resolve 方法接收完整的原生DOM 元素数组作为它的上下文和第一个参数。如果需要单独获取它们，你必须使用 jQuery 的 $.each() 或者 Javascript 原生的 .forEach() 来迭代该数组。
+
+相反， 如果传入 Velocity 的第一个参数不合法，promise 会变成 rejected 状态（例如传入一个空的属性对象或者不存在的 Velocity 指令）。 reject 回调的参数是错误对象。
+
+promise 也适用于来自 [UI pack](http://velocityjs.org/#uiPack) （包括自定义效果） 的动画效果。通常，确保使用 Velocity 的 utility 方法来调用 UI pack 动画效果。另外，确保使用最新版本的 UI pack，因为是最近才添加了对 promise 的支持。
+
+浏览器支持： 仅仅桌面班的 Chrome 和 Firefox 支持 promise。其它所有浏览器，你必须引入第三方 promise 库，如 [Bluebird](https://github.com/petkaantonov/bluebird) 或者 [When](https://github.com/cujojs/when/tree/master/es6-shim) 的 ES6 promise shim（不要使用 [Q](https://github.com/kriskowal/q)，因为它不会像 ES6 promise那样自动安装）。当使用 Bluebird 或者 When的时候，确保promise 库在 Velocity 之前加载完成。 Bluebird 和 When 都可以在 IE8 和 Android 上使用。
+
+### Feature: Mock [Demo](http://codepen.io/julianshapiro/pen/KmlCv)
+
+当进行UI测试的时候，你可以设置 $.Velocity.mock=true 来强制所有 Velocity 动画使用 0ms duration 和 0ms delay。（In essence, values are fully applied on the next animation tick）。这在测试完成值(end value)而非测试中间动画(tweening)时进行重复UI测试时非常有帮助。
+
+另外，你也可以设置 $.Velocity.mock 为一个任意的乘数来加速或者降低所有页面动画的速度。
+
+``` js
+/* Slow down all animations by a factor of 10. */
+$.Velocity.mock = 10;
+```
+
+当你试图微调多元素动画序列的时序时，以这种方式减慢动画是很有用的。
+
+
+### Feature: Utility Function [Demo](http://codepen.io/julianshapiro/pen/ythqp)
+
+与其使用jQuery插件的语法来在 Velocity 中使用 jQuery对象，你还可以使用 Velocity 来使用原始DOM元素：
+
+``` js
+/* Standard multi-argument syntax. */
+var divs = document.getElementsByTagName("div");
+$.Velocity(divs, { opacity: 0 }, { duration: 1500 });
+/* Alternative single-argument syntax (ideal for CoffeeScript). <i>e</i> stands for elements, <i>p</i> for properties, and <i>o</i> for options: */
+var divs = document.getElementsByTagName("div");
+$.Velocity({ e: divs, p: { opacity: 0 }, o: { duration: 1500 } });
+```
+
+语法与标准的 Velocity 语法相同，只是所有参数通过一个对象传入。
+
+使用 utility 方法在你需要实时生成元素的时候并且负担不起 jQuery对象创建的开销的时候（jQuery 创建对象会触发 DOM 查询）。
+
+[这里](http://codepen.io/julianshapiro/pen/ythqp)有一个使用 utility 方法的示例。
+
+
+## Advanced
+
+### Advanced: Value Functions [Demo](http://codepen.io/julianshapiro/pen/Ecsoh)
+
+属性的值可以时函数。 这些函数在每个元素上都会被调用 —— 在动画之前立即调用。因此，当使用 loop/reverse 的时候，这些函数不会重复调用。
+
+函数的返回值会作为属性的值：
+
+``` js
+$element.velocity({
+    opacity: function() { return Math.random() }
+});
+```
+
+Value functions are passed the iterating element as their context, plus a first argument containing the element's index within the set and a second argument containing the total length of the set. By using these values, visual offseting can be achieved:
+
+``` js
+$element.velocity({
+    translateX: function(i, total) {
+        /* Generate translateX's end value. */
+        return i * 10;
+    }
+});
+```
+
+In addition to helping contain animation logic within Velocity, value functions are the most performant way of differentiating properties amongst a set of elements — as opposed to pre-iterating through them and calling Velocity once for each, which forgoes Velocity's element set optimization.
+
+### Advanced: Forcefeeding [Demo](http://codepen.io/julianshapiro/pen/rkgyH)
+
+通常，动画引擎查询 DOM 来决定每个动画元素属性的初始值。 Velocity 使用 `forcefeeding` 技术 —— 用户明确指定元素动画的初始值来避免 DOM 查询 —— 消除了 [layout thrashing](http://www.kellegous.com/j/2013/01/26/layout-performance/)
+
+Forcefed 通过传入第二或第三个数组元素来取代属性的值。(As described in the Easing pane, the second item can optionally be a per-property easing).
+
+``` js
+$element.velocity({
+    /* Two-item array format. */
+    translateX: [ 500, 0 ],
+    /* Three-item array format with a per-property easing. */
+    opacity: [ 0, "easeInSine", 1 ]
+});
+```
+
+上例中，如果我们知道该元素还没有被 translate，所以传递个 translateX 0 作为初始值。
+另外，我们也知道元素当前的透明度是 1。相当于我们指定了我们所知道的（或所期望的）动画初始值。
+
+Forcefed 初始值也支持值函数，你可以利用此特性生成一个具有差异化起始值的元素集（参考 Velocity 的 [3D demo codecast](https://www.youtube.com/watch?v=MDLiVB6g2NY&hd=1)）
+
+确保 forcefeed 仅仅是再动画开始的时候使用，而不是在动画链中间（此时 Velocity 已经在内部缓存了值）：
+
+``` js
+$element
+    /* Optionally forcefeed here. */
+    .velocity({ translateX: [ 500, 0 ] })
+    /* Do not forcefeed here; 500 is internally cached. */
+    .velocity({ translateX: 1000 });
+```
+
+Forcefeeding 在DOM 查询代价很大的时候非常有帮助，而在一些常规的、DOM查询开销并不大的地方就没使用的必要。
+
+Note: Forcefeeding a hook's subproperty will default that hook's non-animated subproperties to their zero-values.
+
+## Plugins
+
+### Plugins: [UI Pack](http://velocityjs.org/#uiPack)
+
+### [Plugins: VMD](http://velocityjs.org/#vmd)
+
+### [Plugins: Ember & Misc.](http://velocityjs.org/#ember)
+
+- [Ember UI](http://emberui.com/) is a UI component library with motion design powered by Velocity.
+- [Liquid Fire](https://github.com/ef4/liquid-fire) provides comprehensive Velocity-powered animation.
+- [Ember Velocity Mixin](https://github.com/quandl/ember-velocity-mixin) is an alternative to Liquid Fire.
+- [Tweene](http://tweene.com/) is a timeline manipulation library that works on top of Velocity.
+- [Bellows](https://github.com/mobify/bellows) is a mobile-first accordion widget that that uses Velocity for its motion.
+- [ScrollMagic](https://github.com/janpaepke/ScrollMagic) is standalone scroll animation library that works with Velocity.
