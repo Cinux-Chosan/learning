@@ -200,7 +200,7 @@ $element.velocity({
 自定义 easing 方法，将方法依附于 $.Velocity.Easings 对象上，该方法接收如下参数：
 - p: 该 easing function 调用的完成百分比（十进制）
 - opts(可选): 传入 Velocity 的 option 对象
-- tweenDelta(可选): 动画属性结束值与其起始值的差异。
+- tweenDelta(可选): 动画属性结束值与其起始值的差异，如前例 borderBottomWidth 使用自定义动画 myCustomEasing，在动画开始时 borderBottomWidth 为 10px，结束时是 2px，则tweenDelta为 -8。
 
 ``` js
 $.Velocity.Easings.myCustomEasing = function (p, opts, tweenDelta) {
