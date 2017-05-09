@@ -506,3 +506,131 @@ $element [tab]/* Stop animating opacity. */
 ```
 
 #### 清除动画队列
+
+当一个动画调用停止，该元素动画队列的下一个 Velocity 调用将会立即执行。 另外，传入 true（或自定义队列名称）来清除该元素队列中所有剩余的调用。与标准的 `stop`一样，元素所有的并行动画都将会停止。
+
+``` js
+/* Prior Velocity calls. */
+$element
+    .velocity({ width: 100 }, 1000)
+    .velocity({ height: 200 }, 1000);
+/* Called immediately after. */
+$element.velocity("stop", true);
+```
+
+上例中， {width: 100} 会立即停止，随后的 {height:200} 会直接被移除，完全不会执行。
+
+**重要**：If you're clearing the remaining queue entries on a call that targeted more than one element, be sure that your stop command is applied to the full set of elements that the call initially targeted. Otherwise, some elements will have stuck queues and will ignore further Velocity calls until they are manually dequeued.
+
+#### 停止多个元素的动画调用
+
+Because Velocity uses call-based tweening, when stop is called on an element, it is specifically the call responsible for that element's current animation that is stopped. Thus, if other elements were also targeted by that same call, they will also be stopped:
+
+``` js
+/* Prior Velocity call. */
+$allElements.velocity({ opacity: 0 });
+/* Stop the above call. */
+$allElements.velocity("stop");
+or
+/* Behaves like above since it's ending a multi-element call. */
+$firstElement.velocity("stop");
+```
+
+If you want per-element stop control in a multi-element animation, perform the animation by calling Velocity once on each element.
+
+
+### Command: Finish [Demo](http://codepen.io/julianshapiro/pen/OPbQKw)
+
+如果需要过早的跳到动画结尾，可以使用 `finish` 指令。
+
+``` js
+$element.velocity("finish");
+```
+
+`stop` 不管动画执行到什么时候都立即停止动画。`finish`则会跳到期望的最终值。与 `stop` 不同的还有 `finish` 不会阻止 `complete` 回调和 `display:none` 切换。
+简而言之， `finish` 指令意味着立即跳到动画的最后一贞。
+
+与 `stop` 一样的是， `finish` 也会影响当前活跃的并行的动画（通过 `queue:false` 调用的动画）。进而，给 `finish`指令传递第二个参数为 `false`与传入 `stop` 指令会有一样的效果：Only parallel animations are targeted for finishing。最后，给 `finish` 指令传递 `true` 也会与传入 `stop` 指令 `true` 有相同的效果：除了该指令的默认行为（停止当前队列调用加上所有并行动画），即使是默认队列的动画调用也会从队列移除。注意，这些调用在移除之前不会立即执行；剩下的队列动画调用根本不会执行。
+
+### Command: Reverse [Demo](http://codepen.io/julianshapiro/pen/hBFbc)
+
+如果想通过动画将元素还原到最后一个 Velocity 调用的状态，可以通过传入 `reverse` 指令。
+
+`reverse` 默认使用前一个 Velocity 调用的参数（duration、easing 等）。也可以通过传入一个选项参数对象来覆盖前面的参数：
+
+``` js
+$element.velocity("reverse");
+or
+$element.velocity("reverse", { duration: 2000 });
+```
+
+`reverse` 会忽略前一个调用的回调函数（`begin` 和 `complete`）,即 `reverse` 不会重新触发回调函数。
+
+注意： `reverse` 指令仅仅适用于默认队列(default queue)，不会对自定义队列(custom queue)和并行队列(queue:false)起作用。
+
+## Feature
+
+### Feature: Transforms [Demo](http://codepen.io/julianshapiro/pen/FIwfv)
+
+#### 概览
+
+CSS transform 属性允许你执行转换、缩放、2D和3D旋转。Learn more at [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
+
+Velocity 使用 translateX 和 translateY ：
+
+``` js
+/* Translate to the right and rotate clockwise. */
+$element.velocity({
+    translateX: "200px",
+    rotateZ: "45deg"
+});
+```
+
+因为 Velocity 仅仅为每个 CSS 属性采用一个数值作为值。 transform 属性必须具有转换轴。例如 `scale` 不能使用 "1.5,2"，但是 scaleX() 和 scaleY() 可以同时动画达到相同的效果。（参考 [CSS Support dropdown](http://velocityjs.org/#cssSupport) 获取 Velocity 完整的 transform 支持 ）
+
+**注意**：Velocity 的性能优化会忽略外部 transform 值的改变。（包括在 stylesheet 里面定义的初始值，但是可以通过 [Forcefeeding](http://velocityjs.org/#forcefeeding) 补救）（你可以通过Velocity使用 [Hook](http://velocityjs.org/#hook) 函数手动设置 transform 值）
+
+#### 详细信息
+
+所有浏览器在执行 3D 变换的时候自动触发硬件加速，硬件加速的好处是可以让动画更平滑，但是不好的地方是会造成文本的模糊和内存的消耗。如果你想要强制 2D 变换的时候使用硬件加速带来的好处，你可以通过传递给 3D 变换属性一个不会改变的值（如 0）：
+
+``` js
+/* Translate to the right and rotate clockwise. */
+$element.velocity({
+    translateZ: 0, // Force HA by animating a 3D property
+    translateX: "200px",
+    rotateZ: "45deg"
+});
+```
+
+（该方法仅适用于桌面浏览器 —— 默认情况下，Velocity 在所有的移动端都会自动开启硬件加速，参考 [mobileHA](http://velocityjs.org/#mobileHA) ）
+
+浏览器支持： 3D 变换在 IE10 或 Andriod 3.0 以下[不支持](http://caniuse.com/#search=transforms)，甚至IE9 下不支持 2D 变换。请记住，必须在父元素上设置 perspective 来使 3D 变换生效，参考 [MDN transform guide](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Using_CSS_transforms)
+
+
+### Feature: Colors [Demo](http://codepen.io/julianshapiro/pen/wlEtB)
+
+Velocity 支持 color 动画，支持以下属性： `color`、`backgroundColor`、`borderColor`、`outlineColor`
+
+你可以给一个支持的 color 属性传递十六进制值的字符串（rgb, hsla 字符串， 不支持颜色关键字，如 red），你也可以对 color 属性的当个 RGB 分量进行动画： 分量为 红、绿、蓝 （它们从 0 ～ 255，也可以是百分比）和 Alpha值（透明度，值从 0 ～ 1）。
+
+``` js
+$element.velocity({
+    /* Animate a color property to a hex value of red... */
+    backgroundColor: "#ff0000",
+    /* ... with a 50% opacity. */
+    backgroundColorAlpha: 0.5,
+    /* Animate the red RGB component to 50% (0.5 * 255). */
+    colorRed: "50%",
+    /* Concurrently animate to a stronger blue. */
+    colorBlue: "+=50",
+    /* Fade the text down to 85% opacity. */
+    colorAlpha: 0.85
+});
+```
+
+在 IE9 及以下不支持RGBA，这种情况下Velocity 会忽略 Alpha 分量，从而使用原始的RGB。
+
+### Feature: [SVG](http://velocityjs.org/#svg) [Demo](http://codepen.io/julianshapiro/pen/wmtEH)
+
+### Feature: Hook [Demo](http://codepen.io/julianshapiro/pen/LFeDB)
