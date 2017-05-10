@@ -683,4 +683,52 @@ this.transition(
 );
 ```
 
-[Choosing Transition Animations](http://ember-animation.github.io/liquid-fire/#/transition-map/choosing-transitions)
+## Debug Transition Matching
+
+transition 规则没有匹配或者约束没有执行，这可能会让人很疑惑。这个时候就需要 `debug()` 了。它将在执行时为每个约束和规则打印结果到控制台。
+
+``` js
+// The inclusion of `this.debug()` below causes the match results to be
+// logged to the console, so you can see if this transition is not
+// animating because the fromRoute is not 'foo', or because the toRoute
+// is not 'bar'.
+this.transition(
+  this.fromRoute('foo'),
+  this.toRoute('bar'),
+  this.use('crossFade'),
+  this.debug()
+);
+```
+
+## Transitions
+
+Transition 实现了两个状态之间的动画。当一个 [template helper](http://ember-animation.github.io/liquid-fire/#/helpers) 即将发生改变的时候，它会去 [transition map](http://ember-animation.github.io/liquid-fire/#/transition-map) 查看是否有匹配的 transition。如果找到一个，则 transition 就会使用它定义的动画去从旧的状态切换到新的状态中去。
+
+Liquid Fire 自带了一些预定义的 transition 动画。但是它还是希望用户能够自己定义一些 transition 动画。
+
+### 预定义 transition
+
+Liquid Fire 包含了一个预定义 transition 集合。预定义这些集合的目的是希望它能够作为用户扩展自己 transition 的基础。
+
+为了得到更多预定义 transition 的信息，可以[查看源码](https://github.com/ef4/liquid-fire/tree/master/app/transitions)
+
+预定义的有 toLeft，toRight，toUp，toDown，fade，crossFade，explode，flyTo，scrollThen，scale，wait 等。
+
+[查看 Demo](http://ember-animation.github.io/liquid-fire/#/transitions/predefined)
+
+## explode transition
+
+`explode` 将新旧模板分开并且分开给予它们动画。查看[Demo](http://ember-animation.github.io/liquid-fire/#/transitions/explode)
+
+### API 详情
+
+`explode` 接受任意数目的参数。每个参数都必须是 object。每个 object 描述该 transition 的一部分。
+
+每个部分都有一个 `use` 属性，它的用法如下：
+
+- 另一个 transition 的名称，如 "toLeft"
+- 一个数组，第一个元素是另一个 transition 的名称，剩下的元素是第一个元素 transition 的参数。例如：`["toLeft", { duration: 100 }]`
+- 一个直接实现了 transition 的函数，例如：`function() { return animate(this.newElement, { opacity: 0 });}`
+- 一个数组，第一个参数是直接实现了 transition 的函数，剩余的参数是该函数的参数。例如：`[myTransitionFunction, { duration: 400 }]`
+
+每个
