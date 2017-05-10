@@ -630,6 +630,57 @@ this.transition(
 
 每个 transition 都有一个 `use()` 来声明使用何种动画。
 
-每个 transition 都有一个 `reverse()` 来声明逆规则的动画。
+每个 transition 都有一个 `reverse()` 来声明逆规则的动画，逆规则在 `fromRoute` 和 `toRoute` 之间，还有 `fromModel` 和 `toModel` 之间。
+
+`use()` 和 `reverse()` 相同的情况下，我们可以简写为 `useAndReverse()` 。 即 `use()` 和 `reverse()` 具有相同的规则。
+
+``` js
+// The simplest 'use' just calls a named transition.
+this.transition(
+  this.withinRoute('foo'),
+  this.use('fade')
+);
+
+// Named transitions may take arguments. For example, the predefined
+// 'fade' transition accepts an `opts` hash that's passed through to
+// Velocity, so you can say:
+this.transition(
+  this.withinRoute('foo'),
+  this.use('fade', { duration: 3000 })
+);
+
+// This declares two symmetric rules: "from foo to bar use toLeft" and
+// "from bar to foo use toRight".
+this.transition(
+  this.fromRoute('foo'),
+  this.toRoute('bar'),
+  this.use('toLeft'),
+  this.reverse('toRight')
+);
+
+// You can also provide an implementation instead of a name, though
+// it's probably better to keep implementations in separate files. We
+// talk more about transition implementations in the next section.
+import { animate, stop } from "liquid-fire";
+this.transition(
+  this.withinRoute('foo'),
+  this.use(function(oldView, insertNewView, opts) {
+    stop(oldView);
+    return animate(oldView, {opacity: 0}, opts)
+      .then(insertNewView)
+      .then(function(newView){
+        return animate(newView, {opacity: [1, 0]}, opts);
+      });
+  })
+);
+
+// This declares two equivalent rules: "from foo to bar use fade" and
+// "from bar to foo use fade".
+this.transition(
+  this.fromRoute('foo'),
+  this.toRoute('bar'),
+  this.useAndReverse('fade')
+);
+```
 
 [Choosing Transition Animations](http://ember-animation.github.io/liquid-fire/#/transition-map/choosing-transitions)
