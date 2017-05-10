@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+    .square {
+      width: 100px;
+      height: 100px;
+      background: red;
+      border-style: solid;
+      border-color: blue;
+      border-width: 10px;
+    }
+
+    .mt100 {
+      margin-top: 100px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="square">
+  </div>
+
+  <button type="button" name="button" class="mt100" id="run">Run</button>
+  <a href="https://github.com/Cinux-Chosan/learning/blob/master/Frontend-learning/velocity/velocity.js.md#选项-begin--complete">文档</a>
+  <script type="text/javascript" src=" http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="velocity.min.js"></script>
+
+  <script type="text/javascript">
+    let divs = $('div');
+    $('#run').click(e => {
+
+      // $.Velocity.hook(divs.get(0), "translateY", "100px");
+      // divs.velocity({
+      //     width: "50px"
+      // }, {
+      //     duration: 3000,
+      //     loop: true,
+      //     begin: function (a,b,c,d) {
+      //       debugger
+      //     },
+      //     complete(a,b) {
+      //       debugger
+      //     },
+      //     progress(a,b,c,d,e,f) {
+      //       console.log(arguments);
+      //     }
+      // }); // Runs for 3s
+      divs
+        // .velocity("fadeOut", {
+        //   duration: 3000,
+        //   loop: 3
+        // })
+        .velocity({
+          translateX: "200",
+          rotateZ: "45",
+          /* Animate a color property to a hex value of red... */
+          backgroundColor: "#ff0000",
+          /* ... with a 50% opacity. */
+          backgroundColorAlpha: 0.5,
+          /* Animate the red RGB component to 50% (0.5 * 255). */
+          colorRed: "50%",
+          /* Concurrently animate to a stronger blue. */
+          colorBlue: "+=50",
+          /* Fade the text down to 85% opacity. */
+          colorAlpha: 0.85
+        }, {
+          loop: 3,
+          duration: 3000,
+          delay: function() {
+            return 0;
+          }
+        });
+      // setTimeout(function() {
+      //     /* Will run in parallel starting at the 1500ms mark. */
+      //     divs.velocity({
+      //         height: "50px"
+      //     }, {
+      //         loop: true,
+      //         delay: function() {return 2000;}
+      //     });
+      // }, 500); // 1500ms mark
+      // setTimeout(()=> divs.dequeue("myqueue"), 1000);
+    });
+  </script>
+</body>
+
+</html>
