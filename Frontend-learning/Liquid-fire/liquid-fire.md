@@ -10,7 +10,7 @@ Liquid Fire 是一个 Ember 应用程序的动画库。
 
 #### Template Helpers
 
-Liquid Fire 提供的如 {{liquid-outlet}}, {{liquid-if}} 等 helper，它们几乎可以直接替代常规的 Ember helpers，最大的不同是它们不能在绑定的数据发生改变的时候立即刷新，而是会先查询应用程序的 transition map，如果发现了匹配的 transition，则会同时控制新老内容的变换。[Read more about Template Helpers](http://ember-animation.github.io/liquid-fire/#/helpers)
+Liquid Fire 提供的如 `{{liquid-outlet}}`, `{{liquid-if}}` 等 helper，它们几乎可以直接替代常规的 Ember helpers，最大的不同是它们不能在绑定的数据发生改变的时候立即刷新，而是会先查询应用程序的 transition map，如果发现了匹配的 transition，则会同时控制新老内容的变换。[Read more about Template Helpers](http://ember-animation.github.io/liquid-fire/#/helpers)
 
 #### Transition Map
 
@@ -731,4 +731,63 @@ Liquid Fire 包含了一个预定义 transition 集合。预定义这些集合�
 - 一个直接实现了 transition 的函数，例如：`function() { return animate(this.newElement, { opacity: 0 });}`
 - 一个数组，第一个参数是直接实现了 transition 的函数，剩余的参数是该函数的参数。例如：`[myTransitionFunction, { duration: 400 }]`
 
-每个
+每个部分也可以包含以下选项之一：
+
+- `pick` 属性：它的值是一个 CSS 选择器，用于匹配新旧元素。
+- `pickOld` 属性：它时一个 CSS 选择器，用于匹配旧的元素。
+- `pickNew` 属性：同 `pickOld`，用于匹配新的元素。
+- `matchBy` 属性：它的值时一个 HTML 属性名，它将会为 pairewise transition 匹配新旧元素。
+
+A piece that has only a `use` and no further options may be used to control everything else that doesn't match another section.
+
+## 定义 transition 动画
+
+通过创建一个类似于 `app/transitions/my-transition.js` 一样的模块并导出一个函数来创建一个 transition。 该函数必须返回一个 Promise，在完成的是否该 Promise 必须为 resolved 状态。
+
+该函数可以通过 `this` 来获取当前 transition 的上下文。该上下文包含：
+
+- `oldElement` : 即将离开视图的 jQuery 元素。如果从一个空的初始状态开始 transition，它可能会是 `undefined`，如果 transition 被中断，它也可能变成 `undefined`
+- `newElement` ： 即将进入视图的 jQuery 元素。如果 transition 到一个空状态或者被中断，它可能是 `undefined`
+- `oldValue, newValue` ： 新旧状态对应的值（如`{{liquid-bind}}`则是直接传给它的值）
+- `oldView, newView` ： 新旧状态对应的 Ember View
+- `older` : 如果 transition 在 finish 之前被打断，你可能同一时间在 DOM 中有两个活跃的变体。该属性是一个旧变体的列表，最新的在第一个，每一项都是具有如下属性的 object: `{ element, value, view}`
+- `lookup` ： 该属性是一个函数，它允许你通过 transition 名去访问别的 transition。则使得基于现有的 transition 来写新的 transition 变得更加容易：`this.lookup('other').apply(this).then(...)`
+
+transition 可以在 transition 规则中直接从 `use` 声明获取参数，例如：
+
+``` js
+/* app/transitions/my-animation.js */
+export default function(color, opts) {
+  //...
+}
+
+/* within app/transitions.js */
+this.transition(
+  this.toRoute('home'),
+  this.use('myAnimation', 'red', { duration: 100 })
+);
+```
+
+## 动画制作
+
+Liquid Fire 导出了如下方法：
+
+- `animate($elt, props, opts, label)`
+  - 该方法操作给定的 jQuery 元素 `$elt`，并且总是返回一个 promise（即使 $elt 为 undefined）。 `props` 和 `opts` 直接传递给 [Velocity's animate 函数](http://julian.com/research/velocity/#arguments)。`label` 是一个可选的字符串，你可以使用它来在改动画执行的时候引用到它。
+
+- `stop($elt)`
+  - 停止给定元素 `$elt` 上的所有正在执行的动画
+
+- `isAnimating($elt, label)`
+  - 判断 $elt 是否正在执行 label 指定的动画，label 是动画名
+
+- `timeSpent($elt, label)`
+  - 返回动画已经运行了多少 ms，在动画过程中需要中断动画的时候比较有用。
+
+- `timeRemaining($elt, label)`
+  - 返回 $elt 上 label 动画还离执行完成还剩余多少 ms，在动画过程中需要中断动画的时候比较有用。
+
+- `finish($elt, label)`
+  - 当 $elt 上的 label 动画执行完成的时候，返回一个 resolves 的 promise
+
+[Demo](http://ember-animation.github.io/liquid-fire/#/transitions/primitives)
