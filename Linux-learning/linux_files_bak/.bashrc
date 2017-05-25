@@ -35,6 +35,13 @@ alias gitci=" git add *; git commit -m 'x'; git push "
 alias gci=" gitci "
 alias gcia=" git add *; git commit -am 'x'; git push "
 alias pyhttp=" python -m SimpleHTTPServer 8888 >> /dev/null 2>&1 &  "
+alias npmlogin=" npm login --registry http://registry.npmjs.org "
+alias npmpub=" npm publish --registry http://registry.npmjs.org "
+
+### export
+
+
 export work=" $HOME/desktop/all/projects/"
 export desktop=" $HOME/desktop/"
 export learning=" $desktop/all/learning/"
+
