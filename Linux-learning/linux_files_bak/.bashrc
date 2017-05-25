@@ -37,6 +37,7 @@ alias gcia=" git add *; git commit -am 'x'; git push "
 alias pyhttp=" python -m SimpleHTTPServer 8888 >> /dev/null 2>&1 &  "
 alias npmlogin=" npm login --registry http://registry.npmjs.org "
 alias npmpub=" npm publish --registry http://registry.npmjs.org "
+alias tree=" tree -N --charset utf-8 "
 
 ### export
 
