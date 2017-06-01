@@ -45,4 +45,4 @@ alias tree=" tree -N --charset utf-8 "
 export work=" $HOME/desktop/all/projects/"
 export desktop=" $HOME/desktop/"
 export learning=" $desktop/all/learning/"
-
+export myproj=" $desktop/all/myproj/ "
