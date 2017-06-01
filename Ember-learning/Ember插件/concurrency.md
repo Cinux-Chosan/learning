@@ -617,3 +617,19 @@ ember-concurrency task 可以被明确的取消（通过调用某个task或者ta
 `finally` 块虽然很好的用于清理逻辑，但是请确保合理使用了 `Task Modifiers` 和 `.isRunning/.isIdle` 属性，因为这样可以避免自己去写很多重复逻辑。例如，在控制显示和隐藏 loading spinner 的时候可以使用 `.isRunning` 属性。
 
 #### 例子 [demo](http://ember-concurrency.com/#/docs/error-vs-cancelation)
+
+### 子 task（child task）
+
+task 可以通过 `yield` `anoterTask.perform()` 的结果值 来调用其它 task。当发生这种情况的时候， 父task 将会等待 子task 完成才会开始。如果 父task 被取消， 子task 也将会自动被取消。
+
+#### 例子 [demo](http://ember-concurrency.com/#/docs/child-tasks)
+
+
+### task 组
+
+[`Task Modifiers`](http://ember-concurrency.com/#/docs/task-concurrency)防止单个任务并行， task组 用于阻止多个 task 同一时间运行。使用 task group 有两步：
+
+1、 定义 task组 。如：`nameOfGroup: taskGroup()`;
+2、 使用 `.group()` 来关联 task。如 `myTask: task(...).group('nameOfGroup')`
+
+一旦你定义了一个 task 作为 task组 的成员，你可以不在使用像 `drop()`、`restartable()` 等其它 task modifiers；取而代之的是使用将它们用在 task组 上，参考示例 [demo](http://ember-concurrency.com/#/docs/task-groups)
