@@ -633,3 +633,50 @@ task 可以通过 `yield` `anoterTask.perform()` 的结果值 来调用其它 ta
 2、 使用 `.group()` 来关联 task。如 `myTask: task(...).group('nameOfGroup')`
 
 一旦你定义了一个 task 作为 task组 的成员，你可以不在使用像 `drop()`、`restartable()` 等其它 task modifiers；取而代之的是使用将它们用在 task组 上，参考示例 [demo](http://ember-concurrency.com/#/docs/task-groups)
+
+### 衍生状态
+
+ember-concurrency 的核心目标之一就是提供尽可能多的衍生状态. 例如,ember-concurrency提供了 `.isRunning` 和 `.isIdle` 属性来供你使用,这样就不需要自己去控制 `isRunning` 状态.
+
+ember-concurrency 提出了一个 task 概念. 当你 `perform` 一个 task 的时候, 就会产生一个 task实例 —— 它代表该 task 的一个执行实例. task 和 task实例都暴露出很多衍生状态给我们使用. 接下来将介绍它们:
+
+#### task 对象的属性
+
+- `isRunning` 当至少有一个该 task 实例在运行的时候返回 true,否则返回 false
+- `isIdle` 与 `isRunning` 相反
+- `performCount` 该task 被 perform 的次数
+- `concurrency` 该task 当前正在执行的实例个数. 如果使用了如 `drop/enqueue/restartable` 这样的 task modifier 并且没有指定 `maxConcurrency` 则该数字不会超过 1, 在调试的时候该属性比较有用.
+- `state` 代表task 状态的字符串,可以是 "running" 或者 "idle"
+
+#### 重 task 对象获取 task实例
+
+task 也暴露给我们了一些属性来获取指定的 task实例(每次通过调用 `.perform()` 创建)
+
+- `last` 最后一个已经启动执行的task实例, This property will never point to a `drop`ped Task Instance,
+- `lastSuccessful` 最后一个执行完成的实例(即返回值不是拒绝态的 promise)
+- `isSuccessful` 如果该 task实例运行完成则返回 true
+- `isError` 如果该 task实例由于异常导致失败,将返回true
+
+任何时候你都可以把 `.perform()` 返回的 task实例 存储起来用以获取上面的衍生状态
+
+#### task实例的属性
+- `value` task 函数返回的值. 在返回值之前它是 `null` ,如果 task 一直没有执行完成(包括抛出异常和被取消),则一直为 null
+- `error` task 函数抛出的 error/exception(也可能是 yield 返回的 reject promise 的值). 注意: 直到[该issue](https://github.com/machty/ember-concurrency/issues/40) 被解决之前,除非你在代码中解决了该问题(`.catch()`),否则该问题回一直冒泡到浏览器.
+
+#### 合二为一
+
+假如有一个叫 `myTask` 的 task, 如果你需要根据 myTask 最近执行的返回值显示一个成功的banner, 你可以写成 `{{myTask.last.value}}`, 如果需要该banner直到下一次task执行完成,可以写成 `{{myTask.lastSuccessful.value}}`, 还有很多其他组合写法供你使用.
+
+#### [例子](http://ember-concurrency.com/#/docs/derived-state)
+
+### Ember / jQuery 事件
+
+可以使用 `waitForEvent` 来直到 Ember.Evented 或者 jQuery Event 触发之前暂停 task.
+
+当需要在一个 task 中等待 event 触发时, 但是又你不想专门建立一个 promise 来等待事件触发的时候 resolve 该promise 时非常有用.
+
+#### 使用 `waitForEvent` 的例子 [demo](http://ember-concurrency.com/#/docs/events)
+
+#### 使用 衍生状态 的例子 [demo](http://ember-concurrency.com/#/docs/events)
+
+有时候需要task嵌套, task2 是 task1 的子task, task2 一直无限循环,如果判断task2的 `isRunning` 将永远是 true, 所以通过判断子 task1 的状态来判断运行状态.
