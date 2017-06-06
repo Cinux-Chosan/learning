@@ -80,3 +80,81 @@ co(function*() {
 | :---- |:---:| :-----|
 | w | {Number/String, > -1 或 ‘majority’} | <1 的时候，写操作响应不带有结果的 {ok:1}， w >= 1 或者 w='majority'会响应完整的写结果|
 | wtimeout |  {Number,0} | 写完成的等待超时时间|
+| j | (Boolean, default:false) | write waits for journal sync. |
+| serializeFunctions | (Boolean, default:false) | 默认情况下序列化函数不会序列化文档中的对象，将它设置为 true 会序列化对象 |
+| forceServerObjectId |	(Boolean, default:false) | 强制使用 MongoDB服务 给 _id 属性赋值而非该驱动对 _id 赋值 |
+
+下例演示如何序列化文档中的函数并写入到[副本集](https://docs.mongodb.org/manual/core/replica-set-members/)：
+
+``` js
+var MongoClient = require('mongodb').MongoClient,
+  co = require('co'),
+  assert = require('assert');
+
+co(function*() {
+  // Connection URL
+  var db = yield MongoClient.connect('mongodb://localhost:27017/myproject');
+  console.log("Connected correctly to server");
+
+  // Insert a single document
+  var r = yield db.collection('inserts').insertOne({
+        a:1
+      , b: function() { return 'hello'; }
+    }, {
+        w: 'majority'
+      , wtimeout: 10000
+      , serializeFunctions: true
+      , forceServerObjectId: true
+    });
+
+  assert.equal(1, r.insertedCount);
+  db.close();
+}).catch(function(err) {
+  console.log(err.stack);
+});
+```
+
+### 指定数据类型
+
+下面的例子演示使用 insertMany 方法在插入文档的时候指定数据类型：
+
+The Decimal128 data type requires MongoDB server version 3.4 or higher.
+
+``` js
+
+var Long = require('mongodb').Long;
+var Decimal = require('mongodb').Decimal128;
+
+var MongoClient = require('mongodb').MongoClient,
+  co = require('co'),
+  assert = require('assert');
+
+co(function*() {
+  // Connection URL
+  var db = yield MongoClient.connect('mongodb://localhost:27017/myproject');
+  console.log("Connected correctly to server");
+
+  var longValue = Long(1787);
+  var decimalValue = Decimal.fromString("27.8892836");
+
+  // Insert multiple documents
+  var r = yield db.collection('numbers').insertMany([ { a : longValue }, { b : decimalValue } ]);
+  assert.equal(2, r.insertedCount);
+
+  // Close connection
+  db.close();
+}).catch(function(err) {
+  console.log(err.stack);
+});
+```
+
+上面的操作插入了以下两个文档到 numbers 集合：
+
+``` json
+{ "_id" : ObjectId("57d6f63a98724c65a5d7bd7a"), "a" : NumberLong(1787) }
+{ "_id" : ObjectId("57d6f63a98724c65a5d7bd7b"), "b" : NumberDecimal("27.8892836") }
+```
+
+### 更新文档
+
+The updateOne and updateMany methods exist on the Collection class and are used to update and upsert documents.
