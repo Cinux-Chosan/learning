@@ -157,4 +157,96 @@ co(function*() {
 
 ### 更新文档
 
-The updateOne and updateMany methods exist on the Collection class and are used to update and upsert documents.
+`updateOne` 和 `updateMany`方法存在于`Collection` 类，用于更新和插入文档：
+
+``` js
+var MongoClient = require('mongodb').MongoClient,
+  co = require('co'),
+  assert = require('assert');
+
+co(function*() {
+  // Connection URL
+  var db = yield MongoClient.connect('mongodb://localhost:27017/myproject');
+  console.log("Connected correctly to server");
+
+  // Get the updates collection
+  var col = db.collection('updates');
+  // Insert a single document
+  var r = yield col.insertMany([{a:1}, {a:2}, {a:2}]);
+  assert.equal(3, r.insertedCount);
+
+  // Update a single document
+  var r = yield col.updateOne({a:1}, {$set: {b: 1}});
+  assert.equal(1, r.matchedCount);
+  assert.equal(1, r.modifiedCount);
+
+  // Update multiple documents
+  var r = yield col.updateMany({a:2}, {$set: {b: 1}});
+  assert.equal(2, r.matchedCount);
+  assert.equal(2, r.modifiedCount);
+
+  // Upsert a single document
+  var r = yield col.updateOne({a:3}, {$set: {b: 1}}, {
+    upsert: true
+  });
+  assert.equal(0, r.matchedCount);
+  assert.equal(1, r.upsertedCount);
+  db.close();
+}).catch(function(err) {
+  console.log(err.stack);
+});
+```
+
+`update` 方法也接受第三个参数，它可以有以下字段：
+
+| 参数 | 类型 | 描述 |
+| ---  | --- | --- |
+| w | {Number/String, > -1 || ‘majority’} | 同 insertOne |
+| wtimeout | {Number, 0} | 同 insertOne |
+| j | (Boolean, default:false) | 同 insertOne |
+| multi | (Boolean, default:false) | 更新一个/所有 文档 |
+| upsert | (Boolean, default:false) | 更新操作为 upsert |
+
+与 `insert` 一样， `update` 方法允许你使用 `w`、`wtimeout`、`fsync` 参数来指定每一个操作更新操作。
+
+### 删除文档
+
+`deleteOne` 和 `deleteMany` 方法存在于 `Collection` 类，用于从 mongodb 删除文档。
+
+``` js
+var MongoClient = require('mongodb').MongoClient,
+  co = require('co'),
+  assert = require('assert');
+
+co(function*() {
+  // Connection URL
+  var db = yield MongoClient.connect('mongodb://localhost:27017/myproject');
+  console.log("Connected correctly to server");
+
+  // Get the removes collection
+  var col = db.collection('removes');
+  // Insert a single document
+  var r = yield col.insertMany([{a:1}, {a:2}, {a:2}]);
+  assert.equal(3, r.insertedCount);
+
+  // Remove a single document
+  var r = yield col.deleteOne({a:1});
+  assert.equal(1, r.deletedCount);
+
+  // Update multiple documents
+  var r = yield col.deleteMany({a:2});
+  assert.equal(2, r.deletedCount);
+  db.close();
+}).catch(function(err) {
+  console.log(err.stack);
+});
+```
+
+`deleteOne` 和 `deleteMany` 方法也接受第二个参数，它有以下字段。
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| w | {Number/String, > -1 || ‘majority’} | 同 insertOne |
+| wtimeout | {Number, 0} | 同 insertOne |
+| j | (Boolean, default:false) | 同 insertOne |
+| single | (Boolean, default:false) | 移除找到的第一条文档 |
