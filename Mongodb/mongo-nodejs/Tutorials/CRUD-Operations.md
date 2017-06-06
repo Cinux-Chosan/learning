@@ -250,3 +250,7 @@ co(function*() {
 | wtimeout | {Number, 0} | 同 insertOne |
 | j | (Boolean, default:false) | 同 insertOne |
 | single | (Boolean, default:false) | 移除找到的第一条文档 |
+
+Just as for `updateOne/updateMany` and `insertOne/insertMany`, the `deleteOne/deleteMany` method allows you to specify a per operation write concern using the `w`, `wtimeout` and `fsync` parameters.
+
+### findOneAndUpdate ， findOneAndDelete ， findOneAndReplace
