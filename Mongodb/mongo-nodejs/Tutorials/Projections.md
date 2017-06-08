@@ -1,6 +1,6 @@
 # [Projections](http://mongodb.github.io/node-mongodb-native/2.2/tutorials/projections/) （投影）
 
-默认情况下，MongoDB 返回匹配文档的所有字段。你可以在查询的时候包含一个`projections document(投影文档)` 来限制 MongoDB 返回大量的数据。
+默认情况下，MongoDB 返回匹配文档的所有字段。你可以在查询的时候包含一个`projections document(投影文档)` 来限制 MongoDB 返回大量的数据。它实际上是一个条件过滤器。
 
 ## 投影文档
 
