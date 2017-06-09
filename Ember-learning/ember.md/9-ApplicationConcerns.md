@@ -1,3 +1,58 @@
+部分总结：
+
+
+``` js
+// app/initializers/inject-controller2components.js
+
+import Ember from 'ember';
+export function initialize(application) {  // application 是 Ember.Application 的实例，即 application instanceof Ember.Application 为 true
+  application.inject('component', 'appController', 'controller:application');    //  将 controller 注入所有的 component，这样就可以在 component 中通过 this.get('appController') 来使用 application 的 controller，如使用 transitionToRoute()
+  var log = {
+    log(x) {
+      console.log(x instanceof Ember.ApplicationInstance);  // 通过 Ember.getOwner(this) 得到的实例是 Ember.ApplicationInstance 的实例，而非 Ember.Application 的实例，通过 Ember.getOwner(this) 得到的实例提供 lookup('Factory_type:Factory_name') 来获取注册在它上面某个的 Factory。如在 component.js 中使用 Ember.getOwner(this).lookup('logger:main').log(Ember.getOwner(this)) 输出 Ember.getOwner(this) instanceof Ember.ApplicationInstance 的结果， 即 true
+    }
+  }
+  application.register('logger:main', log, { instantiate: false });
+  application.inject('component', 'log', 'logger:main');
+}
+
+export default {
+  name: 'controller-inject',
+  initialize
+};
+
+```
+
+``` js
+// app/instance-initializers/inject-instanceinitial.js
+
+export function initialize(appInstance) {    // 每个instance-initializer 的该参数实际上都是同一个 application instance。它也是其它类型（如 controller，component等）通过 Ember.getOwner(this) 得到的对象，它们都是同一个对象。
+  // appInstance.inject('route', 'foo', 'service:foo');
+  var log = {
+    log(x) {
+      console.log(appInstance == x);
+    }
+  }
+  appInstance.register('logger:main', log, { instantiate: false });    // instance-initializer 中也可以注册Factory，如果传给 register 的第一个参数是同一个参数，则它会覆盖在 initializer 中注册的那个factory， 即通过 Ember.getOwner(this).lookup('logger:main') 得到的是  instance-initializer 而不是  initializer 中的那个。
+  appInstance.inject('component', 'log', 'logger:main');    // 注意，通过测试发现，此处给 component 注入 log 属性与 initializer 中注册的是同一个属性，如果注册(通过 register注册)的也是同一个属性，那么在 component 中使用 this.get('log') 得到的是 instance-initializer 中注册的factory， 如果注册的名称不一样，即传递给 register 的第一个参数不一样，当属 inject 的属性名一样，则得到的是 initializer 中的 factory。
+}
+
+export default {
+  name: 'inject-instanceinitial',
+  initialize
+};
+
+```
+## 总结：
+- initializer 会在 instance-initializer 之前执行
+- initializer 的函数参数是 Ember.Application 的实例
+- instance-initializer 的函数参数是 Ember.ApplicationInstance 的实例，它不是 Ember.Application 的实例（虽然看名字以为是），它们相互独立。
+- Ember.ApplicationInstance 的实例提供 lookup 方法来获取在 initializer 和 instance-initializer 上注册的 factory。
+- Ember.getOwner(this) 得到的是 Ember.ApplicationInstance 的实例，它与 instance-initializer 参数是同一个对象。
+- 在 initializer 中注册的 factory 会被 instance-initializer 接管
+- instance-initializer 中也可以注册 factory，如果同名，会覆盖 initializer 中注册的同名 factory，（即通过 lookup 得到的是被覆盖的 factory）。
+- 如果传递给 register 的第一个参数相同，然后都调用了 inject 给其它 factory 注册属性，属性名相同，则在其它 factory 中通过 this.get('注册时的属性名') 得到的是 initializer 中的 factory
+
 # Application Concerns
 - Application：声明和和配置组成该网页应用的objects，单个Application的配置可以在多个ApplicationInstance之间共享。
 - ApplicationInstance：由application创建，用于管理应用的状态，该实例作为应用中那些实例化对象的拥有者。
