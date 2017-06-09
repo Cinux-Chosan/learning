@@ -48,6 +48,7 @@ export default {
 - initializer 的函数参数是 Ember.Application 的实例
 - instance-initializer 的函数参数是 Ember.ApplicationInstance 的实例，它不是 Ember.Application 的实例（虽然看名字以为是），它们相互独立。
 - Ember.ApplicationInstance 的实例提供 lookup 方法来获取在 initializer 和 instance-initializer 上注册的 factory。
+- 注册 factory（功能函数或者对象） 是为了能够在其它地方调用。
 - Ember.getOwner(this) 得到的是 Ember.ApplicationInstance 的实例，它与 instance-initializer 参数是同一个对象。
 - 在 initializer 中注册的 factory 会被 instance-initializer 接管
 - instance-initializer 中也可以注册 factory，如果同名，会覆盖 initializer 中注册的同名 factory，（即通过 lookup 得到的是被覆盖的 factory）。
