@@ -1,3 +1,5 @@
+# Iterator
+
 Iterator 用于提供统一的遍历接口。
 
 如果需要实现 Iterator，实现对象的 Symbol.iterator 属性，该方法返回一个 Iterator 对象，即实现了 next 方法的对象。
