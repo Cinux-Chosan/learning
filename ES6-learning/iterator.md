@@ -1,6 +1,6 @@
 Iterator 用于提供统一的遍历接口。
 
-如果需要实现 Iterator，实现对象的 Symbol.iterator 属性，该方法返回一个 Iterator 对象。
+如果需要实现 Iterator，实现对象的 Symbol.iterator 属性，该方法返回一个 Iterator 对象，即实现了 next 方法的对象。
 
 for...of 会默认调用元素的 iterator，如果传入的是对象，for...of 会调用对象的 Symbol.iterator， iterator 在它的原型链上也实现了 Symbol.iterator 方法：
 
