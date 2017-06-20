@@ -4,7 +4,7 @@ Iterator 用于提供统一的遍历接口。
 
 for...of 会默认调用元素的 iterator，如果传入的是对象，for...of 会调用对象的 Symbol.iterator， iterator 在它的原型链上也实现了 Symbol.iterator 方法：
 
-Array.prototype[Symbol.iterator]()[Symbol.iterator]()[Symbol.iterator]() 返回的还是 Iterator 对象的实例。
+`Array.prototype[Symbol.iterator]()` 和 `Array.prototype[Symbol.iterator]()[Symbol.iterator]()[Symbol.iterator]()` 返回的还是 Iterator 对象的实例。
 
 
 ### 调用Iterator接口的场合
