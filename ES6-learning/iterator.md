@@ -30,11 +30,11 @@ for...of 会默认调用元素的 iterator，如果传入的是对象，for...of
 #### 其他场合
 
 由于数组的遍历会调用遍历器接口，所以任何接受数组作为参数的场合，其实都调用了遍历器接口。下面是一些例子。
-  for...of
-  Array.from()
-  Map(), Set(), WeakMap(), WeakSet()（比如new Map([['a',1],['b',2]])）
-  Promise.all()
-  Promise.race()
+- for...of
+- Array.from()
+- Map(), Set(), WeakMap(), WeakSet()（比如new Map([['a',1],['b',2]])）
+- Promise.all()
+- Promise.race()
 
 
 字符串默认也实现了 Iterator， [...'zhang'] 为 ['z', 'h', 'a', 'n', 'g']
