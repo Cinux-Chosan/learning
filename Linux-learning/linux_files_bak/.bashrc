@@ -38,7 +38,8 @@ alias pyhttp=" python -m SimpleHTTPServer 8888 >> /dev/null 2>&1 &  "
 alias npmlogin=" npm login --registry http://registry.npmjs.org "
 alias npmpub=" npm publish --registry http://registry.npmjs.org "
 alias tree=" tree -N --charset utf-8 "
-
+alias sqt=" nohup ss-qt5 >> /dev/null 2>&1 & "
+alias google-chrome=" google-chrome --no-sandbox "
 ### export
 
 
