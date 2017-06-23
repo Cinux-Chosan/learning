@@ -21,7 +21,7 @@ for...of 会默认调用元素的 iterator，如果传入的是对象，for...of
 
 #### yield*
 
-- yield*后面跟的是一个可遍历的结构，它会调用该结构的遍历器接口。
+- yield*后面跟的是一个可遍历的结构，它会调用该结构的遍历器接口。**生成器函数执行过后，返回的是 Iterator 实例。**
 
       let generator = function* () {
         yield 1;
