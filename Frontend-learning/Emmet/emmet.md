@@ -278,3 +278,107 @@ Emmet 使用类似于 CSS 选择器的语法来描述元素在生成树的位置
 ## 元素类型
 
 在 HTML 和 XML 文档中，所有的缩写都会立即转换成 HTML/XML 标签。但是某些元素如 a 和 img 等会带一些预定义的参数， a 会转换成 `<a href=""></a>` `<img src="" alt="">`，为什么它们会带有一些参数呢？
+
+所有的元素都采用下面的格式定义在 [`snippets.json`](https://github.com/emmetio/emmet/blob/master/lib/snippets.json) 文件中。
+
+```json
+{
+    "html": {
+        "abbreviations": {
+            "a": "<a href=\"\">",
+            "link": "<link rel=\"stylesheet\" href=\"\" />"
+            ...
+        },
+        "snippets": {
+            "cc:ie6": "<!--[if lte IE 6]>\n\t${child}|\n<![endif]-->"
+            ...
+        }
+    },
+
+    "css": {
+        ...
+    }
+}
+```
+
+第一层级为所定义元素的语法名称，可以理解为文件的类型（扩展名，如上面的"html" 实际上指下面的约束被约束在html文件中）。在它下面的语法部分，元素的定义被分为两部分：片段和缩写（snippets and abbreviations.）
+
+### 片段（Snippets）
+
+片段就是纯代码块，怎么定义，就怎么生成代码，不会经过任何的加工。
+
+### 缩写（Abbreviations）
+
+缩写实际上是带有一些数据提示的块。因为 Emmet 常用于编写 HTML/XML 标签，缩写使用 XML 格式的定义来描述一个元素该如何生成。
+
+Emmet 解析缩写语的定义，然后检索以下数据：
+
+- 元素名
+- 默认属性
+- 属性顺序
+- 属性默认值
+- 是否包含闭合标签
+
+上面示例中 link 元素定义为 `<link rel="stylesheet" href="" />` （在JSON中双引号需要转义，或者使用单引号代替）。这样的定义就代表它是给 link 元素定义个缩写，包含两个属性，`rel` 有默认值 stylesheet，`href` 有个空的初始值，并且该元素没有闭标签。
+
+你可以覆盖默认的属性值，也可以添加新的属性值：
+
+`link[rel=prefetch title="hello"]` 生成：
+
+```html
+<link rel="prefetch" href="" title="hello">
+```
+
+你可以添加子元素来强制元素生成闭标签：
+
+`link>xsl:apply-templates` 生成：
+
+```html
+<link rel="stylesheet" href="">
+  <xsl:apply-templates></xsl:apply-templates>
+</link>
+```
+
+### Aliases
+
+你可以在 snippets.json 的 abbreviations 部分定义 *aliases* 字段，它是其他常用缩写的简写方式。它可以定义：
+- 为名字比较长的标签定义短名
+- 引用常用的缩写
+
+你可以在 snippets.json 中找到下面这样的代码：
+
+```json
+"html": {
+    "abbreviations": {
+        "bq": "blockquote",
+        "ol+": "ol>li"
+    }
+}
+```
+
+在上面的例子中，当你展开 `bq` 缩写的时候， Emmet 将会查找 `blockquote` 的定义。如果不存在，它将会直接输出 `<blockquote></blockquote>` 元素。 `ol+` 缩写将会输出和 ol>li 一样的结果。
+
+`ol+` 这样的定义看起来模棱两可，因为它以 `+` 操作符结尾。由于历史原因，Emmet 将会正确的展开这样的缩写定义，加号被留在这儿。但是记住，没有必要在缩写 alias 中使用 `+` 操作符。
+
+## 隐式标签名
+
+在一些情况下，你可以跳过标签名，如 `div.content` 可以写作 `.content`，它们都被解析为： `<div class="content"></div>`
+
+### 它是怎么工作的
+
+当将缩写展开的时候， Emmet 会尝试获取父级的上下文，如果获取父级的上下文成功，则 Emmet 会使用它的标签名作为隐式标签名。
+
+Here’s how it resolves the names for some parent elements:
+
+- li for ul and ol
+- tr for table, tbody, thead and tfoot
+- td for tr
+- option for select and optgroup
+
+如下面的例子：
+
+
+- `.wrap>.content` => `div.wrap>div.content`
+- `em>.info` => `em>span.info`
+- `ul>.item*3` => `ul>li.item*3`
+- `table>#row$*4>[colspan=2]` => `table>tr#row$*4>td[colspan=2]`
