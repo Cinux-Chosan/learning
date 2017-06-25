@@ -382,3 +382,90 @@ Here’s how it resolves the names for some parent elements:
 - `em>.info` => `em>span.info`
 - `ul>.item*3` => `ul>li.item*3`
 - `table>#row$*4>[colspan=2]` => `table>tr#row$*4>td[colspan=2]`
+
+## “Lorem Ipsum” generator（生成测试的虚假数据）
+
+[“Lorem ipsum”](http://www.lipsum.com/) dummy text 被很多 web 开发者用来测试网页模板在真实数据下的显示情况。通常情况下，开发者使用第三方服务来生成 “lorem ipsum” 文字，但是现在你马上就可以在你的编辑器里面就可以使用了。展开 lorem 或者 lipsum 缩写来得到下面的片段：
+
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
+
+lorem 不是常规的片段，它实际上是一个生成器。每次你展开它，会生成 30 个单词的文本，它们被分成多个片段。
+
+你可以在缩写中指定生成多少个单词。例如， lorem100 会生成 100 个文字的虚假文字。
+
+### Repeated “Lorem ipsum”
+
+你可以使用 lorem 生成器来为重复的标签生成不同的随机段落。例如 `p*4>lorem` 缩写将会得到如下面的代码：
+
+```html
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus perferendis ipsa expedita optio a quae quo officiis veritatis assumenda magni, excepturi nemo dolorum, minima vitae eum facilis praesentium reiciendis error.</p>
+<p>Assumenda iusto placeat dolore maiores, ad nobis iure doloribus! Dignissimos excepturi nihil dolor doloremque ullam deserunt sunt temporibus odio, voluptates molestiae aliquam illo a, esse! Corporis laborum ullam nostrum. Quibusdam.</p>
+<p>Nesciunt quos facilis dolores at voluptatum, quis, quam est blanditiis neque saepe quasi perferendis odit laboriosam repudiandae voluptate labore aliquid asperiores maiores. Recusandae, at, dolorum! Non est, architecto ipsam voluptate.</p>
+<p>Aliquid quia, consectetur labore doloribus asperiores modi minima cupiditate laboriosam ea quis pariatur, temporibus voluptas aut, sapiente praesentium cumque! Nihil alias aliquid aspernatur placeat, amet ad quas! Earum, impedit, laboriosam!</p>
+```
+
+当 lorem 元素重复的时候 生成器利用 [implicit tag name resolver](https://docs.emmet.io/abbreviations/implicit-names/)
+
+`ul.generic-list>lorem10.item*4` 生成
+
+```html
+<ul class="generic-list">
+  <li class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, consectetur.</li>
+  <li class="item">Aliquam quidem laborum accusamus fugit eius voluptatibus rem sit unde?</li>
+  <li class="item">Temporibus necessitatibus architecto ullam maxime numquam minima dicta, est iusto.</li>
+  <li class="item">Laborum facilis repellendus dignissimos ad, vel doloribus repudiandae veniam enim.</li>
+</ul>
+```
+
+## CSS 缩写
+
+尽管Emmet 缩写在生成 HTML/XML 或者其他结构化标记的时候非常有用，在CSS方便看起来好像很无力。你是不是也不想写 CSS 选择器，或者把它们转换成CSS选择器。Emmet 唯一能为你做的就是给 CSS 属性提供一些简写，但是编辑器的一些原生的片段和自动补全功能可以帮你做得更好。
+
+实际上，Emmet 提供了一些东西。
+
+Emmet 有一些 CSS 属性的预定义片段。例如，你可以将 `m` 缩写展开为 `margin:;`，然后你想给属性指定一个值，这时你就手动输入值，如 10px。
+
+Emmet 可以大大的优化你的工作流程：你可以直接给缩写注入值。如果希望得到 `margin:10px;`，你可以缩写为 `m10`。 希望赋予多个值？使用连字符（中划线）来分隔它们：`m10-20` 得到 `margin: 10px 20px;`，那如果希望得到负的值呢？加一个连字符（中划线）即可，即第一个值使用一个连字符（中划线），后面的值使用两个连字符（中划线）。`m-10--20` 展开得到 `margin: -10px -20px;`
+
+#### 它是如何工作的？
+
+Emmet 有一个特别的 CSS 转换器来将这种缩写转换成 CSS 属性。
+
+接下来讲述当你展开 m10 缩写的时候发生了什么。
+
+第一，它在 `snippets.json` 中查找 `m10` 片段。如果找到了，它就将它当做常规的片段输出。否则，它从缩写中提取值。
+
+为了提供最佳体验，解释器不引入任何特殊的分隔符：因为输入 `m5` 比 `m:5`更快，它将第一个数字或者连字符当做属性的值。在 `m10` 中， m 是属性， 10 是值。
+
+当解析器找到属性的时候，它搜索 snippets.json 中 snippet 的定义。如`m`会与定义中的 `"m": "margin:|;"` 匹配。`|` 字符被当做片段扩展后的插入符号的位置引用，属性值会被放到符号的这个位置，如果没有在缩写中指定值，则光标会自动指到这里。
+
+片段的定义看起来很像 CSS 属性，所以 Emmet 能够将它分成属性和值，并且将值放在插入符号的位置（`|`的位置）。
+
+#### 为值提供单位
+
+数值的单位默认是 `px`，如果使用的是浮点数，则单位是 `em`。但是你可以在值后面显式提供单位名称， `m1.5ex` 得到`margin: 1.5ex;` ， `m10foo` 得到 `margin: 10foo;`
+
+如果你明确地定义了单位，就不需要使用连字符来分隔多个值。`m10ex20em` 得到 `margin: 10ex 20em;` `m10ex-5` 得到 `margin:10ex -5px;`
+
+#### Value aliases（别名）
+
+Emmet 为一些常用的单位定义了别名：
+
+- p -> %
+- e -> em
+- x -> ex
+
+可以使用别名来代替完整的单位：
+
+- w100p -> width: 100%;
+- m10p30e5x -> margin: 10% 30em 5ex;
+
+#### 颜色的值（color values）
+
+Emmet 支持十六进制的颜色值，如 `c#3` -> `color: #333;`，`#`号作为值的分隔符。例如，`bd5#0s` 展开成 `5px #000 solid;`：`#` 号将5和颜色值分开，`s` 不是十六进制的值，所以用不着连字符来分隔。
+
+你可以使用 1、2、3或者6个字符作为颜色值：
+
+- #1 -> #111111
+- #e0 -> #e0e0e0
+- #fc0 -> #ffcc00
