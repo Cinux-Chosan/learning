@@ -501,4 +501,4 @@ Emmet 的CSS 解析器有有一个漂亮的特性可以改善你写 CSS3 的体�
 border-radius: ;
 ```
 
-#### 它是如何工作的？
+#### [它是如何工作的？](https://docs.emmet.io/css-abbreviations/vendor-prefixes/#how-it-works)
