@@ -196,7 +196,7 @@ Emmet 使用类似于 CSS 选择器的语法来描述元素在生成树的位置
   </ul>
 ```
 
-你可以在统一行多次使用 `$` 来填充 0：
+你可以在同一行多次使用 `$` 来填充 0：
 
 `ul>li.item$$$*5` 生成：
 
@@ -341,7 +341,7 @@ Emmet 解析缩写语的定义，然后检索以下数据：
 
 ### Aliases
 
-你可以在 snippets.json 的 abbreviations 部分定义 *aliases* 字段，它是其他常用缩写的简写方式。它可以定义：
+你可以在 snippets.json 的 abbreviations 部分定义 *别名(aliases)* 字段，它是其他常用缩写的简写方式。它可以定义：
 - 为名字比较长的标签定义短名
 - 引用常用的缩写
 
@@ -366,17 +366,16 @@ Emmet 解析缩写语的定义，然后检索以下数据：
 
 ### 它是怎么工作的
 
-当将缩写展开的时候， Emmet 会尝试获取父级的上下文，如果获取父级的上下文成功，则 Emmet 会使用它的标签名作为隐式标签名。
+当将缩写展开的时候， Emmet 会尝试获取父级的上下文，如果获取父级的上下文成功，则 Emmet 会使用它的标签名作为隐式标签名,如 `span>.subspan` 得到 `<span><span class="subspan"></span></span>`。
 
-Here’s how it resolves the names for some parent elements:
+但是有一些例外,下面罗列了一些父节点里面会默认解析的元素标签:
 
-- li for ul and ol
-- tr for table, tbody, thead and tfoot
-- td for tr
-- option for select and optgroup
+- 父级是 ul、ol, 子标签默认为 li
+- 父级是 table、 tbody、 thead、 tfoot, 子标签默认为 tr
+- 父级是 tr, 子标签默认为 td
+- 父级是 select、 optgroup, 子标签默认为 option
 
 如下面的例子：
-
 
 - `.wrap>.content` => `div.wrap>div.content`
 - `em>.info` => `em>span.info`
@@ -385,7 +384,7 @@ Here’s how it resolves the names for some parent elements:
 
 ## “Lorem Ipsum” generator（生成测试的虚假数据）
 
-[“Lorem ipsum”](http://www.lipsum.com/) dummy text 被很多 web 开发者用来测试网页模板在真实数据下的显示情况。通常情况下，开发者使用第三方服务来生成 “lorem ipsum” 文字，但是现在你马上就可以在你的编辑器里面就可以使用了。展开 lorem 或者 lipsum 缩写来得到下面的片段：
+[“Lorem ipsum”](http://www.lipsum.com/) 虚拟文本被很多 web 开发者用来测试网页模板在真实数据下的显示情况。通常情况下，开发者使用第三方服务来生成 “lorem ipsum” 文字，但是现在你马上就可以在你的编辑器里面就可以使用了。展开 lorem 或者 lipsum 缩写来得到下面的片段：
 
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
 
@@ -404,7 +403,7 @@ lorem 不是常规的片段，它实际上是一个生成器。每次你展开�
 <p>Aliquid quia, consectetur labore doloribus asperiores modi minima cupiditate laboriosam ea quis pariatur, temporibus voluptas aut, sapiente praesentium cumque! Nihil alias aliquid aspernatur placeat, amet ad quas! Earum, impedit, laboriosam!</p>
 ```
 
-当 lorem 元素重复的时候 生成器利用 [implicit tag name resolver](https://docs.emmet.io/abbreviations/implicit-names/)
+生成器基于 [implicit tag name resolver](https://docs.emmet.io/abbreviations/implicit-names/) 来完成随机重复生成的 lorem 文字
 
 `ul.generic-list>lorem10.item*4` 生成
 
@@ -419,7 +418,7 @@ lorem 不是常规的片段，它实际上是一个生成器。每次你展开�
 
 ## CSS 缩写
 
-尽管Emmet 缩写在生成 HTML/XML 或者其他结构化标记的时候非常有用，在CSS方便看起来好像很无力。你是不是也不想写 CSS 选择器，或者把它们转换成CSS选择器。Emmet 唯一能为你做的就是给 CSS 属性提供一些简写，但是编辑器的一些原生的片段和自动补全功能可以帮你做得更好。
+尽管Emmet 缩写在生成 HTML/XML 或者其他结构化标记的时候非常有用，在CSS方面看起来好像很无力。你是不是也不想写 CSS 选择器，或者把它们转换成CSS选择器。Emmet 唯一能为你做的就是给 CSS 属性提供一些简写，但是编辑器的一些原生的片段和自动补全功能可以帮你做得更好。
 
 实际上，Emmet 提供了一些东西。
 
@@ -578,6 +577,6 @@ BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或�
 | 缩写 | 输出 |
 |:------ |:------:|
 |.b_m | ```html <div class="b_m"></div> ``` |
-|.b_m1._m2 | ```html <div class="b_m1 _m2"></div> ``` |
-|.b>._m |```html <div class="b"> <div class="b b_m"></div></div>```（文档中）   ```html <div class="b"> <div class="_m"></div></div>```（测试得到）|
-|.b1>.b2_m1>.-e1+.--e2_m2 | ```html <div class="b1"><div class="b2_m1"><div class="-e1"></div><div class="--e2_m2"></div></div></div>``` |
+|.b_m1._m2 | ```html <div class="b_m1 _m2"></div> ``` （将 bem 设置为默认filter才起效）|
+|.b>._m |```html <div class="b"> <div class="b b_m"></div></div>```（将 bem 设置为默认filter才起效）|
+|.b1>.b2_m1>.-e1+.--e2_m2 | ```html <div class="b1"><div class="b2_m1"><div class="-e1"></div><div class="--e2_m2"></div></div></div>```（将 bem 设置为默认filter才起效） |
