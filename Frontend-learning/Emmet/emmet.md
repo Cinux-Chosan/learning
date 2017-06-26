@@ -487,7 +487,7 @@ padding:  !important;
 margin: 10em !important;
 ```
 
-### Vendor prefixes（供应商前缀）
+### Vendor prefixes（浏览器前缀、供应商前缀）
 
 新的 CSS3 特性给众多的开发者带来了福音： 相比以前可以使用更少的代码来写出更好的效果。但是这些特性也给我们带来了一些痛苦：我们不得不给相同的属性添加不同的前缀以适应不同的浏览器。
 
@@ -502,3 +502,86 @@ border-radius: ;
 ```
 
 #### [它是如何工作的？](https://docs.emmet.io/css-abbreviations/vendor-prefixes/#how-it-works)
+
+在展开一个带有连字符前缀的缩写的时候，Emmet 先去掉连字符，然后在 snippets.json 中查找剩下的缩写片段。例如， `-bdrs` 缩写会去查询 snippets.json 中的 bdrs 定义：
+
+`"bdrs": "border-radius:|;"`
+
+它代表了 bdrs 应该被展开为 border-radius 属性。如果没有找到，则该缩写就会被当作 CSS 属性名。
+
+在 CSS 解析器找到属性名之后，它会去特定的供应商分类目录中查找。这些供应商目录定义在偏好设置中，格式为 `css.{vendor}Properties` 的条目，用户也可以覆盖它们。`{vendor}` 是浏览器的供应商前缀，例如 webkit, moz 等。
+
+如果展开的属性在这些供应商目录中被找到，它们的供应商前缀就会被加到属性前面，否则，所有的前缀都将被用上。
+、例如， `border-radius` 属性定义在 `css.webkitProperties` 和 `css.mozProperties` 中，所以该属性将会被添加上 `webkit` 和 `moz` 前缀。另一方面，`foo` 属性没有在任何地方定义，所以 `-foo` 会添加所有的前缀： `webkit`, `moz`, `ms`, `o`。这些使用最新的一些 CSS 属性的时候非常有用。
+
+#### 默认添加属性前缀
+
+在写 CSS 的时候你可能会发现一个 `clear` 的 CSS3 属性在没有添加浏览器前缀的时候是没用的。每次都要在属性前面添加连字符，这样太过于麻烦。Emmet 默认开启偏好设置 `css.autoInsertVendorPrefixes`。当这个设置被开启的时候，所有定义在 vendor 目录中的 CSS 属性将会被自动匹配浏览器前缀。
+
+这意味着你不需要使用连字符为已知的 CSS 属性添加前缀。那些已知的属性直接写做 `bdrs` 、`trf` 就可以了。
+
+#### 明确浏览器前缀
+
+有些时候你可能只想输出特定浏览器前缀的 CSS 属性。
+
+比如只希望输出 `webkit` 和 `moz` 前缀的 `transform`，这种情况下你可以像下面这样写：
+
+`-wm-trf`
+
+如你所见，我们通过添加一个字母前缀（单字符前缀）的列表对缩写进行了略微的修改。这种情况下，`w` 代表 `webkit`，`m`代表`moz`，Emmet 有下面一些单字符前缀定义：
+
+- w -> webkit
+- m -> moz
+- s -> ms
+- o -> o
+
+### [Gradients](https://docs.emmet.io/css-abbreviations/gradients/)
+
+ CSS3 linear-gradient 属性
+
+### 模糊搜索（Fuzzy search）
+
+如果你看过 [Cheat Sheet](https://docs.emmet.io/cheat-sheet/)，你可能觉得有太多的 CSS 片段需要记住。从逻辑分离的角度来看，这有些冗余。
+
+为了让 CSS 写起来更简单，Emmet 实现了模糊搜索。每次你输入不了解的缩写的时候，Emmet 将会找到最相近的一个。
+
+例如，你想输入 `ov:h`（overflow:hidden），但是你可能写成了 `ov-h`，`ovh`，`oh`，得益于 Emmet 的模糊搜索，它们都能正确匹配。
+
+The fuzzy search is performed against predefined snippet names, not snippet values or CSS properties. This results in more predictable and controllable matches. Remember that you can always [create your own snippets or redefine existing ones](https://docs.emmet.io/customization/) to fine-tune fuzzy search experience.
+
+## Yandex BEM/OOCSS
+
+如果你使用 [OOCSS](http://coding.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)、[Yandex's BEM](http://coding.smashingmagazine.com/2012/04/16/a-new-front-end-methodology-bem/) 风格写 HTML 和 CSS 代码，那么你肯定喜欢这个过滤器：它提供一些别名和在 class 中自动插入一些常规的块或元素名。
+
+简言之，BEM 为 CSS 样式引入 3 个概念： *块*、*元素*、*修改器*。**块** 是HTML页面的语义段的名字空间简称，例如： `search-form` 。**元素** 是段的一部分，例如： `search-form__query-string`。 **修改器** 定义块和元素的变量：`search-form_wide` 或者 `search-form_narrow`。样式名中的元素用双下划线 `__`分隔，修改器使用单下划线 `_` 分隔。
+
+BEM/OOCSS 管理和重用 CSS，用纯 HTML 来写这些样式名可能非常的乏味。你必须在缩写中写同样的块或元素名：
+
+`form.search-form.search-form_wide>input.search-form__query-string+input:s.search-form__btn.search-form__btn_large`
+
+BEM 过滤器写法如下：
+
+`form.search-form._wide>input.-query-string+input:s.-btn_large|bem
+`
+
+### 如何工作的？
+
+BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或者 `-` 作为元素的前缀， `_` 作为修改器的前缀。无论什么时候你以这些前缀开始写样式名，过滤器将会帮你补全剩下的部分：
+
+- 以元素前缀开头的样式名，过滤器将根据父节点解析块名。
+- 以修改器前缀开始的样式名，过滤器将会从当前节点或者父节点解析块名和元素名。
+- 以元素和修改器前缀开始，过滤器将会从父节点解析块名并且在元素上输出修改后和未修改的样式名
+- 使用多个元素前缀的情况，过滤器将会从第 N 个父节点来解析块名。
+
+下面是一些例子：
+
+|-- 缩写 |-- 输出 |
+|.b_m | <div class="b_m"></div> |
+|.b_m1._m2 | <div class="b_m1 _m2"></div> |
+|.b>._m |<div class="b"> <div class="b b_m"></div></div>（文档中）   <div class="b"> <div class="_m"></div></div>（测试得到）|
+|.b1>.b2_m1>.-e1+.--e2_m2 | <div class="b1">
+  <div class="b2_m1">
+    <div class="-e1"></div>
+    <div class="--e2_m2"></div>
+  </div>
+</div> |
