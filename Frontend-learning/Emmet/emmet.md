@@ -560,23 +560,56 @@ BEM/OOCSS 管理和重用 CSS，用纯 HTML 来写这些样式名可能非常的
 
 BEM 过滤器写法如下：
 
-`form.search-form._wide>input.-query-string+input:s.-btn_large|bem
-`
+`form.search-form._wide>input.-query-string+input:s.-btn_large|bem`
 
 ### 如何工作的？
 
 BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或者 `-` 作为元素的前缀， `_` 作为修改器的前缀。无论什么时候你以这些前缀开始写样式名，过滤器将会帮你补全剩下的部分：
 
-- 以元素前缀开头的样式名，过滤器将根据父节点解析块名。
-- 以修改器前缀开始的样式名，过滤器将会从当前节点或者父节点解析块名和元素名。
+- 以元素前缀（`__`或`-`）开头的样式名，过滤器将根据父节点解析块名。
+- 以修改器前缀（`_`）开始的样式名，过滤器将会从当前节点或者父节点解析块名和元素名。
 - 以元素和修改器前缀开始，过滤器将会从父节点解析块名并且在元素上输出修改后和未修改的样式名
 - 使用多个元素前缀的情况，过滤器将会从第 N 个父节点来解析块名。
 
-下面是一些例子：
+结合规律：
+
+- 块（b）与元素（e）结合，生成 块__元素（b__e）
+- 元素（e）与修改器（m）结合生成： 元素_修改器（e_m）
+
+下面是一些例子，`b` 为块， `e` 为元素， `m` 为修改器：
 
 | 缩写 | 输出 |
 |:------ |:------:|
-|.b_m | ```html <div class="b_m"></div> ``` |
-|.b_m1._m2 | ```html <div class="b_m1 _m2"></div> ``` （将 bem 设置为默认filter才起效）|
-|.b>._m |```html <div class="b"> <div class="b b_m"></div></div>```（将 bem 设置为默认filter才起效）|
-|.b1>.b2_m1>.-e1+.--e2_m2 | ```html <div class="b1"><div class="b2_m1"><div class="-e1"></div><div class="--e2_m2"></div></div></div>```（将 bem 设置为默认filter才起效） |
+|.b_m | ``` <div class="b b_m"></div> ``` |
+|.b_m1._m2 | ``` <div class="b b_m1 b_m2"></div> ``` （将 bem 设置为默认filter才起效）|
+|.b>._m |```   <div class="b"><div class="b b_m"></div></div> ```（将 bem 设置为默认filter才起效）|
+|.b1>.b2_m1>.-e1+.--e2_m2 | ```   <div class="b1"> <div class="b2 b2_m1"> <div class="b2__e1"></div> <div class="b1__e2 b1__e2_m2"></div> </div> </div> ```（将 bem 设置为默认filter才起效）|
+
+```HTML
+<!-- .b>.-e1 -->
+<div class="b">
+  <div class="b__e1"></div>
+</div>
+
+<!-- .b>._m1 -->
+<div class="b">
+  <div class="b b_m1"></div>
+</div>
+
+<!-- .b>.-e_m -->
+<div class="b">
+  <div class="b__e b__e_m"></div>
+</div>
+
+
+<!-- .b>.-_em1 -->
+<div class="b">
+  <div class="b b_em1"></div>
+</div>
+
+<!-- .b>._-em1 -->
+<div class="b">
+  <div class="b b_-em1"></div>
+</div>
+
+```
