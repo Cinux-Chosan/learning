@@ -576,7 +576,7 @@ BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或�
 下面是一些例子：
 
 |-- 缩写 |-- 输出 |
-|.b_m | <div class="b_m"></div> |
+|.b_m | ```html <div class="b_m"></div> ``` |
 |.b_m1._m2 | <div class="b_m1 _m2"></div> |
 |.b>._m |<div class="b"> <div class="b b_m"></div></div>（文档中）   <div class="b"> <div class="_m"></div></div>（测试得到）|
 |.b1>.b2_m1>.-e1+.--e2_m2 | <div class="b1">
