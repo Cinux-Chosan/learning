@@ -212,7 +212,7 @@ Emmet 使用类似于 CSS 选择器的语法来描述元素在生成树的位置
 
 #### 修改基数（起始值）和值的改变方向（增或减）：
 
-使用 `@` 修改器，你可以改变数字的基数变化方向，例如，编号递减，可以在 `$` 后添加 `@-`：
+使用 `@` 修饰符，你可以改变数字的基数变化方向，例如，编号递减，可以在 `$` 后添加 `@-`：
 
 `ul>li.item$@-*5` 生成：
 
@@ -550,9 +550,9 @@ The fuzzy search is performed against predefined snippet names, not snippet valu
 
 ## Yandex BEM/OOCSS
 
-如果你使用 [OOCSS](http://coding.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)、[Yandex's BEM](http://coding.smashingmagazine.com/2012/04/16/a-new-front-end-methodology-bem/) 风格写 HTML 和 CSS 代码，那么你肯定喜欢这个过滤器：它提供一些别名和在 class 中自动插入一些常规的块或元素名。
+如果你使用 [OOCSS](http://coding.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)、[Yandex's BEM](http://coding.smashingmagazine.com/2012/04/16/a-new-front-end-methodology-bem/) 风格写 HTML 和 CSS 代码，那么你肯定喜欢这个过滤器：它提供一些别名和在 class 中自动插入一些常规的块或元素名。参考[getbem](http://getbem.com/introduction/)
 
-简言之，BEM 为 CSS 样式引入 3 个概念： *块*、*元素*、*修改器*。**块** 是HTML页面的语义段的名字空间简称，例如： `search-form` 。**元素** 是段的一部分，例如： `search-form__query-string`。 **修改器** 定义块和元素的变量：`search-form_wide` 或者 `search-form_narrow`。样式名中的元素用双下划线 `__`分隔，修改器使用单下划线 `_` 分隔。
+简言之，BEM 为 CSS 样式引入 3 个概念： *块（Block）*、*元素（Element）*、*修饰符（Modifier）*。**块** 是HTML页面的语义段的名字空间简称，它具有独立与其他元素的特性，例如： `search-form`，`header`，`container`，`menu`，`checkbox`，`input` 。**元素** 是块的一部分，它没有独立的意义，它依附于块，例如： `search-form__query-string`，`menu item`，`list item`，`checkbox caption`，`header title`。 **修饰符** 定义块和元素的外观或表现：`search-form_wide` 或者 `search-form_narrow`，`disabled`，`highlighted`，`checked`，`fixed`，`size big`，`color yellow`。样式名中的元素用双下划线 `__`分隔，修饰符使用单下划线 `_` 分隔。
 
 BEM/OOCSS 管理和重用 CSS，用纯 HTML 来写这些样式名可能非常的乏味。你必须在缩写中写同样的块或元素名：
 
@@ -564,19 +564,19 @@ BEM 过滤器写法如下：
 
 ### 如何工作的？
 
-BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或者 `-` 作为元素的前缀， `_` 作为修改器的前缀。无论什么时候你以这些前缀开始写样式名，过滤器将会帮你补全剩下的部分：
+BEM 过滤器为一些概念的类型引入了一些样式名前缀： `__` 或者 `-` 作为元素的前缀， `_` 作为修饰符的前缀。无论什么时候你以这些前缀开始写样式名，过滤器将会帮你补全剩下的部分：
 
 - 以元素前缀（`__`或`-`）开头的样式名，过滤器将根据父节点解析块名。
-- 以修改器前缀（`_`）开始的样式名，过滤器将会从当前节点或者父节点解析块名和元素名。
-- 以元素和修改器前缀开始，过滤器将会从父节点解析块名并且在元素上输出修改后和未修改的样式名
+- 以修饰符前缀（`_`）开始的样式名，过滤器将会从当前节点或者父节点解析块名和元素名。
+- 以元素和修饰符前缀开始，过滤器将会从父节点解析块名并且在元素上输出修改后和未修改的样式名
 - 使用多个元素前缀的情况，过滤器将会从第 N 个父节点来解析块名。
 
 结合规律：
 
 - 块（b）与元素（e）结合，生成 块__元素（b__e）
-- 元素（e）与修改器（m）结合生成： 元素_修改器（e_m）
+- 元素（e）与修饰符（m）结合生成： 元素_修饰符（e_m）
 
-下面是一些例子，`b` 为块， `e` 为元素， `m` 为修改器：
+下面是一些例子，`b` 为块， `e` 为元素， `m` 为修饰符：
 
 | 缩写 | 输出 |
 |:------ |:------:|
