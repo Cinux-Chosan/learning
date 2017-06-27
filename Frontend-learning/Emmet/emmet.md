@@ -552,7 +552,7 @@ The fuzzy search is performed against predefined snippet names, not snippet valu
 
 如果你使用 [OOCSS](http://coding.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)、[Yandex's BEM](http://coding.smashingmagazine.com/2012/04/16/a-new-front-end-methodology-bem/) 风格写 HTML 和 CSS 代码，那么你肯定喜欢这个过滤器：它提供一些别名和在 class 中自动插入一些常规的块或元素名。参考[getbem](http://getbem.com/introduction/)
 
-简言之，BEM 为 CSS 样式引入 3 个概念： *块（Block）*、*元素（Element）*、*修饰符（Modifier）*。**块** 是HTML页面的语义段的名字空间简称，它具有独立与其他元素的特性，例如： `search-form`，`header`，`container`，`menu`，`checkbox`，`input` 。**元素** 是块的一部分，它没有独立的意义，它依附于块，例如： `search-form__query-string`，`menu item`，`list item`，`checkbox caption`，`header title`。 **修饰符** 定义块和元素的外观或表现：`search-form_wide` 或者 `search-form_narrow`，`disabled`，`highlighted`，`checked`，`fixed`，`size big`，`color yellow`。样式名中的元素用双下划线 `__`分隔，修饰符使用单下划线 `_` 分隔。
+简言之，BEM 为 CSS 样式引入 3 个概念： *块（Block）*、*元素（Element）*、*修饰符（Modifier）*。**块** 是HTML页面的语义段的名字空间简称，它具有独立与其他元素的特性，例如： `search-form`，`header`，`container`，`menu`，`checkbox`，`input` 。**元素** 是块的一部分，它没有独立的意义，它依附于块，例如： `search-form__query-string`，`menu item`，`list item`，`checkbox caption`，`header title`。 **修饰符** 定义块和元素的外观或表现（状态）：`search-form_wide` 或者 `search-form_narrow`，`disabled`，`highlighted`，`checked`，`fixed`，`size big`，`color yellow`。样式名中的元素用双下划线 `__`分隔，修饰符使用单下划线 `_` 分隔。
 
 BEM/OOCSS 管理和重用 CSS，用纯 HTML 来写这些样式名可能非常的乏味。你必须在缩写中写同样的块或元素名：
 
