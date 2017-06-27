@@ -51,7 +51,7 @@ If you have customized your Atom keymap, you can always see the keybinding you h
 你可以通过下面的方式打开设置面板：
 - 使用 *Edit > preferences* 菜单项
 - 在命令面板中搜索 `setting-view:open`
-- 使用快捷键 `
+- 使用快捷键 `Ctrl+,`
 
 #### 修改主题
 
@@ -171,3 +171,13 @@ Atom Packages
 - 删除空格
 
 所以 "Ignored Names" 变成了 "ignoredNames"
+
+# 第二章
+
+既然我们已经了解了 Atom 的基础，那让我们开始挖掘 Atom 无限的潜力吧。本章我们将回学到如何查找和安装新的包来给 Atom 赋予更多的功能，如何查找和安装新的主题，如何以更高级的方式处理文本、如何按照自己的想法定制编辑器 以及如何配合 Git 版本控制器一起使用等。
+
+到本章末尾，你将有一个舒适的自定义的编辑环境，而且你能够像高手一样改变、创建、删除等操作文本。
+
+## Atom Packages（插件包）
+
+本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。
