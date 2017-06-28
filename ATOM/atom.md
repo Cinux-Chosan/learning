@@ -160,7 +160,6 @@ Atom Packages
 
 `core.ignoredNames` 和 `fuzzy-finder.ignoredNames` 被当作 glob匹配模式 通过 [minimatch](https://github.com/isaacs/minimatch) 这个 Node 模块进行解释。
 
-
 ##### Configuration Setting Notation
 
 有时候你看到我们像 "Ignored Names in COre Settings" 这样的拼写来指代配置，另一些时候你看到我们使用如 `core.ignoredNames` 这样的速记名，它们其实都是指同一个东西。速记的写法是包名（包名使用速记写法），然后一个`.`（点号）跟在设置的驼峰命名后面。
@@ -180,4 +179,4 @@ Atom Packages
 
 ## Atom Packages（插件包）
 
-本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。
+本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。199381es

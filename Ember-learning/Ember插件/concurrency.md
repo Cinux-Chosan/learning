@@ -609,7 +609,7 @@ ember-concurrency task 可以被明确的取消（通过调用某个task或者ta
 
 [Task Function Syntax docs](http://ember-concurrency.com/#/docs/task-function-syntax) 演示了如何使用 `try/catch` 块来捕捉异常，但是如果是取消了？
 
-在 ember-concurrency 中，取消被认为是第三种 "完成态"（另外两种是 成功/抛出异常）。也就是说如果 task 被取消，它会暂停在取消的时候，并且重该暂停处返回，它会跳过所有的 `catch(e){}` 代码块，但是会执行 `finally{}` 块。这样的操作有两个好处：
+在 ember-concurrency 中，取消被认为是第三种 "完成态"（另外两种是 成功/抛出异常）。也就是说如果 task 被取消，它会暂停在取消的时候，并且从该暂停处返回，它会跳过所有的 `catch(e){}` 代码块，但是会执行 `finally{}` 块。这样的操作有两个好处：
 
 - `finally` 块始终都会执行，并且可以用于清理逻辑
 - 你没有必要在 `catch` 块中清楚区分是 取消 还是 异常（如果取消被当作是错误被抛出的话你会在代码中感到很疑惑）
