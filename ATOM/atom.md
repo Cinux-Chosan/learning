@@ -134,7 +134,7 @@ Atom 里面编辑文件非常直接，没有特定的编辑模式或者核心命
 
 树状视图允许你浏览和修改文件和目录结构：重命名、删除、创建新的文件等。
 
-你还可以通过快捷键 `Ctro+\` 或者命令 `tree-view:toggle` 来隐藏或显示树状视图。 `Alt+\` 将会将焦点聚焦到树状视图上。当焦点在树状视图的时候，你可以通过 `A`，`M`，'Delete' 来添加、移动（也可以修改文件名，同Linux mv）、删除文件或文件夹。你还可以通过在树状视图的每一项上面点击鼠标右键来查看可以操作的选项。
+你还可以通过快捷键 `Ctrl+\` 或者命令 `tree-view:toggle` 来隐藏或显示树状视图。 `Alt+\` 将会将焦点聚焦到树状视图上。当焦点在树状视图的时候，你可以通过 `A`，`M`，'Delete' 来添加、移动（也可以修改文件名，同Linux mv）、删除文件或文件夹。你还可以通过在树状视图的每一项上面点击鼠标右键来查看可以操作的选项。
 
 ```
 Atom Packages
@@ -179,4 +179,18 @@ Atom Packages
 
 ## Atom Packages（插件包）
 
-本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。199381es
+本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。
+
+实际上， Atom 默认包使用了超过 90 个包，它们包含了 Atom 的所有功能。例如，首次启动 Atom 时候的 [开始界面](https://github.com/atom/welcome)， [拼写检查](https://github.com/atom/spell-check)，[主题](https://github.com/atom/one-dark-ui)，[糢糊查询](https://github.com/atom/fuzzy-finder)等包都是保持独立的，并且它们都使用相同的 API，这些 API 可以在 [Hacking Atom](http://flight-manual.atom.io/hacking-atom/) 中查看，并且是任何人都可以使用的。
+
+这意味着这些包可以无比强大，可以改变从整个界面的外观到每一个核心功能的基本操作接口。
+
+可以在设置视图（`Ctrl+,`）中的 install 标签安装新的包。
+
+所有罗列出的包都已经发布到 Atom 官方的包托管仓库 [http://atom.io/packages](http://atom.io/packages)，在设置视图中搜索包的时候会去请求 Atom 的托管仓库，并拉取到匹配的选项的信息。
+
+![](http://flight-manual.atom.io/using-atom/images/packages-install.png)
+
+所有罗列出的包都有一个安装按钮，点击它就会自动下载和安装这个包，完成以后你的编辑器就有了这个包提供的功能。
+
+## 包设置
