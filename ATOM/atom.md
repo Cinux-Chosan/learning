@@ -193,4 +193,108 @@ Atom Packages
 
 所有罗列出的包都有一个安装按钮，点击它就会自动下载和安装这个包，完成以后你的编辑器就有了这个包提供的功能。
 
-## 包设置
+### 包设置
+
+一旦包被安装到了 Atom，它就会显示在设置视图的 “Packages” 标签栏，并且与 Atom 预装的包区别开。如果要查找一个包，可以直接在 “Packages” 标签栏的 “Installed Packages” 标题下面输入。
+
+![](http://flight-manual.atom.io/using-atom/images/package-specific-settings.png)
+
+点击包的 "Settings" 按钮将会展示包的设置界面，你可以在这里有选择性的改变包的默认变量、查看快捷键、临时禁用该包、查看源码、查看包版本号、报告错误或者卸载该包。
+
+如果某一个包有更新， Atom 会自动检测到它，你可以在包的设置界面或者 "Updates" 标签栏更新它。
+
+### Atom 主题
+
+你可以在设置界面查找和安装新的主题。不管是 UI 主题还是 语法主题你都可以像搜索新的包一样在 "Install" 标签页查找。确保切换到设置界面中 “Install” 标签界面中的 “Themes” 。
+
+![](http://flight-manual.atom.io/using-atom/images/themes.png)
+
+点击主题的标题会被引导到 atom.io 上面的简介页面，该页面一般都有一个主题的截图，你可以看到安装过后的插件会带来什么样的变化。
+
+点击 "install" 将会安装该主题，安装好之后你就可以在设置界面的主题下拉框中选择该主题了。
+
+![](http://flight-manual.atom.io/using-atom/images/unity-theme.png)
+
+### 命令行
+
+你也可以从命令行安装包或者主题，使用命令 `apm`
+
+在控制它输入以下命令来检查是否安装了 `apm` 命令。
+
+`apm help install`
+
+如果没有，你可以查看[如何安装 atom 和 apm](http://flight-manual.atom.io/getting-started/sections/installing-atom)
+
+你也可以使用 `apm install` 来安装包：
+
+- `apm install <包名>` 来安装最新的包
+- `apm install <包名>@<包版本号>` 来安装指定版本的包
+
+例如 `apm install emmet@0.1.5` 来安装 0.1.5 版本的[Emmet](https://github.com/atom/emmet)。
+
+你也可以时使用 `apm` 来查找新的包。使用命令 `apm search <包名>`
+
+`apm search coffee`
+
+```
+Search Results For 'coffee' (29)
+├── build-coffee Atom Build provider for coffee, compiles CoffeeScript (1160 downloads, 2 stars)
+├── scallahan-coffee-syntax A coffee inspired theme from the guys over at S.CALLAHAN (183 downloads, 0 stars)
+├── coffee-paste Copy/Paste As : Js ➤ Coffee / Coffee ➤ Js (902 downloads, 4 stars)
+├── atom-coffee-repl Coffee REPL for Atom Editor (894 downloads, 2 stars)
+├── coffee-navigator Code navigation panel for Coffee Script (3493 downloads, 22 stars)
+...
+├── language-iced-coffeescript Iced coffeescript for atom (202 downloads, 1 star)
+└── slontech-syntax Dark theme for web developers ( HTML, CSS/LESS, PHP, MYSQL, javascript, AJAX, coffee, JSON ) (2018 downloads, 3 stars)
+```
+
+使用 `apm view` 命令来查看某个包的详情：
+
+`apm view build-coffee`
+
+```
+
+build-coffee
+├── 0.6.4
+├── https://github.com/idleberg/atom-build-coffee
+├── Atom Build provider for coffee, compiles CoffeeScript
+├── 1152 downloads
+└── 2 stars
+>
+Run `apm install build-coffee` to install this package.
+```
+
+## Atom 中移动
+
+尽管在 Atom 中使用鼠标或者键盘上的方向键来移动界面非常方便，但是 Atom 中还有一些快捷键可以让你手不离开键盘就可以更快的定位到某个字符。
+
+Atom 支持所有标准的 Linux光标移动组合键。使用上下左右键来将光标移动单个字符。
+
+除此之外，还有下面一些键可以使用：
+
+- `Ctrl+Left` 移动到单词的开始
+- `Ctrl+Right` 移动到单词的末尾
+- `Home` 移动到当前行的开始
+- `End` 移动到当前行的末尾
+- `Ctrl+Home` 移动到文件开始
+- `Ctrl+End` 移动到文件末尾
+
+你还可以使用 `Ctrl+G` 移动到某一行或者某列，该组合键键会弹出一个对话框，输入 `行:列` 这样格式的字符来让 Atom 跳到对应的行或者列。
+
+![](http://flight-manual.atom.io/using-atom/images/goto.png)
+
+### [Navigating by Symbols](http://flight-manual.atom.io/using-atom/sections/moving-in-atom/#navigating-by-symbols)
+
+### 书签
+
+Atom 还有一个很实用的功能。你可以给项目文件中的某一行保存书签，这样你就可以快速的跳转到那你。
+
+如果你按 `Ctrl+Shift+F2`，Atom 会在当前行标记或取消标记该行，标记为书签的行会在行的开始显示一个小的书签标记（就像下图的 22 行）。你可以给项目中比较重要的行设置书签，然后在需要的时候快速找到它们。
+
+如果你按 `F2`， Atom 会跳到当前焦点界面的下一个书签的位置。如果按 `Shift+F2` 则会在它们之间循环。
+
+你可以使用 `Ctrl+F2` 来查看项目中所有的书签，选中它们进行跳转。
+
+![](http://flight-manual.atom.io/using-atom/images/bookmarks.png)
+
+书签功能来自于 [bookmarks](https://github.com/atom/bookmarks) 包。
