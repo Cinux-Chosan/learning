@@ -404,3 +404,5 @@ Atom 提供了一些基本的文件编码。
 按 `Esc` 退出搜索面板。
 
 搜索和替换功能由包 [find-and-replace](https://github.com/atom/find-and-replace) 实现， 使用了 Node 模块 [scandal](https://github.com/atom/scandal)。
+
+## [Snippets](http://flight-manual.atom.io/using-atom/sections/snippets/)
