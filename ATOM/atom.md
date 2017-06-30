@@ -315,4 +315,92 @@ Atom 还有一个很实用的功能。你可以给项目文件中的某一行保
 - `Ctrl+K``Ctrl+U` 当前单词转换成大写
 - `Ctrl+K``Ctrl+L` 当前单词转换为小写
 
-Atom 还有一个内置的功能，它能够将基于指定的行最大长度当前段落的换行机制改编成 "hard-wrap" 模式。你可以使用 `Alt+Ctrl+Q` 来将当前选中内容的每行格式化为不超过 80 个字符。如果没有选择任何东西，则当前段落将会回流。
+Atom 还有一个内置的功能，它能够将基于指定的行最大长度当前段落的换行机制改编成 "hard-wrap" 模式。你可以使用 `Alt+Ctrl+Q` 来将当前选中内容的每行格式化为不超过 80 个字符（或者其它 `editor.preferredLineLength` 定义的其它数字）。如果没有选择任何东西，则当前段落将会回流（ If nothing is selected, the current paragraph will be reflowed.）。
+
+### 删除和剪切
+
+你还可以通过一些快捷方式删除或剪切缓冲区中的文本。
+
+- `Ctrl+Shift+K` 删除当前行
+- `Ctrl+Backspace` 删除光标到当前单词开始
+- `Ctrl+Delete` 删除光标到当前单词末尾
+
+### 多个光标
+
+- `Ctrl+鼠标点击` 在鼠标点击处添加一个光标
+- `Alt+Shift+Up/Down` 在当前光标上面或者下面添加一个光标
+- `Ctrl+D` 选中光标所在单词的单词，或追加选中与当前单词相同的下一个单词
+- `Alt+F3` 选择所有与当前单词相同的单词
+
+有了这些命令，你就可以在多行、多处放置光标，并一次性执行相同的命令。
+
+![](http://flight-manual.atom.io/using-atom/images/multiple-cursors.gif)
+
+### 空白
+
+Atom 默认带有一些命令来帮助你处理文档中的空白字符。如果你的文档有混合的空白字符（空格和Tab），这些命令可以让你将文件的空白字符统一化。这些命令没有快捷键，所以你需要使用命令来执行它们，使用 `Ctrl+Shift+p` 打开命令对话框，输入 “Convert Spaces to Tabs” 或者 “Convert Tabs to Spaces”。
+
+该命令由包 [atom/whitespace](https://github.com/atom/whitespace) 实现。命令的设置在包 `whitespace` 的管理页面。
+
+![](http://flight-manual.atom.io/using-atom/images/whitespace.png)
+
+`Remove Trailing Whitespace（移除末尾空白字符）` 默认开启。这样的话每次在保存文件的时候，都会去除文件中所有尾随的空格字符。如果你希望禁用该项，可以去 `whitespace`包 的设置界面设置。
+
+Atom 也会确保文件的最后有一行新的空白行，你也可以在 `whitespace` 界面设置。
+
+### 括号
+
+Atom 可以很简单和智能的处理括号。
+
+默认情况下，光标在 `[]` `()` `{}` 的时候它们会高亮，也会高亮匹配的 XML 或者 HTML 标签对。
+
+Atom 将回自动补齐 `[]`, `()`, `{}`, `""`, `''`, `“”`, `‘’`, `«»`, `‹›`。
+
+有一些与括号相关的命令：
+
+- `Ctrl+M` 跳到与当前光标所在括号匹配的另一半，如果光标不在括号旁，则将光标跳到最近的一个开括号处。
+- `Alt+Ctrl+M` 选择所有当前括号内的文字
+- `Alt+Ctrl+.` 关闭当前 XML/HTML 标签
+
+括号的功能是包 [bracket-matcher](https://github.com/atom/bracket-matcher)提供。
+
+### 编码
+
+Atom 提供了一些基本的文件编码。
+
+- `Alt+U` 改变文件编码
+
+点击 Atom 底部的 "UTF-8" 也可以选择文件编码。
+
+打开文件的时候，Atom 会自动检测文件的类型，如果 Atom 不确定文件类型，则默认选择 UFT-8 编码，这也是新文件的编码。
+
+![](http://flight-manual.atom.io/using-atom/images/encodings.png)
+
+编码选择功能由包 [encoding-selector](https://github.com/atom/encoding-selector) 提供。
+
+## 查找和替换
+
+- `Ctrl+F` 在缓冲区搜索
+- `Ctrl+Shift+F` 在整个项目搜索（全局搜索）
+
+不管是在缓冲区搜索还是整个项目搜索，都会弹出搜索面板。
+
+![](http://flight-manual.atom.io/using-atom/images/find-replace-file.png)
+
+使用 `Ctrl+F` 在当前页面搜索的时候, 输入希望查找的字符, 然后按 `Enter`（回车）即可查找，或者按 `F3` 查找下一个。 搜索面板的也包含了时候大小写敏感、正则表达式匹配、选择搜索范围等。
+
+如果需要替换匹配的项，在 `Replace` 输入框输入需要替换的文本，然后选择替换/替换所有。
+
+使用正则表达式搜索的时候，使用 $1、$2、$3、$n 来访问搜索的组（group）。
+
+你还可以使用 `Ctrl+Shift+F` 来在整个项目中搜索。
+
+![](http://flight-manual.atom.io/using-atom/images/find-replace-project.png)
+
+使用全局搜索的时候，你可以在 "File/Directory pattern" 框中输入 [glob pattern](http://en.wikipedia.org/wiki/Glob_%28programming%29) 来限制搜索的文件。例如，模式 `src/*.js` 将搜索限制在 `scr` 目录下面的所有后缀为 `.js` 的文件中。"Globstar" 模式符号 `**` 可以用于目录的递归，即任意深层级的目录。 例如 `docs/**/*.md` 将回匹配 `docs/a/foo.md`、`docs/a/b/foo.md` 或更深层级的目录中。
+
+当你打开了多个项目目录时，该特性也可以用于将搜索限制在某一个目录中。例如，你打开了 `/path1/folder1` 和 `/path2/folder2`， 你可以输入模式 `folder1` 来将搜索限制在 folder1 中。
+
+按 `Esc` 退出搜索面板。
+
+搜索和替换功能由包 [find-and-replace](https://github.com/atom/find-and-replace) 实现， 使用了 Node 模块 [scandal](https://github.com/atom/scandal)。
