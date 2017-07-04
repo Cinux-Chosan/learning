@@ -406,3 +406,140 @@ Atom 提供了一些基本的文件编码。
 搜索和替换功能由包 [find-and-replace](https://github.com/atom/find-and-replace) 实现， 使用了 Node 模块 [scandal](https://github.com/atom/scandal)。
 
 ## [Snippets](http://flight-manual.atom.io/using-atom/sections/snippets/)
+
+片段可以快速的生成需要的代码片段。
+
+例如你输入 `habtm` 然后按下 `Tab` 键，自动生成了 `has_and_belongs_to_many`。
+
+有很多核心或者社区包可以用来完成这样的操作。如 `language-html` 包提供了 HTML 语法高亮和帮助你生成多种多样的 HTML 标签。 你输入 `html` 按下 `Tab` 键会得到展开的代码：
+
+```HTML
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+
+  </body>
+</html>
+```
+
+并且它还会将光标移动到 `title` 标签中间。许多片段有多个光标焦点，你可以使用 `Tab` 键将光标移动到下一个标签中将，如输入完成 `title` 过后，按 `Tab` 将会跳到 `body` 中间。
+
+可以通过在命令面板中输入 `Snippets: Available` 来查看当前文件支持哪些片段。并且在结果中糢糊搜索你需要的片段。
+
+![](http://flight-manual.atom.io/using-atom/images/snippets.png)
+
+### 创建自己的片段
+
+在 `~/.atom` 目录下面有一个叫 `snippets.cson` 的文件，它包含了所有在启动 Atom 的时候需要加载的自定义片段。可以通过 Atom 的菜单打开该文件： *Edit > Snippets*
+
+#### 片段的格式
+
+基本格式如下：
+
+```JSON
+'.source.js':
+  'console.log':
+    'prefix': 'log'
+    'body': 'console.log(${1:"crash"});$2'
+```
+
+最左边的键（key）是决定这些片段在哪里可用的选择器。最简单的方式就是去某个语言的包查看 Scope 属性值。如 js 就到 `languiage-javascript` 包里面查看，javascript 就到 `languiage-java` 中查看。
+
+例如，如果想添加一些 java 片段，可以在设置视图里面进入 `languiage-java` 包，我们可以看到 Scope 是 `source.java`，这片段的顶级键将会在该名字前面添加一个点号`.`（就像 CSS 类的选择器）。
+
+![](http://flight-manual.atom.io/using-atom/images/snippet-scope.png)
+
+因为 javascript 的 Scope 是 `source.js` ，所以上面的 JSON 例子是 `.scource.js`。
+
+片段的第二级键是片段名。它用于在片段菜单中用更加可读的方式描述片段（在还没有展开片段的时候，该字段作为注释显示给用户看）。你可以将它定义为任意你想的名字。
+
+片段中 `prefix` 字段是触发该片段的缩写，`body` 字段为展开后的内容格式，例如 prefix 是 "log1"，则输入 log1然后按下 tab 键就会展开成 `body` 字段的内容。
+
+每个后面接了个数字的 `$` 符号是 `Tab` 键停留的位置。 在片段已经展开过后按 tab 键将会在 tab 停留位置循环。如果数字相同，则会同时存在多个光标。
+
+上面的例子，使用 `log` 将会展开成
+
+```js
+console.log("crash");
+```
+
+“crash” 将会在展开的时候被选中，再次按 tab 键将会将光标移动到 `;` 之后。
+
+片段的键（key），与 CSS 选择器不同，它仅每级仅可重复一次。如果统一级有多个键，则只有最后一个将会被读取。更多信息参考[CSON配置](http://flight-manual.atom.io/using-atom/sections/basic-customization/#configuring-with-cson)
+
+### 具有多行的片段
+
+你可以使用 [CoffeeScript 多行语法] `"""` 来定义：
+
+```JSON
+'.source.js':
+  'if, else if, else':
+    'prefix': 'ieie'
+    'body': """
+      if (${1:true}) {
+        $2
+      } else if (${3:false}) {
+        $4
+      } else {
+        $5
+      }
+    """
+```
+
+可能正如你说想的，还有一个用于在定义片段的文件中创建片段的片段。你大开一个定义片段的文件，输入 `snip` 然后按 `Tab` 键，你将得到一个片段的格式：
+
+```JSON
+'.source.js':
+  'Snippet Name':
+    'prefix': 'hello'
+    'body': 'Hello World!'
+```
+
+然后就可以像编辑其它片段一样编辑里面的内容了。当你保存这个文件的时候，Atom 会重新载入片段，然后你马上就可以使用它了。
+
+### 每个源定义多个片段
+
+想在`snippets.cson`文件中同一个范围定义多个片段，只需要另起一行将下一个片段的定义写在上一个后面即可。为了可读性，可以隔一行。
+
+``` JSON
+'.text.md':
+  'Hello World':
+    'prefix': 'hewo'
+    'body': 'Hello World!'
+
+  'Github Hello':
+    'prefix': 'gihe'
+    'body': 'Octocat says Hi!'
+
+  'Octocat Image Link':
+    'prefix': 'octopic'
+    'body': '![GitHub Octocat](https://assets-cdn.github.com/images/modules/logos_page/Octocat.png)'
+```
+
+### 更多信息
+
+snippets 功能由包 [snippets](https://github.com/atom/snippets) 实现。
+
+如果要获取更多示例，查看 [language-html](https://github.com/atom/language-html/blob/master/snippets/language-html.cson) [languiage-javascript](https://github.com/atom/language-javascript/blob/master/snippets/language-javascript.cson)。
+
+## 自动补全
+
+如果你仍然希望节约一些打字时间，atom 还提供了一些自动补全功能。
+
+自动补全功能使用 `Tab` 键或者 `Enter` 键。
+
+![](http://flight-manual.atom.io/using-atom/images/autocomplete.png)
+
+默认情况下， 自动补全会检查当前文件的匹配字符串来确定如何补全。
+
+如果你希望更多的选项，可以使用 autocomplete-plus 包，它可以设置在打开的缓存中查找，而不是在当前文件中。
+
+自动补全功能由 [autocomplete-plus](https://github.com/atom/autocomplete-plus) 提供。
+
+## 代码折叠
+
+如果你想看看当前代码的结构，那么折叠代码将会非常有用。折叠隐藏代码块，如函数或循环块，以简化屏幕上的内容。
+
+你可以通过点击代码块最前面的排版线上的箭头来折叠当前代码块。

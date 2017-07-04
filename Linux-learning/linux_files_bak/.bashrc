@@ -47,3 +47,9 @@ export work=" $HOME/desktop/all/projects/"
 export desktop=" $HOME/desktop/"
 export learning=" $desktop/all/learning/"
 export myproj=" $desktop/all/myproj/ "
+
+#http_proxy=http://127.0.0.1:1080
+#export http_proxy
+
+#export https_proxy=https://127.0.0.1:1080
+#export socks_proxy=sock5://127.0.0.1:1080
