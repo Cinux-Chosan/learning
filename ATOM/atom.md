@@ -542,4 +542,22 @@ snippets 功能由包 [snippets](https://github.com/atom/snippets) 实现。
 
 如果你想看看当前代码的结构，那么折叠代码将会非常有用。折叠隐藏代码块，如函数或循环块，以简化屏幕上的内容。
 
-你可以通过点击代码块最前面的排版线上的箭头来折叠当前代码块。
+你可以通过点击代码块最前面的排版线上的箭头来折叠/展开当前代码块。你也可以使用快捷键 `Alt+Ctrl+[` 来折叠代码，使用 `Alt+Ctrl+]` 来展开代码。
+
+![](http://flight-manual.atom.io/using-atom/images/folding.png)
+
+使用 `Alt+Ctrl+Shift+[` 折叠所有代码，使用 `Alt+Ctrl+Shift+]` 展开所有代码。你也可以以使用 `Ctrl+K`然后再按 `Ctrl+[0-9]` 来指定折叠第几层级的代码。如 `Ctrl+K`配合 `Ctrl+1` 将折叠第一层级代码，即第一个可以被折叠的层级，越往折叠块里面，层级越高。 0 层级展开所有代码。
+
+最后，你可以通过选择一个任意一个区域，然后按 `Alt+Ctrl+F` 或者在命令面板输入 `Fold Selection` 来折叠任意区域。
+
+## 窗格
+
+你可以通过使用快捷键 `Ctrl+K` `Up/Down/Left/Right`（后面没有Ctrl）来水平或者垂直切分当前编辑面板。方向键的方向就是分割的方向。一旦你切分了一个窗格，你就可以使用 `Ctrl+K` `Ctrl+Up/Down/Left/Right` 来切换窗格。方向键的方向就是将要移动到的窗格的方向。
+
+![](http://flight-manual.atom.io/using-atom/images/panes.png)
+
+每个面板有自己的 “面板项”，即上面的标签，你可以通过鼠标拖拽将一个面板的文件拖到另一个面板中。
+
+如果你不喜欢使用标签，你也可以不必要使用它。你可以在包 [tab](https://github.com/atom/tabs) 中禁用它，禁用过后每个面板仍然支持多个面板项。只是你没有可以点击的标签了。
+
+可以通过 `Ctrl+W` 来关闭面板。 You can configure whether panes auto-close when empty in the Settings View with the "Remove Empty Panes" setting under Core Settings.
