@@ -596,3 +596,21 @@ snippets 功能由包 [snippets](https://github.com/atom/snippets) 实现。
 当文件的语法改变的时候，Atom 将会在当前会话记住文件的改变。
 
 语法选择器由包 [grammar-selector](https://github.com/atom/grammar-selector) 实现。
+
+## Atom 中的版本控制系统
+
+版本控制系统是所有项目的一个重要的部分。Atom 内置了基本的 Git 和 GitHub 功能整合。
+
+项目的根目录必须是一个 git 仓库才能在 Atom 中使用版本控制系统。
+
+### checkout HEAD version
+
+快捷键 `Alt+Ctrl+Z` 会在编辑器中检出当前文件的 `HEAD` 版本。
+
+这是一个比较快捷的丢弃当前文件从 `HEAD` 提交以后的变化，将文件重置到 `HEAD` 提交的时候的内容。 相当于在命令行运行该文件 path 的 `git checkout HEAD -- <path>` 和 `git reset HEAD -- <path>`。
+
+![](http://flight-manual.atom.io/using-atom/images/git-checkout-head.gif)
+
+该命令将进入撤销堆栈，你可以使用 `Ctrl+Z` 来恢复之前的内容。
+
+### [Git status list](http://flight-manual.atom.io/using-atom/sections/version-control-in-atom/#git-status-list)
