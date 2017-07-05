@@ -1,4 +1,4 @@
-# 使用私有模块(Working with private modules)
+# [使用私有模块(Working with private modules)](https://docs.npmjs.com/private-modules/intro#working-with-private-modules)
 
 使用私有的包的时候,你可以轻松的使用 npm 仓库来托管自己的私有代码和使用 npm 命令行来管理它。这易与同时使用私有模块和公共模块。
 

@@ -560,4 +560,39 @@ snippets 功能由包 [snippets](https://github.com/atom/snippets) 实现。
 
 如果你不喜欢使用标签，你也可以不必要使用它。你可以在包 [tab](https://github.com/atom/tabs) 中禁用它，禁用过后每个面板仍然支持多个面板项。只是你没有可以点击的标签了。
 
-可以通过 `Ctrl+W` 来关闭面板。 You can configure whether panes auto-close when empty in the Settings View with the "Remove Empty Panes" setting under Core Settings.
+可以通过 `Ctrl+W` 来关闭面板。你可以在设置视图中的 "Core Settings" 里面设置 "Remove Empty Panes" 来当面板中没有打开的文件的时候自动关闭该面板。
+
+## 挂起的文件
+
+挂起的文件是之前的 “预览标签”。
+
+当你在文件树中鼠标单击一个文件的时候，它将会以一个新标签打开，标签标题为斜体。这表明文件处于 “挂起” 状态。当一个文件处于挂起状态时，它将会被下一个打开的 “挂起” 文件取代。这种挂起的文件允许你点开很多文件来查找信息而不用回过来一个一个关闭它们。
+
+如果要将挂起的文件变成确认状态，以下之一都可以做到：
+
+- 双击标签
+- 双击树状图中的文件
+- 编辑文件
+- 保存文件
+
+你也可以通过双击打开一个文件，这样它就是一个确认状态的文件。
+
+### 禁用挂起文件
+
+![](http://flight-manual.atom.io/using-atom/images/allow-pending-pane-items.png)
+
+如果你不喜欢在打开的文件标签中有这种挂起的文件，你可以在`Core Settings` 里面取消选中 `Allow Pending Pane items` 选项。禁用了过后，在文件树中单击文件将不会打开这个文件，你必须双击打开它。
+
+## 语法
+
+文件的语法是 Atom 与之进行关联的语言。语法的类型包括 Java、C 等编程语言 或者 GitHub-Flavored Markdown。在使用文件片段的时候，我们会使用这个类型。
+
+当你加载一个文件的时候， Atom 会额外的去确认文件类型。很大程度上是通过文件的扩展名来确定的，但是也有的情况需要检查一下文件内容才能够确定。
+
+当你打开一个文件的时候， 如果Atom 不能决定文件的语法，则默认是 “Plain Text”，它是最简单的类型。如果该文件不能以 “Plain Text” 作为默认值，为文件选择了一个错误的语法或者如果由于其它原因你希望改变它的语法，你可以使用 `Ctrl+Shift+L` 来打开语法选择器。
+
+![](http://flight-manual.atom.io/using-atom/images/grammar.png)
+
+当文件的语法改变的时候，Atom 将会在当前会话记住文件的改变。
+
+语法选择器由包 [grammar-selector](https://github.com/atom/grammar-selector) 实现。
