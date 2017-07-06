@@ -1,0 +1,357 @@
+<h1 id="atom-">Atom 手册</h1>
+<h1 id="-">第一章</h1>
+<h2 id="-atom-http-flight-manual-atom-io-getting-started-sections-why-atom-"><a href="http://flight-manual.atom.io/getting-started/sections/why-atom/">为什么选择 Atom</a></h2>
+<h2 id="-atom-http-flight-manual-atom-io-getting-started-sections-installing-atom-"><a href="http://flight-manual.atom.io/getting-started/sections/installing-atom/">安装 Atom</a></h2>
+<h2 id="-atom-http-flight-manual-atom-io-getting-started-sections-atom-basics-"><a href="http://flight-manual.atom.io/getting-started/sections/atom-basics/">Atom 基础</a></h2>
+<p>假设现在 Atom 已经安装在你的系统上了，现在打开它。去配置它，然后找回熟悉的的感觉</p>
+<p>首次打开Atom，你将看到下面的样子：</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/first-launch.png" alt=""></p>
+<p>这是 Atom 的欢迎界面，它提供了一些 Atom 的使用指引。</p>
+<h3 id="-">术语</h3>
+<p>接下来可能看到很多关于 Atom 的术语，它们都在<a href="http://flight-manual.atom.io/resources/sections/glossary/">词汇表</a>中</p>
+<h3 id="-">命令面板</h3>
+<p>在开始界面中，介绍了一些 Atom 最重要的命令。当焦点在编辑器编辑窗口的时候，按 <code>Ctrl+Shift+P</code> 按钮会弹出命令面板。</p>
+<p>在整个手册单中，我们都使用快捷键如 <code>Ctrl+Shift+P</code> 来演示如何运行命令。这些都是我们检测你的系统平台给出的默认快捷键。</p>
+<p>如果你希望看到除了我们检测到的其它平台，你可以在<a href="http://flight-manual.atom.io/getting-started/sections/atom-basics/">这个页面</a>顶部选择其它的平台。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/platform-selector.png" alt=""></p>
+<p>If the Platform Selector is not present, then the current page doesn&#39;t have any platform-specific content.</p>
+<p>If you have customized your Atom keymap, you can always see the keybinding you have mapped in the Command Palette or the Keybindings tab in the <a href="http://flight-manual.atom.io/getting-started/sections/atom-basics/#settings-and-preferences">Settings View</a>.</p>
+<p>搜索驱动菜单可以完成任何 Atom 可以完成的重要任务。你可以按下 <code>Ctrl+Shift+p</code> 然后搜索命令，而不是点击所有的菜单按钮来查询命令。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/command-palette.png" alt=""></p>
+<p>你不仅可以搜索成千上万的命令，还可以看到与之绑定的快捷键。</p>
+<h3 id="-">偏好设置</h3>
+<p>你可以在设置中修改 Atom 的很多设置和偏好。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/settings.png" alt=""></p>
+<p>包括改变主题、文字、tab退格的数量、scroll的速度等。你也可以在这里安装新的插件和主题，它们都在 <a href="http://flight-manual.atom.io/using-atom/sections/atom-packages">Atom Packages</a> 中。</p>
+<p>你可以通过下面的方式打开设置面板：</p>
+<ul>
+<li>使用 <em>Edit &gt; preferences</em> 菜单项</li>
+<li>在命令面板中搜索 <code>setting-view:open</code></li>
+<li>使用快捷键 <code>Ctrl+,</code></li>
+</ul>
+<h4 id="-">修改主题</h4>
+<p>设置界面中可以改变 Atom 的主题。Atom 有4个默认的UI主题，每个主题有8个语法主题。你可以在设置界面的侧边栏中选中 Themes 标签来修改当前主题和安装新的主题。</p>
+<p>UI 主题控制如 tab 标签、树状视图等UI元素，语法主题用于编辑器中的文本高亮等。</p>
+<p>还有很多主题在 <a href="https://atom.io/">https://atom.io</a> 上。我们将在<a href="http://flight-manual.atom.io/using-atom/sections/basic-customization">Style Tweaks</a>介绍自定义主题，并且在 <a href="http://flight-manual.atom.io/hacking-atom/sections/creating-a-theme">Creating a Theme</a> 创建主题。</p>
+<h4 id="-">自动换行</h4>
+<p>你可以在设置视图中指定个人的空白和换行偏好。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/settings-wrap.png" alt=""></p>
+<p>开启 <code>Soft Tabs</code> 将会在你按下 <code>Tab</code> 键的时候用空格取代实际的 tab字符。 <code>Tab Length</code> 指定用多少个空格替换 tab 字符，或者当禁用了 <code>Soft Tabs</code> 的时候一个 tab 具有多少个空格的宽度。</p>
+<p><code>Soft Wrap</code> 选项将超出当前窗口的文字换行。如果禁用了它，超出当前窗口的文字也会在同一行中显示，你就不得不通过滚动窗口来查看剩下的内容。If <code>Soft Wrap At Preferred Line Length</code> is toggled, the lines will wrap at 80 characters instead of the end of the screen. You can also change the default line length to a value other than 80 on this screen.</p>
+<p>在<a href="http://flight-manual.atom.io/using-atom/sections/basic-customization/">Basic Customization</a> 中我们将看到如何为不同文件类型设置不同的换行偏好（例如，你仅希望 Markdown 文件换行）。</p>
+<h3 id="-">文件的打开，修改，编辑</h3>
+<h4 id="-">打开文件</h4>
+<p>在 Atom 中有很多打开文件的方法。你可以通过菜单栏的 <em>File &gt; Open</em> 按钮或者 <code>Ctrl+o</code> 从对话框中选择文件。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/open-file.png" alt=""></p>
+<p>这在打开一个不在当前项目中的文件或由于其它原因开启了一个新的窗口时非常方便。</p>
+<p>另外，可以在命令行中使用 <code>atom</code> 命令。<code>atom</code> 和 <code>apm</code> 命令在<a href="http://flight-manual.atom.io/getting-started/sections/installing-atom/">安装 Atom</a> 的时候自动被安装在了你的系统上。</p>
+<p>你可以给 <code>atom</code> 命令传递一个或者多个需要打开的文件路径。</p>
+<pre class="editor-colors lang-shell"><div class="line"><span class="syntax--source syntax--shell"><span>atom&nbsp;--help</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>Atom&nbsp;Editor&nbsp;v1.8.0</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>Usage:&nbsp;atom&nbsp;</span><span class="syntax--meta syntax--scope syntax--logical-expression syntax--shell"><span class="syntax--punctuation syntax--definition syntax--logical-expression syntax--shell"><span>[</span></span><span>options</span><span class="syntax--punctuation syntax--definition syntax--logical-expression syntax--shell"><span>]</span></span></span><span>&nbsp;</span><span class="syntax--meta syntax--scope syntax--logical-expression syntax--shell"><span class="syntax--punctuation syntax--definition syntax--logical-expression syntax--shell"><span>[</span></span><span>path&nbsp;...</span><span class="syntax--punctuation syntax--definition syntax--logical-expression syntax--shell"><span>]</span></span></span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>One&nbsp;or&nbsp;more&nbsp;paths&nbsp;to&nbsp;files&nbsp;or&nbsp;folders&nbsp;may&nbsp;be&nbsp;specified.&nbsp;If&nbsp;there&nbsp;is&nbsp;an</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>existing&nbsp;Atom&nbsp;window&nbsp;that&nbsp;contains&nbsp;all&nbsp;of&nbsp;the&nbsp;given&nbsp;folders,&nbsp;the&nbsp;paths</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>will&nbsp;be&nbsp;opened&nbsp;</span><span class="syntax--keyword syntax--control syntax--shell"><span>in</span></span><span>&nbsp;that&nbsp;window.&nbsp;Otherwise,&nbsp;they&nbsp;will&nbsp;be&nbsp;opened&nbsp;</span><span class="syntax--keyword syntax--control syntax--shell"><span>in</span></span><span>&nbsp;a&nbsp;new</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>window.</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--source syntax--shell"><span>...</span></span></div></pre>
+<p>如果你曾经或者现在经常使用命令行，那这个功能对你来说非常方便。输入 <code>atom [files]</code> 即可开始编辑文件。</p>
+<h4 id="-">编辑和保存文件</h4>
+<p>Atom 里面编辑文件非常直接，没有特定的编辑模式或者核心命令。如果你更喜欢具有特定模式或者更复杂的命令，你可以看一下 <a href="https://atom.io/packages"><code>Atom Packages List</code></a>。它们给 Atom 提供了其它编辑风格。</p>
+<p>保存文件：</p>
+<ul>
+<li>通过菜单栏的 <em>File &gt; Save</em></li>
+<li>通过快捷键 <code>Ctrl+S</code></li>
+</ul>
+<p>另存为：</p>
+<ul>
+<li>通过菜单栏的 <em>File &gt; Save As</em></li>
+<li>通过快捷键 <code>Ctrl+Shift+S</code></li>
+</ul>
+<p>保存所有：</p>
+<ul>
+<li>通过菜单栏的 <em>File &gt; Save All</em></li>
+</ul>
+<h4 id="-">打开文件夹</h4>
+<ul>
+<li>通过菜单栏的 <em>File &gt; Open Folder</em></li>
+<li>通过命令 <code>atom [path1 path2 path3 ...]</code></li>
+</ul>
+<h5 id="-">添加文件夹</h5>
+<ul>
+<li>通过菜单栏 <em>File &gt; Add Project Folder</em></li>
+<li>通过命令 <code>Ctrl+Shift+A</code></li>
+</ul>
+<p>如果打开的是 文件夹， Atom 会自动在侧边栏显示树状视图。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/project-view.png" alt=""></p>
+<p>树状视图允许你浏览和修改文件和目录结构：重命名、删除、创建新的文件等。</p>
+<p>你还可以通过快捷键 <code>Ctrl+\</code> 或者命令 <code>tree-view:toggle</code> 来隐藏或显示树状视图。 <code>Alt+\</code> 将会将焦点聚焦到树状视图上。当焦点在树状视图的时候，你可以通过 <code>A</code>，<code>M</code>，&#39;Delete&#39; 来添加、移动（也可以修改文件名，同Linux mv）、删除文件或文件夹。你还可以通过在树状视图的每一项上面点击鼠标右键来查看可以操作的选项。</p>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Atom&nbsp;Packages</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>和&nbsp;Atom&nbsp;其它部分以一样，&nbsp;树状视图不是编辑器内置功能，它是独立的包，只是默认与&nbsp;Atom&nbsp;捆绑在一起。与&nbsp;Atom&nbsp;捆绑的包称为核心包，没有与&nbsp;Atom&nbsp;绑定的包成为社区包（Community&nbsp;Packages）。</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>你可以在&nbsp;[</span><span class="syntax--markup syntax--underline syntax--link syntax--https syntax--hyperlink"><span>https://github.com/atom/tree-view</span></span><span>](</span><span class="syntax--markup syntax--underline syntax--link syntax--https syntax--hyperlink"><span>https://github.com/atom/tree-view</span></span><span>)&nbsp;查看树状视图的源码。</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>有趣的是，许多核心的特性实际上是一些与实现其它功能具有相同方式的包的实现。这意味着，如果你不喜欢树状视图，你可以自己实现那个功能并且完全替换原有的包。</span></span></span></div></pre><h4 id="-">在项目中打开文件</h4>
+<p>一旦你在 Atom 中打开了一个项目，你可以轻松的找到和打开这个项目的任何文件。</p>
+<p>快捷键 <code>Ctrl+T</code> 或者 <code>Ctrl+P</code> 会弹出模糊搜索框，你可以输入文件路径的一部分来快速查找文件。</p>
+<p><img src="http://flight-manual.atom.io/getting-started/images/finder.png" alt=""></p>
+<p>你可以使用快捷键 <code>Ctrl+B</code> 在当前打开的文件中搜索（而不是在项目中所有文件中查找需要的文件）。它会查找你的 “缓存” 或者已经打开的文件。你还可以通过 <code>Ctrl+Shift+B</code> 来限制模糊搜索，这样搜索仅仅被限制在新创建的文件或者Git提交过后有新的修改的文件。</p>
+<p>模糊搜索使用 <code>core.ignoredNames</code>，<code>fuzzy-finder.ignoredNames</code> 和 <code>core.excludeVCSIgnoredPaths</code> 配置来过滤出不应该显示的文件或文件夹。如果你的项目有一大堆你不想搜索出来的文件，你可以在这些配置或者<a href="https://git-scm.com/docs/gitignore">标准的 <code>.gitignore</code> 文件</a>中添加对应的匹配模式或者路径。我们将会学到 <a href="http://flight-manual.atom.io/using-atom/sections/basic-customization/#global-configuration-settings">全局配置（Global Configuration Settings）</a> 中更多的配置项的设置，但是现在你可以轻松的在设置视图中设置它们。</p>
+<p><code>core.ignoredNames</code> 和 <code>fuzzy-finder.ignoredNames</code> 被当作 glob匹配模式 通过 <a href="https://github.com/isaacs/minimatch">minimatch</a> 这个 Node 模块进行解释。</p>
+<h5 id="configuration-setting-notation">Configuration Setting Notation</h5>
+<p>有时候你看到我们像 &quot;Ignored Names in COre Settings&quot; 这样的拼写来指代配置，另一些时候你看到我们使用如 <code>core.ignoredNames</code> 这样的速记名，它们其实都是指同一个东西。速记的写法是包名（包名使用速记写法），然后一个<code>.</code>（点号）跟在设置的驼峰命名后面。</p>
+<p>如果你想要使用驼峰命名，遵循以下步骤：</p>
+<ul>
+<li>第一个单词（不是首字母）小写</li>
+<li>其它单词的首字母大写</li>
+<li>删除空格</li>
+</ul>
+<p>所以 &quot;Ignored Names&quot; 变成了 &quot;ignoredNames&quot;</p>
+<h1 id="-">第二章</h1>
+<p>既然我们已经了解了 Atom 的基础，那让我们开始挖掘 Atom 无限的潜力吧。本章我们将回学到如何查找和安装新的包来给 Atom 赋予更多的功能，如何查找和安装新的主题，如何以更高级的方式处理文本、如何按照自己的想法定制编辑器 以及如何配合 Git 版本控制器一起使用等。</p>
+<p>到本章末尾，你将有一个舒适的自定义的编辑环境，而且你能够像高手一样改变、创建、删除等操作文本。</p>
+<h2 id="atom-packages-">Atom Packages（插件包）</h2>
+<p>本章我们从 Atom 的 package 系统开始。如前面提到的，Atom 本身只是一个捆绑了一些有用的包来为它增加新的如树状视图和设置视图功能的一个核心。</p>
+<p>实际上， Atom 默认包使用了超过 90 个包，它们包含了 Atom 的所有功能。例如，首次启动 Atom 时候的 <a href="https://github.com/atom/welcome">开始界面</a>， <a href="https://github.com/atom/spell-check">拼写检查</a>，<a href="https://github.com/atom/one-dark-ui">主题</a>，<a href="https://github.com/atom/fuzzy-finder">糢糊查询</a>等包都是保持独立的，并且它们都使用相同的 API，这些 API 可以在 <a href="http://flight-manual.atom.io/hacking-atom/">Hacking Atom</a> 中查看，并且是任何人都可以使用的。</p>
+<p>这意味着这些包可以无比强大，可以改变从整个界面的外观到每一个核心功能的基本操作接口。</p>
+<p>可以在设置视图（<code>Ctrl+,</code>）中的 install 标签安装新的包。</p>
+<p>所有罗列出的包都已经发布到 Atom 官方的包托管仓库 <a href="http://atom.io/packages">http://atom.io/packages</a>，在设置视图中搜索包的时候会去请求 Atom 的托管仓库，并拉取到匹配的选项的信息。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/packages-install.png" alt=""></p>
+<p>所有罗列出的包都有一个安装按钮，点击它就会自动下载和安装这个包，完成以后你的编辑器就有了这个包提供的功能。</p>
+<h3 id="-">包设置</h3>
+<p>一旦包被安装到了 Atom，它就会显示在设置视图的 “Packages” 标签栏，并且与 Atom 预装的包区别开。如果要查找一个包，可以直接在 “Packages” 标签栏的 “Installed Packages” 标题下面输入。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/package-specific-settings.png" alt=""></p>
+<p>点击包的 &quot;Settings&quot; 按钮将会展示包的设置界面，你可以在这里有选择性的改变包的默认变量、查看快捷键、临时禁用该包、查看源码、查看包版本号、报告错误或者卸载该包。</p>
+<p>如果某一个包有更新， Atom 会自动检测到它，你可以在包的设置界面或者 &quot;Updates&quot; 标签栏更新它。</p>
+<h3 id="atom-">Atom 主题</h3>
+<p>你可以在设置界面查找和安装新的主题。不管是 UI 主题还是 语法主题你都可以像搜索新的包一样在 &quot;Install&quot; 标签页查找。确保切换到设置界面中 “Install” 标签界面中的 “Themes” 。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/themes.png" alt=""></p>
+<p>点击主题的标题会被引导到 atom.io 上面的简介页面，该页面一般都有一个主题的截图，你可以看到安装过后的插件会带来什么样的变化。</p>
+<p>点击 &quot;install&quot; 将会安装该主题，安装好之后你就可以在设置界面的主题下拉框中选择该主题了。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/unity-theme.png" alt=""></p>
+<h3 id="-">命令行</h3>
+<p>你也可以从命令行安装包或者主题，使用命令 <code>apm</code></p>
+<p>在控制它输入以下命令来检查是否安装了 <code>apm</code> 命令。</p>
+<p><code>apm help install</code></p>
+<p>如果没有，你可以查看<a href="http://flight-manual.atom.io/getting-started/sections/installing-atom">如何安装 atom 和 apm</a></p>
+<p>你也可以使用 <code>apm install</code> 来安装包：</p>
+<ul>
+<li><code>apm install &lt;包名&gt;</code> 来安装最新的包</li>
+<li><code>apm install &lt;包名&gt;@&lt;包版本号&gt;</code> 来安装指定版本的包</li>
+</ul>
+<p>例如 <code>apm install emmet@0.1.5</code> 来安装 0.1.5 版本的<a href="https://github.com/atom/emmet">Emmet</a>。</p>
+<p>你也可以时使用 <code>apm</code> 来查找新的包。使用命令 <code>apm search &lt;包名&gt;</code></p>
+<p><code>apm search coffee</code></p>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Search&nbsp;Results&nbsp;For&nbsp;&#39;coffee&#39;&nbsp;(29)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;build-coffee&nbsp;Atom&nbsp;Build&nbsp;provider&nbsp;for&nbsp;coffee,&nbsp;compiles&nbsp;CoffeeScript&nbsp;(1160&nbsp;downloads,&nbsp;2&nbsp;stars)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;scallahan-coffee-syntax&nbsp;A&nbsp;coffee&nbsp;inspired&nbsp;theme&nbsp;from&nbsp;the&nbsp;guys&nbsp;over&nbsp;at&nbsp;S.CALLAHAN&nbsp;(183&nbsp;downloads,&nbsp;0&nbsp;stars)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;coffee-paste&nbsp;Copy/Paste&nbsp;As&nbsp;:&nbsp;Js&nbsp;➤&nbsp;Coffee&nbsp;/&nbsp;Coffee&nbsp;➤&nbsp;Js&nbsp;(902&nbsp;downloads,&nbsp;4&nbsp;stars)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;atom-coffee-repl&nbsp;Coffee&nbsp;REPL&nbsp;for&nbsp;Atom&nbsp;Editor&nbsp;(894&nbsp;downloads,&nbsp;2&nbsp;stars)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;coffee-navigator&nbsp;Code&nbsp;navigation&nbsp;panel&nbsp;for&nbsp;Coffee&nbsp;Script&nbsp;(3493&nbsp;downloads,&nbsp;22&nbsp;stars)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>...</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;language-iced-coffeescript&nbsp;Iced&nbsp;coffeescript&nbsp;for&nbsp;atom&nbsp;(202&nbsp;downloads,&nbsp;1&nbsp;star)</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>└──&nbsp;slontech-syntax&nbsp;Dark&nbsp;theme&nbsp;for&nbsp;web&nbsp;developers&nbsp;(&nbsp;HTML,&nbsp;CSS/LESS,&nbsp;PHP,&nbsp;MYSQL,&nbsp;javascript,&nbsp;AJAX,&nbsp;coffee,&nbsp;JSON&nbsp;)&nbsp;(2018&nbsp;downloads,&nbsp;3&nbsp;stars)</span></span></span></div></pre><p>使用 <code>apm view</code> 命令来查看某个包的详情：</p>
+<p><code>apm view build-coffee</code></p>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>build-coffee</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;0.6.4</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;</span><span class="syntax--markup syntax--underline syntax--link syntax--https syntax--hyperlink"><span>https://github.com/idleberg/atom-build-coffee</span></span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;Atom&nbsp;Build&nbsp;provider&nbsp;for&nbsp;coffee,&nbsp;compiles&nbsp;CoffeeScript</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>├──&nbsp;1152&nbsp;downloads</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>└──&nbsp;2&nbsp;stars</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&gt;</span></span></span></div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Run&nbsp;`apm&nbsp;install&nbsp;build-coffee`&nbsp;to&nbsp;install&nbsp;this&nbsp;package.</span></span></span></div></pre><h2 id="atom-">Atom 中移动</h2>
+<p>尽管在 Atom 中使用鼠标或者键盘上的方向键来移动界面非常方便，但是 Atom 中还有一些快捷键可以让你手不离开键盘就可以更快的定位到某个字符。</p>
+<p>Atom 支持所有标准的 Linux光标移动组合键。使用上下左右键来将光标移动单个字符。</p>
+<p>除此之外，还有下面一些键可以使用：</p>
+<ul>
+<li><code>Ctrl+Left</code> 移动到单词的开始</li>
+<li><code>Ctrl+Right</code> 移动到单词的末尾</li>
+<li><code>Home</code> 移动到当前行的开始</li>
+<li><code>End</code> 移动到当前行的末尾</li>
+<li><code>Ctrl+Home</code> 移动到文件开始</li>
+<li><code>Ctrl+End</code> 移动到文件末尾</li>
+</ul>
+<p>你还可以使用 <code>Ctrl+G</code> 移动到某一行或者某列，该组合键键会弹出一个对话框，输入 <code>行:列</code> 这样格式的字符来让 Atom 跳到对应的行或者列。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/goto.png" alt=""></p>
+<h3 id="-navigating-by-symbols-http-flight-manual-atom-io-using-atom-sections-moving-in-atom-navigating-by-symbols-"><a href="http://flight-manual.atom.io/using-atom/sections/moving-in-atom/#navigating-by-symbols">Navigating by Symbols</a></h3>
+<h3 id="-">书签</h3>
+<p>Atom 还有一个很实用的功能。你可以给项目文件中的某一行保存书签，这样你就可以快速的跳转到那你。</p>
+<p>如果你按 <code>Ctrl+Shift+F2</code>，Atom 会在当前行标记或取消标记该行，标记为书签的行会在行的开始显示一个小的书签标记（就像下图的 22 行）。你可以给项目中比较重要的行设置书签，然后在需要的时候快速找到它们。</p>
+<p>如果你按 <code>F2</code>， Atom 会跳到当前焦点界面的下一个书签的位置。如果按 <code>Shift+F2</code> 则会在它们之间循环。</p>
+<p>你可以使用 <code>Ctrl+F2</code> 来查看项目中所有的书签，选中它们进行跳转。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/bookmarks.png" alt=""></p>
+<p>书签功能来自于 <a href="https://github.com/atom/bookmarks">bookmarks</a> 包。</p>
+<h2 id="atom-">Atom 选词</h2>
+<h2 id="-">编辑和删除文本</h2>
+<p>到这里相信大家已经知道如何在 Atom 中选择文件的某个区域了，现在来修改文件。尽管可以用鼠标选中直接输入文本，不过下面将要介绍一些更加方便的方法来操作文本。</p>
+<h3 id="-">基本操作</h3>
+<p>有一些快捷键来慢速基本的本文操作。包括移动行、多行改变。</p>
+<ul>
+<li><code>Ctrl+J</code> 将下一行拼接在当前行末尾</li>
+<li><code>Ctrl+Up/Down</code> 将当前行上移/下移</li>
+<li><code>Ctrl+Shift+D</code> 直接复制当前行（或选中的多行）到下一行</li>
+<li><code>Ctrl+K``Ctrl+U</code> 当前单词转换成大写</li>
+<li><code>Ctrl+K``Ctrl+L</code> 当前单词转换为小写</li>
+</ul>
+<p>Atom 还有一个内置的功能，它能够将基于指定的行最大长度当前段落的换行机制改编成 &quot;hard-wrap&quot; 模式。你可以使用 <code>Alt+Ctrl+Q</code> 来将当前选中内容的每行格式化为不超过 80 个字符（或者其它 <code>editor.preferredLineLength</code> 定义的其它数字）。如果没有选择任何东西，则当前段落将会回流（ If nothing is selected, the current paragraph will be reflowed.）。</p>
+<h3 id="-">删除和剪切</h3>
+<p>你还可以通过一些快捷方式删除或剪切缓冲区中的文本。</p>
+<ul>
+<li><code>Ctrl+Shift+K</code> 删除当前行</li>
+<li><code>Ctrl+Backspace</code> 删除光标到当前单词开始</li>
+<li><code>Ctrl+Delete</code> 删除光标到当前单词末尾</li>
+</ul>
+<h3 id="-">多个光标</h3>
+<ul>
+<li><code>Ctrl+鼠标点击</code> 在鼠标点击处添加一个光标</li>
+<li><code>Alt+Shift+Up/Down</code> 在当前光标上面或者下面添加一个光标</li>
+<li><code>Ctrl+D</code> 选中光标所在单词的单词，或追加选中与当前单词相同的下一个单词</li>
+<li><code>Alt+F3</code> 选择所有与当前单词相同的单词</li>
+</ul>
+<p>有了这些命令，你就可以在多行、多处放置光标，并一次性执行相同的命令。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/multiple-cursors.gif" alt=""></p>
+<h3 id="-">空白</h3>
+<p>Atom 默认带有一些命令来帮助你处理文档中的空白字符。如果你的文档有混合的空白字符（空格和Tab），这些命令可以让你将文件的空白字符统一化。这些命令没有快捷键，所以你需要使用命令来执行它们，使用 <code>Ctrl+Shift+p</code> 打开命令对话框，输入 “Convert Spaces to Tabs” 或者 “Convert Tabs to Spaces”。</p>
+<p>该命令由包 <a href="https://github.com/atom/whitespace">atom/whitespace</a> 实现。命令的设置在包 <code>whitespace</code> 的管理页面。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/whitespace.png" alt=""></p>
+<p><code>Remove Trailing Whitespace（移除末尾空白字符）</code> 默认开启。这样的话每次在保存文件的时候，都会去除文件中所有尾随的空格字符。如果你希望禁用该项，可以去 <code>whitespace</code>包 的设置界面设置。</p>
+<p>Atom 也会确保文件的最后有一行新的空白行，你也可以在 <code>whitespace</code> 界面设置。</p>
+<h3 id="-">括号</h3>
+<p>Atom 可以很简单和智能的处理括号。</p>
+<p>默认情况下，光标在 <code>[]</code> <code>()</code> <code>{}</code> 的时候它们会高亮，也会高亮匹配的 XML 或者 HTML 标签对。</p>
+<p>Atom 将回自动补齐 <code>[]</code>, <code>()</code>, <code>{}</code>, <code>&quot;&quot;</code>, <code>&#39;&#39;</code>, <code>“”</code>, <code>‘’</code>, <code>«»</code>, <code>‹›</code>。</p>
+<p>有一些与括号相关的命令：</p>
+<ul>
+<li><code>Ctrl+M</code> 跳到与当前光标所在括号匹配的另一半，如果光标不在括号旁，则将光标跳到最近的一个开括号处。</li>
+<li><code>Alt+Ctrl+M</code> 选择所有当前括号内的文字</li>
+<li><code>Alt+Ctrl+.</code> 关闭当前 XML/HTML 标签</li>
+</ul>
+<p>括号的功能是包 <a href="https://github.com/atom/bracket-matcher">bracket-matcher</a>提供。</p>
+<h3 id="-">编码</h3>
+<p>Atom 提供了一些基本的文件编码。</p>
+<ul>
+<li><code>Alt+U</code> 改变文件编码</li>
+</ul>
+<p>点击 Atom 底部的 &quot;UTF-8&quot; 也可以选择文件编码。</p>
+<p>打开文件的时候，Atom 会自动检测文件的类型，如果 Atom 不确定文件类型，则默认选择 UFT-8 编码，这也是新文件的编码。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/encodings.png" alt=""></p>
+<p>编码选择功能由包 <a href="https://github.com/atom/encoding-selector">encoding-selector</a> 提供。</p>
+<h2 id="-">查找和替换</h2>
+<ul>
+<li><code>Ctrl+F</code> 在缓冲区搜索</li>
+<li><code>Ctrl+Shift+F</code> 在整个项目搜索（全局搜索）</li>
+</ul>
+<p>不管是在缓冲区搜索还是整个项目搜索，都会弹出搜索面板。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/find-replace-file.png" alt=""></p>
+<p>使用 <code>Ctrl+F</code> 在当前页面搜索的时候, 输入希望查找的字符, 然后按 <code>Enter</code>（回车）即可查找，或者按 <code>F3</code> 查找下一个。 搜索面板的也包含了时候大小写敏感、正则表达式匹配、选择搜索范围等。</p>
+<p>如果需要替换匹配的项，在 <code>Replace</code> 输入框输入需要替换的文本，然后选择替换/替换所有。</p>
+<p>使用正则表达式搜索的时候，使用 $1、$2、$3、$n 来访问搜索的组（group）。</p>
+<p>你还可以使用 <code>Ctrl+Shift+F</code> 来在整个项目中搜索。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/find-replace-project.png" alt=""></p>
+<p>使用全局搜索的时候，你可以在 &quot;File/Directory pattern&quot; 框中输入 <a href="http://en.wikipedia.org/wiki/Glob_%28programming%29">glob pattern</a> 来限制搜索的文件。例如，模式 <code>src/*.js</code> 将搜索限制在 <code>scr</code> 目录下面的所有后缀为 <code>.js</code> 的文件中。&quot;Globstar&quot; 模式符号 <code>**</code> 可以用于目录的递归，即任意深层级的目录。 例如 <code>docs/**/*.md</code> 将回匹配 <code>docs/a/foo.md</code>、<code>docs/a/b/foo.md</code> 或更深层级的目录中。</p>
+<p>当你打开了多个项目目录时，该特性也可以用于将搜索限制在某一个目录中。例如，你打开了 <code>/path1/folder1</code> 和 <code>/path2/folder2</code>， 你可以输入模式 <code>folder1</code> 来将搜索限制在 folder1 中。</p>
+<p>按 <code>Esc</code> 退出搜索面板。</p>
+<p>搜索和替换功能由包 <a href="https://github.com/atom/find-and-replace">find-and-replace</a> 实现， 使用了 Node 模块 <a href="https://github.com/atom/scandal">scandal</a>。</p>
+<h2 id="-snippets-http-flight-manual-atom-io-using-atom-sections-snippets-"><a href="http://flight-manual.atom.io/using-atom/sections/snippets/">Snippets</a></h2>
+<p>片段可以快速的生成需要的代码片段。</p>
+<p>例如你输入 <code>habtm</code> 然后按下 <code>Tab</code> 键，自动生成了 <code>has_and_belongs_to_many</code>。</p>
+<p>有很多核心或者社区包可以用来完成这样的操作。如 <code>language-html</code> 包提供了 HTML 语法高亮和帮助你生成多种多样的 HTML 标签。 你输入 <code>html</code> 按下 <code>Tab</code> 键会得到展开的代码：</p>
+<pre class="editor-colors lang-HTML"><div class="line"><span class="syntax--text syntax--html syntax--basic"><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>html</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>head</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--tag syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;</span></span><span class="syntax--entity syntax--name syntax--tag syntax--html"><span>title</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span><span class="syntax--meta syntax--scope syntax--between-tag-pair syntax--html"><span>&lt;</span></span><span>/</span></span><span class="syntax--entity syntax--name syntax--tag syntax--html"><span>title</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;/</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>head</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>body</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;/</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>body</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div><div class="line"><span class="syntax--text syntax--html syntax--basic"><span class="syntax--meta syntax--tag syntax--structure syntax--any syntax--html"><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&lt;/</span></span><span class="syntax--entity syntax--name syntax--tag syntax--structure syntax--any syntax--html"><span>html</span></span><span class="syntax--punctuation syntax--definition syntax--tag syntax--html"><span>&gt;</span></span></span></span></div></pre>
+<p>并且它还会将光标移动到 <code>title</code> 标签中间。许多片段有多个光标焦点，你可以使用 <code>Tab</code> 键将光标移动到下一个标签中将，如输入完成 <code>title</code> 过后，按 <code>Tab</code> 将会跳到 <code>body</code> 中间。</p>
+<p>可以通过在命令面板中输入 <code>Snippets: Available</code> 来查看当前文件支持哪些片段。并且在结果中糢糊搜索你需要的片段。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/snippets.png" alt=""></p>
+<h3 id="-">创建自己的片段</h3>
+<p>在 <code>~/.atom</code> 目录下面有一个叫 <code>snippets.cson</code> 的文件，它包含了所有在启动 Atom 的时候需要加载的自定义片段。可以通过 Atom 的菜单打开该文件： <em>Edit &gt; Snippets</em></p>
+<h4 id="-">片段的格式</h4>
+<p>基本格式如下：</p>
+<pre class="editor-colors lang-JSON"><div class="line"><span class="syntax--source syntax--json"><span>&#39;.source.js&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;console.log&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;log&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;&#39;console.log($</span><span class="syntax--meta syntax--structure syntax--dictionary syntax--json"><span class="syntax--punctuation syntax--definition syntax--dictionary syntax--begin syntax--json"><span>{</span></span><span class="syntax--invalid syntax--illegal syntax--expected-dictionary-separator syntax--json"><span>1</span></span><span class="syntax--meta syntax--structure syntax--dictionary syntax--value syntax--json"><span class="syntax--punctuation syntax--separator syntax--dictionary syntax--key-value syntax--json"><span>:</span></span><span class="syntax--string syntax--quoted syntax--double syntax--json"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--json"><span>&quot;</span></span><span>crash</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--json"><span>&quot;</span></span></span></span><span class="syntax--punctuation syntax--definition syntax--dictionary syntax--end syntax--json"><span>}</span></span></span><span>);$</span><span class="syntax--constant syntax--numeric syntax--json"><span>2</span></span><span>&#39;</span></span></div></pre>
+<p>最左边的键（key）是决定这些片段在哪里可用的选择器。最简单的方式就是去某个语言的包查看 Scope 属性值。如 js 就到 <code>languiage-javascript</code> 包里面查看，javascript 就到 <code>languiage-java</code> 中查看。</p>
+<p>例如，如果想添加一些 java 片段，可以在设置视图里面进入 <code>languiage-java</code> 包，我们可以看到 Scope 是 <code>source.java</code>，这片段的顶级键将会在该名字前面添加一个点号<code>.</code>（就像 CSS 类的选择器）。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/snippet-scope.png" alt=""></p>
+<p>因为 javascript 的 Scope 是 <code>source.js</code> ，所以上面的 JSON 例子是 <code>.scource.js</code>。</p>
+<p>片段的第二级键是片段名。它用于在片段菜单中用更加可读的方式描述片段（在还没有展开片段的时候，该字段作为注释显示给用户看）。你可以将它定义为任意你想的名字。</p>
+<p>片段中 <code>prefix</code> 字段是触发该片段的缩写，<code>body</code> 字段为展开后的内容格式，例如 prefix 是 &quot;log1&quot;，则输入 log1然后按下 tab 键就会展开成 <code>body</code> 字段的内容。</p>
+<p>每个后面接了个数字的 <code>$</code> 符号是 <code>Tab</code> 键停留的位置。 在片段已经展开过后按 tab 键将会在 tab 停留位置循环。如果数字相同，则会同时存在多个光标。</p>
+<p>上面的例子，使用 <code>log</code> 将会展开成</p>
+<pre class="editor-colors lang-js"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--entity syntax--name syntax--type syntax--object syntax--console syntax--js"><span>console</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--function syntax--console syntax--js"><span>log</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>crash</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--punctuation syntax--terminator syntax--statement syntax--js"><span>;</span></span></span></div></pre>
+<p>“crash” 将会在展开的时候被选中，再次按 tab 键将会将光标移动到 <code>;</code> 之后。</p>
+<p>片段的键（key），与 CSS 选择器不同，它仅每级仅可重复一次。如果统一级有多个键，则只有最后一个将会被读取。更多信息参考<a href="http://flight-manual.atom.io/using-atom/sections/basic-customization/#configuring-with-cson">CSON配置</a></p>
+<h3 id="-">具有多行的片段</h3>
+<p>你可以使用 [CoffeeScript 多行语法] <code>&quot;&quot;&quot;</code> 来定义：</p>
+<pre class="editor-colors lang-JSON"><div class="line"><span class="syntax--source syntax--json"><span>&#39;.source.js&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;if,&nbsp;else&nbsp;if,&nbsp;else&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;ieie&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--json"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--json"><span>&quot;</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--json"><span>&quot;</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--json"><span>&quot;</span></span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(${1:true})&nbsp;{</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$2</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;if&nbsp;(${3:false})&nbsp;{</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$4</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$5</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span></span></div><div class="line"><span class="syntax--source syntax--json"><span class="syntax--string syntax--quoted syntax--double syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--json"><span>&quot;</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--json"><span>&quot;</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--json"><span>&quot;</span></span></span></span></div></pre>
+<p>可能正如你说想的，还有一个用于在定义片段的文件中创建片段的片段。你大开一个定义片段的文件，输入 <code>snip</code> 然后按 <code>Tab</code> 键，你将得到一个片段的格式：</p>
+<pre class="editor-colors lang-JSON"><div class="line"><span class="syntax--source syntax--json"><span>&#39;.source.js&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;Snippet&nbsp;Name&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;hello&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;&#39;Hello&nbsp;World!&#39;</span></span></div></pre>
+<p>然后就可以像编辑其它片段一样编辑里面的内容了。当你保存这个文件的时候，Atom 会重新载入片段，然后你马上就可以使用它了。</p>
+<h3 id="-">每个源定义多个片段</h3>
+<p>想在<code>snippets.cson</code>文件中同一个范围定义多个片段，只需要另起一行将下一个片段的定义写在上一个后面即可。为了可读性，可以隔一行。</p>
+<pre class="editor-colors lang-JSON"><div class="line"><span class="syntax--source syntax--json"><span>&#39;.text.md&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;Hello&nbsp;World&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;hewo&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;&#39;Hello&nbsp;World!&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;Github&nbsp;Hello&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;gihe&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;&#39;Octocat&nbsp;says&nbsp;Hi!&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&#39;Octocat&nbsp;Image&nbsp;Link&#39;:</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;prefix&#39;:&nbsp;&#39;octopic&#39;</span></span></div><div class="line"><span class="syntax--source syntax--json"><span>&nbsp;&nbsp;&nbsp;&nbsp;&#39;body&#39;:&nbsp;&#39;!</span><span class="syntax--meta syntax--structure syntax--array syntax--json"><span class="syntax--punctuation syntax--definition syntax--array syntax--begin syntax--json"><span>[</span></span><span class="syntax--invalid syntax--illegal syntax--expected-array-separator syntax--json"><span>G</span><span>i</span><span>t</span><span>H</span><span>u</span><span>b</span></span><span>&nbsp;</span><span class="syntax--invalid syntax--illegal syntax--expected-array-separator syntax--json"><span>O</span><span>c</span><span>t</span><span>o</span><span>c</span><span>a</span><span>t</span></span><span class="syntax--punctuation syntax--definition syntax--array syntax--end syntax--json"><span>]</span></span></span><span>(https://assets-cdn.github.com/images/modules/logos_page/Octocat.png)&#39;</span></span></div></pre>
+<h3 id="-">更多信息</h3>
+<p>snippets 功能由包 <a href="https://github.com/atom/snippets">snippets</a> 实现。</p>
+<p>如果要获取更多示例，查看 <a href="https://github.com/atom/language-html/blob/master/snippets/language-html.cson">language-html</a> <a href="https://github.com/atom/language-javascript/blob/master/snippets/language-javascript.cson">languiage-javascript</a>。</p>
+<h2 id="-">自动补全</h2>
+<p>如果你仍然希望节约一些打字时间，atom 还提供了一些自动补全功能。</p>
+<p>自动补全功能使用 <code>Tab</code> 键或者 <code>Enter</code> 键。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/autocomplete.png" alt=""></p>
+<p>默认情况下， 自动补全会检查当前文件的匹配字符串来确定如何补全。</p>
+<p>如果你希望更多的选项，可以使用 autocomplete-plus 包，它可以设置在打开的缓存中查找，而不是在当前文件中。</p>
+<p>自动补全功能由 <a href="https://github.com/atom/autocomplete-plus">autocomplete-plus</a> 提供。</p>
+<h2 id="-">代码折叠</h2>
+<p>如果你想看看当前代码的结构，那么折叠代码将会非常有用。折叠隐藏代码块，如函数或循环块，以简化屏幕上的内容。</p>
+<p>你可以通过点击代码块最前面的排版线上的箭头来折叠/展开当前代码块。你也可以使用快捷键 <code>Alt+Ctrl+[</code> 来折叠代码，使用 <code>Alt+Ctrl+]</code> 来展开代码。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/folding.png" alt=""></p>
+<p>使用 <code>Alt+Ctrl+Shift+[</code> 折叠所有代码，使用 <code>Alt+Ctrl+Shift+]</code> 展开所有代码。你也可以以使用 <code>Ctrl+K</code>然后再按 <code>Ctrl+[0-9]</code> 来指定折叠第几层级的代码。如 <code>Ctrl+K</code>配合 <code>Ctrl+1</code> 将折叠第一层级代码，即第一个可以被折叠的层级，越往折叠块里面，层级越高。 0 层级展开所有代码。</p>
+<p>最后，你可以通过选择一个任意一个区域，然后按 <code>Alt+Ctrl+F</code> 或者在命令面板输入 <code>Fold Selection</code> 来折叠任意区域。</p>
+<h2 id="-">窗格</h2>
+<p>你可以通过使用快捷键 <code>Ctrl+K</code> <code>Up/Down/Left/Right</code>（后面没有Ctrl）来水平或者垂直切分当前编辑面板。方向键的方向就是分割的方向。一旦你切分了一个窗格，你就可以使用 <code>Ctrl+K</code> <code>Ctrl+Up/Down/Left/Right</code> 来切换窗格。方向键的方向就是将要移动到的窗格的方向。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/panes.png" alt=""></p>
+<p>每个面板有自己的 “面板项”，即上面的标签，你可以通过鼠标拖拽将一个面板的文件拖到另一个面板中。</p>
+<p>如果你不喜欢使用标签，你也可以不必要使用它。你可以在包 <a href="https://github.com/atom/tabs">tab</a> 中禁用它，禁用过后每个面板仍然支持多个面板项。只是你没有可以点击的标签了。</p>
+<p>可以通过 <code>Ctrl+W</code> 来关闭面板。你可以在设置视图中的 &quot;Core Settings&quot; 里面设置 &quot;Remove Empty Panes&quot; 来当面板中没有打开的文件的时候自动关闭该面板。</p>
+<h2 id="-">挂起的文件</h2>
+<p>挂起的文件是之前的 “预览标签”。</p>
+<p>当你在文件树中鼠标单击一个文件的时候，它将会以一个新标签打开，标签标题为斜体。这表明文件处于 “挂起” 状态。当一个文件处于挂起状态时，它将会被下一个打开的 “挂起” 文件取代。这种挂起的文件允许你点开很多文件来查找信息而不用回过来一个一个关闭它们。</p>
+<p>如果要将挂起的文件变成确认状态，以下之一都可以做到：</p>
+<ul>
+<li>双击标签</li>
+<li>双击树状图中的文件</li>
+<li>编辑文件</li>
+<li>保存文件</li>
+</ul>
+<p>你也可以通过双击打开一个文件，这样它就是一个确认状态的文件。</p>
+<h3 id="-">禁用挂起文件</h3>
+<p><img src="http://flight-manual.atom.io/using-atom/images/allow-pending-pane-items.png" alt=""></p>
+<p>如果你不喜欢在打开的文件标签中有这种挂起的文件，你可以在<code>Core Settings</code> 里面取消选中 <code>Allow Pending Pane items</code> 选项。禁用了过后，在文件树中单击文件将不会打开这个文件，你必须双击打开它。</p>
+<h2 id="-">语法</h2>
+<p>文件的语法是 Atom 与之进行关联的语言。语法的类型包括 Java、C 等编程语言 或者 GitHub-Flavored Markdown。在使用文件片段的时候，我们会使用这个类型。</p>
+<p>当你加载一个文件的时候， Atom 会额外的去确认文件类型。很大程度上是通过文件的扩展名来确定的，但是也有的情况需要检查一下文件内容才能够确定。</p>
+<p>当你打开一个文件的时候， 如果Atom 不能决定文件的语法，则默认是 “Plain Text”，它是最简单的类型。如果该文件不能以 “Plain Text” 作为默认值，为文件选择了一个错误的语法或者如果由于其它原因你希望改变它的语法，你可以使用 <code>Ctrl+Shift+L</code> 来打开语法选择器。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/grammar.png" alt=""></p>
+<p>当文件的语法改变的时候，Atom 将会在当前会话记住文件的改变。</p>
+<p>语法选择器由包 <a href="https://github.com/atom/grammar-selector">grammar-selector</a> 实现。</p>
+<h2 id="atom-">Atom 中的版本控制系统</h2>
+<p>版本控制系统是所有项目的一个重要的部分。Atom 内置了基本的 Git 和 GitHub 功能整合。</p>
+<p>项目的根目录必须是一个 git 仓库才能在 Atom 中使用版本控制系统。</p>
+<h3 id="checkout-head-version">checkout HEAD version</h3>
+<p>快捷键 <code>Alt+Ctrl+Z</code> 会在编辑器中检出当前文件的 <code>HEAD</code> 版本。</p>
+<p>这是一个比较快捷的丢弃当前文件从 <code>HEAD</code> 提交以后的变化，将文件重置到 <code>HEAD</code> 提交的时候的内容。 相当于在命令行运行该文件 path 的 <code>git checkout HEAD -- &lt;path&gt;</code> 和 <code>git reset HEAD -- &lt;path&gt;</code>。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/git-checkout-head.gif" alt=""></p>
+<p>该命令将进入撤销堆栈，你可以使用 <code>Ctrl+Z</code> 来恢复之前的内容。</p>
+<h3 id="-git-status-list-http-flight-manual-atom-io-using-atom-sections-version-control-in-atom-git-status-list-"><a href="http://flight-manual.atom.io/using-atom/sections/version-control-in-atom/#git-status-list">Git status list</a></h3>
+<p>Atom 的糢糊搜索包 <a href="https://github.com/atom/fuzzy-finder">fuzzy-finder</a> 提供了 <code>Ctrl+T</code> 快速打开项目中的文件, <code>Ctrl+B</code> 跳转到编辑器中某个打开的文件。包也提供了 <code>Ctrl+Shift+B</code> 显示一个所有未跟踪或已修改未提交的文件列表，它与运行 <code>git status</code> 看到的结果是一样的。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/git-status.gif" alt=""></p>
+<p>文件列表的右边会有一个小图标来表明它是未跟踪的文件还是已修改未提交的文件。</p>
+<h3 id="-">提交编辑</h3>
+<p>Atom 可以作为 git 提交编辑信息的工具，它自带了包 <a href="https://github.com/atom/language-git">language-git</a> 来提交语法高亮和编辑提交、合并以及 rebase。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/git-message.gif" alt=""></p>
+<p>你可以用下面的命令来 Atom 配置为 git 提交编辑器。</p>
+<pre class="editor-colors lang-sh"><div class="line"><span class="syntax--source syntax--shell"><span>git&nbsp;config&nbsp;--global&nbsp;core.editor&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--shell"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--shell"><span>&quot;</span></span><span>atom&nbsp;--wait</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--shell"><span>&quot;</span></span></span></span></div></pre>
+<p>当提交的信息超过50或者65个字符的时候，<a href="https://github.com/atom/language-git">language-git</a> 包将通过改变提交备注信息的第一行的背景色来提醒你将信息尽可能写简洁明了。</p>
+<h3 id="-">状态图标</h3>
+<p>已经包含的<a href="https://github.com/atom/status-bar">status-bar</a> 包在编辑器右下角的状态栏，它包含了一些 git 修饰：</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/git-status-bar.png" alt=""></p>
+<p>当前检出的分支名也在这里展示，并且还展示了当前分支超过或低于上游分支的提交次数。</p>
+<p>与上次提交相比添加或者删除的行数也会显示在这里。</p>
+<h3 id="-">行修改状态</h3>
+<p>已经包含的 <a href="https://github.com/atom/git-diff">git-diff</a> 包在添加、编辑、删除的行前面添加颜色来表示该行的状态，这个功能可能需要去 git-diff 包的设置界面开启。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/git-lines.png" alt=""></p>
+<p>该包添加了快捷键 <code>Alt+G``Down</code> 和 <code>Alt+G``Up</code> 来允许你在当前编辑界面将光标移动到前一个或者后一个修改块（多行修改连在一起为一个块）的第一行。</p>
+<h3 id="-github-">在 GitHub 中打开</h3>
+<p>如果你正在工作的当前项目在 GitHub 上，则还有很多集成的功能可以供你使用。大多数命令将会将你正在浏览的文件</p>
+<ul>
+<li><code>Alt+G``O</code> 在 GitHub 上打开文件</li>
+<li><code>Alt+G``B</code> 在 GitHub 上打开 Blame 视图</li>
+<li><code>Alt+G``H</code> 在 GitHub 上打开历史视图</li>
+<li><code>Alt+G``C</code> 拷贝当前文件在 GitHub 上的 URL</li>
+<li><code>Alt+G``R</code> 在 GitHub 比较分支</li>
+</ul>
+<p>分支比较显示了本地工作在当前分支提交了而又不在主干分支的提交。</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/open-on-github.png" alt=""></p>
+<h2 id="-github-http-flight-manual-atom-io-using-atom-sections-github-package-github-package-"><a href="http://flight-manual.atom.io/using-atom/sections/github-package/#github-package">github</a>包</h2>
+<h2 id="-atom-">使用 Atom 编辑</h2>
+<p>尽管通常使用 Atom 来编辑代码，但是 Atom 也可以用来高效的写文章，尤其是在使用一些如 Asciidoc 或者 <a href="https://help.github.com/articles/about-writing-and-formatting-on-github/">Markdown</a> 一样的标记语言的时候最为突出。下面介绍 Atom 提供的一些写文章的高效工具。</p>
+<p>这里假设是写 Markdown，其它如 Asciidoc 的标记语言有相应的包来提供类似的功能。</p>
+<h3 id="-">拼写检查</h3>
+<p>如果你是基于文字的工作（文本文件、markdown等），Atom 会自动尝试去检查你的拼写。</p>
+<p>任何拼写错误的单词都会被高亮（默认在文字下方出现一个红色虚线），使用快捷键 <code>Ctrl+Shift+;</code> 来选择一个可能的修正结果（或者点击鼠标右键选择 &quot;Correct Spelling&quot;）</p>
+<p><img src="http://flight-manual.atom.io/using-atom/images/spellcheck.png" alt=""></p>
+<p>如果希望添加更多的文件类型让 Atom 会去自动检查拼写，可以到包 “spell-check” 去添加你想要检查的任何语法。</p>
+<p>默认会检查拼写的语法是 <code>text.plain</code>，<code>source.gfm</code> 和 <code>text.git-commit</code> 但是你可以添加如 <code>source.asciidoc</code> 来检查这种文件类型。</p>
+<p>拼写检查由  <a href="https://github.com/atom/spell-check">spell-check</a> 包实现。</p>
+<h3 id="-">预览</h3>
+<p>如果使用 markdown 写文章的时候， 经常需要查看当前文章显示出来是什么样子。 Atom 默认带有一个预览 markdown 的包。</p>
+<ul>
+<li><code>Ctrl+Shift+M</code> 将会打开/关闭 markdown 预览。</li>
+</ul>
+<p><img src="http://flight-manual.atom.io/using-atom/images/preview.png" alt=""></p>

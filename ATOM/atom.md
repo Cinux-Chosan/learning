@@ -614,3 +614,191 @@ snippets 功能由包 [snippets](https://github.com/atom/snippets) 实现。
 该命令将进入撤销堆栈，你可以使用 `Ctrl+Z` 来恢复之前的内容。
 
 ### [Git status list](http://flight-manual.atom.io/using-atom/sections/version-control-in-atom/#git-status-list)
+
+Atom 的糢糊搜索包 [fuzzy-finder](https://github.com/atom/fuzzy-finder) 提供了 `Ctrl+T` 快速打开项目中的文件, `Ctrl+B` 跳转到编辑器中某个打开的文件。包也提供了 `Ctrl+Shift+B` 显示一个所有未跟踪或已修改未提交的文件列表，它与运行 `git status` 看到的结果是一样的。
+
+![](http://flight-manual.atom.io/using-atom/images/git-status.gif)
+
+文件列表的右边会有一个小图标来表明它是未跟踪的文件还是已修改未提交的文件。
+
+### 提交编辑
+
+Atom 可以作为 git 提交编辑信息的工具，它自带了包 [language-git](https://github.com/atom/language-git) 来提交语法高亮和编辑提交、合并以及 rebase。
+
+![](http://flight-manual.atom.io/using-atom/images/git-message.gif)
+
+你可以用下面的命令来 Atom 配置为 git 提交编辑器。
+
+``` sh
+git config --global core.editor "atom --wait"
+```
+
+当提交的信息超过50或者65个字符的时候，[language-git](https://github.com/atom/language-git) 包将通过改变提交备注信息的第一行的背景色来提醒你将信息尽可能写简洁明了。
+
+### 状态图标
+
+已经包含的[status-bar](https://github.com/atom/status-bar) 包在编辑器右下角的状态栏，它包含了一些 git 修饰：
+
+![](http://flight-manual.atom.io/using-atom/images/git-status-bar.png)
+
+当前检出的分支名也在这里展示，并且还展示了当前分支超过或低于上游分支的提交次数。
+
+与上次提交相比添加或者删除的行数也会显示在这里。
+
+### 行修改状态
+
+已经包含的 [git-diff](https://github.com/atom/git-diff) 包在添加、编辑、删除的行前面添加颜色来表示该行的状态，这个功能可能需要去 git-diff 包的设置界面开启。
+
+![](http://flight-manual.atom.io/using-atom/images/git-lines.png)
+
+该包添加了快捷键 `Alt+G``Down` 和 `Alt+G``Up` 来允许你在当前编辑界面将光标移动到前一个或者后一个修改块（多行修改连在一起为一个块）的第一行。
+
+### 在 GitHub 中打开
+
+如果你正在工作的当前项目在 GitHub 上，则还有很多集成的功能可以供你使用。大多数命令将会将你正在浏览的文件
+- `Alt+G``O` 在 GitHub 上打开文件
+- `Alt+G``B` 在 GitHub 上打开 Blame 视图
+- `Alt+G``H` 在 GitHub 上打开历史视图
+- `Alt+G``C` 拷贝当前文件在 GitHub 上的 URL
+- `Alt+G``R` 在 GitHub 比较分支
+
+分支比较显示了本地工作在当前分支提交了而又不在主干分支的提交。
+
+![](http://flight-manual.atom.io/using-atom/images/open-on-github.png)
+
+## [github](http://flight-manual.atom.io/using-atom/sections/github-package/#github-package)包
+
+## 使用 Atom 编辑
+
+尽管通常使用 Atom 来编辑代码，但是 Atom 也可以用来高效的写文章，尤其是在使用一些如 Asciidoc 或者 [Markdown](https://help.github.com/articles/about-writing-and-formatting-on-github/) 一样的标记语言的时候最为突出。下面介绍 Atom 提供的一些写文章的高效工具。
+
+这里假设是写 Markdown，其它如 Asciidoc 的标记语言有相应的包来提供类似的功能。
+
+### 拼写检查
+
+如果你是基于文字的工作（文本文件、markdown等），Atom 会自动尝试去检查你的拼写。
+
+任何拼写错误的单词都会被高亮（默认在文字下方出现一个红色虚线），使用快捷键 `Ctrl+Shift+;` 来选择一个可能的修正结果（或者点击鼠标右键选择 "Correct Spelling"）
+
+![](http://flight-manual.atom.io/using-atom/images/spellcheck.png)
+
+如果希望添加更多的文件类型让 Atom 会去自动检查拼写，可以到包 “spell-check” 去添加你想要检查的任何语法。
+
+默认会检查拼写的语法是 `text.plain`，`source.gfm` 和 `text.git-commit` 但是你可以添加如 `source.asciidoc` 来检查这种文件类型。
+
+拼写检查由  [spell-check](https://github.com/atom/spell-check) 包实现。
+
+### 预览
+
+如果使用 markdown 写文章的时候， 经常需要查看当前文章显示出来是什么样子。 Atom 默认带有一个预览 markdown 的包。
+
+- `Ctrl+Shift+M` 将会打开/关闭 markdown 预览。（个人推荐使用命令面板输入 markdown 来查看关于 markdown 的命令，可以拷贝成 HTML 等等，请自行尝试，自行引入 bootstrap 样式即可）
+
+![](http://flight-manual.atom.io/using-atom/images/preview.png)
+
+当你编辑文件的时候，预览界面也会自动更新，这使得你可以非常方便的对文件进行检查。
+
+你也可以在预览面板拷贝为 HTML，该功能没有快捷键，但是你可以在命令面板搜索 "Markdown Preview Copy HTML"。
+
+Markdown 由包 [markdown-preview](https://github.com/atom/markdown-preview) 提供。
+
+### 片段（snippets）
+
+还有一些写 markdown 的预定义片段。
+
+如果你输入 `img` 然后按 `tab` 键将会得到一个markdown 格式的嵌入图像的代码 `![]()`。如果你输入 `table` 你将得到
+
+      | Header One     | Header Two     |
+      | :------------- | :------------- |
+      | Item One       | Item Two       |
+
+虽然只有少数的 markdown 片段（`b`加粗，`i`斜体，`code`代码等），但是可以免去你查询晦涩的语法文档。再次提醒，你可以在命令行输入 "Snippets: Available" 来查看当前文件类型支持的片段。
+
+## 定制化基础
+
+你应该已经感受到 Atom 内置功能的方便了，现在让我们来对它作出适当的调整。也许一些快捷键与你的使用习惯不太一样，Atom 是非常灵活的，让我们来看看如何对它进行调整。
+
+### 配置 CSON
+
+所有 Atom 的配置文件都是 CSON 格式（除了[样式](http://flight-manual.atom.io/using-atom/sections/basic-customization/#style-tweaks)和[初始化脚本](http://flight-manual.atom.io/hacking-atom/sections/the-init-file)），它是 [CoffeeScript Object Notation](https://github.com/bevry/cson#what-is-cson) 的缩写。就像 JSON，[JavaScript Object Notation](http://json.org/)，CSON 为键-值对形式组成的存储结构化数据的文本格式的简单对象。
+
+``` cson
+key:
+  key: value
+  key: value
+  key: [value, value]
+```
+
+对象是 CSON 文件的骨架，以缩进来进行划分（如上例）。值可以是字符串、数字、一个对象、布尔值、null或者以上数据类型的数组。
+
+需要注意的是，与JSON一样，CSON 的键名在每个对象中只能重复一次，如果有多个重复的键名，这最后一个会覆盖所有前面的同名键名的元素，这就使得前面的全部无效，对于Atom 配置文件也是如此：
+
+下面是错误的写法：
+
+``` cson
+# Only the second snippet will be loaded
+'.source.js':
+  'console.log':
+    'prefix': 'log'
+    'body': 'console.log(${1:"crash"});$2'
+'.source.js':
+  'console.error':
+    'prefix': 'error'
+    'body': 'console.error(${1:"crash"});$2'
+```
+
+正确的写法是：
+
+``` cson
+# Both snippets will be loaded
+'.source.js':
+  'console.log':
+    'prefix': 'log'
+    'body': 'console.log(${1:"crash"});$2'
+  'console.error':
+    'prefix': 'error'
+    'body': 'console.error(${1:"crash"});$2'
+```
+
+### 自定义风格
+
+如果你不想创建一个完整的主题，仅仅是想使用一些个人的样式文件，你可以在 `~/.atom` 目录下的 `style.less` 里面添加样式，可以通过 *Edit > Stylesheet* 按钮快速打开这个文件。
+
+例如，想要改变状态栏的颜色，你可以在 `style.less` 里面添加下面的规则：
+
+``` less
+.status-bar {
+  color: white;
+  background-color: black;
+}
+```
+
+如果要确定某个地方是什么样式，最简单的方法就是手动在开发者工具里面查看 DOM 结构。下一章将会详细教你如何使用开发者工具，但是现在我们可以先简单的了解一下。你可以通过快捷键 `Ctrl+Shift+I` 打开开发者工具，它是一个 Chromium 开发者工具面板。
+
+![](http://flight-manual.atom.io/using-atom/images/devtools.png)
+
+你可以在 Atom 中使用它来查看 DOM 结构，如果你想更新样式，你就可以去 `style.less` 中配置你想要的样式了。
+
+Less 是一个 CSS 的预处理器，可以让你更轻松的写 CSS 代码。如果不熟悉可以到 [lesscss.org](http://www.lesscss.org/) 查看。
+
+如果不喜欢写 less，你完全可以在 `style.less` 中写 CSS 样式。
+
+### 自定义快捷键
+
+Atom 快捷键映射类似于样式表（Stylesheet）。就像样式表使用选择器将样式应用于元素一样， Atom 快捷键映射在特点定的上下文中使用选择器将事件与快捷键绑定。 下面有一个摘录自 Atom 内置的快捷键映射表的简单例子：
+
+``` cson
+'atom-text-editor':
+  'enter': 'editor:newline'
+
+'atom-text-editor[mini] input':
+  'enter': 'core:confirm'
+```
+
+该映射定义了两中不同上下文中关于 `Enter` 键的意义。在正常编辑的时候，按 `Enter` 键触发 `editor:newline` 命令，它将会让编辑器插入新的一行。但是如果在选择列表的迷你编辑器中敲击了同样的键，它将基于更加详细的选择器触发 `core:confirm` 命令。
+
+默认情况下， `keymap.cson` 在 Atom 启动的时候被载入。它总是在最后被载入，所以能够让你有机会覆盖在 Atom 或者第三方包提供的快捷键映射。你可以通过 *Edit > Keymap* 按钮在编辑器中打开这个文件。
+
+你可以在设置视图中的 Keybindings 标签查看所有当前安装的 Atom 的快捷键。
+
+如果你的快捷键出了问题，快捷键的冲突解决器将给你提供帮助。你可以通过 `Ctrl+.` 打开它。它将会向你展示 Atom 检测到你按的键 和 Atom 执行的命令。
