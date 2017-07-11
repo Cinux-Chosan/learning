@@ -42,7 +42,7 @@ If you have customized your Atom keymap, you can always see the keybinding you h
 
 ### 偏好设置
 
-你可以在设置中修改 Atom 的很多设置和偏好。
+你可以在设置视图中修改 Atom 的很多偏好设置来满足个人的习惯。
 
 ![](http://flight-manual.atom.io/getting-started/images/settings.png)
 
