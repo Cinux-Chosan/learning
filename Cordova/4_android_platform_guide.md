@@ -41,4 +41,7 @@
 - Android SDK build-tools 19.1.0 或更高版本。
 - Android Support Repository（在"Extras"下面）
 
-更多详细信息查看安卓文档上的 [Installing SDK Packages](https://developer.android.com/studio/intro/update.html) 
+更多详细信息查看安卓文档上的 [Installing SDK Packages](https://developer.android.com/studio/intro/update.html)
+
+### [Setting environment variables
+](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#setting-environment-variables)
