@@ -237,3 +237,5 @@ keyPassword=SECRET2
 ## [Debugging](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#debugging)
 
 Android SDK 自带了调试工具。参考[安卓开发者文档debugging部分](https://developer.android.com/studio/debug/index.html)。此外，Android 开发者文档的 [web app 调试](http://developer.android.com/guide/webapps/debugging.html) 部分介绍了如何调试运行在 webview 中的 app。
+
+### [在 Android Studio中打开项目](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#opening-a-project-in-android-studio)
