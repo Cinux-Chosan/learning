@@ -99,7 +99,7 @@ C:\Development\android-sdk\tools
 
 Cordova 使用 [Gradle](http://www.gradle.org/) 来构建 Android 项目。如果希望查看如何使用 Ant 来构建项目，请参考较老版本的文档。Android SDK tools 25.3.0 废弃了使用 Ant 来构建项目。
 
-#### [设置 Gradle Properties](#set-gradle-properties)
+#### <a id="set-gradle-properties">设置 Gradle Properties</a>
 
 通过设置 Cordova 暴露出来的 [Gradle properties](https://docs.gradle.org/current/userguide/build_environment.html) 的值来配置 Gradle 如何构建项目。有下面的 properties 可以设置：
 
@@ -221,4 +221,4 @@ ext.postBuildExtras = {
 ### 使用 Gradle
 
 你也可以通过 Gradle properties `cdvReleaseSigningPropertiesFile` 和
- `cdvDebugSigningPropertiesFile` 指向一个 `.properties` 文件来指定 签名的 properties（参考 [设置 Gradle Properties](#set-gradle-properties)） 
+ `cdvDebugSigningPropertiesFile` 指向一个 `.properties` 文件来指定 签名的 properties（参考 [设置 Gradle Properties](#set-gradle-properties)）
