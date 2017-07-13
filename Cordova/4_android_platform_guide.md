@@ -222,3 +222,18 @@ ext.postBuildExtras = {
 
 你也可以通过 Gradle properties `cdvReleaseSigningPropertiesFile` 和
  `cdvDebugSigningPropertiesFile` 指向一个 `.properties` 文件来指定 签名的 properties（参考 [设置 Gradle Properties](#set-gradle-properties)）
+，文件格式如下：
+
+```
+storeFile=relative/path/to/keystore.p12
+storePassword=SECRET1
+storeType=pkcs12
+keyAlias=DebugSigningKey
+keyPassword=SECRET2
+```
+
+`storePassword` 和 `keyPassword` 为可选参数，如果缺省的话会提示输入。
+
+## [Debugging](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#debugging)
+
+Android SDK 自带了调试工具。参考[安卓开发者文档debugging部分](https://developer.android.com/studio/debug/index.html)。此外，Android 开发者文档的 [web app 调试](http://developer.android.com/guide/webapps/debugging.html) 部分介绍了如何调试运行在 webview 中的 app。
