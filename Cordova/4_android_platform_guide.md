@@ -99,7 +99,7 @@ C:\Development\android-sdk\tools
 
 Cordova 使用 [Gradle](http://www.gradle.org/) 来构建 Android 项目。如果希望查看如何使用 Ant 来构建项目，请参考较老版本的文档。Android SDK tools 25.3.0 废弃了使用 Ant 来构建项目。
 
-#### 设置Gradle Properties
+#### [设置 Gradle Properties](#set-gradle-properties)
 
 通过设置 Cordova 暴露出来的 [Gradle properties](https://docs.gradle.org/current/userguide/build_environment.html) 的值来配置 Gradle 如何构建项目。有下面的 properties 可以设置：
 
@@ -171,3 +171,54 @@ ext.postBuildExtras = {
 首先，你应该看 [Android app 签名要求](https://developer.android.com/studio/publish/app-signing.html)
 
 ### 使用 Flag
+
+你需要使用下面的一些参数来签名 app：
+
+| Parameter | Flag     | 作用 |
+| :------------- | :------------- | :-------------|
+| Keystore | --keystore | 保存了一组 key 的二进制文件路径 |
+| Keystore Password | --storePassword | keystore 的密码 |
+| Alias | `--alias` | 指定用于签名的私钥的id |
+| Password | `--password` | 指定私钥的密码 |
+| Type of the Keystore | `--keystoreType` | 默认：基于文件扩展名 pkcs12 或者 jks 自动检测 |
+
+这些参数可以在命令行运行 [Cordova CLI](http://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html) `build` 或者 `run` 的时候指定。
+
+**注意：** 你应该使用 `--` 来表明这些平台特异性的参数。例如：
+
+`cordova run android --release -- --keystore=../my-release-key.keystore --storePassword=password --alias=alias_name --password=password
+`
+
+### 使用 build.json
+
+另外，你需要在 build 配置文件（`build.json`）中指定它们，就像在命令行使用 `--buildConfig` 参数一样。下面有一个 build 配置文件：
+
+``` json
+{
+    "android": {
+        "debug": {
+            "keystore": "../android.keystore",
+            "storePassword": "android",
+            "alias": "mykey1",
+            "password" : "password",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "../android.keystore",
+            "storePassword": "",
+            "alias": "mykey2",
+            "password" : "password",
+            "keystoreType": ""
+        }
+    }
+}
+```
+
+发布版本的签名中，密码（password）可以缺省，在 build 的时候会提示输入密码。
+
+`build.json` 中同样支持混合和匹配的命令行参数。命令行的参数优先级较高。这样在运行命令行的时候指定参数覆盖 `build.json` 中的配置会非常方便。
+
+### 使用 Gradle
+
+你也可以通过 Gradle properties `cdvReleaseSigningPropertiesFile` 和
+ `cdvDebugSigningPropertiesFile` 指向一个 `.properties` 文件来指定 签名的 properties（参考 [设置 Gradle Properties](#set-gradle-properties)） 
