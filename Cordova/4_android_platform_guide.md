@@ -1,4 +1,4 @@
-# 安卓平台入门
+# 安卓平台指南
 
 该入门手册将讲述如何设置 SDK 环境来在安卓设备上部署Cordova app，如何在开发过程中选择性的使用安卓相关的命令行。不管在开发中你是想使用平台相关的 shell 工具还是跨平台的 Cordova CLI ，你都需要安装安卓 SDK。如果想要比较这两种开发途径，请查看 [预览（Overview）](http://cordova.apache.org/docs/en/latest/guide/overview/index.html#development-paths)。查看 CLI 的详细内容，看 [Cordova CLI Reference](http://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html)
 
@@ -239,3 +239,53 @@ keyPassword=SECRET2
 Android SDK 自带了调试工具。参考[安卓开发者文档debugging部分](https://developer.android.com/studio/debug/index.html)。此外，Android 开发者文档的 [web app 调试](http://developer.android.com/guide/webapps/debugging.html) 部分介绍了如何调试运行在 webview 中的 app。
 
 ### [在 Android Studio中打开项目](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#opening-a-project-in-android-studio)
+
+Cordova Android 项目可以在 Android IDE —— [Android Studio](https://developer.android.com/studio/index.html) 中直接打开。在使用 Andriod Studio 内置的 debugging/profiling 工具时或者开发 Android 插件的时候非常有用。但是请注意，不建议在该 IDE 中编辑代码。它会编辑你项目中 `platforms` 目录中的代码（非`www`），修改的内容很容易被覆盖。较好的方法是编辑 `www` 目录，通过运行 `cordova build` 将修改复制到目录中。
+
+Plugin 开发者希望在 IDE 中编辑本地代码，那么在通过`cordova plugin add` 将插件添加到项目的时候就需要使用 `--link` 标识，它会让`platforms` 目录中文件的修改映射到 plugin 的源文件夹中（反之亦然）。
+
+下面的步骤在 Android Studio 中打开 Cordova Android 项目：
+
+* 启动 Android Studio
+* 选择 `Import Project(Eclipse ADT,Gradle,etc)`
+
+![](http://cordova.apache.org/static/img/guide/platforms/android/asdk_import_project.png)
+
+* 选择Android platform 目录（`<your-project>/platforms/android`）
+
+![](http://cordova.apache.org/static/img/guide/platforms/android/asdk_import_select_location.png)
+
+* `Gradle Sync` 问题你可以直接选择 `Yes`
+
+一旦导入完成，你就可以直接在 Android Studio 中构建和运行 app。参考[Android Studio Overview](https://developer.android.com/studio/intro/index.html) 和 [Building and Running from Android Studio](https://developer.android.com/studio/run/index.html)
+
+![](http://cordova.apache.org/static/img/guide/platforms/android/asdk_import_done.png)
+
+## 以平台为中心的工作流（[Platform Centered Workflow](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#platform-centered-workflow)）
+
+*待后续翻译*
+
+
+## 升级
+
+升级 `cordova-android` 包的版本，参考[这里](http://cordova.apache.org/docs/en/latest/guide/platforms/android/upgrade.html)
+
+## 生命周期指南
+
+### Cordova 和 Android
+
+Android 应用程序通常由用户交互的一系列活动（[activities](http://developer.android.com/reference/android/app/Activity.html)）组成。活动可以被看作是构成应用程序的各个屏幕（活动可以被看作是构成应用程序的各个屏幕）。app 中不同的任务（task）经常都有自己的活动。每个活动在进入或离开用户的设备的过程中都有自己的生命周期。
+
+相反，Android 平台上的 Cordova 应用运行在一个嵌入在单个 Android 活动中的 Webview 中。这个活动的生命周期通过文档（document）事件暴露出来。这些事件不能确保符合 Android 的生命周期，但是它们可以为保存和恢复程序状态做引导。这些事件大致按下表映射到 Android 的回调：
+
+| Cordova 事件 | Android 中大致相同的事件    | 事件的意义 |
+| :------------- | :------------- | :------------ |
+| `deviceready`      | `onCreate()`  | 应用程序启动（非从后台启动） |
+| `pause` | `onPause()` | 应用程序被移到后台 |
+| `resume` | `onResume()` | 应用程序从后台返回到前台 |
+
+Cordova 的其它平台都有一个类似的生命周期模型，并且在用户设备中当类似的操作（action）发生的时候都会触发与之类似的事件。但是由于 Android 原生活动的原因，Android 端可能面临一些独特的挑战。
+
+### 是什么使得 Android 有所不同
+
+在Android中，操作系统可以选择在后台杀死活动，以便在内存不足的情况下释放资源。但是不幸的是，当你应用程序所驻留的活动被杀死，你应用程序驻留的 webview 也被销毁了。这种情况下你应用程序管理的任何状态都将消失。当用户再次回到你的应用程序的时候，活动和 webview 都将被操作系统重新创建。但是 Cordova 应用的状态不会自动重新载入。由于这种原因，你的应用程序就必须注意这些生命周期事件，并管理程序的状态，以确保应用程序中用户的上下文在离开应用程序时不会丢失。
