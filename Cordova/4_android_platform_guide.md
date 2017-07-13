@@ -103,4 +103,71 @@ Cordova 使用 [Gradle](http://www.gradle.org/) 来构建 Android 项目。如�
 
 通过设置 Cordova 暴露出来的 [Gradle properties](https://docs.gradle.org/current/userguide/build_environment.html) 的值来配置 Gradle 如何构建项目。有下面的 properties 可以设置：
 
-http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#setting-gradle-properties
+| Property | 作用     |
+| :------------- | :------------- |
+| `cdvBuildMultipleApks`       | 如果设置该属性，则会生成多个 APK 文件：每个本地平台都会生成生成一个 APK，由平台自身库的类型进行支持（x86. ARM. 等），如果你的项目使用了大量的本地库文件提供的功能，则这个特性非常有用，它将会大大的提高生成 APK 的文件大小。如果没有设置该属性，则只会生成应用于所有设备的单个 APK       |
+| `cdvVersionCode` | 覆盖在 `AndroidManifest.xml` 中设置的 versionCode |
+| `cdvReleaseSigningPropertiesFile` | 默认为：`release-signing.properties`，是包含发布版本的签名信息的文件路径（参考 [APP签名](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#signing-an-app)） |
+| `cdvDebugSigningPropertiesFile` | 默认为：`debug-signing.properties`，包含调试版本的签名信息文件的路径（参考[APP签名](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#signing-an-app)）。在你需要于其它开发者共享签名信息的时候非常有用 |
+| `cdvMinSdkVersion` | 覆盖在 `AndroidManifest.xml` 中设置的 `minSdkVersion` 的值。在基于 SDK 版本生成多个 APK 的时候非常有用 |
+| `cdvBuildToolsVersion` | 覆盖自动检测生成的 `android.buildToolsVersion` 的值 |
+| `cdvCompileSdkVersion` | 覆盖自动检测生成的 `android.compileSdkVersion` 的值 |
+
+你可以用下面四种方式之一来设置这些 properties：
+- 像下面这样设置环境变量：
+```
+$ export ORG_GRADLE_PROJECT_cdvMinSdkVersion=20
+$ cordova build android
+```
+- 在运行 Cordova 的 `build` 或者 `run` 的时候加上 `--gradleArg` 标识
+`cordova run android -- --gradleArg=-PcdvMinSdkVersion=20`
+- 通过在 Android platform 目录中放置一个叫 `gradle.properties` 的文件，然后在它里面像下面这样设置
+```
+# In <your-project>/platforms/android/gradle.properties
+cdvMinSdkVersion=20
+```
+- 通过在文件 [build-extras.gradle](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#extending-build-gradle) 中像下面这样设置
+```
+// In <your-project>/platforms/android/build-extras.gradle
+ext.cdvMinSdkVersion = 20
+```
+
+后面两种通过在 Android platform 目录中添加额外文件的方式不建议采用，因为它可能轻易的被覆盖或丢失。较好的方式是，在使用 build 命令的时候通过 `before_build` [hook](http://cordova.apache.org/docs/en/latest/guide/appdev/hooks/index.html) 将这两个文件从其它地方拷贝到这个目录中。
+
+#### 扩展 build.gradle
+
+如果你需要自定义 `build.gradle`文件，你不应该直接编辑它，而是创建一个叫 `build-extras.gradle` 的兄弟文件。该文件将会被 `build.gradle` 包含。该文件必须放在 android platform 目录中（`<your-project>/platforms/android`）。因此还是建议你通过于 `before_build`[hook](http://cordova.apache.org/docs/en/latest/guide/appdev/hooks/index.html) 关联的脚本将它拷贝进去。
+
+例：
+
+```
+// Example build-extras.gradle
+// This file is included at the beginning of `build.gradle`
+ext.cdvDebugSigningPropertiesFile = '../../android-debug-keys.properties'
+
+// When set, this function allows code to run at the end of `build.gradle`
+ext.postBuildExtras = {
+    android.buildTypes.debug.applicationIdSuffix = '.debug'
+}
+```
+
+注意，插件也可以通过下面的方式包含 `build-extras.gradle`文件：
+```xml
+<framework src="some.gradle" custom="true" type="gradleReference" />
+```
+
+### 设置 Version Code
+
+如果要修改生成的 apk 的 [version code](https://developer.android.com/studio/publish/versioning.html)，则可以通过设置应用中的 [config.xml](http://cordova.apache.org/docs/en/latest/config_ref/index.html) 文件中 `widget` 元素的 `android-versionCode` 属性。如果没有设置 `android-versionCode`，则version code 将使用 `version` 属性。例如：如果 version 是 `MAJOR.MINOR.PATCH` 这样的格式：
+`versionCode = MAJOR * 10000 + MINOR * 100 + PATCH`
+
+如果应用开启了 Gradle Property `cdvBuildMultipleApks`（参考[设置 Gradle Properties](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#setting-gradle-properties)），则 version code 也会被乘以 10，最后一个数字用来表明构建的 apk 体系结构（ the architecture the apk was built for）。不管版本号来自 `android-versionCode` 属性或者是使用 `version` 来生成，该乘法规则都会发生。注意：将一些 plugin 添加到项目中的时候（包括including cordova-plugin-crosswalk-webview）可能会自动设置 Gradle property。
+
+
+注意： 当更新property `android-versionCode` 的时候，直接从构建的 apk 来增加版本号是不明智的选择。你应该基于 `config.xml` 文件中的 `android-versionCode` 属性来增加版本，因为 property `cdvBuildMultipleApks` 导致版本号在构建的时候乘以 10，并且使用这个是的时候下一次版本号就变成了 100 倍（10 * 10）。
+
+## App 签名
+
+首先，你应该看 [Android app 签名要求](https://developer.android.com/studio/publish/app-signing.html)
+
+### 使用 Flag
