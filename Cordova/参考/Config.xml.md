@@ -1,7 +1,7 @@
 # [Config.xml](http://cordova.apache.org/docs/en/latest/config_ref/index.html)
 
 
-Config.xml 是 Cordova 的全局配置文件，包含了 Cordova 多个方面的行为表现。它是一个与平台无关的 XML 文件，根据 W3C的 [Web App包（Widgets）](http://www.w3.org/TR/widgets/) 规范来制定。并且扩展了一些用于指定 Cordova 合兴 API、插件、平台相关的设置。
+Config.xml 是 Cordova 的全局配置文件，包含了 Cordova 多个方面的行为表现。它是一个与平台无关的 XML 文件，根据 W3C的 [Web App包（Widgets）](http://www.w3.org/TR/widgets/) 规范来制定。并且扩展了一些用于指定 Cordova 核心 API、插件、平台相关的设置。
 
 如果是使用 Cordova CLI 创建的项目，这个文件可以在项目的顶级目录中找到:
 
