@@ -242,4 +242,4 @@ Used to specify what certain plugin parameters such as: what package to retrieve
 
 | 属性（类型） | 描述与作用 |
 | :------------- | :------------- |
-| name（string） | 必须 <br> 允许的值： `android-package` |
+| name（string） | 必须 <br> 允许的值： `android-package` `ios-package` `osx-package` `onload` <br> `android-package` `ios-package` `osx-package` |
