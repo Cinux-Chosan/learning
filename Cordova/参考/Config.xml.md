@@ -78,3 +78,95 @@ config.xml 文档的根元素。
    <description>A sample Apache Cordova application</description>
 </widget>
 ```
+
+## author
+
+指定会出现在 app-store 中用于联系的作者信息
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| email（string） | 必须 <br> 作者的 Email |
+| href （string） | 必须 <br> 作者的个人主页 |
+
+例：
+
+```xml
+<widget ...>
+   <author email="dev@cordova.apache.org" href="http://cordova.io"></author>
+</widget>
+```
+
+## content
+
+在顶级 web assets 目录中定义 app 的初始页面。默认值是 `index.html`。它一般在项目的顶级 `www` 目录中。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| src（string） | 必须 <br> 在顶级 web assets 目录中定义 app 的初始页面。默认值是 `index.html`。它一般在项目的顶级 `www` 目录中。 |
+
+例：
+
+```xml
+<widget ...>
+   <content src="startPage.html"></content>
+</widget>
+```
+
+## access
+
+定义app允许通信的外部域名集合。默认值允许任意服务器。参考 [域名白名单指南](http://cordova.apache.org/docs/en/latest/guide/appdev/whitelist/index.html)
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| origin（string）    | 必须 <br> 定义app 允许进行通信的外部服务器域名 |
+
+例：
+
+```xml
+<widget ...>
+   <access origin="*"></access>
+</widget>
+
+<widget ...>
+   <access origin="http://google.com"></access>
+</widget>
+```
+
+## allow-navigation
+
+控制 webview 可以导航到的 URL。只适用于顶级导航。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| href（string） | 必须 <br> 定义WebView 允许导航到的外部域名集合 |
+
+参考 [cordova-plugin-whitelist](http://cordova.apache.org/docs/en/latest/reference/cordova-plugin-whitelist/index.html#navigation-whitelist)
+
+例：
+
+```xml
+<!-- Allow links to example.com -->
+<allow-navigation href="http://example.com/*" />
+
+<!-- Wildcards are allowed for the protocol, as a prefix to the host, or as a suffix to the path -->
+<allow-navigation href="*://*.example.com/*" />
+```
+
+## allow-intent
+
+用于控制哪些 URL 可以通过 app 询问系统时候可以打开。默认情况下，没有外部 URL 被允许。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| href（string）       | 必须 <br> 定义哪些 URL 可以通过 app 询问系统是否打开 |
+
+参考 [cordova-plugin-whitelist](http://cordova.apache.org/docs/en/latest/reference/cordova-plugin-whitelist/index.html#intent-whitelist)
+
+例：
+
+```xml
+<allow-intent href="http://*/*" />
+<allow-intent href="https://*/*" />
+<allow-intent href="tel:*" />
+<allow-intent href="sms:*" />
+```
