@@ -170,3 +170,19 @@ config.xml 文档的根元素。
 <allow-intent href="tel:*" />
 <allow-intent href="sms:*" />
 ```
+
+## engine
+
+指定准备期间需要恢复的平台详情（Specifies details about what platform to restore during a prepare.）
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string） | 必须 <br> 需要恢复的平台名称 |
+| spec（string） | 必须 <br> 需要恢复的平台的详情。它可以是一个 `主.从.补丁` 版本号，一个包含了该平台的目录或者一个指向 git 仓库的URL。该信息将会被用于从 NPM 检索用于恢复的平台代码，本地目录或者git仓库。更多详情参考 [Platform Spec](http://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#platform-spec) |
+
+例：
+
+```xml
+<engine name="android" spec="https://github.com/apache/cordova-android.git#5.1.1" />
+<engine name="ios" spec="^4.0.0" />
+```
