@@ -186,3 +186,60 @@ config.xml 文档的根元素。
 <engine name="android" spec="https://github.com/apache/cordova-android.git#5.1.1" />
 <engine name="ios" spec="^4.0.0" />
 ```
+
+## plugin
+
+指定在准备起将需要恢复的插件。当插件使用 `--save` 标识来安装的是否，该元素会自动添加到项目的 `config.xml` 文件中。参考 [CLI reference](http://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#cordova-plugin-command)
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string） | 必须 <br> 恢复插件的名称 |
+| spec（string） | 必须 <br> 插件详情。可以是 `主.从.补丁` 格式的版本号、一个包含了插件的目录、一个插件的 git 仓库URL。该信息将会被用来从 NPM、本地目录、git仓库来检索插件代码和恢复安装插件 |
+
+例：
+
+```xml
+<plugin name="cordova-plugin-device" spec="^1.1.0" />
+<plugin name="cordova-plugin-device" spec="https://github.com/apache/cordova-plugin-device.git#1.0.0" />
+```
+
+### variable
+
+将 CLI 的变量保存起来，以便插件恢复的是否使用。在使用 `--save` 标识添加一个使用了 CLI 变量的插件的时候，该元素会被添加到 `config.xml` 中。参考 [CLI reference](http://cordova.apache.org/docs/en/latest/reference/cordova-cli/index.html#cordova-plugin-command)
+
+注意，该值只会在准备阶段将一个插件恢复到项目的时候被使用。改变这个值并不会改变当前项目该插件使用的值。如果需要改变这个值，删除插件然后通过运行 `cordova prepare` 来恢复它。参考 `plugin.xml` [preference element](http://cordova.apache.org/docs/en/latest/plugin_ref/spec.html#preference)
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string）    | 必须 <br> CLI变量名。只能包含大写子母、数字、下划线 |
+| value（string） | 必须 <br>  CLI变量的值。在准备阶段恢复插件的时候回被使用 |
+
+例：
+
+```xml
+<plugin name="cordova-plugin-device" spec="^1.1.0">
+    <variable name="MY_VARIABLE" value="my_variable_value" />
+</plugin>
+```
+
+## preference（偏好）
+
+使用 `名/值` 格式来配置各种属性。每个偏好的名字不区分大小写。许多偏好只针对于特定平台。
+
+表哥数量太大，请参考 [偏好属性表格](http://cordova.apache.org/docs/en/latest/config_ref/index.html#preference)
+
+## feature
+
+如果例使用 CLI 来构建应用程序，使用插件明空灵来开启设备 API。这不会改变顶级 `config.xml` 文件，因此该元素不适用于你的工作流程。如果你直接在 SDK 中工作并且使用平台特定的 `config.xml` 文件，你就可以使用该标签来开启“设备级” API 和外部插件。他们经常出现在特定平台的 config.xml 文件中并且自定义值。参考 API Reference 来查看如何指定每一个 feature。参考 [Plugin Development Guide](http://cordova.apache.org/docs/en/latest/guide/hybrid/plugins/index.html) 来查看插件的详细信息。注意：大多数情况你可能不需要直接设置它。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string） | 必须 <br>  需要开启的插件名|
+
+### param
+
+Used to specify what certain plugin parameters such as: what package to retrieve the plugin code from, and whether the plugin code is to be initialized during the Webview's initialization.
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string） | 必须 <br> 允许的值： `android-package` |
