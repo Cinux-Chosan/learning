@@ -91,3 +91,7 @@ function onPause() {
     // Handle the pause event
 }
 ```
+
+### IOS 怪癖
+
+`pause` 处理函数
