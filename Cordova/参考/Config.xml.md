@@ -242,4 +242,105 @@ Used to specify what certain plugin parameters such as: what package to retrieve
 
 | 属性（类型） | 描述与作用 |
 | :------------- | :------------- |
-| name（string） | 必须 <br> 允许的值： `android-package` `ios-package` `osx-package` `onload` <br> `android-package` `ios-package` `osx-package` |
+| name（string） （ios, android, osx） | 必须 <br> 允许的值： `android-package` `ios-package` `osx-package` `onload` <br> `android-package` `ios-package` `osx-package` 用来指定用于初始化插件代码的包名（通过value指定），`onload` 用来指定当 controller 初始化之后相应的插件如何被初始化 |
+| value（string 或者 boolean） （ios, android, osx） | 必须 <br> 指定用于初始化插件代码的包名（当`name`属性是 android-package、ios-package、osx-package 的时候）。指定 controller 初始化期间需要加载的插件名（当 `name` 属性是 `onload`的时候） |
+
+例：
+
+```xml
+<!-- Here is how to specify the Device API for Android projects -->
+<feature name="Device">
+   <param name="android-package" value="org.apache.cordova.device.Device" />
+</feature>
+
+<!-- Here's how the element appears for iOS projects -->
+<feature name="Device">
+   <param name="ios-package" value="CDVDevice" />
+   <param name="onload" value="true" />
+</feature>
+
+<!-- Here's how the element appears for OS X projects -->
+<feature name="Device">
+   <param name="osx-package" value="CDVDevice" />
+   <param name="onload" value="true" />
+</feature>
+```
+
+## platform
+
+当使用 CLI 来构建应用的时候，有时候有必要指定一些偏好选项或者指定某个具体平台的其他元素。使用该元素来指定配置应该只出现在一个特定平台的config.xml文件。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| name（string） | 必须 <br> 正在定义偏好的平台 |
+
+例：
+
+```xml
+<platform name="android">
+   <preference name="Fullscreen" value="true" />
+</platform>
+```
+
+## hook
+
+代表当某个确定的操作发生的时候 Corodva 将会自动调用的你的脚本文件（例如，在插件添加完成之后或者平台准备逻辑被调用的时候`cordova prepare`）。这在当你需要定义一些额外的Cordova 默认操作的时候很有用，参考 [Hooks Guide](http://cordova.apache.org/docs/en/latest/guide/appdev/hooks/index.html)
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| type（string） | 必须 <br> 指定在哪个自定义脚本调用的时候执行的操作 |
+| src（string ）| 必须 <br> 指定某个操作发生的时候需要调用的脚本的路径 |
+
+例：
+
+```xml
+<hook type="after_plugin_install" src="scripts/afterPluginInstall.js" />
+```
+
+## resource-file
+
+该标签将资源文件安装到你的平台中，与 `plugin.xml` 中类似的文件相似。该标签在 `cordova-ios@4.4.0` 及以上或者 `cordova-android@6.2.1` 及以上。
+
+| 属性（类型） | 描述与作用 |
+| :------------- | :------------- |
+| src（string） （ios， android） | 必须 <br> 相对于 `config.xml` 的文件路径 |
+| target（string） | 将会被拷贝到你目录中的文件路径 |
+
+例：
+
+For Android:
+
+```xml
+<resource-file src="FooPluginStrings.xml" target="res/values/FooPluginStrings.xml" />
+```
+
+# 一个简单的 config.xml
+
+```xml
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>HelloCordova</name>
+  <description>
+      A sample Apache Cordova application that responds to the deviceready event.
+  </description>
+  <author email="dev@cordova.apache.org" href="http://cordova.io">
+      Apache Cordova Team
+  </author>
+  <content src="index.html" />
+  <plugin name="cordova-plugin-whitelist" spec="1" />
+  <access origin="*" />
+  <allow-intent href="http://*/*" />
+  <allow-intent href="https://*/*" />
+  <allow-intent href="tel:*" />
+  <allow-intent href="sms:*" />
+  <allow-intent href="mailto:*" />
+  <allow-intent href="geo:*" />
+  <platform name="android">
+      <allow-intent href="market:*" />
+  </platform>
+  <platform name="ios">
+      <allow-intent href="itms:*" />
+      <allow-intent href="itms-apps:*" />
+  </platform>
+</widget>
+```
