@@ -26,4 +26,36 @@
 Ember Engines 当前为 pre-1.0，处于正在开发的状态。最好的获取动态的方法就是查看 [repo](https://github.com/ember-engines/ember-engines) 和保持 [Ember’s RFCs](https://github.com/emberjs/rfcs/pulls)
 
 
+# 引导
 
+## 介绍
+
+欢迎来到 Ember Engines 官方指南。该指南以在旨在为你提供一些与 Engines 相关的概念和想法，让你能够使用在 [ember-engines](https://www.npmjs.com/package/ember-engines)插件中实现的 Engine。
+
+注意，因为 Engines 还没有 1.0.0 发布版本，所以一些特性仍然只存在于 [Ember RFC process](https://github.com/emberjs/rfcs)，本指南中给出的一些 API 和示例可能会有所变动。
+
+### 本指南包含的内容
+
+- 什么是Engine
+- 理解 Engine 的核心概念
+- 如何从零开始创建 Engine
+- Engine 的基本使用（如：挂载和共享依赖）
+- 如何开启 Engines 懒加载
+
+### 本指南不包括的内容
+
+- Engine 特性和开发进度线路图
+- 转换已经存在的应用/代码来使用 Engines
+
+### 额外资源
+
+- [Ember Engines on GitHub](https://github.com/ember-engines/ember-engines)
+- [Engines RFC](https://github.com/emberjs/rfcs/pull/10)
+- [Engine Linking RFC](https://github.com/emberjs/rfcs/pull/122)
+- [Ember Asset Loader on GitHub](https://github.com/ember-engines/ember-asset-loader)
+- [Asset Manifest RFC](https://github.com/emberjs/rfcs/pull/153)
+- [Asset Loader Service RFC](https://github.com/emberjs/rfcs/pull/158)
+
+Note: 该手册是 ember-engines 0.4.0 发布版。
+
+## [什么是 Engines？](http://ember-engines.com/guide/what-are-engines)
