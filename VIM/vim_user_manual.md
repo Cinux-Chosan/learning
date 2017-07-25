@@ -458,10 +458,10 @@ Vim 有一种特殊的启动方式，可以显示两个文件的不同之处。�
 
 分隔窗口命令还可以有一个位置修饰限定词作为前辍, 用来指定新打
 开的窗口将出现的位置:
-:leftabove {cmd} 当前窗口的左边或上面
-:aboveleft {cmd} 同上
-:rightbelow {cmd} 当前窗口的右边或下面
-:belowright {cmd} 同上
-:topleft {cmd} 当前窗口的上边或左边
-:botright {cmd} 当前窗口的下面或右边
+- `:leftabove {cmd}` 当前窗口的左边或上面
+- `:aboveleft {cmd}`同上
+- `:rightbelow {cmd}` 当前窗口的右边或下面
+- `:belowright {cmd}` 同上
+- `:topleft {cmd}` 当前窗口的上边或左边
+- `:botright {cmd}` 当前窗口的下面或右边
 
