@@ -76,3 +76,7 @@ void 可以像 typeof 一样写成 `void(表达式)` 也可以直接写成 `void
 ```html
 <a href="javascript:void window.open();">打开一个新窗口</a>
 ```
+
+# **严格模式与非严格模式区别汇总**
+
+P115
