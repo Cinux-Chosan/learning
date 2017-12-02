@@ -111,6 +111,22 @@ h2 { font: bold italic 200%/1.2 Verdana, Helvetica, Arial, sans-serif; }
 
 除了 `left` `center` `right` 之外还有 `justify`，它会强制每一行的首尾与行的边界对齐，如果在行尾出现半个单词的情况，它会将该单词显示在下一行，而根据浏览器自身的实现来拉伸或压缩本行字符间距或者单词间距来促使左右边界对齐。
 
+**需要注意的是，在实践中发现，对不换行的元素使用 justify 不起作用，所以有如下实现**
+
+```css
+.justify{
+  width: 120px;
+  text-align: justify;
+}
+
+// 使用 after 的 padding 强制将 after 内容换到下一行，触发 justify 效果
+.justify:after{
+  content: "";
+  padding-left: 100%;
+  display: inline-block;
+}
+```
+
 ### 垂直对齐
 
 `line-height`
