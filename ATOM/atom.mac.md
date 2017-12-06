@@ -8,7 +8,7 @@
 
 `cmd + shift + O` 打开目录
 
-`cmd + \` 打开/关闭目录树， `tree-view:toggle`
+`cmd + \` 打开/关闭目录树，对应的命令为 `tree-view:toggle`
   - `A` 新建文件
   - `shift + A` 新建目录
   - `M` 修改
