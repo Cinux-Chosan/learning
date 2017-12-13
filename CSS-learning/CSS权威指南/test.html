@@ -4,37 +4,39 @@
     <meta charset="utf-8">
     <title></title>
     <style media="screen">
-      /*.div1{
-        width: 200px;
-        height: 200px;
-        background: #000;
-      }
-      .div2{
-        width: 100px;
+      .parent > div{
         height: 100px;
-        background: #cfb;
-        position: relative;
-      }*/
+        margin-bottom: 10px;
+        background: red;
+      }
+      .div1 + .div2:hover{
+        background: blue;
 
-      body{
-        padding: 300px;
       }
-      .div1{
-        width: 200px;
-        height: 200px;
-        background: #000;
+      .b:hover{
+        font-size: 20px;
       }
-      .div2{
-        width: 100px;
-        height: 100px;
-        background: #cfb;
-        position: relative;
+      a::first-line{
+        color: yellow;
+      }
+      span::first-line{
+        background: blue;
+      }
+      span::after{
+        content: "the end"
       }
     </style>
   </head>
   <body>
-    <div class="div1">
+    <div class="parent">
+      <div class="div1"></div>
       <div class="div2"></div>
+      <div class="div3"></div>
+      <div class="div4"></div>
+      <span>Lorem ssimus quo voluptates asperioresm? Dolores.</span>
+      <a href="1">zhang001</a>
+      <a href="1" class="b">zhang002</a>
+      <a href="1">zhang003</a>
     </div>
   </body>
 </html>
