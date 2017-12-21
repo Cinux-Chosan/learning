@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="https://unpkg.com/vue"></script>
+
+</head>
+
+<body>
+
+  <div class="page">
+    {{name}}
+    <div class="" v-bind:title="name" v-if="show" v-for="i in items" v-on:click="sayHello">
+      我是{{i}}
+      <t-comp v-bind:name="name"></t-comp>
+    </div>
+    <input type="text" name="" v-model="name">
+  </div>
+  <script type="text/javascript">
+  Vue.component('t-comp', {
+    props: ['name'],
+    template: '<li> my name is {{name}}</li>'
+  })
+    var app = new Vue({
+      el: '.page',
+      data: {
+        name: '张建军',
+        show: true,
+        items: [1, 2, 3]
+      },
+      methods: {
+        sayHello(e) {
+          debugger
+
+          console.log(e);
+        }
+      }
+    });
+
+  </script>
+</body>
+
+</html>
