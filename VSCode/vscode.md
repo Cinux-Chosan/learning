@@ -1,0 +1,22 @@
+# 命令
+
+- `⇧⌘P` 命令面板
+- `⌘P` 快捷打开文件
+- `⇧⌘M` 错误和警告
+- `F8` or `⇧F8` 在 error 之间切换
+- `⌘K M` 改变语言模式
+- `⌘K ⌘T` 改变主题
+- `⌘K ⌘S` 自定义键盘快捷键
+- `⌘,` 打开设置
+- `⇧⌘X` 打开插件管理
+- ``⌃` `` 切换终端
+- `⌘B` 切换侧边栏
+- `⌘K Z` 切换全屏
+- `⌘\` 分屏, You can also use Ctrl then click a file from the File Explorer (Cmd+click on macOS).You can use drag and drop editors to create new editor groups and move editors between groups.
+- `⌘1, ⌘2, ⌘3` 分屏间切换
+- `⇧⌘E` 快捷定位文件
+- `⌘W` 关闭 tab 标签
+- 导航
+  - `⌃Tab` 浏览整个历史记录
+  - `⌃-` 返回
+  - `⌃⇧-` 向前
