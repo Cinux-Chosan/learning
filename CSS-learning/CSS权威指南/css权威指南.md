@@ -123,6 +123,8 @@ h2 { font: bold italic 200%/1.2 Verdana, Helvetica, Arial, sans-serif; }
 
 除了 `left` `center` `right` 之外还有 `justify`，它会强制每一行的首尾与行的边界对齐，如果在行尾出现半个单词的情况，它会将该单词显示在下一行，而根据浏览器自身的实现来拉伸或压缩本行字符间距或者单词间距来促使左右边界对齐。
 
+如果 letter-spacing 是一个长度值, 则不会被 justify 覆盖, word-spacing 可能被覆盖.
+
 tip: **需要注意的是，在实践中发现，justify 的最后一行不会被拉伸到父元素两端对齐, 即对不换行的元素使用 justify 不起作用，所以需要让它换行, 有如下实现**
 
 ```css
