@@ -6,7 +6,7 @@
 - `F8` or `⇧F8` 在 error 之间切换
 - `⌘K M` 改变语言模式
 - `⌘K ⌘T` 改变主题
-- `⌘K ⌘S` 自定义键盘快捷键
+- `⌘K ⌘S` 查看键盘快捷方式, 自定义键盘快捷键
 - `⌘,` 打开设置
 - `⇧⌘X` 打开插件管理
 - ``⌃` `` 切换终端
@@ -16,7 +16,33 @@
 - `⌘1, ⌘2, ⌘3` 分屏间切换
 - `⇧⌘E` 快捷定位文件
 - `⌘W` 关闭 tab 标签
-- 导航
+- ## 导航
   - `⌃Tab` 浏览整个历史记录
   - `⌃-` 返回
   - `⌃⇧-` 向前
+  - `⌘P` 导航到文件
+- ## 编辑
+  - `⌥⌘↑ or ⌥⌘↓` 多光标
+  - `⌃J` 行合并
+  - `⇧⌥↑ or ⇧⌥↓` 向上/下复制当前行
+  - `⌃⇧⌘← or ⌃⇧⌘→` 收缩/扩展选中范围
+  - `⇧⌘O` Go to Symbol in File
+  - `⌘T` Go to Symbol in Workspace
+  - `⌃G` 跳转到指定行
+  - `⌘U` 撤销光标处操作
+  - `⌥↑ or ⌥↓` 将当前行向上或向下移动
+  - `⌘K ⌘X` 去掉尾部空格
+  - `⌘K ⌘F` 格式化选中的行, `⇧⌥F` 格式化整个文档
+  - `⌥⌘[ and ⌥⌘]` 代码折叠/展开
+  - `⌘I` 选中当前行
+  - `⌘↑ and ⌘↓` 移动到文件开始或结尾
+  - `⇧⌘V` 打开 markdown 预览, `⌘K V` 在侧边栏打开预览
+  - `⌃Space` 触发感知建议
+  - `⇧⌘F12` 选中一个 symbol(方法), 然后用该快捷键查看它的实现
+  - `F12` 选中一个 symbol(方法), 然后跳转到它的定义
+  - `⇧F12` Find All References
+  - `F2` 重命名
+- ## [Snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
+  - `File > Preferences > User Snippets` 创建自己的 snippets
+- ## [Git](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_git-integration)
+- ## [Debugging](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_debugging)
