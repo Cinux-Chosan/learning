@@ -380,6 +380,16 @@ display 只是改变了元素的显示，并没有改变元素的本质，让一
 - `run-in`
   - 如果它后面接的是一个块级框时，该 run-in 元素将成为后面那个块级框开始处的一个行内框，但是与实际上通过 span 写在后面块级框内有所不同，它是根据自身的父节点继承属性，而不是继承自紧随它后面的块级框，如果后面不是块级框，则该 run-in 元素自己生成块级框。（P209）
 
+#### 计算值
+
+如果元素是浮动或定位元素，display 的计算值可以被改变。如果一个根元素声明 display 值，计算值也可以改变。实际上，display、position、float 值会以很有意思的方式相互影响。
+|声明值|计算值|
+|---|---|
+|inline-table| table |
+|inline, run-in, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block| block |
+|所有其它值|根据指定确定|
+
+对于根元素，如果声明值为 inline-table 或 table，都会得到计算值 table，声明为 none 时则会得到同样的计算值 none，所有其它 display 值都计算为 block。
 
 # 第九章：颜色和背景
 
