@@ -384,13 +384,21 @@ display 只是改变了元素的显示，并没有改变元素的本质，让一
 
 如果元素是浮动或定位元素，display 的计算值可以被改变。如果一个根元素声明 display 值，计算值也可以改变。实际上，display、position、float 值会以很有意思的方式相互影响。
 
-|声明值|计算值|
-|---|---|
-|inline-table| table |
-|inline, run-in, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block| block |
-|所有其它值|根据指定确定|
+| 声明值 | 计算值 |
+| --- | --- |
+| inline-table | table |
+| inline, run-in, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block | block |
+| 所有其它值 | 根据指定确定 |
 
 对于根元素，如果声明值为 inline-table 或 table，都会得到计算值 table，声明为 none 时则会得到同样的计算值 none，所有其它 display 值都计算为 block。
+
+例如浮动元素会生成块级框, 即使使用 `display: inline` 也无法改变使其生成行内框.
+
+# 第八章：内边距、边框和外边距
+
+对于只包含文本的行, 能改变行间距的属性只有 line-height、font-size 和 vertical-align, margin 不会改变行内非替换元素的行高.
+
+如果不指定, border-style 就为 none, 如果 border-style 为 none, 则 border-width 会被设置为 0;
 
 # 第九章：颜色和背景
 
@@ -460,8 +468,8 @@ css2.1 引入了清除区域，它在清除元素 **上边距之上** 增加额�
 - 非根元素
   - 如果position为relative或者static，则包含块是最近的块级框、表单元格或行内块祖先框的内容边界构成。
   - 如果position为absolute，包含块设置为最近的position不是static的祖先元素，过程如下：
-    - 如果该祖先是块级元素，包含块则设置为该元素的内边距边界
-    - 如果该祖先是行内元素，包含块则设置为该祖先元素的内容边界
+    - 如果该祖先是块级元素，包含块则设置为该元素的内边距边界。
+    - 如果该祖先是行内元素，包含块则设置为该祖先元素的内容边界。
     - 如果过没有祖先，元素的包含块可以定义为初始包含块。
 
 #### 偏移属性

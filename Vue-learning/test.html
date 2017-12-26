@@ -1,44 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Document</title>
   <script src="https://unpkg.com/vue"></script>
 
 </head>
 
 <body>
 
-  <div class="page">
-    {{name}}
-    <div class="" v-bind:title="name" v-if="show" v-for="i in items" v-on:click="sayHello">
-      我是{{i}}
-      <t-comp v-bind:name="name"></t-comp>
-    </div>
-    <input type="text" name="" v-model="name">
-  </div>
-  <script type="text/javascript">
-  Vue.component('t-comp', {
-    props: ['name'],
-    template: '<li> my name is {{name}}</li>'
-  })
-    var app = new Vue({
-      el: '.page',
-      data: {
-        name: '张建军',
-        show: true,
-        items: [1, 2, 3]
-      },
-      methods: {
-        sayHello(e) {
-          debugger
+  <div id="app">
+    <ul>
+      <li v-for="n in evenNumbers">{{ n }}</li>
+    </ul>
 
-          console.log(e);
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        numbers: [1, 2, 3, 4, 5]
+      },
+      computed: {
+        evenNumbers: function () {
+          return this.numbers.filter(function (number) {
+            return number % 2 === 0
+          })
         }
       }
-    });
-
+    })
   </script>
 </body>
 
