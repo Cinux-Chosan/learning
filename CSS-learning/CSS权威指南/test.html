@@ -8,26 +8,24 @@
   <title>Document</title>
   <style>
     .container {
-      width: 500px;
-      height: 100px;
-      /* background: yellow; */
-      border: 50px solid red;
-      border-color: red transparent ;
-      border-radius: 50%;
       position: absolute;
-      top: 300px;
-      left: 200px;
-      border-style: solid none solid solid;
+      width: 400px;
+      height: 400px;
+      background: green;
     }
-    .inner{
-      width: 100px;
-      height: 100px;
-      border: 100px solid greenyellow;
-      border-color:  transparent greenyellow ;
-      border-radius: 50%;
-      position: relative;
-      left: -100px;
-      top: -100px;
+
+    .inner {
+      background: yellow;
+      position: absolute;
+      top: 50%;
+      bottom: 0;
+      left: 50%;
+      right: 0;
+      quotes: "'" '"';
+    }
+
+    .inner:after {
+      content: close-quote;
     }
   </style>
 
@@ -35,21 +33,10 @@
 
 <body>
 
-  <div class="container" id="c">
-    <!-- <div class="inner"> </div> -->
-    Lorem,<span> ipsum <img src="https://pic.cnblogs.com/face/740839/20150730225601.png" alt=""></span> dolor sit amet consectetur adipisicing elit. A itaque numquam mollitia ut earum fugiat? Ut fugit nam quod inventore nulla, deserunt perferendis! Odio blanditiis neque, hic reprehenderit deserunt ut animi maxime dolor! Aliquam tempora reprehenderit reiciendis harum exercitationem earum eius sed accusantium, fugiat rerum qui. Consectetur molestias commodi, ullam, incidunt alias excepturi vero, qui error hic adipisci illum ipsa. Rerum, nulla? Dolores quod architecto similique omnis ullam enim pariatur temporibus mollitia quibusdam. Mollitia reprehenderit facere rem nostrum, autem iure pariatur quae laborum provident eligendi explicabo. Deserunt voluptates, blanditiis doloremque expedita reprehenderit fugiat voluptatibus architecto dignissimos officia, consequuntur vel quasi!
-     </div>
-  <script>
-    var deg = 0;
-    var el = document.getElementById('c');
-    var fn = t => {
-      // el.style.transition = "all .3s";
-      el.style.transform = `rotate(${deg+=4}deg) `;
-      // el.style.width = `${100*Math.sin(t)}px`;
-      // el.style.height = `${100*Math.sin(t)}px`;
-      requestAnimationFrame(fn);
-    }
-    // requestAnimationFrame(fn);
+  <div class="container">
+    <div class="inner" md="zhangjianjun">sdkdfa <q>   lkdfl</q>
+      <p>sdkdfalkdfl</p>sdkdfalkdfl</div>
+  </div>
   </script>
 </body>
 
