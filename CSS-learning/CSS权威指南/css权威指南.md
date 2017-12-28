@@ -373,6 +373,8 @@ span 元素有边框的话, 会看到多行边框重叠的情况. 因为边框�
 
 `display`
 
+对浮动元素、定位元素和根元素, 计算值可变.
+
 display 只是改变了元素的显示，并没有改变元素的本质，让一个段落生成行内框并不会把这个段落真正变成一个行内元素。
 
 - `inline-block`
@@ -533,8 +535,61 @@ visibility 为 hidden 的元素, 其子元素可以显式指定 visibility 为 v
 
 相对定位的偏移值只是把元素从正常位置移走, 不过原来的空间不会因此消失, 而且它为后代元素建立了一个新的包含块, 这个包含块对应于元素本身所在的位置.
 
+# 第十一章: 表布局
 
-# 列表生成内容
+所有内部表元素生成矩形框, 这些框有内容、内边距、边框, 但是没有外边距. 因此不能通过指定外边距来定义单元格之间的间隔. 如果试图得单元格、行或任何其他内部表元素应用外边距, 则会被忽略(总标题除外)
+
+在 HTML 中能够确定哪些元素是表元素, 哪些不是, 但是在 XML 中则没有办法确定, 所以引入了一组 display 值:
+
+- table:
+  - 指定了一个元素定义了一个块级表, 因此它定义了一个生成框的矩形块, HTML 中就是 table 元素
+- display:
+  - inline-table
+    - 指定一个元素定义了一个行内级表. 这说明该元素定义了一个生成行内框的矩形块. 与之最接近的非表值是 inline-block. 最接近的 HTML 元素为 table, 不过默认情况下 HTML 表不是行内元素.
+  - table-row
+    - 指定一个元素为单元格行, 相应的 HTML 元素为 tr
+  - table-row-group
+    - 指定一个元素为一个或多个行的组, 相应的元素为 tbody
+  - table-header-group
+    - 与 table-row-group 相似, 只是视觉格式化时, 标题行组总是在所有其他行和行组之前显示. 规范没有定义为多个元素指定 table-header-group 会发生什么情况, 与之对应的元素是 thead
+  - table-footer-group
+    - 与 table-header-group 相似, 不过脚注行组总是在所有其他行之后显示, 如果最下面有页角标题, 要在该总标题之前显示, 规范没有定义为多个元素指定 table-footer-group 会发生什么情况, 与之对应的元素时 tfoot
+  - table-column
+    - 该值描述了一个单元格的列. 按CSS术语来说, 有这个 display 值的元素并不显示, 就好像它是 display 为  none 一样. 之所以会存在这个值, 主要是为了帮助定义列中单元格的表示, 相应的 HTML 元素为 col
+  - table-column-group
+    - 这个值声明一个元素时一个或多个列的组. 类似于 table-column 元素, table-column-group 元素, 该元素也不显示, 用于定义列祖中元素的表示. 相应的元素是 colgroup
+  - table-cell
+    - 指定一个元素表示表中的单个单元格. HTML 元素 th 和 td 都属于 table-cell
+  - table-caption
+    - 定义一个表的总标题. CSS 没有定义如果多个元素的 display 为 caption 时会发生什么. 不过 CSS 明确的警告不要在一个表或行内表元素中放多个 display 为 caption 的元素.
+
+### 列
+
+CSS 中列和列组只能接受 4 种样式: border、background、width、visibility
+
+- border
+  - 只有当 border-collapse 属性值为 collapse 时才能为列和列组设置边框. 这种情况下, 列和列组边框会参与设置各单元格边界边框样式的合并算法
+- background
+  - 只有当单元格及其行有透明背景时, 列或列组的背景才可见
+- width
+  - 定义了列或列组的最小宽度. 列或列组中单元格的内容可能要求列更宽
+- visibility
+  - 如果一个列或列组的 visibility 为 collapse, 则该列或列组中所有单元格都不显示. 从合并列跨到其他列的单元格会被裁剪. 另外, 表的总宽度会减去已合并列的宽度. 如果对列或列组将 visibility 声明为任何非 collapse 则会被忽略.
+
+...
+
+### 对齐
+
+水平对齐: text-align
+
+垂直对齐: vertical-align
+  - `top`: 单元格内容的顶端与其行顶端对齐
+  - `bottom`: 单元格底端与其行底端对齐
+  - `middle`: 单元格内容的中间与其行中间对齐
+  - `baseline`: 单元格的基线与其行的基线对齐, 行的基线由该行所有单元格中最低初始单元格基线定义, 即基线最低的一个单元格的基线决定行基线.
+
+
+# 第十二章: 列表生成内容
 
 ### 生成内容: before, after
 
