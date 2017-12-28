@@ -563,6 +563,13 @@ visibility 为 hidden 的元素, 其子元素可以显式指定 visibility 为 v
   - table-caption
     - 定义一个表的总标题. CSS 没有定义如果多个元素的 display 为 caption 时会发生什么. 不过 CSS 明确的警告不要在一个表或行内表元素中放多个 display 为 caption 的元素.
 
+#### 表布局 P365
+
+table-layout:
+
+- auto
+- fixed
+
 ### 列
 
 CSS 中列和列组只能接受 4 种样式: border、background、width、visibility
