@@ -80,3 +80,75 @@ void 可以像 typeof 一样写成 `void(表达式)` 也可以直接写成 `void
 # **严格模式与非严格模式区别汇总**
 
 P115
+
+
+
+# 第六章: 对象
+
+- Object.create(): 第一个参数为所要继承的原型, 第二个可选参数为新创建对象上属性的描述符. 第一个参数可以是 null, 此时创建的对象不继承任何东西, 甚至没有 toString 方法, 也就是说它和 `+` 进行运算也会报错.
+
+- 在 JavaScript 中, 只有查询属性的时候才会体现出继承的存在, 设置属性值的时候与继承无关, 查询属性的时候, 如果该属性不为该对象的自有属性, 则会查找原型链, 但是设置属性的时候, 该属性会被设置为对象的自有属性, 会覆盖但不影响原型属性. 但有一例外, 如果该继承属性是一个具有 setter 的访问属性, 则会调用这个访问属性而不是在该对象上创建该属性. 不过调用该 setter 的是当前对象, 而非它的原型对象, 所以在 setter 里面定义的任意属性都只针对对象本身, 而不会影响原型链.
+
+- 如果原型链上有某个属性且该属性为只读, 则不会在当前对象上创建一个同名属性来覆盖这个属性.
+
+- delete 只是断开属性和宿主对象的联系, 不会去操作属性中的属性:
+
+``` js
+var a = { p: { x: 1 }};
+var b = a;
+delete a.p;
+console.log(b.x); // 1
+```
+
+- delete 只能删除自有属性, 不能删除继承属性.
+
+### 属性检测
+
+- `in`:自有或继承属性都会返回 true
+- `hasOwnProperty`: 只有当前属性为自有属性才返回 true
+- `propertyIsEnumerable`: 自有属性且为可枚举时才返回 true
+
+### 属性的特性
+
+- 数据属性有四个特性:
+  - `value`
+  - `writable`
+  - `enumerable`
+  - `configurable`
+
+- 存取属性的四个特性:
+  - `get`
+  - `set`
+  - `enumerable`
+  - `configurable`
+
+## 6.8: 对象的三个属性
+### 原型属性
+
+原型属性来是在实例对象创建之初就设置好的, 通过对象的直接量创建的对象使用 Object.prototype 作为它的原型; 通过 new 创建的对象使用构造函数的 prototype 属性作为它的原型; 通过 Object.create 创建的对象使用第一个参数(可以是 null)作为原型.
+
+- 获得原型: `Object.getPrototypeOf()`
+- 检测是否是原型(链): `Object.isPrototypeOf()`
+
+### 类属性
+
+默认的 toString 方法(继承自 Object.prototype) 返回 `[object class]` 这种格式的字符串, 因此如果想要获得对象的类, 可以取该字符串的 8 到倒数第二个字符之间的字符串, 不过大多数对象都重新了 toString 方法, 所以只有如下调用:
+
+```js
+// P139
+function classof(o) {
+  if (o === null) return 'Null';
+  if (o === undefined) return 'Undefined';
+  return Object.prototype.toString.call(o).slice(8, -1);
+}
+```
+
+### 可扩展性
+
+对象的可扩展性用以表示是否可以给对象添加新属性.
+
+- 检测对象是否可扩展: `Object.isExtensible`
+- 使对象不可扩展: `Object.preventExtensions` , 不可逆
+- 将对象和对象上所有的自有属性都设置为不可配置: `Object.seal`, 使用 `Object.isSealed` 来检测
+  - 除了将对象设置为不可扩展外, 还可以将对象的所有自有属性都设置为不可配置. 也就是说不能给这个对象添加新属性, 而且它已有的属性也不能删除或配置, 不过它已有的可写属性依然可以设置
+- 冻结: 除了将对象设置为不可扩展和属性设置为不可配置外, 还可以将它自有的所有数据属性设置为只读(存取器属性具有 setter 的不受影响, 仍然可以通过给属性赋值调用它们): `Object.freeze`, 使用 `Object.isFrozen` 检测

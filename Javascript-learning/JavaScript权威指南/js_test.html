@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="square" width="800" height="800"></canvas>
+  <script>
+    var canvas = document.getElementById('square');
+    if (canvas) {
+      let c = canvas.getContext('2d');
+      c.beginPath();
+      c.moveTo(100, 100);
+      c.lineTo(200, 200);
+      c.lineTo(100, 200);
+      c.moveTo(300, 100);
+      c.lineTo(300, 200);
+      c.fill();
+      c.stroke();
+    }
+  </script>
+</body>
+</html>

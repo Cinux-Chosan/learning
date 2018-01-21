@@ -1,90 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
-
-  <title>Document</title>
-  <style>
-    .bounce-enter-active {
-      animation: bounce-in .5s;
-    }
-
-    .bounce-leave-active {
-      animation: bounce-in .5s reverse;
-    }
-
-    @keyframes bounce-in {
-      0% {
-        transform: scale(0);
-      }
-      50% {
-        transform: scale(1.5);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .slide-fade-enter-active {
-      transition: all .3s ease;
-    }
-
-    .slide-fade-leave-active {
-      transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-
-    .slide-fade-enter,
-    .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-
-    {
-      transform: translateX(10px);
-      opacity: 0;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js"></script>
 </head>
 
 <body>
-  <div id="app">
-    <form>
-      <label for="name">
-        姓名
-      </label>
-      <input type="text" id="name" v-model="name">
-      <label for="pwd">
-        密码
-        <input type="password" id="pwd" v-model="pwd">
-      </label>
-      <button type="button" @click="show = !show">显示/隐藏</button>
-
-      <transition :duration="{ enter: 5000, leave: 80 }" enter-active-class="animated tada" leave-active-class="animated bounceOutRight">
-        <div v-if="show">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique non mollitia veritatis dicta natus asperiores
-          nobis eos nemo, soluta voluptas dolore aut minus, nostrum dolorum eaque laudantium adipisci tenetur magni.</div>
-      </transition>
-
-    </form>
-
+  <div id="app">{{namex()}}
+    <input type="text" v-model="name">
   </div>
-
   <script>
-    var vm = new Vue({
+    let vm =  new  Vue({
       el: '#app',
-      data: function () {
-        return {
-          name: '',
-          pwd: '',
-          show: false
+      data: () => {
+        let message = 'say hello!';
+        let name = 'zhangjianjun';
+        return { message, name };
+      },
+      created() {
+      },
+      methods: {
+        namex() {
+          debugger
+          return this.name;
+        }
+      },
+      computed: {
+        time(){
+          return this.name;
         }
       }
-    });
+    })
+
   </script>
-
 </body>
-
 
 </html>
