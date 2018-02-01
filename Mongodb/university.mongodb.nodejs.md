@@ -15,3 +15,15 @@
         return db.close();
       })
     ```
+
+- sort, skip, limit:
+  - 不管我们按照什么顺序使用, mongodb 都会按照 sort, skip, limit 的顺序执行, 所以下面的代码也是先 sort, 然后 skip 然后 limit .
+
+  ```js
+   var cursor = db.collection('companies').find(query);
+    cursor.project(projection);
+    cursor.limit(30);
+    cursor.skip(10);
+    // cursor.sort({founded_year: 1});  // 单个排序 , 1 为增序, -1 为降序
+    cursor.sort([["founded_year", 1], ["number_of_employees", -1]]);  // 多个排序
+  ```
