@@ -79,7 +79,7 @@ session ID cookie 的配置对象, 默认值是 `{ path: '/', httpOnly: true, se
 
 **注意**: 设置为 `true` 时需要小心, 如果浏览器不是通过 `HTTPS` 与服务器进行连接, 那么未来标准的浏览器不会将 cookie 发送回服务器端.
 
-请注意, 我们推荐设置 `secure: true`. 然而, 它需要是开启了 https 的网站. 对 secure cookie 来说 HTTPS 是必须的.如果设置了 `secure`, 通过 HTTP 访问你的网站不会设置 cookie. 如果使用了代理访问 nodejs 程序同时设置了 `secure: true`, 那么你还需要在 express 中设置`trust proxy`:
+请注意, 我们推荐设置 `secure: true`. 然而, 它需要是开启了 https 的网站. 对 secure cookie 来说 HTTPS 是必须的.如果设置了 `secure`, 通过 HTTP 访问你的网站不会设置 cookie. 如果 nodejs 程序运行在代理（如反向代理）之后同时还设置了 `secure: true`, 那么你还需要在 express 中设置`trust proxy`:
 
 ```js
 var app = express();
@@ -109,4 +109,88 @@ if (app.get('env') === 'production') {
 app.use(session(sess));
 ```
 
-`cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见
+`cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见。在当 Express 设置了 `trust proxy` 以简化开发和生产配置的时候非常有用。
+
+#### genid
+
+用于生成一个新 session ID 的函数。它需要返回一个字符串来作为新的 Session ID。该方法会接收 `req` 作为第一个参数，因为你可能希望在生成 session ID 的时候在 `req` 上关联一些有用的值。
+
+默认值为使用 `uid-safe` 库来生成 ID 的函数。
+
+**注意**: 请生成唯一 ID 的时候小心，否则可能发出会话冲突。
+```js
+app.use(session({
+  genid: function(req) {
+    return genuuid() // use UUIDs for session IDs
+  },
+  secret: 'keyboard cat'
+}))
+```
+
+#### name
+
+session ID cookie 的名字，在服务器给客户端发送的响应中设置 cookie 和从客户端发送过来的请求中读取 cookie 的时候都会用到它。
+
+默认值是 `connect.sid`
+
+**注意**: 如果你在同一个主机名上运行了多个 app（仅仅是名称，如 `localhost` 或 `127.0.0.1`;不同的 scheme 和端口并不会产生不同的主机名），然后你需要把它们相互区分开来，最简单的方法就是为每个 app 设置不同的 name.
+
+#### proxy
+
+在设置 secure cookie 的时候请信任反向代理（通过 `X-Forwarded-Proto`头）
+
+默认值为 `undefined`
+
+- `true`
+  - 使用 `X-Forwarded-Proto`
+- `false`
+  - 所有头部都会被忽略并且只有在直接使用 TLS/SSL 连接的时候才会被认为是安全的(secure)
+- `undefined`
+  - 使用 express 的 `trust proxy`
+
+#### resave
+强制 session 回写到 session 存储，即使 session 在请求过程中并没有发生改变。这可能对于你的使用的存储来说是必要的，但是当同一个客户端发送两个并行请求到服务器并且其中一个请求对session做了改动的时候可能被另一个请求在结束的时候覆盖，即使它没有做任何改变（这种行为也取决于你使用何种存储）。
+
+默认值为 `true`，但是已经不推荐使用默认值了，并且以后可能会有所改变。请根据你自己的情况合理使用该选项。通常情况下，你可能希望使用 `false`。
+
+如何判断对于我的存储是否需要该选项？最好的方法就是检查你的存储是否实现了 `touch` 方法。如果是，那么你可以安全地设置为 `resave: false`。如果没有，并且你的存储在已经存储的 session
+ 上设置了超时日期，那么你可能更希望使用 `resave: true`;
+
+#### rolling
+
+强制在每个响应中设置 session identifier(标识符) cookie。超时会被重置为最初的 `maxAge`，即重置到期时间。
+
+默认值为 `false`
+
+**注意**: 当该选项被设置为 `true` 并且 `saveUninitialized` 选项设置为 `false`的时候，该 cookie 不会在响应中被设置为未初始化的 session。
+
+#### saveUninitialized
+
+强制一个 “uninitialized” session 保存进存储中。当一个新 session 没有发生改变的时候，它就是 uninitialized（未初始化的）。实现登录 session 的时候使用 `false` 会比较有用。减少服务器存储的使用量，或者在设置 cookie 之前符合需要权限的规则。设置 `false` 也将有助于客户在没有会话的情况下进行多个并行请求。
+
+默认值是 `true`，但是默认值已经被废弃了，在一会默认值可能会发生改变。请根据你自己的情况合理选择使用。
+
+**注意**: 如果你配合 PassportJS 一起使用 Session， Passport 将会给 session 添加一个空的 Passport 对象以便用户认证过后使用，这将会被视作 session 发生了改变，导致它被保存。这个情况在 PassportJS 0.3.0 已经得到了修复。
+
+#### secret
+
+**必选项**
+
+用于签名 session ID cookie。可以是代表单个 secret 的字符串，也可以是多个 secret 的字符串数组。如果是数组，仅第一个元素会被用于签名 session ID cookie，而在请求中验证签名时将会考虑所有元素。
+
+#### store
+
+session store 实例，默认为一个新的 `MemoryStore` 的实例。
+
+#### unset
+
+控制 unset `req.session` 的结果（如通过`delete`设置为`null`等）。
+
+默认值是`keep`.
+
+- `destroy`
+  - Session 会在服务端发送完响应过后被销毁/删除。
+- `keep`
+  - 存储中的 session 会被保留，但是请求过程中的修改会被忽略，不会被保存。
+
+#### [req.session](https://www.npmjs.com/package/express-session#reqsession)
