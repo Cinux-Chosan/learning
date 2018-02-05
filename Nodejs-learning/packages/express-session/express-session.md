@@ -194,3 +194,24 @@ session store 实例，默认为一个新的 `MemoryStore` 的实例。
   - 存储中的 session 会被保留，但是请求过程中的修改会被忽略，不会被保存。
 
 #### [req.session](https://www.npmjs.com/package/express-session#reqsession)
+
+简单的使用 `req.session` 就可以存储和访问被存储序列号为 JSON 的 session data，所以嵌套的对象也是完全没有问题的。例如下面就是一个用户定义的视图计数器：
+
+```js
+// Use the session middleware
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+ 
+// Access the session as req.session
+app.get('/', function(req, res, next) {
+  if (req.session.views) {
+    req.session.views++
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<p>views: ' + req.session.views + '</p>')
+    res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+    res.end()
+  } else {
+    req.session.views = 1
+    res.end('welcome to the session demo. refresh!')
+  }
+})
+```
