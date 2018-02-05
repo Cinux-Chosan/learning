@@ -109,4 +109,4 @@ if (app.get('env') === 'production') {
 app.use(session(sess));
 ```
 
-`cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见
+`cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见.
