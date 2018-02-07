@@ -109,6 +109,8 @@ if (app.get('env') === 'production') {
 app.use(session(sess));
 ```
 
+
+`cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见.    // 重复
 `cookie.secure` 选项也可以设置为特殊的 `auto` 值来使其根据连接自动匹配. 如果该站点既可用于 HTTP 也可用于 HTTPS, 请谨慎使用此设置, 因为一旦 cookie 设置为 HTTPS, 那么它将不再对 HTTP 可见。在当 Express 设置了 `trust proxy` 以简化开发和生产配置的时候非常有用。
 
 #### genid
@@ -200,7 +202,7 @@ session store 实例，默认为一个新的 `MemoryStore` 的实例。
 ```js
 // Use the session middleware
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
- 
+
 // Access the session as req.session
 app.get('/', function(req, res, next) {
   if (req.session.views) {
@@ -215,6 +217,7 @@ app.get('/', function(req, res, next) {
   }
 })
 ```
+
 
 #### Session.regenerate(callback)
 
