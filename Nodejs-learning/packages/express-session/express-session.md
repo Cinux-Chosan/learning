@@ -215,3 +215,179 @@ app.get('/', function(req, res, next) {
   }
 })
 ```
+
+#### Session.regenerate(callback)
+
+用于生成session。一旦完成，新 SID 和 `Session` 实例将会被初始化在 `req.session` 里，同时调用回调函数 callback。
+
+```js
+req.session.regenerate(function(err) {
+  // will have a new session here
+})
+```
+
+#### Session.destroy(callback)
+
+销毁 session 和 unset `req.session` 属性。完成过后调用 callback。
+
+```js
+req.session.destroy(function(err) {
+  // cannot access session here
+})
+```
+
+#### Session.reload(callback)
+
+从存储中重载 session 数据来填充 `req.session` 对象。完成过后调用 callback。
+
+```js
+req.session.reload(function(err) {
+  // session updated
+})
+```
+
+#### Session.save(callback)
+
+将 session 写入存储中，用内存中的内容替换存储中的内容。（存储可能做更多其他操作，请查看你所使用的存储的文档）
+
+如果 session 数据发生改变，该方法会在 HTTP 响应结束后自动调用（尽管这个行为可以通过中间件构造函数中的各种选项来改变）。因此，该方法通常不需要手动调用。
+
+在某些情况下，调用此方法很有用，例如，重定向，长连接请求或 WebSocket。
+
+```js
+req.session.save(function(err) {
+  // session saved
+})
+```
+
+#### Session.touch()
+
+更新 `.maxAge` 属性。通常不必要我们自己调用，因为 session 中间件已经为我们做了这些。
+
+#### req.session.id
+
+每个session 有唯一 ID，该属性是 `req.sessionID` 的别名，不能更改。它已经被添加到 `session` 对象中，使得 session ID 可从 `session` 对象中获取。
+
+#### req.session.cookie
+
+每个 session 有唯一 cookie 对象与之配对。这允许你为每个访问者修改cookie。例如我们可以把 `req.session.cookie.expires` 设置为 `false` 来开启配置使得cookie仅在用户代理这段时间保留。
+
+#### cookie.maxAge
+
+`req.session.cookie.maxAge` 将会返回剩余的毫秒数，我们也可以重新分配一个新值来适当地调整`.expires`属性。下面两个实际上相等：
+
+```js
+var hour = 3600000
+req.session.cookie.expires = new Date(Date.now() + hour)
+req.session.cookie.maxAge = hour
+```
+
+例如当 `maxAge` 设置为 60000（一分钟）,如果已经过了30秒，那么直到当前请求完成的时候它将返回 30000，也就是此时会调用 `req.session.touch()` 来重置 `req.session.maxAge` 为初始值。
+
+```js
+req.session.cookie.maxAge // => 30000
+```
+
+#### req.sessionID
+
+通过`req.sessionID`获得当前载入的 session 的 ID。当 session 载入/创建过后它将是一个只读的值。
+
+## Session 存储实现
+
+每个 session 存储必须是一个 `EventEmitter`并且实现了指定的方法。以下方法分为必须、推荐和可选：
+
+- 必须方法为该模块总会在存储上调用的方法
+- 推荐方法为该模块会在该方法可用的时候在存储上调用的方法
+- 可选方法为用于向用户展现统一存储格式的方法，模块不会调用它们。
+
+访问 [connect-redis](http://github.com/visionmedia/connect-redis) 查看实现示例。
+
+### store.all(callback)
+
+**可选**
+
+该方法用于以数组的形式获取存储中的所有 session。 callback 的形式为 `callback(error, sessions)`
+
+### store.destroy(sid, callback)
+
+**必须**
+
+该方法用于 销毁/删除 存储中通过 session ID(`sid`) 指定的 session。一旦销毁，就会调用 `callback(error)`
+
+### store.clear(callback)
+
+**可选**
+
+该方法用于删除存储中的所有 session。一旦完成就会调用 `callback(error)`
+
+### store.length(callback)
+
+**可选**
+
+获取存储中 session 的数目。回调函数的格式为 `callback(error, len)`
+
+### store.get(sid, callback)
+
+**必须**
+
+从存储中获取通过 session ID（`sid`）指定的 session。回调函数格式为`callback(error, session)`
+
+如果找到了session，那么`session`参数就是该session，否则为 `null` 或 `undefined`（没有error）。一个特例是当 `error.code === 'ENOENT'` 的时候就像 `callback(null, null)` 一样。
+
+### store.set(sid, session, callback)
+
+**必须**
+
+通过指定的 session ID(`sid`) 和 session 对象更新或插入一个 session。如果完成则调用`callback(error)`
+
+### store.touch(sid, session, callback)
+
+**推荐**
+
+通过指定的 session ID(`sid`) 和 session 对象来"触摸"一个session，如果一旦完成则调用 `callback(error)`
+
+主要用于当存储将会自动删除空闲的 session 之前，该方法用于通知存储这个 session 还处于活跃状态（在程序中），可能重置空闲session的计时器。
+
+## [Compatible Session Stores](https://www.npmjs.com/package/express-session#compatible-session-stores)
+
+以下模块实现了与当前模块兼容的存储。需要自己添加：
+
+## [示例](https://www.npmjs.com/package/express-session#example)
+
+使用 express-session 统计页面用户浏览量的示例：
+
+```js
+var express = require('express')
+var parseurl = require('parseurl')
+var session = require('express-session')
+ 
+var app = express()
+ 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}))
+ 
+app.use(function (req, res, next) {
+  if (!req.session.views) {
+    req.session.views = {}
+  }
+ 
+  // get the url pathname
+  var pathname = parseurl(req).pathname
+ 
+  // count the views
+  req.session.views[pathname] = (req.session.views[pathname] || 0) + 1
+ 
+  next()
+})
+ 
+app.get('/foo', function (req, res, next) {
+  res.send('you viewed this page ' + req.session.views['/foo'] + ' times')
+})
+ 
+app.get('/bar', function (req, res, next) {
+  res.send('you viewed this page ' + req.session.views['/bar'] + ' times')
+})
+```
