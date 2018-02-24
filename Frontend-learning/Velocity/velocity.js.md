@@ -1,5 +1,7 @@
 # [Velocity.js](http://velocityjs.org/)
 
+翻译自[Velocity.js](http://velocityjs.org/), 翻译时未确认版本, 文档版本不详.
+
 ## 概览
 
 Velocity 是一个与 jQuery 的 $.animate() 一样的动画引擎。它不依赖 jQuery，它性能比 jQuery 好。
