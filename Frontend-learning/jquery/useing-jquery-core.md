@@ -617,5 +617,183 @@ $( "#myDiv a:first" ).attr( "href", function( idx, href ) {
 });
 ```
 
+# [The jQuery Object](http://learn.jquery.com/using-jquery-core/jquery-object/)
+
+当创建或选中已经存在的元素的时候, jQuery 返回一个包含元素的集合. 许多 jQuery 新手会假定这个集合是一个数组. 毕竟它有 基于0 的 DOM 元素序列, 一些类似数组的方法, 和`.length` 属性. 实际上, jQuery 对象比数组更复杂.
+
+## DOM and DOM Elements
+
+DOM 代表 HTML 文档. 它包含许多 DOM 元素. 在高层次上，DOM元素可以被认为是Web页面的“一块”, 它可能包含文本和/或其他DOM元素。DOM元素由类型描述, 如 `<div>` `<a>` `<p>`, 还有一些属性, 如 `src` `href` `class`. 更详细的描述可以参考 [the official DOM specification from the W3C](http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-745549614)
+
+元素有像任何 JavaScript 对象的属性. 这些对象属性(property)中有的是像 `.tagName` 这样的属性(attribute) 和 `.appendChild()` 这样的方法. 这些属性是通过 JavaScript 与页面交互的唯一途径.
+
+## The jQuery Object
+
+结果表明, 直接使用 DOM 元素可能会非常麻烦. jQuery 对象定义了许多方法来为开发人员提供更加平滑的过渡. jQuery 对象的好处包括:
+
+- 兼容性: 元素方法的实现因浏览器供应商和版本而异,下面的代码片段期望设置一个保存在 `target` 中 `<tr>` 元素的内部 HTML:
+
+```js
+var target = document.getElementById( "target" );
+
+target.innerHTML = "<td>Hello <b>World</b>!</td>";
+```
+
+这种方法在多数情况下会有效, 但是在大多数 IE 中却会失败. 这种情况下, [建议的方法](http://www.quirksmode.org/dom/w3c_html.html)是使用纯DOM方法替代。通过将 target 元素封装成一个 jQuery 对象, 这些边缘情况将得到处理, 并且在所有支持的浏览器中得到预期的实现:
+
+```js
+// Setting the inner HTML with jQuery.
+
+var target = document.getElementById( "target" );
+
+$( target ).html( "<td>Hello <b>World</b>!</td>" );
+```
+
+- 方便: 还有许多常见的DOM操作用例，用纯DOM方法很难完成。例如, 将 `newElement` 插入到 `target` 元素后面需要相当冗长的 DOM 方法:
+
+```js
+// Inserting a new element after another with the native DOM API.
+
+var target = document.getElementById( "target" );
+
+var newElement = document.createElement( "div" );
+
+target.parentNode.insertBefore( newElement, target.nextSibling );
+```
+
+通过将`target`元素封装在jQuery对象中，同样的任务变得简单得多：
+
+```js
+// Inserting a new element after another with jQuery.
+
+var target = document.getElementById( "target" );
+
+var newElement = document.createElement( "div" );
+
+$( target ).after( newElement );
+```
+
+在大多数情况下，这些细节都是你和你的目标之间简单的“陷阱”。
+
+## Getting Elements Into the jQuery Object
+
+当使用CSS选择器调用jQuery函数时，它将返回一个jQuery对象，包装与此选择器匹配的任何元素。例如：
+
+```js
+// Selecting all <h1> tags.
+
+var headings = $( "h1" );
+```
+
+此时 `headings` 是一个包含页面中所有 `<h1>` 标签的 jQuery 元素. 可以通过检查`headings`的`.length`属性来验证这一点。
+
+```js
+// Viewing the number of <h1> tags on the page.
+
+var headings = $( "h1" );
+
+alert( headings.length );
+```
+
+检查`.length`属性是确保选择器成功匹配一个或多个元素的常用方法。
+
+如果仅仅需要选择第一个 heading 元素, 最简单的方法是使用 `.eq()` 方法:
+
+```js
+// Selecting only the first <h1> element on the page (in a jQuery object)
+
+var headings = $( "h1" );
+
+var firstHeading = headings.eq( 0 );
+```
+
+现在 firstHeading 就是包含页面中第一个 `<h1>` 元素的jQuery 对象, 它有 `.html()` 和 `.after()` 方法. jQuery 也有一个名叫 `.get()` 的方法提供了相关功能, 它返回的是 DOM 元素而非封装过后的 jQuery DOM 元素.
+
+```js
+// Selecting only the first <h1> element on the page.
+
+var firstHeadingElem = $( "h1" ).get( 0 );
+```
+
+另外，因为jQuery对象是类数组的，所有它支持通过数组下标进行索引：
+
+```js
+// Selecting only the first <h1> element on the page (alternate approach).
+
+var firstHeadingElem = $( "h1" )[ 0 ];
+```
+
+无论哪种情况，`firstHeadingElem` 包含原生 DOM 元素, 也就意味着它有类似于 `.innerHTML` 的 DOM 属性 和 `.appendChild()` 方法. 但没有 `.html()` 或者 `.after()` 这样的 jQuery 方法. 尽管 `firstHeadingElem` 元素使用起来更加困难, 但是有些情况下需要使用它, 比如说比较实例.
+
+## Not All jQuery Objects are Created ===
+
+一个关于 jQuery 封装重要的表现就是, 每个封装都是唯一的. 即使jQuery对象是用相同的选择器创建的，或者包含对完全相同的DOM元素的引用，也是如此。
+
+```js
+// Creating two jQuery objects for the same element.
+
+var logo1 = $( "#logo" );
+var logo2 = $( "#logo" );
+
+// Comparing jQuery objects.
+
+alert( $( "#logo" ) === $( "#logo" ) ); // alerts "false"
+```
+
+然而, 两个jQuery 对象包含相同的 DOM 元素. `.get()` 方法可以用于获取它们:
+
+```js
+// Comparing DOM elements.
+
+var logo1 = $( "#logo" );
+var logo1Elem = logo1.get( 0 );
+
+var logo2 = $( "#logo" );
+var logo2Elem = logo2.get( 0 );
+
+alert( logo1Elem === logo2Elem ); // alerts "true"
+```
+
+许多开发人员对 jQuery对象的变量的名称习惯上加上一个 `$` , 它只是用于区分 jQuery 对象和一般变量。可以重新编写前面的示例以遵循此约定：
+
+```js
+// Comparing DOM elements (with more readable variable names).
+
+var $logo1 = $( "#logo" );
+var logo1 = $logo1.get( 0 );
+
+var $logo2 = $( "#logo" );
+var logo2 = $logo2.get( 0 );
+
+alert( logo1 === logo2 ); // alerts "true"
+```
+
+这段代码和前一个一样, 但是更容易阅读.
+
+不管使用什么命名约定，区分jQuery对象和原生 DOM元素 都是非常重要的。原生 DOM方法和属性不存在于jQuery对象上，反之亦然。
+
+## jQuery Objects Are Not "Live"
+
+给定页面上所有段落元素的jQuery对象：
+
+```js
+// Selecting all <p> elements on the page.
+
+var allParagraphs = $( "p" );
+```
+
+当页面中的 `<p>` 元素从文档中被添加或删除之后, `allParagraphs` 代表的元素不会自动进行更新. 如果文档中相应的选中元素发生了变化, 可以重新进行元素选取以得到页面中最新的元素集合.
+
+```js
+// Updating the selection.
+
+allParagraphs = $( "p" );
+```
+
+## Wrapping Up
+
+尽管DOM元素提供了创建交互式Web页面所需的所有功能。jQuery对象包装这些元素以平滑这种体验并使普通任务变得轻松。在用jQuery创建或选择元素时，结果总是封装在一个新的jQuery对象中。需要使用原生 DOM 元素的情况可以使用 `.get()` 方法和数组下标的方式获取.
+
+
 
 
