@@ -402,3 +402,220 @@ $( "form :selected" );
 - [:file](http://api.jquery.com/file-selector/)
 
 所有以上类型都会有关于性能的标注, 更深入的信息请查看 [API 文档](http://api.jquery.com/category/selectors/form-selectors/)
+
+# [Working with Selections](http://learn.jquery.com/using-jquery-core/working-with-selections/)
+
+## Getters & Setters
+
+一些 jQuery 方法可以用来读取或设置选中元素的值. 如果带参数, 那么它就将参数的值设置到该元素上, 此时当做 setter 使用. 如果不带参数, 就从元素中读取值, 此时当做 getter 使用. setter 对所有的选中的元素起作用, 而 getter 只返回所有选中的元素中第一个的值. 只有一个例外, `.text()` 返回所有元素的值.
+
+```js
+// The .html() method sets all the h1 elements' html to be "hello world":
+$( "h1" ).html( "hello world" );
+```
+
+```js
+// The .html() method returns the html of the first h1 element:
+$( "h1" ).html();
+// > "hello world"
+```
+
+setter 返回 jQuery 对象用于链式调用, getter 返回你期望得到的值. 所以 getter 上不能进行链式调用.
+
+```js
+// Attempting to call a jQuery method after calling a getter.
+// This will NOT work:
+$( "h1" ).html().addClass( "test" );
+```
+
+## Chaining
+
+如果你调用的方法返回 jQuery 对象, 你可以连续调用, 这就是链式调用 "chaining"
+
+```js
+$( "#content" ).find( "h3" ).eq( 2 ).html( "new text for the third h3!" );
+```
+
+多行可以提升可读性:
+
+```js
+$( "#content" )
+    .find( "h3" )
+    .eq( 2 )
+    .html( "new text for the third h3!" );
+```
+
+如果在链式中间修改了选择元素, jQuery 也提供 `.end()` 方法来回到最初的所选择的元素上:
+
+```js
+$( "#content" )
+    .find( "h3" )
+    .eq( 2 )
+        .html( "new text for the third h3!" )
+        .end() // Restores the selection to all h3s in #content
+    .eq( 0 )
+        .html( "new text for the first h3!" );
+```
+
+链式调用非常有用, 这个特性自从在 jQuery 中流行起来过后, 已经在很多其它库中也得到了支持. 但是需要注意的是, 太长的链式调用会非常难以修改和调试, 也没有硬性规定需要写多长.
+
+# [Manipulating Elements ](http://learn.jquery.com/using-jquery-core/manipulating-elements/)
+
+完整的 jQuery 操纵方法文档参考 [jQuery 操作 DOM API 文档](http://api.jquery.com/category/manipulation/)
+
+## Getting and Setting Information About Elements
+
+有很多方法可以修改已经存在的元素. 最常见的就是改变元素中的 HTML 或者元素的属性. jQuery 为这些功能提供了简单易用,跨浏览器的支持. 你也可以使用这些方法获取这些属性. 这些方法你可以用来读取和设置元素:
+
+- `.HTML()`: 读取或设置 HTML 内容
+- `.text()`: 读取或设置文本内容, HTML 会被当作文本处理
+- `.attr()`: 读取或设置属性值
+- `.width()`: 以整数读取或设置元素的像素宽度
+- `.height()`: 以整数读取或设置元素的像素高度
+- `.position()`: 以一个对象的方式返回一个元素相对于它第一个定位祖先(position 不为 static)的定位信息, 只能读取不能用于设置值
+- `.val()`: 读取或设置表单元素的值
+
+再次提醒, 作为 setter 使用时是针对所有选中的元素. 如果只想对其中某个元素进行操作, 请确保在操作前提取或过滤出该元素.
+
+```js
+// Changing the HTML of an element.
+$( "#myDiv p:first" ).html( "New <strong>first</strong> paragraph!" );
+```
+
+## Moving, Copying, and Removing Elements
+
+虽然在DOM上移动元素的方法多种多样，但通常有两种方法：
+
+- 相对于其他元素放置选中元素, insertAfter
+- 相对于选中元素放置其他元素, after
+
+例如, jQuery 提供 `.insertAfter` 和 `.after`. `.insertAfter` 方法将选中元素放置在参数所指定的元素后面, `.after()` 方法将参数所指定的元素放到选中元素后面. 其他几种方法遵循这种模式：`.insertBefore()` 和 `.before()`, `.appendTo()` 和 `.append()`, `.prependTo()` 和 `.prepend()`.
+
+使用何种方法取决于你选择了什么元素, 以及是否需要存储添加到页面中的这些元素的引用. 如果你需要存储引用, 你总是希望使用第一种方式 - 即将选中的元素相对于其它元素进行放置 - 因为它会返回你放置的元素. 这种情况下应该使用的是 `.insertAfter()`, `.insertBefore()`, `.appendTo()`, 和 `.prependTo()`.
+
+```js
+// Moving elements using different approaches.
+
+// Make the first list item the last list item:
+var li = $( "#myList li:first" ).appendTo( "#myList" );
+
+// Another approach to the same problem:
+$( "#myList" ).append( $( "#myList li:first" ) );
+
+// Note that there's no way to access the list item
+// that we moved, as this returns the list itself.
+```
+
+## Cloning Elements
+
+`.appendTo` 这些方法会移动元素, 有时候我们需要使用元素的副本, 此时首先需要使用 `.clone()`:
+
+```js
+// Making a copy of an element.
+
+// Copy the first list item to the end of the list:
+$( "#myList li:first" ).clone().appendTo( "#myList" );
+```
+
+如果希望复制相关的数据和事件, 需要给 `.clone()` 传递 `true` 作为参数.
+
+## Removing Elements
+
+有两种方式移除页面中的元素: `.remove()` 和 `.detach()`. 当你想要永久移除元素的时候使用 `.remove()`. `.remove` 会返回移除的元素, 如果再将元素放回到页面中时, 它不会再有与之关联的事件和数据.
+
+如果你需要数据和事件, 使用 `.detach()`, 它也会返回选中的元素, 同时它会保持元素的数据和事件, 所以你可以在之后把它们放回到页面中.
+
+如果对元素有大量操作的时候, 使用`.detach()` 方法会比较好. 这种情况下, 它可以从页面中移除元素, 然后在代码中修改, 再重新载入到页面中去. 它减少了昂贵的 "DOM touches" 同时保持了元素的数据和事件.
+
+如果你是希望页面中保持元素, 只是移除它的内容, 可以使用 `.empty()` 移除元素内部的 HTML.
+
+## Creating New Elements
+
+jQuery 提供了一种简洁而优雅的方式来使用 `$()` 创建新的元素:
+
+```js
+// Creating new elements from an HTML string.
+$( "<p>This is a new paragraph</p>" );
+$( "<li class=\"new\">new list item</li>" );
+```
+
+```js
+// Creating a new element with an attribute object.
+$( "<a/>", {
+    html: "This is a <strong>new</strong> link",
+    "class": "new",
+    href: "foo.html"
+});
+```
+
+上面的 class 之所以带有引号, 是因为它是js中的[保留字](https://mathiasbynens.be/notes/reserved-keywords).
+
+创建好新的元素之后, 有多种方法将它添加到页面中去:
+
+```js
+// Getting a new element on to the page.
+
+var myNewElement = $( "<p>New element</p>" );
+
+myNewElement.appendTo( "#content" );
+
+myNewElement.insertAfter( "ul:last" ); // This will remove the p from #content!
+
+$( "ul" ).last().after( myNewElement.clone() ); // Clone the p so now we have two.
+```
+
+新创建的元素并不需要存储到变量中去, 你可以在 `$()` 创建完成过后直接添加到页面中去. 然而, 大多数情况还是需要, 这样你就不需要在后续操作中去选取创建的元素了.
+
+你也可以在添加到页面的时候创建该元素, 但是这样你就不能对它进行引用了.
+
+```js
+// Creating and adding an element to the page at the same time.
+$( "ul" ).append( "<li>list item</li>" );
+```
+
+这种创建和添加元素的方法非常方便, 因此，很容易忘记反复添加 DOM 会带来巨大的性能代价。如果需要添加许多的元素到同一个容器元素中去, 你最好将它们连接成单个的 HTML 字符串, 然后再将这个字符串添加到页面中去而非每次添加一个元素. 使用数组将所有片段集合在一起，然后将它们追加到一个字符串中：
+
+```js
+var myItems = [];
+var myList = $( "#myList" );
+
+for ( var i = 0; i < 100; i++ ) {
+    myItems.push( "<li>item " + i + "</li>" );
+}
+
+myList.append( myItems.join( "" ) );
+```
+
+## Manipulating Attributes
+
+jQuery 的属性操作功能非常广泛。根本的修改是简单的，但是，attr()方法还允许更复杂的操作. 它可以设置一个显式值，也可以使用函数的返回值设置一个值。当使用函数返回值时，函数会收到两个参数：属性改变的元素的基于零的索引，以及属性的当前值被更改。
+
+```js
+// Manipulating a single attribute.
+$( "#myDiv a:first" ).attr( "href", "newDestination.html" );
+```
+
+```js
+// Manipulating multiple attributes.
+$( "#myDiv a:first" ).attr({
+    href: "newDestination.html",
+    rel: "nofollow"
+});
+```
+
+```js
+// Using a function to determine an attribute's new value.
+$( "#myDiv a:first" ).attr({
+    rel: "nofollow",
+    href: function( idx, href ) {
+        return "/new/" + href;
+    }
+});
+
+$( "#myDiv a:first" ).attr( "href", function( idx, href ) {
+    return "/new/" + href;
+});
+```
+
+
+
