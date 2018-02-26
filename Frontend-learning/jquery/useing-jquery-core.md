@@ -794,6 +794,53 @@ allParagraphs = $( "p" );
 
 尽管DOM元素提供了创建交互式Web页面所需的所有功能。jQuery对象包装这些元素以平滑这种体验并使普通任务变得轻松。在用jQuery创建或选择元素时，结果总是封装在一个新的jQuery对象中。需要使用原生 DOM 元素的情况可以使用 `.get()` 方法和数组下标的方式获取.
 
+# [Traversing](http://learn.jquery.com/using-jquery-core/traversing/)
 
+使用 jQuery 选择完元素过后, 你根据选择的元素进行遍历. 遍历可分为三个基本部分: parents, children, siblings. jQuery有很多易于使用的方法来处理所有这些部分。每个这些方法可以传入一个可选的字符串选择器, 还有一些可以使用其它的 jQuery 对象来过滤你的选项。注意并参考关于[遍历的API文档](http://api.jquery.com/category/traversing/)以了解有哪些参数的变化。
 
+## Parents
 
+根据选择的元素查找父级元素的方法包括: `.parent()`, `.parents()`, `.parentsUntil()`, 和 `.closest()`.
+
+```html
+<div class="grandparent">
+    <div class="parent">
+        <div class="child">
+            <span class="subchild"></span>
+        </div>
+    </div>
+    <div class="surrogateParent1"></div>
+    <div class="surrogateParent2"></div>
+</div>
+```
+
+```js
+// Selecting an element's direct parent:
+
+// returns [ div.child ]
+$( "span.subchild" ).parent();
+
+// Selecting all the parents of an element that match a given selector:
+
+// returns [ div.parent ]
+$( "span.subchild" ).parents( "div.parent" );
+
+// returns [ div.child, div.parent, div.grandparent ]
+$( "span.subchild" ).parents();
+
+// Selecting all the parents of an element up to, but *not including* the selector:
+
+// returns [ div.child, div.parent ]
+$( "span.subchild" ).parentsUntil( "div.grandparent" );
+
+// Selecting the closest parent, note that only one parent will be selected
+// and that the initial element itself is included in the search:
+
+// returns [ div.child ]
+$( "span.subchild" ).closest( "div" );
+
+// returns [ div.child ] as the selector is also included in the search:
+$( "div.child" ).closest( "div" );
+```
+
+## Children
