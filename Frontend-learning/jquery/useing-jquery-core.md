@@ -844,3 +844,657 @@ $( "div.child" ).closest( "div" );
 ```
 
 ## Children
+
+查找选中元素的子元素的方法包括`.children()` 和 `.find()`. 区别在于选择的子结构的层级有多深。 `.children()` 仅仅操作直接的子节点, `.find()` 可以递归查找它的后代节点.
+
+```js
+// Selecting an element's direct children:
+
+// returns [ div.parent, div.surrogateParent1, div.surrogateParent2 ]
+$( "div.grandparent" ).children( "div" );
+
+// Finding all elements within a selection that match the selector:
+
+// returns [ div.child, div.parent, div.surrogateParent1, div.surrogateParent2 ]
+$( "div.grandparent" ).find( "div" );
+```
+
+## Siblings
+
+除了前面的方法, 剩下的基本上就是查找兄弟节点的了. 就遍历的方向而言，有几个基本的方法。通过 `.prev()` 查找前一个元素, 通过 `.next()` 查找后一个元素, 通过 `.siblings()` 查找所有兄弟节点. 还有一些基于这几个的方法: `.nextAll()` `.nextUnitl()` `.prevAll()` `.prevUntil()`
+
+```js
+// Selecting a next sibling of the selectors:
+
+// returns [ div.surrogateParent1 ]
+$( "div.parent" ).next();
+
+// Selecting a prev sibling of the selectors:
+
+// returns [] as No sibling exists before div.parent
+$( "div.parent" ).prev();
+
+// Selecting all the next siblings of the selector:
+
+// returns [ div.surrogateParent1, div.surrogateParent2 ]
+$( "div.parent" ).nextAll();
+
+// returns [ div.surrogateParent1 ]
+$( "div.parent" ).nextAll().first();
+
+// returns [ div.surrogateParent2 ]
+$( "div.parent" ).nextAll().last();
+
+// Selecting all the previous siblings of the selector:
+
+// returns [ div.surrogateParent1, div.parent ]
+$( "div.surrogateParent2" ).prevAll();
+
+// returns [ div.surrogateParent1 ]
+$( "div.surrogateParent2" ).prevAll().first();
+
+// returns [ div.parent ]
+$( "div.surrogateParent2" ).prevAll().last();
+```
+
+使用 `.siblings()` 选择所有兄弟节点:
+
+```js
+// Selecting an element's siblings in both directions that matches the given selector:
+
+// returns [ div.surrogateParent1, div.surrogateParent2 ]
+$( "div.parent" ).siblings();
+
+// returns [ div.parent, div.surrogateParent2 ]
+$( "div.surrogateParent1" ).siblings();
+```
+
+[Traversal documentation on api.jquery.com](http://api.jquery.com/category/traversing/tree-traversal/) 查看完整文档.
+
+在遍历层级比较深的情况下需要小心, 即使你是编写整个项目前后端的人也很难保证在复杂的遍历过程中文档结构保持不变. 分一或两步遍历是好的，但最好避免从一个容器到另一个容器的遍历。
+
+# [CSS, Styling, & Dimensions](http://learn.jquery.com/using-jquery-core/css-styling-dimensions/)
+
+jQuery包含了获取和设置元素CSS属性的快捷方法：
+
+```js
+// Getting CSS properties.
+
+$( "h1" ).css( "fontSize" ); // Returns a string such as "19px".
+
+$( "h1" ).css( "font-size" ); // Also works.
+```
+
+```js
+// Setting CSS properties.
+
+$( "h1" ).css( "fontSize", "100px" ); // Setting an individual property.
+
+// Setting multiple properties.
+$( "h1" ).css({
+    fontSize: "100px",
+    color: "red"
+});
+```
+
+注意第二行上的参数的样式 - 它是一个包含多个属性的对象. 用于一次性设置多个 CSS 属性.
+
+通常包含 CSS 横线的属性在 JavaScript 中需要使用驼峰变量. 例如, `font-size` 在 JavaScript 中需要使用 `fontSize`. 但是在作为字符串参数传递给`.css()`方法的时候并不一定要这么做, 这种情况下带横线的形式和驼峰形式都可以.
+
+It's not recommended to use `.css()` as a setter in production-ready code, but when passing in an object to set CSS, CSS properties will be camelCased instead of using a hyphen.
+
+## Using CSS Classes for Styling
+
+`.css()` 作为 getter 使用是非常有价值的, 但是不推荐作为 setter 使用, 因为通常最好的方式是不要将表象信息放到 JavaScript 代码里面, 而应该是用 CSS 规则编写相应的 class, 然后修改元素的 class.
+
+```js
+// Working with classes.
+
+var h1 = $( "h1" );
+
+h1.addClass( "big" );
+h1.removeClass( "big" );
+h1.toggleClass( "big" );
+
+if ( h1.hasClass( "big" ) ) {
+    ...
+}
+```
+
+class 还可以用于存储关于某个元素的状态信息，比如指示一个元素是否被选中。
+
+## Dimensions
+
+jQuery提供了获取和修改元素的尺寸和位置信息的各种方法。
+
+下面的例子展示了一个简单的示例, 详细信息请参考: [dimensions documentation on api.jquery.com](http://api.jquery.com/category/dimensions/)
+
+```js
+// Basic dimensions methods.
+
+// Sets the width of all <h1> elements.
+$( "h1" ).width( "50px" );
+
+// Gets the width of the first <h1> element.
+$( "h1" ).width();
+
+// Sets the height of all <h1> elements.
+$( "h1" ).height( "50px" );
+
+// Gets the height of the first <h1> element.
+$( "h1" ).height();
+
+
+// Returns an object containing position information for
+// the first <h1> relative to its "offset (positioned) parent".
+$( "h1" ).position();
+```
+
+# [Data Methods](http://learn.jquery.com/using-jquery-core/data-methods/)
+
+经常需要存储元素的数据信息。 在原生 JavaScript 中, 你可以通过给 DOM 元素添加属性来达到目的, 但是你必须处理一些浏览器中的内存泄漏。jQuery提供了一种直接存储与元素相关的数据的方法，它能为你管理内存问题。
+
+```js
+// Storing and retrieving data related to an element.
+
+$( "#myDiv" ).data( "keyName", { foo: "bar" } );
+
+$( "#myDiv" ).data( "keyName" ); // Returns { foo: "bar" }
+```
+
+任何数据都可以存储在元素上, 使用 `.data()` 来操作数据.
+
+例如, 你希望在列表项和它内部的 `<div>` 之间建立一种关系. 这种关系可以在每次列表项目被需要时建立，但是更好的方法是只建立一次关系, 然后使用 `.data()` 将信息存放到 `<div>` 上
+
+```js
+// Storing a relationship between elements using .data()
+
+$( "#myList li" ).each(function() {
+
+    var li = $( this );
+    var div = li.find( "div.content" );
+
+    li.data( "contentDiv", div );
+
+});
+
+// Later, we don't have to find the div again;
+// we can just read it from the list item's data
+var firstLi = $( "#myList li:first" );
+
+firstLi.data( "contentDiv" ).html( "new content" );
+```
+
+除了给 `.data()` 传递单个键值对来存储数据, 还可以传入包含多个键值对的对象.
+
+# [Utility Methods](http://learn.jquery.com/using-jquery-core/utility-methods/)
+
+jQuery 在 `$` 这个名字空间里面提供了许多工具方法, 它们可以用来完成常规任务. 有关jQuery实用方法的完整参考请访问[utilities documentation on api.jquery.com](http://api.jquery.com/category/utilities/)
+
+下面是这些工具方法的一部分:
+
+`$.trim()`
+
+移除首尾空白字符:
+
+```js
+// Returns "lots of extra whitespace"
+$.trim( "    lots of extra whitespace    " );
+```
+
+`$.each()`
+
+基于数组和对象进行迭代:
+
+```js
+// 注意 jQuery 的 callback 中 索引在前面
+$.each([ "foo", "bar", "baz" ], function( idx, val ) {
+    console.log( "element " + idx + " is " + val );
+});
+
+$.each({ foo: "bar", baz: "bim" }, function( k, v ) {
+    console.log( k + " : " + v );
+});
+```
+
+`.each()` 可以基于选择器选中的元素进行迭代. 注意是 `.each()` 而非 `$.each()`
+
+`$.inArray()`
+
+返回元素在数组中的索引, 如果不存在数组中则返回 -1;
+
+```js
+var myArray = [ 1, 2, 3, 5 ];
+
+if ( $.inArray( 4, myArray ) !== -1 ) {
+    console.log( "found it!" );
+}
+```
+
+`$.extend()`
+
+使用后面的对象属性来改变第一个对象的属性
+
+```js
+var firstObject = { foo: "bar", a: "b" };
+var secondObject = { foo: "baz" };
+
+var newObject = $.extend( firstObject, secondObject );
+
+console.log( firstObject.foo ); // "baz"
+console.log( newObject.foo ); // "baz"
+```
+
+如果你不希望改变任何对象, 可以传入一个空对象作为第一个参数:
+
+```js
+var firstObject = { foo: "bar", a: "b" };
+var secondObject = { foo: "baz" };
+
+var newObject = $.extend( {}, firstObject, secondObject );
+
+console.log( firstObject.foo ); // "bar"
+console.log( newObject.foo ); // "baz"
+```
+
+`$.proxy()` (和 bind 一样, jquery 内部使用 apply)
+
+返回一个将上下文设置在第二个参数对象上的函数 - 也就是说, 将 `this` 设置为第二个参数指定的对象:
+
+```js
+var myFunction = function() {
+    console.log( this );
+};
+var myObject = {
+    foo: "bar"
+};
+
+myFunction(); // window
+
+var myProxyFunction = $.proxy( myFunction, myObject );
+
+myProxyFunction(); // myObject
+```
+
+如果已经有一个带有方法的对象，又需要在其它对象上使用这个对象方法就可以用 `$.proxy()` 获得一个新的函数，该函数将始终在对象的作用域中运行。
+
+```js
+var myObject = {
+    myFn: function() {
+        console.log( this );
+    }
+};
+
+$( "#foo" ).click( myObject.myFn ); // HTMLElement #foo
+$( "#foo" ).click( $.proxy( myObject, "myFn" ) ); // myObject
+```
+
+## Testing Type
+
+有时候 `typeof` 操作符会导致混淆, 所以jQuery 提供了一些方法来帮助检测值的类型.
+
+首先, 可以使用方法来检测特定的类型:
+
+```js
+$.isArray([]); // true
+$.isFunction(function() {}); // true
+$.isNumeric(3.14); // true
+```
+
+此外, 有 `$.type()` 方法用于检查创建值的内部类, 它可以更好的替代 JavaScript 原生的 `typeof` 操作符
+
+```js
+$.type( true ); // "boolean"
+$.type( 3 ); // "number"
+$.type( "test" ); // "string"
+$.type( function() {} ); // "function"
+
+$.type( new Boolean() ); // "boolean"
+$.type( new Number(3) ); // "number"
+$.type( new String('test') ); // "string"
+$.type( new Function() ); // "function"
+
+$.type( [] ); // "array"
+$.type( null ); // "null"
+$.type( /test/ ); // "regexp"
+$.type( new Date() ); // "date"
+```
+
+**个人提醒**
+
+默认的 toString 方法(继承自 Object.prototype) 返回 `[object class]` 这种格式的字符串, 因此如果想要获得对象的类, 可以取该字符串的 8 到倒数第二个字符之间的字符串, 不过大多数对象都重新了 toString 方法, 所以只有如下调用:
+
+```js
+// P139
+function type(o) {
+  if (o === null) return 'Null';
+  if (o === undefined) return 'Undefined';
+  return Object.prototype.toString.call(o).slice(8, -1);
+}
+```
+
+# [Iterating over jQuery and non-jQuery Objects](http://learn.jquery.com/using-jquery-core/iterating/)
+
+jQuery 提供了一个对象迭代器的工具函数 `$.each()` 和 jQuery 集合迭代函数 `.each()`. 它们不可互换. 此外还有一组  `$.map()` 和 `.map()` 方法也是常见的用于迭代的快捷方法.
+
+`$.each()`
+
+[`$.each()`](http://api.jquery.com/jQuery.each/) 是一个在对象、数组和类数组对象上进行迭代的方法. 纯对象通过它们的命名属性进行迭代, 数组和类数组对象通过它们的索引迭代。
+
+`$.each()` 实际上是 `for` 或者 `for-in` 降级替代品.
+
+```js
+var sum = 0;
+
+var arr = [ 1, 2, 3, 4, 5 ];
+
+for ( var i = 0, l = arr.length; i < l; i++ ) {
+    sum += arr[ i ];
+}
+
+console.log( sum ); // 15
+```
+
+可以替代为:
+
+```js
+$.each( arr, function( index, value ){
+    sum += value;
+});
+
+console.log( sum ); // 15
+```
+
+注意不需要访问 `arr[ index ]`, 因为它已经方便的传入了 `$.each()` 的回调函数.
+
+```js
+var sum = 0;
+var obj = {
+    foo: 1,
+    bar: 2
+}
+
+for (var item in obj) {
+    sum += obj[ item ];
+}
+
+console.log( sum ); // 3
+```
+
+可以替换为
+
+```js
+$.each( obj, function( key, value ) {
+    sum += value;
+});
+
+console.log( sum ); // 3
+```
+
+注意, `$.each()` 用于纯对象、数组或类数组对象而非 jQuery 集合.下面的方式是不正确的
+
+```js
+// Incorrect:
+$.each( $( "p" ), function() {
+    // Do something
+});
+```
+
+对于 jQuery 集合, 使用 `.each()`;
+
+`.each()`
+
+[`.each()`](http://api.jquery.com/each/) 用于 jQuery 集合. 它迭代集合中的所有元素. 当前元素的索引会被当做参数传入回调函数中, 值(DOM 元素)也会被传入, 但是回调函数的执行上下文会被设置为当前所匹配的元素, 即 `this` 关键字指向当前元素.
+
+例如给点下面的 HTML 代码:
+
+```html
+<ul>
+    <li><a href="#">Link 1</a></li>
+    <li><a href="#">Link 2</a></li>
+    <li><a href="#">Link 3</a></li>
+</ul>
+```
+
+可以这样使用 `.each()`:
+
+```js
+$( "li" ).each( function( index, element ){
+    console.log( $( this ).text() );
+});
+
+// Logs the following:
+// Link 1
+// Link 2
+// Link 3
+```
+
+### The Second Argument
+
+有一个经常被问到的问题: 如果`this` 就是这个元素, 那么为什么还需要给回调函数传入第二个 DOM 元素作为参数?
+
+因为执行上下文可能被有意或者无意的更改. 如果一贯的使用 `this`, 即使上下文没有发生改变, 在我们或者别人阅读代码的时候都可能很容易陷入迷惑之中, 加入第二个参数是为了增强它的可读性, 例如:
+
+```js
+$( "li" ).each( function( index, listItem ) {
+
+    this === listItem; // true
+
+    // For example only. You probably shouldn't call $.ajax() in a loop.
+    $.ajax({
+        success: function( data ) {
+            // The context has changed.
+            // The "this" keyword no longer refers to listItem.
+            this !== listItem; // true
+        }
+    });
+});
+```
+
+### Sometimes `.each()` Isn't Necessary
+
+许多 jQuery 方法会隐式迭代整个集合，将它们的行为应用于每个匹配的元素。例如, 下面这个就是不必要的:
+
+```js
+$( "li" ).each( function( index, el ) {
+    $( el ).addClass( "newClass" );
+});
+```
+
+因为下面这样写更好:
+
+```js
+$( "li" ).addClass( "newClass" );
+```
+
+另一方面, 有的方法不会基于集合进行迭代, 当我们需要在设置元素的信息之前获取信息时使用 `.each()` 就非常必要.
+
+下面这样是错误的写法:
+
+```js
+// Doesn't work:
+$( "input" ).val( $( this ).val() + "%" );
+
+// .val() does not change the execution context, so this === window
+```
+
+下面这样是正确的写法:
+
+```js
+$( "input" ).each( function( i, el ) {
+    var elem = $( el );
+    elem.val( elem.val() + "%" );
+});
+```
+
+下面是需要 `.each()` 的方法的列表:
+
+- [.attr()](http://api.jquery.com/attr/#attr1) (getter)
+- [.css()](http://api.jquery.com/css/#css1) (getter)
+- [.data()](http://api.jquery.com/data/#data2) (getter)
+- [.height()](http://api.jquery.com/height/#height1) (getter)
+- [.html()](http://api.jquery.com/html/#html1) (getter)
+- [.innerHeight()](http://api.jquery.com/innerHeight/)
+- [.innerWidth()](http://api.jquery.com/innerWidth/)
+- [.offset()](http://api.jquery.com/offset/#offset1) (getter)
+- [.outerHeight()](http://api.jquery.com/outerHeight/)
+- [.outerWidth()](http://api.jquery.com/outerWidth/)
+- [.position()](http://api.jquery.com/position/)
+- [.prop()](http://api.jquery.com/prop/#prop1) (getter)
+- [.scrollLeft()](http://api.jquery.com/scrollLeft/#scrollLeft1) (getter)
+- [.scrollTop()](http://api.jquery.com/scrollTop/#scrollTop1) (getter)
+- [.val()](http://api.jquery.com/val/#val1) (getter)
+- [.width()](http://api.jquery.com/width/#width1) (getter)
+
+再次提醒, 一般情况下作为 "getter" 使用时返回集合第一个元素的结果, 作为 "setter" 使用时会作用于整个集合元素. 一个例外就是 `.text()`, 它作为 "getter" 使用时返回从所有匹配元素中连接起来的文本字符串。
+
+除了直接给 setter 传入一个用于设置的值, 作为 "setter" 使用的attribute、 property、CSS setter 和 DOM 插入的方法(如 `.text()` 和 `.html()`) 可以接受匿名函数来操作集合上的每个元素. 传入回调的参数是元素的索引和该方法作为 "getter" 方式返回的结果.
+
+例如, 下面两个是等价的:
+
+```js
+$( "input" ).each( function( i, el ) {
+    var elem = $( el );
+    elem.val( elem.val() + "%" );
+});
+
+$( "input" ).val(function( index, value ) { // 该处 value 就是 val 作为 getter 使用时的值
+    return value + "%";
+});
+```
+
+关于这种隐性迭代需要注意的就是像 `.children()` 或者 `.parent()` 这种遍历方法会基于集合中的每一个元素返回一个所有子节点或父节点的混合集合.
+
+[`.map()`](http://api.jquery.com/map/)
+
+通常一般的迭代情况可以使用 `.map()` 方法. 如果是希望得到一个数组或者一个基于所有jQuery 选中元素生成的字符串, 最好使用 `.map()`.
+
+例如:
+
+```js
+var newArr = [];
+
+$( "li" ).each( function() {
+    newArr.push( this.id );
+});
+```
+
+可以使用下面的方式替代它:
+
+```js
+$( "li" ).map( function(index, element) {
+    return this.id;
+}).get();
+```
+
+**注意**: `.map()` 返回一个 jQuery 封装过后的集合,
+即使在这里 `.map()` 的回调函数里面是返回的一个字符串. 我们需要使用缺省参数的 `.get()` 来返回一个我们可以使用的基本 JavaScript 数组. 如果需要将返回值串联在一起, 可以使用JS 数组方法 `.join()`
+
+[`$.map`](http://api.jquery.com/jQuery.map/)
+
+如同 `$.each()` 和 `.each()`一样 , `.map` 也有 `$.map()`. 它们之间的不同点同 `$.each()` 和 `.each()`一样. `$.map()` 基于纯的 JavaScript 数组而 `.map()` 基于 jQuery 元素集合. 由于 `$.map()` 是用于原生 JavaScript 数组, 所以不需要在末尾加上一个 `.get()` 来获取原生 JavaScript 数组, 这样反而会报错.
+
+值的注意的是: `$.map()` 调换了回调函数的参数顺序(本来 jQuery 的方法是将索引放在回调函数的第一个参数位置, 但是 `$.map()` 单独对它做了调换), 这是为了和 ECMAScipt5 的原生 JavaScript 的`.map()` 方法相匹配, 但是 `$.each()` 这种却没有作参数调换, 因为 JavaScript 数组没有 `.each()` 而是 `.forEach()`.
+
+```html
+<li id="a"></li>
+<li id="b"></li>
+<li id="c"></li>
+
+<script>
+
+var arr = [{
+    id: "a",
+    tagName: "li"
+}, {
+    id: "b",
+    tagName: "li"
+}, {
+    id: "c",
+    tagName: "li"
+}];
+
+// Returns [ "a", "b", "c" ]
+$( "li" ).map( function( index, element ) {
+    return element.id;
+}).get();
+
+// Also returns [ "a", "b", "c" ]
+// Note that the value comes first with $.map
+$.map( arr, function( value, index ) {
+    return value.id;
+});
+
+</script>
+```
+
+# [Using jQuery’s .index() Function](http://learn.jquery.com/using-jquery-core/understanding-index/)
+
+`.index()` 通常用于在调用它的 jQuery 对象中搜索给定的元素.
+
+该方法有四种不同的用法, 这里讲解了每种情况下 `.index()` 是如何工作的.
+
+## `.index()` with No Arguments
+
+```html
+<ul>
+    <div></div>
+    <li id="foo1">foo</li>
+    <li id="bar1">bar</li>
+    <li id="baz1">baz</li>
+    <div></div>
+</ul>
+
+<script>
+var foo = $( "#foo1" );
+
+console.log( "Index: " + foo.index() ); // 1
+
+var listItem = $( "li" );
+
+// This implicitly calls .first()
+console.log( "Index: " + listItem.index() ); // 1
+console.log( "Index: " + listItem.first().index() ); // 1
+
+var div = $( "div" );
+
+// This implicitly calls .first()
+console.log( "Index: " + div.index() ); // 0
+console.log( "Index: " + div.first().index() ); // 0
+</script>
+```
+
+第一个例子中, `.index()` 返回 `#foo1` 在其父元素中基于 0 的索引. 因为 `#foo1` 是父元素的第二个元素, 所以 `.index()` 返回 1
+
+**注意**: jQuery 1.9 之前, `.index()` 只能在基于单个元素才能得到可靠的结果, 所以我们在每个例子上都使用了 `.first()`. jQuery 1.9及之后可以忽略这样的做法. 随着API的更新，定义它只在第一个元素上运行。
+
+## `.index()` with a String Argument
+
+```html
+<ul>
+    <div class="test"></div>
+    <li id="foo1">foo</li>
+    <li id="bar1" class="test">bar</li>
+    <li id="baz1">baz</li>
+    <div class="test"></div>
+</ul>
+<div id="last"></div>
+
+<script>
+var foo = $( "li" );
+
+// This implicitly calls .first()
+console.log( "Index: " + foo.index( "li" ) ); // 0
+console.log( "Index: " + foo.first().index( "li" ) ); // 0
+
+var baz = $( "#baz1" );
+console.log( "Index: " + baz.index( "li" )); // 2
+
+var listItem = $( "#bar1" );
+console.log( "Index: " + listItem.index( ".test" ) ); // 1
+
+var div = $( "#last" );
+console.log( "Index: " + div.index( "div" ) ); // 2
+</script>
+```
+
