@@ -1498,3 +1498,57 @@ console.log( "Index: " + div.index( "div" ) ); // 2
 </script>
 ```
 
+当给 `.index()` 传递一个字符串作为参数的时候有两点需要考虑. 第一, jQuery 会在最初的 jQuery 对象上调用 `.first()`, 它会找到第一个元素的索引，而不是这个例子中的最后一个元素。这是不一致的，所以在这里要小心。
+
+第二点需要注意的是 jQuery 会使用传入的字符串选择器到整个 DOM 中去查询元素, 生成一个包含选中元素的 jQuery 集合, 再在集合中检查元素的 index. 例如在上面最后一例中, 当使用 `.index("div")` , jQuery 会选中文档中所有的 `<div>` 元素, 然后在包含选中元素的这个 jQuery 集合对象中查找调用 `.index()` 的元素的索引.
+
+## `.index()` with a jQuery Object Argument
+
+```html
+<ul>
+    <div class="test"></div>
+    <li id="foo1">foo</li>
+    <li id="bar1" class="test">bar</li>
+    <li id="baz1">baz</li>
+    <div class="test"></div>
+</ul>
+<div id="last"></div>
+
+<script>
+var foo = $( "li" );
+var baz = $( "#baz1" );
+
+console.log( "Index: " + foo.index( baz ) ); // 2
+
+var tests = $( ".test" );
+var bar = $( "#bar1" );
+
+// Implicitly calls .first() on the argument.
+console.log( "Index: " + tests.index( bar ) ); // 1
+
+console.log( "Index: " + tests.index( bar.first() ) ); // 1
+</script>
+```
+
+这种情况下, jQuery 对象集合的第一个元素会被传递给 `.index()` 用于查找它在另一个集合中的索引. 在 `.index()` 左边的初始 jQuery 对象是一个类数组对象, 它会从它索引的 0 到 `length - 1` 区间查找参数指定的 jQuery 对象.
+
+## `.index()` with a DOM Element Argument
+
+这种情况下, 会在初始的 jQuery 集合对象中查询传入给 `.index()` 的 DOM 元素到索引. 如果理解了其他几种情况, 那么理解这种情况很容易, 它类似于前一种情况, 只是不是 jQuery 对象而是原生 DOM 对象而已.
+
+# [Events](http://learn.jquery.com/events/) (事件)
+
+jQuery 提供了给选中元素绑定事件的方法. 当事件触发的时候, 就会执行所绑定的函数. 在这个函数中, `this` 指向触发事件的 DOM 元素.
+
+关于 jQuery 事件的详细信息, 参考 [Events documentation on api.jquery.com](http://api.jquery.com/category/events/)
+
+事件处理函数会收到一个事件对象参数, 这个对象可以用来确定事件的性质, 阻止事件的默认行为等.
+
+关于事件对象, 参考 [Event object documentation on api.jquery.com](http://api.jquery.com/category/events/event-object/)
+
+## [jQuery Event Basics](http://learn.jquery.com/events/event-basics/)
+
+### 在DOM元素上设置事件响应
+
+jQuery 提供非常简洁的方法来给页面元素设置事件驱动的响应. 这些事件通常由终端用户与页面进行交互时触发, 如在表单中输入文字或者移动鼠标等. 在某些情况下, 浏览器也会触发一些事件, 如页面的 load 和 unload 事件.
+
