@@ -12,7 +12,7 @@ var session = require('express-session');
 
 使用给定的 `options` 创建 session 中间件.
 
-**注意**: Session 数据并不保存在 cookie 中, 只保存 session ID. session 数据保存在服务端.
+**注意**: Session 数据并不保存在 cookie 中, cookie只保存 session ID. session 数据保存在服务端.
 
 **注意**: 自从 1.5.0 版本之后, 不再依赖于 `cookie-parser`, 而是直接在 `req/res` 上读写 cookie. 在 `cookie-parser` 和该模块中使用不同的 `secret` 会导致问题发生.
 
@@ -34,7 +34,7 @@ session ID cookie 的配置对象, 默认值是 `{ path: '/', httpOnly: true, se
 
 ##### cookie.expires
 
-指定一个 `Date` 对象作为 `Set-Cookie` `Expires`  属性的值. 默认情况下不会设置过期时间. 并且大多数客服端会把它当做非持久 cookie 处理, 并在某些情况下(如在 web 浏览器应用退出的时候)删除它.
+指定一个 `Date` 对象作为 `Set-Cookie` `Expires`  属性的值. 默认情况下不会设置过期时间. 并且大多数客户端会把它当做非持久 cookie 处理, 并在某些情况下(如在 web 浏览器应用退出的时候)删除它.
 
 **注意**: 如果 `expires` 和 `maxAge` 同时设置, 则会使用后设置的一个.
 
