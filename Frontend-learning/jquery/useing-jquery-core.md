@@ -1552,3 +1552,252 @@ jQuery 提供了给选中元素绑定事件的方法. 当事件触发的时候, 
 
 jQuery 提供非常简洁的方法来给页面元素设置事件驱动的响应. 这些事件通常由终端用户与页面进行交互时触发, 如在表单中输入文字或者移动鼠标等. 在某些情况下, 浏览器也会触发一些事件, 如页面的 load 和 unload 事件.
 
+jQuery 为大多数浏览器事件提供了便捷的方法. 如 `.click()`, `.focus()`, `.blur()`, `.change()` 等 - 它们都是 jQuery 中 `.on()` 方法的简写. 当你希望给事件处理函数提供数据的时候, 或者当你使用自定义事件的时候, 或者当你希望传递一个包含多个事件和处理函数的时候, `.on()` 方法非常有用, 它可以用于给多个事件绑定相同的事件处理函数.
+
+```js
+// Event setup using a convenience method
+$( "p" ).click(function() {
+    console.log( "You clicked a paragraph!" );
+});
+```
+
+```js
+// Equivalent event setup using the `.on()` method
+$( "p" ).on( "click", function() {
+    console.log( "click" );
+});
+```
+
+### 给新的页面元素添加事件
+
+`.on()` 在给元素绑定事件处理函数的时候, 必须保证元素存在. 事件绑定操作之后创建的元素不会自动绑定之前的事件.
+
+```js
+$( document ).ready(function(){
+
+    // Sets up click behavior on all button elements with the alert class
+    // that exist in the DOM when the instruction was executed
+    $( "button.alert" ).on( "click", function() {
+        console.log( "A button with the alert class was clicked!" );
+    });
+
+    // Now create a new button element with the alert class. This button
+    // was created after the click listeners were applied above, so it
+    // will not have the same click behavior as its peers
+    $( "<button class='alert'>Alert!</button>" ).appendTo( document.body );
+});
+```
+
+Consult the article on event delegation to see how to use `.on()` so that event behaviors will be extended to new elements without having to rebind them.
+
+### Inside the Event Handler Function
+
+每个事件处理函数都会收到一个包含许多属性和方法的事件对象. 对这个事件对象最常用的就是使用它的 `.preventDefault()` 方法来阻止默认行为. 该事件对象还包含了一系列有用的属性和方法, 其中包括:
+
+#### pageX, pageY
+
+事件发生时的鼠标相对于页面显示区域（不是整个浏览器窗口）的左上角位置
+
+#### type
+
+事件类型, 如 "click"
+
+#### which
+
+按下的按钮或 key
+
+#### data
+
+事件绑定时传入的任何数据, 如:
+
+```js
+// Event setup using the `.on()` method with data
+$( "input" ).on(
+    "change",
+    { foo: "bar" }, // Associate data with event binding
+    function( eventObject ) {
+        console.log("An input value has changed! ", eventObject.data.foo);
+    }
+);
+```
+
+#### target
+
+最初产生该事件的 DOM 元素 (事件会有捕获和冒泡阶段, 但该属性是指向最初的元素, 不会跟着事件的不同阶段改变)
+
+#### namespace
+
+事件触发时指定的命名空间。
+
+#### timeStamp
+
+事件在浏览器中发生时和1970年1月1日之间的毫秒差。
+
+#### preventDefault()
+
+阻止事件的默认行为 (如点击链接会跳转)
+
+#### stopPropagation()
+
+阻止事件冒泡
+
+除了事件对象, 事件处理函数也能够通过 `this` 关键字访问到 DOM 元素. 如果希望将 DOM 元素转换成 jQuery 对象, 可以使用  `$(this)`
+
+```js
+// Preventing a link from being followed
+$( "a" ).click(function( eventObject ) {
+    var elem = $( this );
+    if ( elem.attr( "href" ).match( /evil/ ) ) {
+        eventObject.preventDefault();
+        elem.addClass( "evil" );
+    }
+});
+```
+
+### Setting Up Multiple Event Responses
+
+通常，应用程序中的元素将可能绑定到多个事件。如果多个事件共享相同的事件处理函数, 可以给 `.on()` 传递使用空格分隔的事件类型:
+
+```js
+// Multiple events, same handler
+$( "input" ).on(
+    "click change", // Bind handlers for multiple events
+    function() {
+        console.log( "An input was clicked or changed!" );
+    }
+);
+```
+
+如果每个事件有自己的事件处理函数, 你可以给 `.on()` 传递一个包含多个键值对的对象, 键为事件名, 值为事件处理函数.
+
+```js
+// Binding multiple events with different handlers
+$( "p" ).on({
+    "click": function() { console.log( "clicked!" ); },
+    "mouseover": function() { console.log( "hovered!" ); }
+});
+```
+
+### Namespacing Events
+
+对于复杂的应用程序和与他人共享的插件，将事件命名为命名空间是很有用的，这样你就不会无意中解绑被人绑定的你不知道的事件。
+
+```js
+// Namespacing events
+$( "p" ).on( "click.myNamespace", function() { /* ... */ } );
+$( "p" ).off( "click.myNamespace" );
+$( "p" ).off( ".myNamespace" ); // Unbind all events in the namespace
+```
+
+### Tearing Down Event Listeners (删除事件侦听器)
+
+使用给 `.off()` 传递一个事件类型参数来解绑该类型的所有事件. 也可以将原事件处理函数作为第二个参数传入, 这样就只会解绑该类型事件下的这个事件处理函数.
+
+```js
+// Tearing down all click handlers on a selection
+$( "p" ).off( "click" );
+```
+
+```js
+// Tearing down a particular click handler, using a reference to the function
+var foo = function() { console.log( "foo" ); };
+var bar = function() { console.log( "bar" ); };
+
+$( "p" ).on( "click", foo ).on( "click", bar );
+$( "p" ).off( "click", bar ); // foo is still bound to the click event
+```
+
+### Setting Up Events to Run Only Once
+
+有时候可能希望事件处理函数只执行一次, 此后就不再需要执行该事件或者需要执行其它事件, jQuery 为此提供了 `.one()` 方法:
+
+```js
+// Switching handlers using the `.one()` method
+$( "p" ).one( "click", firstClick );
+
+function firstClick() {
+    console.log( "You just clicked this for the first time!" );
+
+    // Now set up the new handler for subsequent clicks;
+    // omit this step if no further click responses are needed
+    $( this ).click( function() { console.log( "You have clicked this before!" ); } );
+}
+```
+
+注意上面的代码中, `firstClick` 方法会为每个 p 标签的第一次点击起作用, 而不是任意 p 标签触发过会就会移除所有 p 标签的该事件.
+
+`.one()` 也可以用来绑定多个事件:
+
+```js
+// Using .one() to bind several events
+$( "input[id]" ).one( "focus mouseover keydown", firstEvent);
+
+function firstEvent( eventObject ) {
+    console.log( "A " + eventObject.type + " event occurred for the first time on the input with id " + this.id );
+}
+```
+
+这种情况下, `firstEvent` 函数会为每个事件执行一次. 也就是说, 即使一个 input 元素获得了焦点, 该处理函数还是会为第一个 keydown 事件执行.
+
+## [Event Helpers](http://learn.jquery.com/events/event-helpers/)
+
+jQuery 提供了一些基于事件的辅助函数, 如 `.hover()`
+
+`.hover()` 接受一个或两个函数作为参数, 它们用于 `mouseenter` 和 `mouseleave` 事件. 如果只传入一个, 则该函数会被用于两个事件, 如果传入两个事件处理函数, 那么第一个用于 `mouseenter`, 第二个用于 `mouseleave`
+
+注意, jQuery 1.4 之前, `.hover()` 方法需要两个参数.
+
+```js
+// The hover helper function
+$( "#menu li" ).hover(function() {
+    $( this ).toggleClass( "hover" );
+});
+```
+
+可以在 [API site for Events](https://api.jquery.com/category/events/) 中找到更多的辅助函数.
+
+## [Introducing Events](http://learn.jquery.com/events/introduction-to-events/)
+
+### Introduction
+
+整个网页都会涉及到交互. 用户会发出任意操作, 如在页面移动鼠标, 点击页面元素或者在输入框中进行输入 - 这些操作都是事件. 除了这些用户事件, 还有许多其他的发生，比如当页面加载时，视频开始播放或暂停时等。无论页面发生什么, 都会触发事件, 也就意味着浏览器会告诉我们页面上发生了某些事情. 并且允许开发者对这些事件进行侦听和做出响应.
+
+### What's a DOM event?
+
+如上所述, 有太多的事件类型, 最容易理解的可能就是如用户点击操作和表单输入这种用户事件. 这些事件在对应的元素上触发. 虽然 DOM 事件中不只是包含用户交互, 但一开始它们是最容易理解的. MDN 上有更多[可用事件参考](https://developer.mozilla.org/en-US/docs/Web/Events).
+
+### Ways to listen for events
+
+监听事件的方式有很多. 页面上不停的有操作产生, 但是开发人员只有在他们监听该事件的时候才会得到通知。监听事件就是等待浏览器告诉我们发生了指定事件然后我们确定页面如何做出响应.
+
+给浏览器提供一个函数(即事件处理函数)来在事件发生的时候进行正确的响应. 除非解绑了该事件, 否则无论什么情况下该事件发生的时候都会执行这个函数.
+
+例如, 无论何时用户点击按钮都弹出消息, 你可以这样写:
+
+```html
+<button onclick="alert('Hello')">Say hello</button>
+```
+
+这里通过 button 的 `onclick` 来指定我们希望监听的事件, 事件处理函数是 `alert` 函数. 这种做法很糟糕:
+
+- 这里把视图代码(HTML) 和 交互代码(JS) 耦合在了一起. 也就意味着无论我们要修改什么功能, 都要编辑 HTML 代码, 这本身就是很糟糕的做法.
+- 这样的代码伸缩性很差, 如果需要给很多按钮绑定相同的事件处理函数就会产生很多重复的代码, 这样也会破坏可维护性
+
+这样的内联事件处理函数看起来有些刺眼, 相反, 我们通常的做法看起来并没有这么显眼, 那就是把 HTML 和 JS 分离使得代码更容易维护和管理. 这样的分离是将相同代码(如 HTML, JS, CSS)的不同片段合在一起, 这样便于修改, 而不是使它们各自分离在不同的地方. 此外, 这种方式还强调应该尽可能少的往页面中添加不必要的成分. 如果用户浏览器不支持 JavaScript, 那么就不应该添加到页面的标记中去. 还有, 为了避免名字冲突, JS 代码应该为不同的功能或库使用一个命名空间。jQuery 就是这样一个很好的例子, 在jQuery 对象/构造函数(`$`和`jQuery`)中也只基于一个全局变量, 所有的 jQuery 功能都打包在这个对象中.
+
+现在我们来修改之前的代码, 移除 `onclick` 属性然后使用 `id` 进行替换, 最后在一个 js 文件中给这个按钮添加事件处理函数.
+
+```html
+<button id="helloBtn">Say hello</button>
+```
+
+然后如果希望在用户点击按钮的时候进行一些操作, 我们可以像下面这样绑定事件:
+
+```js
+// Event binding using addEventListener
+var helloBtn = document.getElementById( "helloBtn" );
+
+helloBtn.addEventListener( "click", function( event ) {
+    alert( "Hello." );
+}, false );
+```
