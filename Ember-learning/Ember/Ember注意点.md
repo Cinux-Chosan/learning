@@ -78,6 +78,7 @@ This is guaranteed to work because the parent route is loaded. But if you tried 
 This is a great way to use the parent context to load something that you want. Using paramsFor will also give you the query params defined on that route's controller. This method could also be used to look up the current route's parameters from an action or another method on the route, and in that case we have a shortcut: this.paramsFor(this.routeName).
 
 这是一种使用父级上下文来加载你需要的数据的好方法. 使用 `paramsFor` 也能够得到那个路由的 `controller` 上定义的查询参数. 可以在路由的 action 或者当前路由的其他方法中使用该方法来获取路由的参数, 这种情况下有个快捷写法:
+
 ```js
 this.paramsFor(this.routeName);
 ```
@@ -189,3 +190,87 @@ export default Route.extend({
   }
 });
 ```
+
+---
+
+Note that you can't bind queryParams to computed properties, they have to be values.
+
+注意, 不能将 queryParams 绑定到计算属性上, 它们必须是一个值.
+
+By default, a query param property change won't cause a full router transition (i.e. it won't call model hooks and setupController, etc.); it will only update the URL.
+
+默认情况下, 查询参数的改变不会导致一个路由发生完全的转换(如它不会调用 model 和 setupController 方法等). 它仅仅更新 URL.
+
+
+### transitionTo
+
+`Route#transitionTo` and `Controller#transitionToRoute` accept a final argument, which is an object with the key `queryParams`.
+
+`Route#transitionTo` 和 `Controller#transitionToRoute` 的最后一个参数如果是包含 `queryParams` 属性的对象, 则会将 queryParams 的字段当做路由的查询参数.
+
+```js
+this.transitionTo('post', object, { queryParams: { showDetails: true }});
+this.transitionTo('posts', { queryParams: { sort: 'title' }});
+
+// if you want to transition the query parameters without changing the route
+// 如果只是想修改查询参数而不改变路由, 可以这样写
+this.transitionTo({ queryParams: { direction: 'asc' }});
+```
+
+You can also add query params to URL transitions:
+也可以在使用 URL 跳转时添加查询参数:
+
+```js
+this.transitionTo('/posts/1?sort=date&showDetails=true');
+```
+
+### Opting into a full transition
+
+When you change query params through a transition (`transitionTo` and `link-to`), it is not considered a full transition. This means that the controller properties associated with the query params will be updated, as will the URL, but no `Route` method hook like `model` or `setupController` will be called.
+
+当你通过 transition(`transitionTo` 和 `link-to`) 方式改变了查询参数的时候, 并不会被当做完整的 transition. 也就意味着 controller 中与查询参数关联的属性会同步更新, 但是不会调用 `Route` 和 `model` 钩子.
+
+If you need a query param change to trigger a full transition, and thus the method hooks, you can use the optional `queryParams` configuration hash on the `Route`. If you have a `category` query param and you want it to trigger a model refresh, you can set it as follows:
+
+如果你需要在查询参数改变的时候触发完整的 transtion, 并调用钩子方法, 你可以在 `Route` 的 `queryParams` 属性中配置. 如果你有一个查询参数 category, 希望它在改变的时候能触发 model 刷新, 你可以向下面这样设置.
+
+```js
+// app/routes/articles.js
+
+import Route from '@ember/routing/route';
+
+export default Route.extend({
+  queryParams: {
+    category: {
+      refreshModel: true
+    }
+  },
+
+  model(params) {
+    // This gets called upon entering 'articles' route
+    // for the first time, and we opt into refiring it upon
+    // query param changes by setting `refreshModel:true` above.
+
+    // params has format of { category: "someValueOrJustNull" },
+    // which we can forward to the server.
+    return this.get('store').query('article', params);
+  }
+});
+```
+
+```js
+// app/controllers/articles.js
+
+import Controller from '@ember/controller';
+
+export default Controller.extend({
+  queryParams: ['category'],
+  category: null
+});
+```
+
+---
+
+`{{if}}` checks for truthiness, which means all values except `false`, `undefined`, `null`, `''`, `0` or `[]` (i.e., any JavaScript falsy value or an empty array).
+
+`{{if}}` 检查逻辑真假, 除了 `false`, `undefined`, `null`, `''`, `0`, `[]` (任何 JavaScript 逻辑假的值和**空数组**)
