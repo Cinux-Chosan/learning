@@ -427,7 +427,6 @@ export default {
 
 Note that ordering only applies to initializers of the same type (i.e. application or application instance). Application initializers will always run before application instance initializers.
 
-
 这种顺序只对相同类型的 initializers 有用(如 同是application 或同是 application instance), Application initializers 总是会在 application instance initializers 之前执行.
 
 ### Customizing Initializer Names
@@ -467,7 +466,6 @@ This initializer will now have the name `my-logger`.
 
 此时 initializer 的名字为 `my-logger`
 
-
 ## [Services](https://guides.emberjs.com/v3.0.0/applications/services/)
 
 A [`Service`](https://www.emberjs.com/api/ember/release/modules/@ember%2Fservice) is an Ember object that lives for the duration of the application, and can be made available in different parts of your application.
@@ -488,3 +486,176 @@ Services 对于需要用到共享状态或持久连接的特性非常有用。 s
 
 ### Defining Services
 
+Services can be generated using Ember CLI's `service generator`. For example, the following command will create the `ShoppingCart` service:
+
+Services 通过 Ember CLI 的 service generator 创建。 例如， 下面的命令就会创建一个  `ShoppingCart` service：
+
+```bash
+ember generate service shopping-cart
+```
+
+Services must extend the `Service` base class:
+
+Service 必须继承自 `Service` 基类。
+
+```js
+// app/services/shopping-cart.js
+
+import Service from '@ember/service';
+
+export default Service.extend({
+});
+```
+
+Like any Ember object, a service is initialized and can have properties and methods of its own. Below, the shopping cart service manages an items array that represents the items currently in the shopping cart.
+
+Service 跟其他 Ember 对象一样， 可以有自己的属性和方法。 下面例子中，shopping cart service 管理了一个表示当前购物车中商品的数组。
+
+```js
+// app/services/shopping-cart.js
+
+import Service from '@ember/service';
+
+export default Service.extend({
+  items: null,
+
+  init() {
+    this._super(...arguments);
+    this.set('items', []);
+  },
+
+  add(item) {
+    this.get('items').pushObject(item);
+  },
+
+  remove(item) {
+    this.get('items').removeObject(item);
+  },
+
+  empty() {
+    this.get('items').clear();
+  }
+});
+```
+
+### Accessing Services
+
+To access a service, you can inject it in any container-resolved object such as a component or another service using the `inject` function from the `@ember/service` module. There are two ways to use this function. You can either invoke it with no arguments, or you can pass it the registered name of the service. When no arguments are passed, the service is loaded based on the name of the variable key. You can load the shopping cart service with no arguments like below.
+
+可以通过使用 `@ember/service` 模块中的 `inject` 方法将一个 service 注入到任何一个像 component 或者其他 service 的容器(container-resolved)对象来访问一个 service。 使用 `inject` 有两种方式，既可以不传参数， 也可以传入注册该 service 时的名字。 不传参数的时候， service 使用对应的属性名。 下面展示不带参数时载入一个 shopping cart 的方法：
+
+```js
+// app/components/cart-contents.js
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+
+export default Component.extend({
+  //will load the service in file /app/services/shopping-cart.js
+  shoppingCart: service()
+});
+```
+
+另一种注入 service 的方式是提供 service 的名称作为参数。
+
+```js
+// app/components/cart-contents.js
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+
+export default Component.extend({
+  //will load the service in file /app/services/shopping-cart.js
+  cart: service('shopping-cart')
+});
+```
+
+This injects the shopping cart service into the component and makes it available as the `cart` property.
+
+这样就把 shopping cart service 注入到了 component 中， 使用 `cart` 属性访问。
+
+Sometimes a service may or may not exist, like when an initializer conditionally registers a service. Since normal injection will throw an error if the service doesn't exist, you must look up the service using Ember's `getOwner` instead.
+
+有时候某个 service 并不存在， 比如在 initializer 中根据条件注册一个 service。 由于注入一个不存在的 service 会抛出异常， 所以你最好使用 Ember 的 `getOwner` 来 lookup 这个 service。
+
+```js
+// app/components/cart-contents.js
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { getOwner } from '@ember/application';
+
+export default Component.extend({
+  //will load the service in file /app/services/shopping-cart.js
+  cart: computed(function() {
+    return getOwner(this).lookup('service:shopping-cart');
+  })
+});
+```
+
+Injected properties are lazy loaded; meaning the service will not be instantiated until the property is explicitly called. Therefore you need to access services in your component using the `get` function otherwise you might get an `undefined`.
+
+注入的属性是懒加载的， 即 service 在该属性显式调用之前是不会实例化的。 因此在 component 中你必须使用 `get` 方法来获取 service， 否则可能得到 `undefined`
+
+Once loaded, a service will persist until the application exits.
+
+但是一旦加载过后， service 会一直存在直到应用退出。
+
+Below we add a remove action to the cart-contents component. Notice that below we access the `cart` service with a call to `this.get`.
+
+下面， 我们给 cart-contents component 添加了一个 remove action。 注意我们使用了 `this.get` 来访问 `cart` service。
+
+```js
+// app/components/cart-contents.js
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+
+export default Component.extend({
+  cart: service('shopping-cart'),
+
+  actions: {
+    remove(item) {
+      this.get('cart').remove(item);
+    }
+  }
+});
+```
+
+Once injected into a component, a service can also be used in the template. Note `cart` being used below to get data from the cart.
+
+注入 service 后也可以在 template 中使用。 注意下面的使用中 `cart` 用于从 cart service 获取数据。
+
+```html
+// app/templates/components/cart-contents.hbs
+<ul>
+  {{#each cart.items as |item|}}
+    <li>
+      {{item.name}}
+      <button {{action "remove" item}}>Remove</button>
+    </li>
+  {{/each}}
+</ul>
+```
+
+## [The Run Loop](https://guides.emberjs.com/v3.0.0/applications/run-loop/)
+
+Ember's internals and most of the code you will write in your applications takes place in a run loop. The run loop is used to batch, and order (or reorder) work in a way that is most effective and efficient.
+
+Ember 内部代码和你写的大多数代码都在 run loop 中执行。run loop 采用最高效的方式来对作业进行批处理和排序（或重排）
+
+It does so by scheduling work on specific queues. These queues have a priority, and are processed to completion in priority order.
+
+它把作业安排在特定的队列中。 这些队列有优先级， 并按照优先级进行处理。
+
+For basic Ember app development scenarios, you don't need to understand the run loop or use it directly. All common paths are paved nicely for you and don't require working with the run loop directly.
+
+对于基本的应用程序开发场景，你不需要了解或直接使用运行循环。所有道路都已经为你铺平，不需要直接使用运行循环。
+
+The most common case for using the run loop is integrating with a non-Ember API that includes some sort of asynchronous callback. For example:
+
+使用运行循环的最常见情况是与包含某种异步回调的非 Ember API 进行集成。例如：
+
+- DOM update and event callbacks (DOM 更新和事件回调)
+- `setTimeout` and `setInterval` callbacks (`setTimeout` 和 `setInterval` 回调)
+- `postMessage` and `messageChannel` event handlers (`postMessage` 和 `messageChannel` 事件处理函数)
+- AJAX callbacks (AJAX 回调)
+- Websocket callbacks (Websocket 回调)
+
+### Why is the run loop useful?
