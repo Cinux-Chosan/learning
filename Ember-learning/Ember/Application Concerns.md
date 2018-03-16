@@ -811,16 +811,16 @@ Because the priority is first to last, the "sync" queue has higher priority than
 
 The algorithm works this way:
 
-- Let the highest priority queue with pending jobs be: `CURRENT_QUEUE`, if there are no queues with pending jobs the run loop is complete
-  第一步: 将优先级队列中处于等待状态的任务放到队列 `CURRENT_QUEUE` 中, 如果最高优先级的这些队列中都没有等待中的任务, 那么该 run loop 执行完成
-- Let a new temporary queue be defined as `WORK_QUEUE`
-  第二步: 定义一个新的临时队列 `WORK_QUEUE`
-- Move jobs from `CURRENT_QUEUE` into `WORK_QUEUE`
-  第三步: 将任务从 `CURRENT_QUEUE` 移入到 `WORK_QUEUE`
-- Process all the jobs sequentially in `WORK_QUEUE`
-  第四步: 按顺序执行 `WORK_QUEUE` 中的任务
-- Return to Step 1
-  返回第一步
+1. Let the highest priority queue with pending jobs be: `CURRENT_QUEUE`, if there are no queues with pending jobs the run loop is complete
+    - 第一步: 将优先级队列中处于等待状态的任务放到队列 `CURRENT_QUEUE` 中, 如果最高优先级的这些队列中都没有等待中的任务, 那么该 run loop 执行完成
+1. Let a new temporary queue be defined as `WORK_QUEUE`
+    - 第二步: 定义一个新的临时队列 `WORK_QUEUE`
+1. Move jobs from `CURRENT_QUEUE` into `WORK_QUEUE`
+    - 第三步: 将任务从 `CURRENT_QUEUE` 移入到 `WORK_QUEUE`
+1. Process all the jobs sequentially in `WORK_QUEUE`
+    - 第四步: 按顺序执行 `WORK_QUEUE` 中的任务
+1. Return to Step 1
+    - 返回第一步
 
 ### An example of the internals
 
@@ -833,6 +833,8 @@ Working with this API directly is not common in most Ember apps, but understandi
 在开发 Ember 应用的时候通常并不会直接使用这些 API, 但是了解这个例子有助于明白 run loop 算法是如何工作的, 它可以让你成为一个更出色的 Ember 开发者.
 
 <iframe src="https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html" width="678" height="410" style="border:1px solid rgb(170, 170, 170);margin-bottom:1.5em;"></iframe>
+
+如果无法查看请[点击这里](https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html)
 
 ### How do I tell Ember to start a run loop?
 
@@ -934,13 +936,13 @@ Autoruns are disabled in testing for several reasons:
 
 在测试模式中, 由于下面的原因会禁用 autoruns:
 
-- Autoruns are Embers way of not punishing you in production if you forget to open a run loop before you schedule callbacks on it. While this is useful in production, these are still situations that should be revealed in testing to help you find and fix them.
+1. Autoruns are Embers way of not punishing you in production if you forget to open a run loop before you schedule callbacks on it. While this is useful in production, these are still situations that should be revealed in testing to help you find and fix them.
 
-Autoruns 并非 Ember 提供来在你在生产环境忘记打开一个 run loop 却在 run loop 之上进行任务调度时用来惩罚你的方式. 虽然这在生产环境的确很有用, 因为这些情况仍然应该在测试中被揭示出来以帮助你找到并修复它们。
+    - Autoruns 并非 Ember 提供来在你在生产环境忘记打开一个 run loop 却在 run loop 之上进行任务调度时用来惩罚你的方式. 虽然这在生产环境的确很有用, 因为这些情况仍然应该在测试中被揭示出来以帮助你找到并修复它们。
 
-- Some of Ember's test helpers are promises that wait for the run loop to empty before resolving. If your application has code that runs outside a run loop, these will resolve too early and give erroneous test failures which are difficult to find. Disabling autoruns help you identify these scenarios and helps both your testing and your application!
+1. Some of Ember's test helpers are promises that wait for the run loop to empty before resolving. If your application has code that runs outside a run loop, these will resolve too early and give erroneous test failures which are difficult to find. Disabling autoruns help you identify these scenarios and helps both your testing and your application!
 
-部分 Ember test helpers 为 promises, 它们会等待 run loop 清空之后才会变为 resolve 状态. 如果你有代码在 run loop 之外运行, 它们会过早的变为 resolve 状态并给出非常难以查找的错误的测试失败信息. 禁用 autoruns 可以帮助你看清这些使用场景, 对你合你的应用都有帮助.
+    - 部分 Ember test helpers 为 promises, 它们会等待 run loop 清空之后才会变为 resolve 状态. 如果你有代码在 run loop 之外运行, 它们会过早的变为 resolve 状态并给出非常难以查找的错误的测试失败信息. 禁用 autoruns 可以帮助你看清这些使用场景, 对你合你的应用都有帮助.
 
 ### Where can I find more information?
 
