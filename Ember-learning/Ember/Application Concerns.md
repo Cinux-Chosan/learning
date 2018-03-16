@@ -6,7 +6,7 @@
 
 Every Ember application is represented by a class that extends [`Application`](https://emberjs.com/api/ember/release/classes/Application). This class is used to declare and configure the many objects that make up your app.
 
-  每个 Ember application 由一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类来表示. 这个类用来声明和配置构成你的应用程序的多个对象.
+每个 Ember application 由一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类来表示. 这个类用来声明和配置构成你的应用程序的多个对象.
 
 As your application boots, it creates an [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) that is used to manage its stateful aspects. This instance acts as the "owner" of objects instantiated for your app.
 
