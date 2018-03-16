@@ -1,24 +1,24 @@
 # Application Concerns
 
-之所以把该部分从 Ember 3.0 注意点中抽离出来, 是因为这部分内容对 Ember 的基本使用并没有太大影响, 但是又特别重要. 理解它可以更好的了解 Ember. 所以对这部分进行逐字翻译. 这部分主要要了解的就是: Application 是类, 用于配置应用程序, Application instance 是 Application 类的实例对象, 用于管理应用程序的实例化后的各个部分. 在 Application 中注册的类也会实例化在 Application instance 中(即在Application instance 中会有在 Application 中注册过的对应的实例化对象). Application initializer 的参数是 Application, Application instance initializer 的参数是 Application instance.
+之所以把该部分从 Ember 3.0 注意点中抽离出来, 是因为这部分内容对 Ember 的基本使用并没有太大影响, 但是又特别重要. 理解它可以更好的了解 Ember, 所以对这部分进行逐字翻译. 这部分主要要了解的就是: Application 和 ApplicationInstance 都是类, Application 用于配置应用程序, ApplicationInstance 用于管理应用程序的实例化后的各个部分. Application initializer 的参数是 Application 的实例, Application instance initializer 的参数是 ApplicationInstance 的实例.
 
 ## Applications and Instances
 
 Every Ember application is represented by a class that extends [`Application`](https://emberjs.com/api/ember/release/classes/Application). This class is used to declare and configure the many objects that make up your app.
 
-每个 Ember application 由一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类来表示. 这个类用来声明和配置构成你的应用程序的多个对象.
+每个 Ember 应用由一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类来表示. 这个类用来声明和配置构成你的应用程序的诸多对象.
 
 As your application boots, it creates an [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) that is used to manage its stateful aspects. This instance acts as the "owner" of objects instantiated for your app.
 
-当你的应用启动的时候, 它创建了一个 [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) 用来对它的状态进行管理. 该 Application 的实例作为为你的应用程序实例化出来的其他对象的 "主人".
+当你的应用 (Application)启动的时候, 它创建了一个 [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) 的实例, 这个实例用来对它的状态进行管理. 该 ApplicationInstance 的实例作为为你的应用程序实例化出来的其他对象的 "主人".
 
 Essentially, the Application defines your application while the ApplicationInstance manages its state.
 
-基本上, Application 用于定义你的应用程序, ApplicationInstance 用于管理应用程序的状态. (实际上 Application 是类, ApplicationInstance 是 Application 的实例对象, 它们之间就是类和对象的关系)
+本质上, Application 用于定义你的应用程序, ApplicationInstance 用于管理应用程序的状态.
 
-This separation of concerns not only clarifies the architecture of your app, it can also improve its efficiency. This is particularly true when your app needs to be booted repeatedly during testing and / or server-rendering (e.g. via FastBoot). The configuration of a single Application can be done once and shared among multiple stateful ApplicationInstance instances. These instances can be discarded once they're no longer needed (e.g. when a test has run or FastBoot request has finished).
+This separation of concerns not only clarifies the architecture of your app, it can also improve its efficiency. This is particularly true when your app needs to be booted repeatedly during testing and / or server-rendering (e.g. via [`FastBoot`](https://github.com/tildeio/ember-cli-fastboot)). The configuration of a single Application can be done once and shared among multiple stateful ApplicationInstance instances. These instances can be discarded once they're no longer needed (e.g. when a test has run or FastBoot request has finished).
 
-概念的分离不仅使得应用程序的结构更加清晰, 还可以提升效率. 尤其是当你的应用程序在测试或服务端渲染(如通过 FastBoot) 过程中需要频繁重复启动时尤为如此. 对 Application 配置一次就可以在多个不同状态的 ApplicationInstance 中共享. 这些实例可以在不再需要时丢弃(如当测试或 FastBoot 请求完成之后)。
+概念的分离不仅使得应用程序的结构更加清晰, 还可以提升效率. 尤其是当你的应用程序在测试或服务端渲染(如通过 [`FastBoot`](https://github.com/tildeio/ember-cli-fastboot)) 过程中需要频繁重复启动时尤为如此. 对 Application 配置一次就可以在多个不同状态的 ApplicationInstance 的实例中共享. 这些实例可以在不再需要时丢弃(如当测试或 FastBoot 请求完成之后)。
 
 ## Dependency Injection
 
@@ -32,7 +32,7 @@ Application 如同依赖声明的 "注册表". Factories(如 类) 在 Applicatio
 
 An ApplicationInstance serves as the "owner" for objects that are instantiated from registered factories. Application instances provide a means to "look up" (i.e. instantiate and / or retrieve) objects.
 
-ApplicationInstance 作为从已注册的 factories 实例化出来的对象的 "主人". 它提供了一种方法来 查找(如实例化和检索) 这些对象.
+ApplicationInstance 作为从已注册的 factories 实例化出来的对象的 "主人". 它提供了一种方法来 查找(look up)(如实例化和检索) 这些对象.
 
       Note: Although an Application serves as the primary registry for an app, each ApplicationInstance can also serve as a registry. Instance-level registrations are useful for providing instance-level customizations, such as A/B testing of a feature.
 
@@ -46,7 +46,7 @@ factory 可以是应用程序的任何部分, 如 route, template, 或自定义�
 
 Registration keys have two segments split by a colon (`:`). The first segment is the framework factory type, and the second is the name of the particular factory. Hence, the `index` template has the key `template:index`. Ember has several built-in factory types, such as `service`, `route`, `template`, and `component`.
 
-注册的键是被一个冒号分隔的两段, 第一个段是 factory 类型, 第二段是某个具体 factory 的名字. 因此, `index` template 的 key 为 `template:index`. Ember 有一些内建的 factory 类型, 如 `service`, `route`, `template` 和 `component`
+用于注册的键的格式为被一个冒号分隔的两段, 第一个段是 factory 类型, 第二段是某个具体 factory 的名字. 因此, `index` template 的 key 为 `template:index`. Ember 有一些内建的 factory 类型, 如 `service`, `route`, `template` 和 `component`
 
 You can create your own factory type by simply registering a factory with the new type. For example, to create a `user` type, you'd simply register your factory with `application.register('user:user-to-register')`.
 
@@ -149,7 +149,7 @@ Once a factory is registered, it can be "injected" where it is needed.
 
 Factories can be injected into whole "types" of factories with type injections. For example:
 
-可以通过类型注册将一个 factory 注册进某个 factory 整个类型中(所有实例都会有), 例如:
+可以通过类型注册将一个 factory 注册进某个 factory 的类型中(该类型的所有实例都会有), 例如:
 
 ```js
 // app/initializers/logger.js
@@ -174,7 +174,7 @@ export default {
 
 As a result of this type injection, all factories of the type `route` will be instantiated with the property `logger` injected. The value of `logger` will come from the factory named `logger:main`.
 
-这种类型注册的结果就是, 所有 route 类型的 factories 都会被实例化一个 `logger` 属性.  `logger` 的值来自于注册时名叫 `logger:main` 的 factory.
+这种类型注册的结果就是, 所有 route 类型的 factory 都会被实例化一个 `logger` 属性.  `logger` 的值来自于注册时名叫 `logger:main` 的 factory.
 
 Routes in this example application can now access the injected `logger`:
 
@@ -280,7 +280,7 @@ export default {
 
 [`Ember.getOwner`](https://emberjs.com/api/ember/release/classes/@ember%2Fapplication/methods/getOwner?anchor=getOwner) will retrieve the application instance that "owns" an object. This means that framework objects like components, helpers, and routes can use `Ember.getOwner` to perform lookups through their application instance at runtime.
 
-[`Ember.getOwner`](https://emberjs.com/api/ember/release/classes/@ember%2Fapplication/methods/getOwner?anchor=getOwner) 会检索到拥有该对象的 application instance. 也就意味着像 components, helpers, routes 这样的框架对象可以使用 `Ember.getOwner` 获得 application instance, 然后通过它来执行 lookup.
+[`Ember.getOwner`](https://emberjs.com/api/ember/release/classes/@ember%2Fapplication/methods/getOwner?anchor=getOwner) 会检索到拥有该对象的 application instance. 也就意味着像 components, helpers, routes 这样的框架对象可以使用 `Ember.getOwner` 获得 application instance, 然后通过它来执行 lookup 操作.
 
 For example, this component plays songs with different audio services based on a song's audioType.
 
@@ -330,7 +330,7 @@ Application instance initializers 在载入 Application instance 的时候运行
 
 Operations performed in initializers should be kept as lightweight as possible to minimize delays in loading your application. Although advanced techniques exist for allowing asynchrony in application initializers (i.e. `deferReadiness` and `advanceReadiness`), these techniques should generally be avoided. Any asynchronous loading conditions (e.g. user authorization) are almost always better handled in your application route's hooks, which allows for DOM interaction while waiting for conditions to resolve.
 
-在 initializers 中执行的操作应该尽可能轻量级, 这样可以减少载入应用时的延迟. 尽管存在一些超前的技术可以在 application initializers 中进行异步初始化(如 `deferReadiness` 和 `advanceReadiness`). 应该避免使用这些技术. 任何需要使用异步加载的情况(如用户认证) 最好是在应用的 route 钩子中执行, 这样允许在等待条件解析时进行DOM交互。
+在 initializers 中执行的操作应该尽可能轻量级, 这样可以减少载入应用时的延迟. 尽管存在一些超前的技术可以在 application initializers 中进行异步初始化(如 `deferReadiness` 和 `advanceReadiness`). 但应该避免使用这些技术. 任何需要使用异步加载的情况(如用户认证) 最好是在应用的 route 钩子中执行, 这样允许在等待条件解析时进行DOM交互。
 
 ### Application Initializers
 
@@ -431,7 +431,7 @@ Note that ordering only applies to initializers of the same type (i.e. applicati
 
 ### Customizing Initializer Names
 
-By default initializer names are derived from their module name. This initializer will be given the name `logger`:
+By default initializer names are derived from their module name(文件名). This initializer will be given the name `logger`:
 
 默认情况下, initializer 名字来自于模块名. 下面这个 initializer 会使用 `logger` 作为名字.
 
@@ -470,7 +470,7 @@ This initializer will now have the name `my-logger`.
 
 A [`Service`](https://www.emberjs.com/api/ember/release/modules/@ember%2Fservice) is an Ember object that lives for the duration of the application, and can be made available in different parts of your application.
 
-[`Service`](https://www.emberjs.com/api/ember/release/modules/@ember%2Fservice) 是在整个应用程序生命周期持续存在的 Ember 对象, 可以在应用程序各个部分获取.
+[`Service`](https://www.emberjs.com/api/ember/release/modules/@ember%2Fservice) 是在整个应用程序生命周期持续存在的 Ember 对象, 可以在应用程序的各个部分访问到它.
 
 Services are useful for features that require shared state or persistent connections. Example uses of services might include:
 
@@ -488,7 +488,7 @@ Services 对于需要用到共享状态或持久连接的特性非常有用。 s
 
 Services can be generated using Ember CLI's `service generator`. For example, the following command will create the `ShoppingCart` service:
 
-Services 通过 Ember CLI 的 service generator 创建。 例如， 下面的命令就会创建一个  `ShoppingCart` service：
+Services 通过 Ember CLI 的 service generator 创建。 例如，下面的命令就会创建一个 `ShoppingCart` service:
 
 ```bash
 ember generate service shopping-cart
@@ -542,7 +542,7 @@ export default Service.extend({
 
 To access a service, you can inject it in any container-resolved object such as a component or another service using the `inject` function from the `@ember/service` module. There are two ways to use this function. You can either invoke it with no arguments, or you can pass it the registered name of the service. When no arguments are passed, the service is loaded based on the name of the variable key. You can load the shopping cart service with no arguments like below.
 
-可以通过使用 `@ember/service` 模块中的 `inject` 方法将一个 service 注入到任何一个像 component 或者其他 service 的容器(container-resolved)对象来访问一个 service。 使用 `inject` 有两种方式，既可以不传参数， 也可以传入注册该 service 时的名字。 不传参数的时候， service 使用对应的属性名。 下面展示不带参数时载入一个 shopping cart 的方法：
+可以通过使用 `@ember/service` 模块中的 `inject` 方法将一个 service 注入到任何一个像 component 或者其他 service 的容器(container-resolved)对象来访问该 service。 使用 `inject` 有两种方式，既可以不传参数， 也可以传入注册该 service 时的名字。 不传参数的时候， service 使用对应的属性名。 下面展示不带参数时载入一个 shopping cart 的方法：
 
 ```js
 // app/components/cart-contents.js
@@ -570,7 +570,7 @@ export default Component.extend({
 
 This injects the shopping cart service into the component and makes it available as the `cart` property.
 
-这样就把 shopping cart service 注入到了 component 中， 使用 `cart` 属性访问。
+这样就把 shopping cart service 注入到了 component 中， 使用 `cart` 属性进行访问。
 
 Sometimes a service may or may not exist, like when an initializer conditionally registers a service. Since normal injection will throw an error if the service doesn't exist, you must look up the service using Ember's `getOwner` instead.
 
@@ -596,7 +596,7 @@ Injected properties are lazy loaded; meaning the service will not be instantiate
 
 Once loaded, a service will persist until the application exits.
 
-但是一旦加载过后， service 会一直存在直到应用退出。
+但是一旦加载过后， service 会一直存在直到应用程序退出。
 
 Below we add a remove action to the cart-contents component. Notice that below we access the `cart` service with a call to `this.get`.
 
@@ -642,7 +642,7 @@ Ember 内部代码和大多数你写的代码都在 run loop 中执行。run loo
 
 It does so by scheduling work on specific queues. These queues have a priority, and are processed to completion in priority order.
 
-它把作业安排在特定的队列中。这些队列有优先级，并按照优先级的顺序进行执行完成。
+它把作业安排在特定的队列中。这些队列有优先级，并按照优先级的顺序执行完成。
 
 For basic Ember app development scenarios, you don't need to understand the run loop or use it directly. All common paths are paved nicely for you and don't require working with the run loop directly.
 
@@ -662,7 +662,7 @@ The most common case for using the run loop is integrating with a non-Ember API 
 
 Very often, batching similar work has benefits. Web browsers do something quite similar by batching changes to the DOM.
 
-对相似的工作进行批量处理是有益的. Web浏览器通过对DOM进行批处理来完成类似的工作。
+对相似的工作进行批量处理是有益的. Web浏览器通过对 DOM 进行批处理来完成类似的工作。
 
 Consider the following HTML snippet:
 
@@ -692,7 +692,7 @@ baz.offsetHeight // read (recalculate style, layout, expensive!)
 
 In this example, the sequence of code forced the browser to recalculate style, and relayout after each step. However, if we were able to batch similar jobs together, the browser would have only needed to recalculate the style and layout once.
 
-这个例子中, 每一步都会强制浏览器重新计算样式并重新布局. 然而, 如果把所有相似的操作放到一起, 浏览器就只需要计算一次样式和布局.
+这个例子中, 每一步都会强制浏览器重新计算样式并重新布局. 然而, 如果把所有相似的操作放到一起, 浏览器就只需要计算一次样式和布局一次.
 
 ```js
 // 读和写分开, 所有写操作在一起执行, 所以只在第一次读取的时候计算样式和布局, 在值没有发生改变的情况下后续都不再计算.
@@ -707,7 +707,7 @@ baz.offsetHeight // read (fast since style and layout are already known)
 
 Interestingly, this pattern holds true for many other types of work. Essentially, batching similar work allows for better pipelining, and further optimization.
 
-有趣的是, 这种模式对其他类型的作业也是有用的. 从本质上讲，批处理类似的作业可以更好的交换数据(pipelining, 这里只可意会不可言传, 故翻译为交换数据)和进一步优化。
+有趣的是, 这种模式对其他类型的作业也是有用的. 从本质上讲，批处理类似的作业可以更好的交换数据流水线化和进一步优化。
 
 Let's look at a similar example that is optimized in Ember, starting with a `User` object:
 
@@ -770,9 +770,9 @@ In the above example with the run loop, since the user's attributes end up at th
 
 It is of course possible to optimize these scenarios on a case-by-case basis, but getting them for free is much nicer. Using the run loop, we can apply these classes of optimizations not only for each scenario, but holistically app-wide.
 
-当然，可以根据具体情况来优化这些方案，但是当我们知道它的原理了过后, 不需要额外的优化就可以免费使用它们当然要好得多。使用了 run loop 之后, 我们不仅可以对这些使用场景进行优化, 还可以对整个应用进行类似的优化.
+当然，可以根据具体情况来优化这些方案，但是当我们知道它的原理了过后, 不需要额外的优化就可以免费使用它们当然要比根据特定情况进行优化要好得多。使用了 run loop 之后, 我们不仅可以对这些使用场景进行优化, 还可以对整个应用进行类似的优化.
 
-### How does the Run Loop work in Ember?
+### How does the Run Loop work in Ember ?
 
 As mentioned earlier, we schedule work (in the form of function invocations) on queues, and these queues are processed to completion in priority order.
 
@@ -780,7 +780,7 @@ As mentioned earlier, we schedule work (in the form of function invocations) on 
 
 What are the queues, and what is their priority order?
 
-那么这些队列是什么, 它们的优先级又是怎样的?
+那么这些队列是什么, 它们的优先级又是怎样的呢?
 
 ```js
 Ember.run.queues
@@ -795,38 +795,58 @@ Because the priority is first to last, the "sync" queue has higher priority than
 ### What happens in these queues?
 
 - The `sync` queue contains binding synchronization jobs.
-  `sync` 队列包含同步绑定的任务
+
+    `sync` 队列包含同步绑定的任务
+
 - The `actions` queue is the general work queue and will typically contain scheduled tasks e.g. promises.
-  `actions` 队列是一般工作队列. 通常包含已经计划好要执行的任务, 如 promises
+
+    `actions` 队列是一般工作队列. 通常包含已经计划好要执行的任务, 如 promises
+
 - The `routerTransitions` queue contains transition jobs in the router.
-  `routerTransitions` 队列包含路由中的 transition 任务.
+
+    `routerTransitions` 队列包含路由中的 transition 任务.
+
 - The `render` queue contains jobs meant for rendering, these will typically update the DOM.
-  `render` 队列包含渲染的工作, 它们通常会更新 DOM.
+
+    `render` 队列包含渲染的工作, 它们通常会更新 DOM.
+
 - The `afterRender` queue contains jobs meant to be run after all previously scheduled render tasks are complete. This is often good for 3rd-party DOM manipulation libraries, that should only be run after an entire tree of DOM has been updated.
-  `afterRender` 队列包含的任务会等待所有安排在前面的作业完成之后才会执行. 这经常对第三方的 DOM 操作库有好处, 它们应该在整个 DOM 树被更新之后执行.
+
+    `afterRender` 队列包含的任务会等待所有安排在前面的作业完成之后才会执行. 这经常对第三方的 DOM 操作库有好处, 它们应该在整个 DOM 树被更新之后执行.
+
 - The `destroy` queue contains jobs to finish the teardown of objects other jobs have scheduled to destroy.
-  `destroy` 队列包含的任务是完成清理和销毁工作, 用于销毁不再需要的对象等.
+
+    `destroy` 队列包含的任务是完成清理和销毁工作, 用于销毁不再需要的对象等.
 
 ### In what order are jobs executed on the queues?
 
 The algorithm works this way:
 
 1. Let the highest priority queue with pending jobs be: `CURRENT_QUEUE`, if there are no queues with pending jobs the run loop is complete
-    - 第一步: 将优先级队列中处于等待状态的任务放到队列 `CURRENT_QUEUE` 中, 如果最高优先级的这些队列中都没有等待中的任务, 那么该 run loop 执行完成
+
+    第一步: 将优先级队列中处于等待状态的任务放到队列 `CURRENT_QUEUE` 中, 如果最高优先级的这些队列中都没有等待中的任务, 那么该 run loop 执行完成
+
 1. Let a new temporary queue be defined as `WORK_QUEUE`
-    - 第二步: 定义一个新的临时队列 `WORK_QUEUE`
+
+    第二步: 定义一个新的临时队列 `WORK_QUEUE`
+
 1. Move jobs from `CURRENT_QUEUE` into `WORK_QUEUE`
-    - 第三步: 将任务从 `CURRENT_QUEUE` 移入到 `WORK_QUEUE`
+
+    第三步: 将任务从 `CURRENT_QUEUE` 移入到 `WORK_QUEUE`
+
 1. Process all the jobs sequentially in `WORK_QUEUE`
-    - 第四步: 按顺序执行 `WORK_QUEUE` 中的任务
+
+    第四步: 按顺序执行 `WORK_QUEUE` 中的任务
+
 1. Return to Step 1
-    - 返回第一步
+
+    返回第一步
 
 ### An example of the internals
 
 Rather than writing the higher level app code that internally invokes the various run loop scheduling functions, we have stripped away the covers, and shown the raw run-loop interactions.
 
-现在我们去掉了那些包装, 看看原始的 run-loop 交互. 而不是写一些在内部调用了许多 run loop 任务管理函数的高层代码.
+现在我们去掉了那些包装, 看看原始的 run-loop 交互而不是写一些在内部调用了许多 run loop 任务管理函数的高层代码.
 
 Working with this API directly is not common in most Ember apps, but understanding this example will help you to understand the run-loops algorithm, which will make you a better Ember developer.
 
@@ -918,9 +938,7 @@ $('a').click(() => {
 
 Although autoruns are convenient, they are suboptimal. The current JS frame is allowed to end before the run loop is flushed, which sometimes means the browser will take the opportunity to do other things, like garbage collection. GC running in between data changing and DOM rerendering can cause visual lag and should be minimized.
 
-尽管 autoruns 非常方便, 但它并不是最后的方法.
-
-Relying on autoruns is not a rigorous or efficient way to use the run loop. Wrapping event handlers manually are preferred. 当前的 JS 帧可能在 run loop 推入运行之前结束, 如有时候浏览器会去做其他事情, 如垃圾回收. 垃圾回收机制运行在数据改变和 DOM 重绘之间. 它的操作应该被最小化, 因为它会引起视觉上的滞后感.
+尽管 autoruns 非常方便, 但它并不是最好的方法. 当前的 JS 帧可能在 run loop 推入运行之前结束, 如有时候浏览器会去做其他事情, 如垃圾回收. 垃圾回收机制运行在数据改变和 DOM 重绘之间. 它的操作应该被最小化, 因为它会引起视觉上的滞后感.
 
 Relying on autoruns is not a rigorous or efficient way to use the run loop. Wrapping event handlers manually are preferred.
 
@@ -930,7 +948,7 @@ Relying on autoruns is not a rigorous or efficient way to use the run loop. Wrap
 
 When your application is in testing mode then Ember will throw an error if you try to schedule work without an available run loop.
 
-应用处于测试模式下时, 如果在调度作业(schedule work)的时候没有可用的 run loop, 则 Ember 会抛出异常.
+应用程序处于测试模式下时, 如果在调度作业(schedule work)的时候没有可用的 run loop, 则 Ember 会抛出异常.
 
 Autoruns are disabled in testing for several reasons:
 
@@ -938,11 +956,11 @@ Autoruns are disabled in testing for several reasons:
 
 1. Autoruns are Embers way of not punishing you in production if you forget to open a run loop before you schedule callbacks on it. While this is useful in production, these are still situations that should be revealed in testing to help you find and fix them.
 
-    - Autoruns 并非 Ember 提供来在你在生产环境忘记打开一个 run loop 却在 run loop 之上进行任务调度时用来惩罚你的方式. 虽然这在生产环境的确很有用, 因为这些情况仍然应该在测试中被揭示出来以帮助你找到并修复它们。
+    Autoruns 并非 Ember 提供来在你在生产环境忘记打开一个 run loop 却在 run loop 之上进行任务调度时用来惩罚你的方式. 虽然这样做在生产环境的确很有用, 因为这些情况仍然应该在测试中被揭示出来以帮助你找到并修复它们。
 
 1. Some of Ember's test helpers are promises that wait for the run loop to empty before resolving. If your application has code that runs outside a run loop, these will resolve too early and give erroneous test failures which are difficult to find. Disabling autoruns help you identify these scenarios and helps both your testing and your application!
 
-    - 部分 Ember test helpers 为 promises, 它们会等待 run loop 清空之后才会变为 resolve 状态. 如果你有代码在 run loop 之外运行, 它们会过早的变为 resolve 状态并给出非常难以查找的错误的测试失败信息. 禁用 autoruns 可以帮助你看清这些使用场景, 对你合你的应用都有帮助.
+    部分 Ember test helpers 为 promises, 它们会等待 run loop 清空之后才会变为 resolve 状态. 如果你有代码在 run loop 之外运行, 它们会过早的变为 resolve 状态并给出非常难以查找的错误的测试失败信息. 禁用 autoruns 可以帮助你看清这些使用场景, 对你合你的应用都有帮助.
 
 ### Where can I find more information?
 
