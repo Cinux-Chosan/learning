@@ -638,19 +638,19 @@ Once injected into a component, a service can also be used in the template. Note
 
 Ember's internals and most of the code you will write in your applications takes place in a run loop. The run loop is used to batch, and order (or reorder) work in a way that is most effective and efficient.
 
-Ember 内部代码和你写的大多数代码都在 run loop 中执行。run loop 采用最高效的方式来对作业进行批处理和排序（或重排）
+Ember 内部代码和大多数你写的代码都在 run loop 中执行。run loop 采用最高效的方式来对作业进行批处理和排序（或重排）
 
 It does so by scheduling work on specific queues. These queues have a priority, and are processed to completion in priority order.
 
-它把作业安排在特定的队列中。 这些队列有优先级， 并按照优先级进行处理。
+它把作业安排在特定的队列中。这些队列有优先级，并按照优先级的顺序进行执行完成。
 
 For basic Ember app development scenarios, you don't need to understand the run loop or use it directly. All common paths are paved nicely for you and don't require working with the run loop directly.
 
-对于基本的应用程序开发场景，你不需要了解或直接使用运行循环。所有道路都已经为你铺平，不需要直接使用运行循环。
+对于基本的应用程序开发场景，你不需要了解或直接使用 run loop, 因为所有常规开发道路都已经为你铺平。
 
 The most common case for using the run loop is integrating with a non-Ember API that includes some sort of asynchronous callback. For example:
 
-使用运行循环的最常见情况是与包含某种异步回调的非 Ember API 进行集成。例如：
+使用 run loop 的最常见情况是集成带有某种异步回调的非 Ember API。例如：
 
 - DOM update and event callbacks (DOM 更新和事件回调)
 - `setTimeout` and `setInterval` callbacks (`setTimeout` 和 `setInterval` 回调)
@@ -659,3 +659,291 @@ The most common case for using the run loop is integrating with a non-Ember API 
 - Websocket callbacks (Websocket 回调)
 
 ### Why is the run loop useful?
+
+Very often, batching similar work has benefits. Web browsers do something quite similar by batching changes to the DOM.
+
+对相似的工作进行批量处理是有益的. Web浏览器通过对DOM进行批处理来完成类似的工作。
+
+Consider the following HTML snippet:
+
+考虑下面的 HTML 片段:
+
+```html
+<div id="foo"></div>
+<div id="bar"></div>
+<div id="baz"></div>
+```
+
+and executing the following code:
+
+执行下面的代码:
+
+```js
+// 读和写是不同的操作, 每次写完过后进行读取, 浏览器会重新计算样式和布局, 性能开销非常大
+foo.style.height = '500px' // write
+foo.offsetHeight // read (recalculate style, layout, expensive!)
+
+bar.style.height = '400px' // write
+bar.offsetHeight // read (recalculate style, layout, expensive!)
+
+baz.style.height = '200px' // write
+baz.offsetHeight // read (recalculate style, layout, expensive!)
+```
+
+In this example, the sequence of code forced the browser to recalculate style, and relayout after each step. However, if we were able to batch similar jobs together, the browser would have only needed to recalculate the style and layout once.
+
+这个例子中, 每一步都会强制浏览器重新计算样式并重新布局. 然而, 如果把所有相似的操作放到一起, 浏览器就只需要计算一次样式和布局.
+
+```js
+// 读和写分开, 所有写操作在一起执行, 所以只在第一次读取的时候计算样式和布局, 在值没有发生改变的情况下后续都不再计算.
+foo.style.height = '500px' // write
+bar.style.height = '400px' // write
+baz.style.height = '200px' // write
+
+foo.offsetHeight // read (recalculate style, layout, expensive!)
+bar.offsetHeight // read (fast since style and layout are already known)
+baz.offsetHeight // read (fast since style and layout are already known)
+```
+
+Interestingly, this pattern holds true for many other types of work. Essentially, batching similar work allows for better pipelining, and further optimization.
+
+有趣的是, 这种模式对其他类型的作业也是有用的. 从本质上讲，批处理类似的作业可以更好的交换数据(pipelining, 这里只可意会不可言传, 故翻译为交换数据)和进一步优化。
+
+Let's look at a similar example that is optimized in Ember, starting with a `User` object:
+
+现在看一个在 Ember 中优化过后的类似的例子, 从 `User` 对象开始:
+
+```js
+import EmberObject, { computed } from '@ember/object';
+
+let User = EmberObject.extend({
+  firstName: null,
+  lastName: null,
+
+  fullName: computed('firstName', 'lastName', function() {
+    return `${this.get('firstName')} ${this.get('lastName')}`;
+  })
+});
+```
+
+and a template to display its attributes:
+
+template 展示它的属性:
+
+```hbs
+{{firstName}}
+{{fullName}}
+```
+
+If we execute the following code without the run loop:
+
+如果我们不在 run loop 中执行下面的代码:
+
+```js
+let user = User.create({ firstName: 'Tom', lastName: 'Huda' });
+user.set('firstName', 'Yehuda');
+// {{firstName}} and {{fullName}} are updated
+
+user.set('lastName', 'Katz');
+// {{lastName}} and {{fullName}} are updated
+```
+
+We see that the browser will rerender the template twice.
+
+浏览器就会重绘 template 两次.
+
+However, if we have the run loop in the above code, the browser will only rerender the template once the attributes have all been set.
+
+然而, 如果我们在 run loop 中运行上面的代码, 浏览器就只会在所有这些属性设置完成之后重绘 template 一次.
+
+```js
+let user = User.create({ firstName: 'Tom', lastName: 'Huda' });
+user.set('firstName', 'Yehuda');
+user.set('lastName', 'Katz');
+user.set('firstName', 'Tom');
+user.set('lastName', 'Huda');
+```
+
+In the above example with the run loop, since the user's attributes end up at the same values as before execution, the template will not even rerender!
+
+上面的例子在 run loop 中执行时, 由于 user 的属性在结束时与开始执行时的值一样, 因此 template 甚至不会进行重绘.
+
+It is of course possible to optimize these scenarios on a case-by-case basis, but getting them for free is much nicer. Using the run loop, we can apply these classes of optimizations not only for each scenario, but holistically app-wide.
+
+当然，可以根据具体情况来优化这些方案，但是当我们知道它的原理了过后, 不需要额外的优化就可以免费使用它们当然要好得多。使用了 run loop 之后, 我们不仅可以对这些使用场景进行优化, 还可以对整个应用进行类似的优化.
+
+### How does the Run Loop work in Ember?
+
+As mentioned earlier, we schedule work (in the form of function invocations) on queues, and these queues are processed to completion in priority order.
+
+就像前面提到的那样, 这些作业被安排在队列中, 这些队列根据优先级的顺序执行完成.
+
+What are the queues, and what is their priority order?
+
+那么这些队列是什么, 它们的优先级又是怎样的?
+
+```js
+Ember.run.queues
+// => ["sync", "actions", "routerTransitions", "render", "afterRender", "destroy"]
+// => ["sync", "actions", "routerTransitions", "render", "afterRender", "destroy", "rsvpAfter"]  Ember.VERSION === 3.0
+```
+
+Because the priority is first to last, the "sync" queue has higher priority than the "render" or "destroy" queue.
+
+优先级的顺序是从前到后的, 所以 "sync" 队列比 "render" 或 "destroy" 有更高的优先级.
+
+### What happens in these queues?
+
+- The `sync` queue contains binding synchronization jobs.
+  `sync` 队列包含同步绑定的任务
+- The `actions` queue is the general work queue and will typically contain scheduled tasks e.g. promises.
+  `actions` 队列是一般工作队列. 通常包含已经计划好要执行的任务, 如 promises
+- The `routerTransitions` queue contains transition jobs in the router.
+  `routerTransitions` 队列包含路由中的 transition 任务.
+- The `render` queue contains jobs meant for rendering, these will typically update the DOM.
+  `render` 队列包含渲染的工作, 它们通常会更新 DOM.
+- The `afterRender` queue contains jobs meant to be run after all previously scheduled render tasks are complete. This is often good for 3rd-party DOM manipulation libraries, that should only be run after an entire tree of DOM has been updated.
+  `afterRender` 队列包含的任务会等待所有安排在前面的作业完成之后才会执行. 这经常对第三方的 DOM 操作库有好处, 它们应该在整个 DOM 树被更新之后执行.
+- The `destroy` queue contains jobs to finish the teardown of objects other jobs have scheduled to destroy.
+  `destroy` 队列包含的任务是完成清理和销毁工作, 用于销毁不再需要的对象等.
+
+### In what order are jobs executed on the queues?
+
+The algorithm works this way:
+
+- Let the highest priority queue with pending jobs be: `CURRENT_QUEUE`, if there are no queues with pending jobs the run loop is complete
+  第一步: 将优先级队列中处于等待状态的任务放到队列 `CURRENT_QUEUE` 中, 如果最高优先级的这些队列中都没有等待中的任务, 那么该 run loop 执行完成
+- Let a new temporary queue be defined as `WORK_QUEUE`
+  第二步: 定义一个新的临时队列 `WORK_QUEUE`
+- Move jobs from `CURRENT_QUEUE` into `WORK_QUEUE`
+  第三步: 将任务从 `CURRENT_QUEUE` 移入到 `WORK_QUEUE`
+- Process all the jobs sequentially in `WORK_QUEUE`
+  第四步: 按顺序执行 `WORK_QUEUE` 中的任务
+- Return to Step 1
+  返回第一步
+
+### An example of the internals
+
+Rather than writing the higher level app code that internally invokes the various run loop scheduling functions, we have stripped away the covers, and shown the raw run-loop interactions.
+
+现在我们去掉了那些包装, 看看原始的 run-loop 交互. 而不是写一些在内部调用了许多 run loop 任务管理函数的高层代码.
+
+Working with this API directly is not common in most Ember apps, but understanding this example will help you to understand the run-loops algorithm, which will make you a better Ember developer.
+
+在开发 Ember 应用的时候通常并不会直接使用这些 API, 但是了解这个例子有助于明白 run loop 算法是如何工作的, 它可以让你成为一个更出色的 Ember 开发者.
+
+<iframe src="https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html" width="678" height="410" style="border:1px solid rgb(170, 170, 170);margin-bottom:1.5em;"></iframe>
+
+### How do I tell Ember to start a run loop?
+
+You should begin a run loop when the callback fires.
+
+当回调函数触发的时候你就应该开始了一个 run loop.
+
+The `Ember.run` method can be used to create a run loop. In this example, jQuery and `Ember.run` are used to handle a click event and run some Ember code.
+
+`Ember.run` 方法用于创建一个 run loop. 这个例子中, jQuery 和 `Ember.run` 分别用于处理 click 事件和运行一些 Ember 代码.
+
+This example uses the `=>` function syntax, which is a [new ES2015 syntax for callback functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) that provides a lexical `this`. If this syntax is new, think of it as a function that has the same `this` as the context it is defined in.
+
+例子使用了 `=>` (箭头函数), 它是 [new ES2015 syntax for callback functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) 提供是的一个词法. 如果对这个语法不熟悉, 可以简单的认为它是一个 `this` 被绑定在它被定义时的上下文的一个函数.
+
+```js
+$('a').click(() => {
+  Ember.run(() => {  // begin loop
+    // Code that results in jobs being scheduled goes here
+  }); // end loop, jobs are flushed and executed
+});
+```
+
+### What happens if I forget to start a run loop in an async handler?
+
+As mentioned above, you should wrap any non-Ember async callbacks in `Ember.run`. If you don't, Ember will try to approximate a beginning and end for you. Consider the following callback:
+
+如前面所说, 你应该把任何非 Ember 异步回调函数封装到 `Ember.run` 中去执行. 如果你没有这么做, Ember 会尝试给你安排一个近似的开始和结束. 考虑下面的回调:
+
+```js
+$('a').click(() => {
+  console.log('Doing things...');
+
+  Ember.run.schedule('actions', () => {
+    // Do more things
+  });
+});
+```
+
+The run loop API calls that schedule work, i.e. [`run.schedule`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/schedule?anchor=schedule), [`run.scheduleOnce`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/scheduleOnce?anchor=scheduleOnce), [`run.once`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/once?anchor=once) have the property that they will approximate a run loop for you if one does not already exist. These automatically created run loops we call `autoruns`.
+
+像 [`run.schedule`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/schedule?anchor=schedule), [`run.scheduleOnce`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/scheduleOnce?anchor=scheduleOnce), [`run.once`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop/methods/once?anchor=once) 这样的 run loop API 调用用来调度作业. 如果不存在一个 run loop 则会为你生成一个近似的 run loop. 这种自动创建 run loop 的操作我们称之为 `autoruns`
+
+Here is some pseudocode to describe what happens using the example above:
+
+现在使用伪代码来描述上面的例子是如何工作的:
+
+```js
+$('a').click(() => {
+  // 1. autoruns do not change the execution of arbitrary code in a callback.
+  //    This code is still run when this callback is executed and will not be
+  //    scheduled on an autorun.
+  console.log('Doing things...');
+
+  Ember.run.schedule('actions', () => {
+    // 2. schedule notices that there is no currently available run loop so it
+    //    creates one. It schedules it to close and flush queues on the next
+    //    turn of the JS event loop.
+    if (! Ember.run.hasOpenRunLoop()) {
+      Ember.run.begin();
+      nextTick(() => {
+        Ember.run.end()
+      }, 0);
+    }
+
+    // 3. There is now a run loop available so schedule adds its item to the
+    //    given queue
+    Ember.run.schedule('actions', () => {
+      // Do more things
+    });
+
+  });
+
+  // 4. This schedule sees the autorun created by schedule above as an available
+  //    run loop and adds its item to the given queue.
+  Ember.run.schedule('afterRender', () => {
+    // Do yet more things
+  });
+});
+```
+
+Although autoruns are convenient, they are suboptimal. The current JS frame is allowed to end before the run loop is flushed, which sometimes means the browser will take the opportunity to do other things, like garbage collection. GC running in between data changing and DOM rerendering can cause visual lag and should be minimized.
+
+尽管 autoruns 非常方便, 但它并不是最后的方法.
+
+Relying on autoruns is not a rigorous or efficient way to use the run loop. Wrapping event handlers manually are preferred. 当前的 JS 帧可能在 run loop 推入运行之前结束, 如有时候浏览器会去做其他事情, 如垃圾回收. 垃圾回收机制运行在数据改变和 DOM 重绘之间. 它的操作应该被最小化, 因为它会引起视觉上的滞后感.
+
+Relying on autoruns is not a rigorous or efficient way to use the run loop. Wrapping event handlers manually are preferred.
+
+依赖 autoruns 并不是使用 run loop 的严格或高效的方式. 往往更推荐手动封装事件处理函数.
+
+### How is run loop behaviour different when testing?
+
+When your application is in testing mode then Ember will throw an error if you try to schedule work without an available run loop.
+
+应用处于测试模式下时, 如果在调度作业(schedule work)的时候没有可用的 run loop, 则 Ember 会抛出异常.
+
+Autoruns are disabled in testing for several reasons:
+
+在测试模式中, 由于下面的原因会禁用 autoruns:
+
+- Autoruns are Embers way of not punishing you in production if you forget to open a run loop before you schedule callbacks on it. While this is useful in production, these are still situations that should be revealed in testing to help you find and fix them.
+
+Autoruns 并非 Ember 提供来在你在生产环境忘记打开一个 run loop 却在 run loop 之上进行任务调度时用来惩罚你的方式. 虽然这在生产环境的确很有用, 因为这些情况仍然应该在测试中被揭示出来以帮助你找到并修复它们。
+
+- Some of Ember's test helpers are promises that wait for the run loop to empty before resolving. If your application has code that runs outside a run loop, these will resolve too early and give erroneous test failures which are difficult to find. Disabling autoruns help you identify these scenarios and helps both your testing and your application!
+
+部分 Ember test helpers 为 promises, 它们会等待 run loop 清空之后才会变为 resolve 状态. 如果你有代码在 run loop 之外运行, 它们会过早的变为 resolve 状态并给出非常难以查找的错误的测试失败信息. 禁用 autoruns 可以帮助你看清这些使用场景, 对你合你的应用都有帮助.
+
+### Where can I find more information?
+
+Check out the [`Ember.run`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop) API documentation, as well as the [`Backburner`](https://github.com/ebryn/backburner.js/) library that powers the run loop.
+
+阅读 [`Ember.run`](https://www.emberjs.com/api/ember/release/classes/@ember%2Frunloop) API 文档和 提供 run loop 的[`Backburner`](https://github.com/ebryn/backburner.js/) 库
