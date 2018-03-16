@@ -6,19 +6,19 @@
 
 Every Ember application is represented by a class that extends [`Application`](https://emberjs.com/api/ember/release/classes/Application). This class is used to declare and configure the many objects that make up your app.
 
-每个 Ember application 代表一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类. 这个类用来声明和配置构成应用程序的多个对象.
+  每个 Ember application 由一个继承自 [`Application`](https://emberjs.com/api/ember/release/classes/Application) 的类来表示. 这个类用来声明和配置构成你的应用程序的多个对象.
 
 As your application boots, it creates an [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) that is used to manage its stateful aspects. This instance acts as the "owner" of objects instantiated for your app.
 
-当你的应用启动的时候, 它创建了一个 [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) 用来管理状态的各个方面. 该实例作为你的应用实例化出来的对象的 "主人"
+当你的应用启动的时候, 它创建了一个 [`ApplicationInstance`](https://emberjs.com/api/ember/release/classes/ApplicationInstance) 用来对它的状态进行管理. 该 Application 的实例作为为你的应用程序实例化出来的其他对象的 "主人".
 
 Essentially, the Application defines your application while the ApplicationInstance manages its state.
 
-基本上, Application 用于定义你的应用的各个方面, ApplicationInstance 用于管理应用程序的各个方面的状态. (实际上 Application 是类, ApplicationInstance 是 Application 的实例对象)
+基本上, Application 用于定义你的应用程序, ApplicationInstance 用于管理应用程序的状态. (实际上 Application 是类, ApplicationInstance 是 Application 的实例对象, 它们之间就是类和对象的关系)
 
 This separation of concerns not only clarifies the architecture of your app, it can also improve its efficiency. This is particularly true when your app needs to be booted repeatedly during testing and / or server-rendering (e.g. via FastBoot). The configuration of a single Application can be done once and shared among multiple stateful ApplicationInstance instances. These instances can be discarded once they're no longer needed (e.g. when a test has run or FastBoot request has finished).
 
-概念的分离不仅使得应用程序的结构更加清晰, 还可以提升效率. 尤其是当你的应用程序在测试或服务端渲染(如通过 FastBoot) 过程中需要频繁重复的启动时尤为如此. 对 Application 配置一次就可以在多个不同状态的 ApplicationInstance 中共享. 这些实例可以在不再需要时丢弃(如当测试或 FastBoot 请求完成之后)。
+概念的分离不仅使得应用程序的结构更加清晰, 还可以提升效率. 尤其是当你的应用程序在测试或服务端渲染(如通过 FastBoot) 过程中需要频繁重复启动时尤为如此. 对 Application 配置一次就可以在多个不同状态的 ApplicationInstance 中共享. 这些实例可以在不再需要时丢弃(如当测试或 FastBoot 请求完成之后)。
 
 ## Dependency Injection
 
