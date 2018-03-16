@@ -832,7 +832,7 @@ Working with this API directly is not common in most Ember apps, but understandi
 
 在开发 Ember 应用的时候通常并不会直接使用这些 API, 但是了解这个例子有助于明白 run loop 算法是如何工作的, 它可以让你成为一个更出色的 Ember 开发者.
 
-<iframe src="https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html" width="678" height="410" style="border:1px solid rgb(170, 170, 170);margin-bottom:1.5em;"></iframe>
+ <iframe src="https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html" width="678" height="410" style="border:1px solid rgb(170, 170, 170);margin-bottom:1.5em;"></iframe>
 
 如果无法查看请[点击这里](https://s3.amazonaws.com/emberjs.com/run-loop-guide/index.html)
 
