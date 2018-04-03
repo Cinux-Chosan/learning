@@ -217,4 +217,132 @@ require(['scripts/config'], function() {
 
 模块与传统的 script 相比较的好处就是它把代码放到局部作用域中, 从而避免污染全局变量. 它可以明确的列出依赖, 无需引用全局对象就可以操作和使用它们 (依赖被当做定义该模块的方法参数传入). RequireJS 中的模块是 [模块模式](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) 的一个扩展, 它的好处就是可以不用全局变量来引用其他模块.
 
-RequireJS 中模块的语法使得它们尽可能的加载得更快, 甚至不按顺序, 但是会以正确的依赖顺序执行, 并且由于不创建全局变量, it makes it possible to load multiple versions of a module in a page.http://requirejs.org/docs/api.html#define
+RequireJS 中模块的语法使得它们尽可能的加载得更快, 甚至不按顺序, 但是会以正确的依赖顺序执行, 并且由于不创建全局变量, 因此使得引入同一个 lib 的不同版本成为了可能。
+
+（如果你对使用 CommonJS 模块熟悉， 还可以参考 [CommonJS Notes](http://requirejs.org/docs/commonjs.html) 学习如何将 RequireJS 模块映射成 CommonJS 模块）
+
+每个文件应该只包含一个模块的定义。 模块可以通过 [优化工具](http://requirejs.org/docs/optimization.html) 打包在一起。
+
+
+### 1.3.1 Simple Name/Value Pairs
+
+如果模块没有任何依赖， 只是一个 name/value 对的集合， 那么直接将它传给 define():
+
+```js
+//Inside file my/shirt.js:
+define({
+    color: "black",
+    size: "unisize"
+});
+```
+
+### 1.3.2 Definition Functions
+
+如果模块没有依赖， 但是需要用一个函数执行一些配置操作， 那么传递一个函数作为 define() 的参数：
+
+```js
+//my/shirt.js now does setup work
+//before returning its module definition.
+define(function () {
+    //Do setup work here
+
+    return {
+        color: "black",
+        size: "unisize"
+    }
+});
+```
+
+### 1.3.3 Definition Functions with Dependencies
+
+如果模块有依赖， 那么给 define() 的第一个参数应该是一个包含所有依赖名字的数组， 第二个参数应该是这个定义函数。 该函数在所有依赖都加载完成之后会被调用一次。 该函数应该返回一个定义该模块的对象。 依赖会被作为参数传入该定义函数， 依赖的顺序和依赖数组的顺序一样：
+
+```js
+//my/shirt.js now has some dependencies, a cart and inventory
+//module in the same directory as shirt.js
+define(["./cart", "./inventory"], function(cart, inventory) {
+        //return an object to define the "my/shirt" module.
+        return {
+            color: "blue",
+            size: "large",
+            addToCart: function() {
+                inventory.decrement(this);
+                cart.add(this);
+            }
+        }
+    }
+);
+```
+
+这个例子中会创建 my/shirt 模块， 它依赖于 my/cart 和 my/inventory，它们在磁盘上的结构如下：
+
+- my/cart.js
+- my/inventory.js
+- my/shirt.js
+
+调用的函数指定了两个参数， "cart" 和 "inventory"， 它们分别代表 "./cart" 和 "./inventory" 模块。
+
+在 my/cart 和 my/inventory 模块加载完成之后， 该函数会收到 "cart" 和 "inventory" 作为这两个模块。
+
+由于不鼓励定义全局模块， 所以可以在同一个模块中使用模块的多个版本。 
+
+函数返回的对象定义了 "my/shirt" 模块， 这种方式定义的模块不会被当做全局对象。
+
+### 1.3.4 Define a Module as a Function
+
+模块并不是必须要返回对象， 任何合法的值都可以返回。这个例子就展示了该模块返回一个函数作为模块的定义：
+
+```js
+//A module definition inside foo/title.js. It uses
+//my/cart and my/inventory modules from before,
+//but since foo/title.js is in a different directory than
+//the "my" modules, it uses the "my" in the module dependency
+//name to find them. The "my" part of the name can be mapped
+//to any directory, but by default, it is assumed to be a
+//sibling to the "foo" directory.
+define(["my/cart", "my/inventory"],
+    function(cart, inventory) {
+        //return a function to define "foo/title".
+        //It gets or sets the window title.
+        return function(title) {
+            return title ? (window.title = title) :
+                   inventory.storeName + ' ' + cart.name;
+        }
+    }
+);
+```
+
+### 1.3.5 Define a Module with Simplified CommonJS Wrapper
+
+如果你希望重用一些用传统的 CommonJS 模块格式写的代码， 要把它们修改成可以用于依赖数组的代码又比较困难，但是你确实希望通过一个依赖名字就可以直接使用它， 这种情况下你可以使用简易的 CommonJS 包装器：
+
+```js
+define(function(require, exports, module) {
+        var a = require('a'),
+            b = require('b');
+
+        //Return the module value
+        return function () {};
+    }
+);
+```
+
+该包装器依赖于 Function.prototype.toString() 来取得函数内容的字符串。 在一些像 PS3 和老式 Opera 手机浏览器上可能不会正常工作，在这些设备上需要使用 [optimizer](http://requirejs.org/docs/optimization.html) 来获取依赖。
+
+More information is available on the [CommonJS page](http://requirejs.org/docs/commonjs.html), and in the ["Sugar" section in the Why AMD page](http://requirejs.org/docs/whyamd.html#sugar).
+
+### 1.3.6 Define a Module with a Name
+
+你可能看到一些 define() 调用第一个参数是一个名字：
+
+```js
+   //Explicitly defines the "foo/title" module:
+    define("foo/title",
+        ["my/cart", "my/inventory"],
+        function(cart, inventory) {
+            //Define foo/title object in here.
+       }
+    );
+```
+
+通常这是 [optimization tool](http://requirejs.org/docs/optimization.html) 生成的结果。你可以显式指定模块名， 但是这就降低了它的适应性 —— 如果你将这些文件移动到其它目录之后你还需要修改它们的名字。 通常最好不要自己去给模块写一个名字，让优化工具去这样做吧。 优化工具需要添加这些名字以便将多个模块捆绑到一个文件中， 这样使得它们在浏览器中加载得更快！
