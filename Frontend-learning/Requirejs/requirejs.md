@@ -284,7 +284,7 @@ define(["./cart", "./inventory"], function(cart, inventory) {
 
 在 my/cart 和 my/inventory 模块加载完成之后， 该函数会收到 "cart" 和 "inventory" 作为这两个模块。
 
-由于不鼓励定义全局模块， 所以可以在同一个模块中使用模块的多个版本。 
+由于不鼓励定义全局模块， 所以可以在同一个模块中使用模块的多个版本。
 
 函数返回的对象定义了 "my/shirt" 模块， 这种方式定义的模块不会被当做全局对象。
 
@@ -346,3 +346,82 @@ More information is available on the [CommonJS page](http://requirejs.org/docs/c
 ```
 
 通常这是 [optimization tool](http://requirejs.org/docs/optimization.html) 生成的结果。你可以显式指定模块名， 但是这就降低了它的适应性 —— 如果你将这些文件移动到其它目录之后你还需要修改它们的名字。 通常最好不要自己去给模块写一个名字，让优化工具去这样做吧。 优化工具需要添加这些名字以便将多个模块捆绑到一个文件中， 这样使得它们在浏览器中加载得更快！
+
+### 1.3.7 模块的其他注意事项
+
+**一文件一模块:** 考虑到通过模块名查找文件路径算法的本质, 每个 JavaScript 文件应该只定义一个模块. 将多个模块打包到一起的操作应该交给优化工具去完成.
+
+**在 define() 中使用相对路径的模块名:** require('./relative/name') 可能发生在 define() 调用中, 请确保使用 require 来声明依赖, 以便能够正确的解析相对路径名.
+
+```js
+define(["require", "./relative/name"], function(require) {
+    var mod = require("./relative/name");
+});
+```
+
+Or better yet, use the shortened syntax that is available for use with [translating CommonJS](http://requirejs.org/docs/commonjs.html) modules:
+
+```js
+define(function(require) {
+    var mod = require("./relative/name");
+});
+```
+
+这种格式会使用 Function.prototype.toString() 来查找 `require()` 调用, 然后将它们添加到依赖数组中去,所以使用 require 才能够正确解析相对路径.
+
+如果你在一个目录里面创建了多个模块, 相对路径就显得特别有用, 因为使用兄弟模块的时候完全不需要知道目录的名字, 你完全可以很方便的将这个目录和其他人或其它项目共享
+
+**相对模块名称是指相对于其他模块名, 而非路径:** 加载器会在内部保存模块的名称而不是它们的路径. 因此，对于相对名称引用，这些引用相对于引用该引用的模块名称进行了解析，然后如果需要加载，则将该模块名称或ID转换为路径.
+
+下面的例子中, compute 包下面有 main 和 extras 模块:
+
+- lib/
+  - compute/
+    - main.js
+    - extras.js
+
+main.js 模块是这样的:
+
+```js
+define(["./extras"], function(extras) {
+    //Uses extras in here.
+});
+```
+
+路径配置是这样的:
+
+```js
+require.config({
+    baseUrl: 'lib',
+    paths: {
+      'compute': 'compute/main'
+    }
+});
+```
+
+`require(['compute'])` 执行完成后, `lib/compute/main.js` 的模块名就被设置为 `compute`.
+
+当需要 `./extras` 的时候, 它就会被解析为相对于 `compute`, 即 `compute/./extras` 会被规格化为 `extras`. 由于没有这个模块的路径配置, 生成的路径就变成了错路的 `lib/extras.js`.
+
+这种情况下, 使用 package 配置, 因为它可以把 main 模块设置为 `compute`, 但是加载器内部会使用 `compute/main` 作为模块 ID, 因此 `./extras` 的相对引用才能够正常工作.
+
+Another option is to construct a module at lib/compute.js that is just define(['./compute/main'], function(m) { return m; });, then there is no need for paths or packages config.
+
+Or, do not set that paths or packages config and do the top level require call as require(['compute/main']).
+
+
+**Generate URLs relative to module:** You may need to generate an URL that is relative to a module. To do so, ask for "require" as a dependency and then use require.toUrl() to generate the URL:
+
+```js
+define(["require"], function(require) {
+    var cssUrl = require.toUrl("./style.css");
+});
+```
+
+**Console debugging:** If you need to work with a module you already loaded via a require(["module/name"], function(){}) call in the JavaScript console, then you can use the require() form that just uses the string name of the module to fetch it:
+
+```js
+require("module/name").callSomeFunction()
+```
+
+Note this only works if "module/name" was previously loaded via the async version of require: require(["module/name"]). If using a relative path, like './module/name', those only work inside define
