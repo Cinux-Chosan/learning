@@ -155,3 +155,60 @@ db.movieDetails.updateOne({title: "The Martian"}, {
 ```js
 db.moiveDetails.updateMany({ rated: null}, { $unset: { rated: "" } });  // 移除该字段, 这里指定空字符串或其它值都可以
 ```
+
+
+
+
+## The nodejs driver 章
+
+```js
+let cursor = db.collection('companies').find(query);
+cursor.forEach(
+    function(doc) {
+        console.log( doc.name + " is a " + doc.category_code + " company." );
+    },
+    function(err) {  // 遍历结束或者出现错误的时候的时候会执行.
+        assert.equal(err, null);
+        return db.close();
+    }
+);
+```
+
+上面这种方式, find 会立即创建一个 cursor, 但是并不立即向数据库发出请求, 直到我们需要使用 cursor 提供的数据的时候才会向数据库请求数据(例如调用 forEach 的时候).
+
+如果我们写作下面的形式:
+
+```js
+db.collection('companies').find(query).toArray(function(err, docs) {
+  // you code here...
+}
+```
+
+相当于 find 返回了一个 cursor 过后, 在 cursor 上面调用 toArray() 方法. 只是链式写法. 调用 toArray() 的时候数据库就会认为我们需要数据, 并且希望得到一个包含所需数据的数组.
+
+### 排序(sort), 跳过(skip), 限制(limit)
+
+```js
+    var cursor = db.collection('companies').find(query);
+    cursor.sort({founded_year: -1}); // 单个排序
+    cursor.sort([["founded_year", 1], ["number_of_employees", -1]]);  // 多个字段排序, 因为字段有顺序, 所以使用数组
+
+    cursor.skip(nSkip);   // 跳过前 nSkip 条数据
+    cursor.limit(nLimit);  // 只返回 nLimit 条数据
+```
+
+**注意:** 值的注意的是, 不管代码中以何种顺序调用 sort, skip, limit, mongoDB 都会按照 sort, skip, limit 的顺序来执行.
+
+如果删除多个数据, 可以将他们的 _id 收集到一个数组里面, 使用 `$in` 作为条件, 然后执行 `deleteMany`:
+
+```js
+var filter = {"_id": {"$in": markedForRemoval}};  // markedForRemoval 是所有需要删除的元素的 _id
+
+db.collection("companies").deleteMany(filter, function(err, res) {
+
+    console.log(res.result);
+    console.log(markedForRemoval.length + " documents removed.");
+
+    return db.close();
+});
+```

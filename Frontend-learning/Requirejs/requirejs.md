@@ -409,7 +409,6 @@ Another option is to construct a module at lib/compute.js that is just define(['
 
 Or, do not set that paths or packages config and do the top level require call as require(['compute/main']).
 
-
 **Generate URLs relative to module:** You may need to generate an URL that is relative to a module. To do so, ask for "require" as a dependency and then use require.toUrl() to generate the URL:
 
 ```js
