@@ -198,3 +198,16 @@ function classof(o) {
 
 var f = function fact(x) { if (x <= 1) return 1; else return x * fact(x - 1);};
 ```
+
+根据 ECMAScript 3 和非严格模式的 ECMAScript 5 对函数调用的规定， 调用上下文（`this`的值）是全局对象。 然而， 在严格模式下， 调用上下文则是 `undefined`，以函数形式调用的函数通常不使用 `this` 关键字，不过正因为如此可以使用 `this` 关键字来判断是否是严格模式：
+
+```js
+var strict = (function () {return !this;}());
+```
+
+如果函数或者方法调用之前使用 new 关键字， 那么它就被当做构造函数调用， 构造函数内部会创建一个新对象， 使用 this 可以访问该对象。
+
+构造函数通常不使用 return， 它执行完毕后会返回一个新初始化的对象。会有以下情况：
+- 没有 return： 返回新创建的对象。
+- 使用 return 返回一个对象： 使用该对象
+- 使用 return 但是没有返回值或者返回原始值： 忽略返回值，继续使用新创建的对象。
