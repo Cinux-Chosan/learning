@@ -188,3 +188,13 @@ function classof(o) {
   Array.prototype.filter.call(s, x => x.match(/[^aeiou]/)).join(""); // JvScrpt
   ```
   - **tip**: 字符串是常量，所以把它们当作参数看待时是只读的。如push，sort，reverse，splice 等数组方法是无效的，并且不会报错！
+
+# 函数
+
+函数名称标识符: 函数名称是函数声明语句必需的部分. 它的用途就像变量的名字, 新定义的函数对象会赋值给这个变量. 对函数定义表达式来说, 这个名字是可选的: **如果存在, 该名字只存在于函数体中, 并指代该函数对象本身**. 如果函数表达式包含名称, 函数的局部作用域将会包含一个绑定到函数对象的名称. 实际上函数的名称将会成为函数内部的一个局部变量.
+
+```js
+(function fn(i) { return console.log(i) || i >= 0 && fn(--i); })(10); // 因此这种递归函数可以不用使用 arguments.callee 和 caller, 因为严格模式不允许使用它们
+
+var f = function fact(x) { if (x <= 1) return 1; else return x * fact(x - 1);};
+```
