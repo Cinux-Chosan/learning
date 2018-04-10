@@ -51,7 +51,7 @@ If we need only one common navbar for all pages in View then it must be a direct
 
 If we need only one common navbar / navbar for all views then it must be a direct child of Views element and be BEFORE all views.
 
-如果所有的 views 都使用一个 common navbar/navbar, 它就必须是 views 的直接子元素, 并且在所有的 view 之前.
+如果所有的 views 都使用一个 common navbar/navbar, 那该 navbar 就必须是 views 的直接子元素, 并且在所有的 view 之前.
 
 ```html
 <div class="views tabs">
@@ -72,7 +72,7 @@ common navbar 必须总是 views/view 的直接子元素, 并且在 toolbar(原�
 
 Dynamic Navbar is supported only in iOS Theme
 
-Dynamic Navbar 仅在 IOS 主题中支持.
+Dynamic Navbar 仅在 iOS 主题中得到支持.
 
 One of the iOS-theme awesome features is the dynamic navbar. Navbar's elements will slide and fade during pages transition and swipe back when dynamic navbar is enabled.
 
