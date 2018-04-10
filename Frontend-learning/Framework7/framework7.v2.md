@@ -1,8 +1,172 @@
+## navbar
+
+Navbar is a fixed area at the top of a screen that contains Page title and navigation elements.
+
+Navbar 是定位在屏幕顶部的区域， 它包含页面的标题和导航元素。
+
+Navbar has 3 main parts: Left, Title and Right. Each part may contain any HTML content, but it is recommended to use them in the following way:
+
+Navbar 有 3 个主要部分组成： Left， Title 和 Right。 每个部分可以包含任意 HTML 内容， 但是建议按照下面的方式来使用它们：
+
+- Left part is designed to be used with "back link", icons or with single text link.
+
+  Left 部分用于配合 “返回”链接， icon 或者单个文本链接一起使用 
+
+- Title part is used to display page title or tab links (buttons row/segmented controller).
+
+  Title 部分用于显示页面 title 或者 tab 链接
+
+- Right part is for the same as the Left part.
+
+  Right 部分同 Left 部分
+
+
+### Navbar HTML Layout
+
+Navbar layout is pretty simple and self explaining:
+
+Navbar 布局非常简单，一看即懂：
+
+```html
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">Left</div>
+        <div class="title">Page Title</div>
+        <div class="right">Right</div>
+    </div>
+</div>
+```
+
+Note that Navbar's Title element has lowest width priority, and when window screen will not fit all three elements Title part will be cut.
+
+注意： Navbar 的 Title 元素宽度的优先级最低， 当屏幕不足以完全展示所有的这 3 个元素的时候 Title 部分会被剪断。
+
+So if you use plain text in Title part it will have ellipsis (...) on the end when cuted. But you need to take care about it if you have some custom elements there.
+
+因此如果 Title 部分是使用纯文本的话， 超出的时候就会以省略号(...)代替。 但是如果在这里使用一些自定义元素的话你就需要小心。 
+
+### Navbar With Links
+
+To add links in Left or Right part you just need to add the plain `<a>` tag with additional `link` class:
+
+你只需要使用 `<a>` 标签加上额外的 class `link` 就可以在 Left 和Right 部分添加链接了。 
+
+```html
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">
+            <a href="#" class="link">Left Link</a>
+        </div>
+        <div class="title">Page Title</div>
+        <div class="right">
+            <a href="#" class="link">Right Link</a>
+        </div>
+    </div>
+</div>
+```
+
+### Multiple Links
+
+Nothing extraordinary. Just add more `<a class="link"` to the required part:
+
+如果有多个链接只需要多几个 `<a class="link"` 标签即可：
+
+```html
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">
+            <a href="#" class="link">Left 1</a>
+            <a href="#" class="link">Left 2</a>
+        </div>
+        <div class="title">Page Title</div>
+        <div class="right">
+            <a href="#" class="link">Right 1</a>
+        </div>
+    </div>
+</div>
+```
+
+### Links With Icons + Text
+
+Here comes a little difference. In this case we need to wrap link's text with `<span>` element. It is required for correct spacing between icon and "word", and for animation:
+
+使用带有 ICON 和 文字的链接就有一点不同， 需要把文字放在 `<span>` 元素中。 用它(span)来控制 icon  和 文字之间的间隔， 并且还可以用于动画：
+
+```html
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">
+            <a href="#" class="link">
+                <i class="icon icon-back"></i>
+                <span>Back</span>
+            </a>
+        </div>
+        <div class="title">Title</div>
+        <div class="right">
+            <a href="#" class="link">
+                <i class="icon another-icon"></i>
+                <span>Menu</span>
+            </a>
+        </div>
+    </div>
+</div>
+```
+
+### Links With Icons Only
+
+If need links with icons and without text we need to additional `icon-only` class to links. With this class link will have fixed size so we can't miss it with finger:
+
+如果只使用 icon 而不需要文字就需要给链接添加额外的 class `icon-only`。使用这个 class 可以给链接固定的大小，让我们的手指更加容易点到它（否则icon太小不容易点到）。
+
+```html
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">
+            <a href="#" class="link icon-only">
+                <i class="icon icon-back"></i>
+            </a>
+        </div>
+        <div class="title">Title</div>
+        <div class="right">
+            <a href="#" class="link icon-only">
+                <i class="icon another-icon"></i>
+            </a>
+        </div>
+    </div>
+</div>
+```
+
+### Theme-specific Styling
+
+In iOS theme Navbar has thin border on the bottom. To disable this border you need to add `no-hairline` class to navbar element:
+
+iOS 主题的 navbar 底部有一个细边框， 可以给 navbar 元素添加 class `no-hairline` 来去除该边框。
+
+```html
+<div class="navbar no-hairline">...</div>
+```
+
+In MD theme Navbar has shadow. To disable this shadow you need to add no-shadow class to navbar element:
+
+在 MD 主题下， navbar 有一个阴影， 可以给 navbar 元素添加 class `no-shadow` 来去除该阴影。
+
+```html
+<div class="navbar no-shadow">...</div>
+```
+
 ### navbar 类型
+
+Now let's look where we can place our Navbar in DOM. There are several rules to place Navbar.
+
+现在来看看 DOM 中哪些地方可以放置 Navbar。这里有几条规则如下。
 
 #### Static Navbar
 
-在 page-content 里面, 会随着页面滚动.
+Static navbar position is the probably most rarely used layout type. In this case Navbar is just part of the scrollable page content:
+
+Static navbar 是最少用到的类型。 这种 Navbar 作为 page content 的一部分， 会随着页面滚动而滚动。
+
+（在 page-content 里面, 会随着页面滚动.）
 
 ```html
 <div class="page">
@@ -17,7 +181,11 @@
 
 #### Fixed Navbar
 
-在 page 下面, 不会随着页面滚动. 它**必须**是 page 的直接子元素, 如果 page 没有 fixed toolebar 那么它必须在 toolbar 之前.
+Fixed navbar is also part of the page but it is always visible on screen not depending on page scroll. In this case it must be a direct child of page and if page has also fixed toolbar then it must be BEFORE the toolbar:
+
+Fixed navbar 也是 page 的一部分， 但是它在屏幕上总是可见的而不会随着页面的滚动而显示/隐藏。这种 Navbar 必须是 page 的直接子元素并且如果 page 也使用了 fixed toolbar，那么它必须在 fixed toolbar 之前。
+
+（在 page 下面, 不会随着页面滚动. 它**必须**是 page 的直接子元素, 如果 page 没有 fixed toolebar 那么它必须在 toolbar 之前）
 
 ```html
 <div class="page">
@@ -32,6 +200,10 @@
   </div>
 </div>
 ```
+
+Fixed Navbar must always be a direct child of a page and BEFORE the toolbar (if fixed toolbar is used on this page)
+
+Fixed Navbar 必须总是 page 的直接子元素并且在 toobar 之前（如果该页面使用了fixed toolbar）
 
 #### Common Navbar
 
