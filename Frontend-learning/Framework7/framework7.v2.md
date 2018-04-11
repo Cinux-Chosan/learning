@@ -595,7 +595,7 @@ Now lets look at one of the most important parts of page navigation, "page event
 现在来看看页面导航中最重要的部分之一的 "页面事件", 页面事件允许我们通过执行 JavaScript 代码来操纵那些已经加载的指定页面.
 
 |Event|Target|Description|
-|----|----|----|----|
+|----|----|----|
 |page:mounted|Page Element `<div class="page">`|当新 page 插入到 DOM 时触发该事件|
 |page:init|Page Element `<div class="page">`| 当 Framework7 初始化必要页面的 components 和 navbar 时触发|
 |page:reinit|Page Element `<div class="page">`|当导航到已经初始化过的页面时会触发该事件|
