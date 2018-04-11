@@ -10,7 +10,7 @@ Navbar 有 3 个主要部分组成： Left， Title 和 Right。 每个部分可
 
 - Left part is designed to be used with "back link", icons or with single text link.
 
-  Left 部分用于配合 “返回”链接， icon 或者单个文本链接一起使用 
+  Left 部分用于配合 “返回”链接， icon 或者单个文本链接一起使用
 
 - Title part is used to display page title or tab links (buttons row/segmented controller).
 
@@ -43,13 +43,13 @@ Note that Navbar's Title element has lowest width priority, and when window scre
 
 So if you use plain text in Title part it will have ellipsis (...) on the end when cuted. But you need to take care about it if you have some custom elements there.
 
-因此如果 Title 部分是使用纯文本的话， 超出的时候就会以省略号(...)代替。 但是如果在这里使用一些自定义元素的话你就需要小心。 
+因此如果 Title 部分是使用纯文本的话， 超出的时候就会以省略号(...)代替。 但是如果在这里使用一些自定义元素的话你就需要小心。
 
 ### Navbar With Links
 
 To add links in Left or Right part you just need to add the plain `<a>` tag with additional `link` class:
 
-你只需要使用 `<a>` 标签加上额外的 class `link` 就可以在 Left 和Right 部分添加链接了。 
+你只需要使用 `<a>` 标签加上额外的 class `link` 就可以在 Left 和Right 部分添加链接了。
 
 ```html
 <div class="navbar">
@@ -555,4 +555,209 @@ $$('.show-navbar').on('click', function () {
     </div>
   </div>
 </div>
+```
+
+--------
+--------
+
+## Page
+
+Page is one of the main components (containers) used to display app content.
+
+Page 用于展示 app 的内容, 是主要的组件(容器)之一.
+
+### Page Layout
+
+```html
+<div class="page" data-name="home">
+  <div class="page-content">
+    ... scrollable page content goes here ...
+  </div>
+</div>
+```
+
+#### Page Name
+
+As you may note, each page has a `data-name` attribute with a unique page name. It's not required but can be useful within "page events" or "page callbacks". It can help us to define which page is loaded and available so you can make required manipulations to the page.
+
+正如你看的的那样, 每个 page 都有一个唯一的 `data-name` 属性. 虽然它并非必需, 但是在 "page 事件" 和 "page 回调函数" 中非常有用. 它可以帮助我们确定哪个页面已加载并可用，以便对页面进行一些必要的操作。
+
+#### Page Content
+
+All visual content (like list views, forms, etc.) should put inside of `<div class="page-content"> `which should be a child of `<div class="page">`. It's required for correct styling, layout and scrolling.
+
+所有视觉内容都应该放到 `<div class="page-content">` 中, 它作为 `<div class="page">` 的直接子元素. 这样做才能得到正确的样式、布局、和页面滚动.
+
+### Page Events
+
+Now lets look at one of the most important parts of page navigation, "page events". **Page Events** allow us to manipulate just loaded pages by executing JavaScript for those specific pages:
+
+现在来看看页面导航中最重要的部分之一的 "页面事件", 页面事件允许我们通过执行 JavaScript 代码来操纵那些已经加载的指定页面.
+
+|Event|Target|Description|
+|----|----|----|----|
+|page:mounted|Page Element `<div class="page">`|当新 page 插入到 DOM 时触发该事件|
+|page:init|Page Element `<div class="page">`| 当 Framework7 初始化必要页面的 components 和 navbar 时触发|
+|page:reinit|Page Element `<div class="page">`|当导航到已经初始化过的页面时会触发该事件|
+|page:beforein|Page Element `<div class="page">`| 当一切都初始化完成过后并且 page 已经准备好切换到 view 中时触发 (into active/current position)|
+|page:afterin|Page Element `<div class="page">`| 在 page 被切换到 view 中之后触发|
+|page:beforeout|Page Element `<div class="page">`| page 被从 view 切换出来之前触发 |
+|page:afterout|Page Element `<div class="page">`| page 被切换到 view 之后触发 |
+|page:beforeremove|Page Element `<div class="page">`| page 即将被移除 DOM 之前触发, 如果你需要解绑一些事件和销毁一些插件来释放内存的时候这个事件就特别有用|
+
+Lets see how we can use these events. There are two ways to add page event handlers:
+
+让我们看看如何使用这些事件, 有两种方式可以添加页面事件处理函数:
+
+```js
+// Option 1. Using one 'page:init' handler for all pages
+$$(document).on('page:init', function (e) {
+  // Do something here when page loaded and initialized
+})
+
+// Option 2. Using live 'page:init' event handlers for each page
+$$(document).on('page:init', '.page[data-name="about"]', function (e) {
+  // Do something here when page with data-name="about" attribute loaded and initialized
+})
+```
+
+### Page Loading Sequence Classes
+
+When a new page is loading and transitioned into the view (main visible part of the app) it has different classes on page element.
+
+一个新的 page 被加载时和切换到 view(app 的主要可见部分) 中这个过程, page 元素会被赋予不同的 class.
+
+When we load/open new page the following happens:
+
+当 load/open 新页面时, 会发生下面的事情:
+
+1. Currently active page has `page-current` class.
+
+    当前活跃的页面会有一个 class `page-current`
+
+2. If page we load not in DOM (e.g. loaded via Ajax or using template or from component) it will be added to DOM.
+
+    如果我们加载的页面不存在与 DOM 中(如通过 Ajax 或使用 template 或来自 component)那么它就会被添加到 DOM 中去.
+
+3. Page that we load/open will have additional `page-next`class set on its element.
+
+    我们 加载/打开 的 page 会被赋予一个额外的 class `page-next`
+
+4. Router element (`<div class="view">`) will have additional `router-transition-forward`class that does the following:
+
+    Router 元素(`<div class="view">`) 会被赋予一个额外的 class `router-transition-forward`来做以下事情:
+
+    - page with `page-next` (new page) class moves into the view
+
+        带有 class `page-next` 的 page 移动到 view 中.
+
+    - page with `page-current` (current page) class moves out of the view
+
+        带有 class `page-current` 的元素移除 view
+
+5. After transition completed, the new page that we loaded will have `page-current` class
+
+    切换完成过后, 我们加载的这个新 page 会有一个 class `page-current`
+
+6. And the page that was previously active will have `page-previous` class
+
+    之前活跃的那个 page 会被添加 class `page-previous`
+
+When we load/open previous page (go back) the following happens:
+
+当我们 load/open 前一个 page 的时候(返回)会发生下面的事情:
+
+1. Currently active page has `page-current` class.
+
+    当前活跃的 page 被添加 class `page-current`
+
+2. If page we go back to not in DOM (e.g. loaded via Ajax or using template or from component) it will be added to DOM.
+
+    如果返回的页面不在 DOM 中(如: 通过 Ajax 加载或者使用 template 或者来自 component)那么它就会被添加到 DOM 中去
+
+3. Page that we go back to will have additional page-previous class set on its element.
+
+    我们即将到达的那个 page 会被添加额外的 class `page-previous`
+
+4. Router element (<div class="view">) will have additional `router-transition-backward`class that does the following:
+
+    Router 元素 (<div class="view">) 将会添加额外的 class `router-transition-backward` 来做以下事情:
+
+    - page with `page-previous` (page that we go back to) class moves into the view
+
+        带有 class `page-previous` 的 page(即返回的页面) 被移入 view 中
+
+    - page with `page-current` (current page) class moves out of the view
+
+        带有 class `page-current` 的 page 被移除 view
+
+5. After transition completed, the new page that we returned to will have `page-current` class
+
+    切换完成后, 新的页面会有 class `page-current`
+
+6. And the page that was previously active will have `page-next` class. In case this page was added to DOM dynamically, it will be removed from DOM.
+
+    之前活跃的页面有 class `page-next`. 如果此页面是动态添加到 DOM，那么它将从 DOM 中删除。
+
+### Page Data
+
+As you may see it is pretty easy, but how do you determine which page is loaded when we use only one handler? For this case we have Page Data in the event details:
+
+所有的工作都如你看到的一样简单, 但是你如何在一个事件处理函数中知道是哪个页面被加载了呢? 这种情况下我们就需要使用 event detail 中的 page data:
+
+```js
+// In page events:
+$$(document).on('page:init', function (e) {
+  // Page Data contains all required information about loaded and initialized page
+  var page = e.detail;
+})
+```
+
+Or in case the event handler was assigned using Dom7 like in example above then it will be passed in second argument:
+
+如果是像上面那样使用 Dom7 来添加的事件处理函数, 那么它还可以收到第二个参数:
+
+```js
+// In page events:
+$$(document).on('page:init', function (e, page) {
+  console.log(page);
+})
+```
+
+Now, in the example above we have page data in **page** variable. It is an object with the following properties:
+
+上面的例子中我们通过变量 page 得到 page data, 它是一个具有以下属性的对象:
+
+||||
+|---|---|---|
+|page.app|object|初始化后的 app 实例|
+|page.view|object| 包含当前 page 的 View 实例 (if this View was initialized)|
+|page.router|object|包含当前 page 的 Router 实例 (if this View was initialized). 同 page.view.router|
+|page.app|string|初始化后的 app 实例|
+|page.name|string|page 的 `data-name` 属性的值|
+|page.el|HTMLElement| Page 元素|
+|page.$el|object|包含 page 元素的Dom7 实例|
+|page.navbarEl|HTMLElement| 该 page 相关的 navbar 元素. 仅在开启了 dynamic navbar 的 iOS 主题中有效.|
+|page.$navbarEl|object|包含该 page 相关的 navbar 元素的 Dom7 实例, 仅在开启了 dynamic navbar 的 iOS 主题中有效.|
+|page.from|string|表示该 page 在切换之前的位置或该 page 来的方向. 如果是加载新 page 那么它就是 `next`, 如果是返回到当前页面那它就是 `previous`, 如果该 page 替换了当前活跃的 page 那么它就是 `current`.|
+|page.to|string| 新 page 的位置或者改页面将会去到的位置. 也是 `next`, `previous`, `current`|
+|page.position|string|同 page.from|
+|page.direction|string|该 page 切换的方向(if applicable). 可以是 `forward` 或 `backward`|
+|page.route|object|与该 page 相关联的 Route|
+|page.pageFrom|object| 在新 page 来临之前, 当前正处于活跃状态的 page data.|
+|page.context|object|当使用 Template7 page 的时候传入该 page 的 Template7 上下文|
+|page.fromPage|object|前一个活跃 page 的 page data|
+
+### Access To Page Data
+
+If you don't use page events/callbacks and need to access to page data, it is possible via the `f7Page` property on its HTMLElement:
+
+如果你没有使用页面 事件/回调 并且需要获取 page data, 可以通过它的 HTML元素的 `f7Page` 属性来得到page data:
+
+```js
+var $$ = Dom7;
+
+var page = $$('.page[data-name="somepage"]')[0].f7Page;
+
+// do something with page data
 ```
