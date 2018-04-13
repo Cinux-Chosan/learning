@@ -761,3 +761,290 @@ var page = $$('.page[data-name="somepage"]')[0].f7Page;
 
 // do something with page data
 ```
+
+## Messages
+
+Messages component will help you with visualisation of comments and messaging system in your app.
+
+Messages 组件可以帮助你将 app 中的注释和消息系统可视化.
+
+### Messages Layout
+
+```html
+<div class="page">
+  <div class="page-content messages-content">
+    <div class="messages">
+      <!-- Date stamp -->
+      <div class="messages-title"><b>Sunday, Feb 9</b> 12:58</div>
+
+      <!-- Sent message (by default - green and on right side) -->
+      <div class="message message-sent">
+        <div class="message-content">
+          <!-- Bubble with text -->
+          <div class="message-bubble">
+            <div class="message-text">Hi, Kate</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Another sent message -->
+      <div class="message message-sent">
+        <div class="message-content">
+          <div class="message-bubble">
+            <div class="message-text">How are you?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received message (by default - grey on left side) -->
+      <div class="message message-with-avatar message-received">
+        <!-- Sender name -->
+        <div class="message-name">Kate</div>
+
+        <!-- Bubble with text -->
+        <div class="message-text">I am fine, thanks</div>
+
+        <!-- Sender avatar -->
+        <div style="background-image:url(http://lorempixel.com/output/people-q-c-100-100-9.jpg)" class="message-avatar"></div>
+      </div>
+
+      <div class="message message-received">
+        <!-- Sender name -->
+        <div class="message-avatar" style="background-image:url(http://lorempixel.com/100/100/people/7)"></div>
+        <div class="message-content">
+          <!-- Sender name -->
+          <div class="message-name">Blue Ninja</div>
+          <!-- Bubble with text -->
+          <div class="message-bubble">
+            <div class="message-text">Hi there, I am also fine, thanks! And how are you?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+#### Messages page layout:
+
+- `messages-content` - required additional class for messages wrapper. Should be added to page-content
+
+    添加到 page-content 上的附加的必要 class, 作为消息的包装
+
+- `messages` - required additional wrapper for messages bubbles. Required element.
+
+    messages 气泡的附加包装, 必须元素.
+
+- `messages-title` - messages title
+
+    消息标题
+
+- `message` - single message
+
+    单个消息
+
+### Single Message Layout
+
+Here is a full single message layout:
+
+下面有一个完成的单个消息的布局:
+
+```html
+<div class="message">
+  <div class="message-avatar" style="background-image:url(path/to/avatar)"></div>
+  <div class="message-content">
+    <div class="message-name">John Doe</div>
+    <div class="message-header">Message header</div>
+    <div class="message-bubble">
+      <div class="message-text-header">Text header</div>
+      <div class="message-image">
+        <img src="path/to/image">
+      </div>
+      <div class="message-text">Hello world!</div>
+      <div class="message-text-footer">Text footer</div>
+    </div>
+    <div class="message-footer">Message footer</div>
+  </div>
+</div>
+```
+
+- `message-avatar` - sender avatar, optional (发送方的头像, 可选)
+
+- `message-name` - sender name, optional (发送方的名字, 可选)
+
+- `message-header` - single message header, optional (单个消息的消息头, 可选)
+
+- `message-text-header` - text header inside of bubble, optional (气泡里面的文本头, 可选)
+
+- `message-image` - message image, optional (消息图片, 可选)
+
+- `message-text` - message text, optional (消息文本, 可选)
+
+- `message-text-footer` - text footer inside of bubble, optional (气泡里面的消息脚, 可选)
+
+- `message-footer` - footer text after bubble, optional (气泡之外的文本脚, 可选)
+
+Additional classes for single message container:
+
+附加到单个消息容器上的 clsss:
+
+- `message-sent` - additional class for single message which indicates that this message was sent by user. It stays on right side with green background color.
+
+    用于表明来自用户的单个消息的附加 class, 它停在消息框右侧, 并且具有绿色的背景.
+
+- `message-received` - additional class for single message which indicates that this message was received by user. It stays on left side with grey background color.
+
+    用于表明用户接收消息的附加 class, 它停留在消息框左侧, 并且有灰色背景.
+
+- `message-tail` - additional class for single message (received or sent) to add bubble "tail"
+
+    单个消息(接收或发送)的气泡尾巴
+
+- `message-same-name` - additional class for indicating that message has same sender name as previous message
+
+    用于表明该消息与前一条消息的发送者同名的附加 class
+
+- `message-same-avatar` - additional class for indicating that message has same avatar as previous message
+
+    用于表明该消息与前一条消息的发送者具有相同头像的附加 class
+
+- `message-same-header` - additional class for indicating that message has same message-header as previous message
+
+    用于表明当前消息与前一条消息具有相同的消息头的附加 class
+
+- `message-same-footer` - additional class for indicating that message has same message-footer as previous message
+
+    用于表明该消息与前一条消息具有相同消息脚的附加 class
+
+- `message-last` - additional class for single message (received or sent) to indicate last received or last sent message in current conversation by one sender
+
+    用于表明该消息是当前的交谈中最后收到(或发送)消息的附加 class
+
+- `message-first` - additional class for single message (received or sent) to indicate first received or first sent message in current conversation by one sender
+
+    用于表明该消息是当前的交谈中第一条收到(或发送)消息的附加 class
+
+
+### Messages App Methods
+
+Let's look on list of all available parameters:
+
+
+|Parameter|Type|Default|Description|
+|----|----|----|----|
+|`autoLayout`|`boolean`|`true`|根据传递的条件启用自动布局以自动添加所有必需的附加 class |
+|`newMessagesFirst`|`boolean`|`false`|该选项使得新消息出现在上面(默认是下面)|
+|`scrollMessages`|`boolean`|`true`|添加新消息的时候消息是否自动滚动|
+|`scrollMessagesOnEdge`|`boolean`|`true`|如果开启该选项, 仅当用户在消息视图的顶部/底部的时候消息才会自动滚动|
+|`messages`|`array`||消息的初始化数组, 数组中的每个元素代表一个包含单个消息参数的消息对象|
+|`on`|`object`||包含事件处理函数的对象. 如:<br> var messages = app.messages.create({<br>&emsp;el: '.messages',<br>&emsp;on: {<br> &emsp;&emsp;change: function () {<br> &emsp;&emsp;&emsp;console.log('Textarea value changed')<br> &emsp;&emsp;}<br> &emsp;}<br> })<br>
+|`renderMessage`|`function(message)`||渲染单个消息的函数, 必须返回整个消息的 HTML 字符串|
+
+#### Autolayout Conditions
+
+|Parameter|Type|Default|Description|
+|----|----|----|----|
+|`firstMessageRule`|`function(message, previousMessage, nextMessage)`||该函数基于当前消息、前一条、后一条消息来判断该消息是否是第一条消息, 返回 true 或 false, 如果匹配则会给该消息添加 class `message-first`|
+|`lastMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 用于判断消息是否是最后一条消息, 会添加 class `message-last`|
+|`tailMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 用于判断消息是否需要尾巴, 会添加 class `message-tail`|
+|`sameNameMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 会添加 class `message-same-name`|
+|`sameHeaderMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 会添加 class `message-same-header`|
+|`sameFooterMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 会添加 class `message-same-footer`|
+|`sameAvatarMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 会添加 class `message-same-avatar`|
+|`customClassMessageRule`|`function(message, previousMessage, nextMessage)`||同`firstMessageRule`, 用于添加自定义 class|
+
+### Single Message Parameters
+
+Let's look on single message parameters object that we should use when we pass `messages` array:
+
+现在来看看传入消息数组的单个消息对象所需要的参数:
+
+| Parameter|Type|Default|Description|
+|--|--|--|--|
+|`text`|`string`||消息文本|
+|`header`|`string`||单个消息头|
+|`footer`|`string`||单个消息脚|
+|`name`|`string`||发送人的名字|
+|`avatar`|`string`||发送人的头像 url|
+|`type`|`string`|`sent`|消息类型 - `sent` 或 `received`|
+|`textHeader`|`string`||消息文本头|
+|`textFooter`|`string`||消息文本脚|
+|`image`|`string`||消息图片的 HTML , e.g. `<img src="path/to/image">`. 可以用来代替 `imageSrc` 参数|
+|`imageSrc`|`string`||同 `image`, 可以用来代替 `image`|
+|`isTitle`|`boolean`||定义应该呈现为消息还是所有消息的标题|
+
+### Messages Methods & Properties
+
+So to create Messages we have to call:
+
+调用下面的方法来创建 Messages:
+
+```js
+var messages = app.messages.create({ /* parameters */ })
+```
+
+After we initialize Messages we have its initialized instance in variable (like `messages` variable in example above) with helpful methods and properties:
+
+|Properties||
+|--|--|
+|`messages.params`|包含传入的初始化参数对象|
+|`messages.el`| Messages 容器的 HTML 元素 (`<div class="messages">`)|
+|`messages.$el`|Messages 容器的 Dom7 元素|
+|`messages.messages`|消息数组|
+
+|Methods||
+|--|--|
+|messages.showTyping(`message`)|显示消息光标 <br> `message` - `object` - 要添加的消息的参数|
+|messages.hideTyping()|隐藏光标|
+|messages.addMessage(message, method, animate)|根据方法的参数来将新消息添加到顶部或底部<br>&emsp;`message` - `object` - 要添加的消息的参数, `必须`<br>&emsp;`method` - `string` - (`append` or `prepend`) 决定在消息容器的末端或开始处添加新消息. `可选`, 如果没有指定, 则基于 `newMessagesFirst` 参数<br>&emsp;`animate` - `boolean` - (默认为 `true`) 如果为 false, 则消息会立即添加, 不会有切换和滚动的动画, `可选`. <br>&emsp;方法返回消息实例|
+|messages.addMessages(`messages`, `method`, `animate`)|一次添加多个消息<br>&emsp;`messages` - `array` 包含需要添加的消息的数组. 每个消息都应该是一个包含消息参数的对象, `必须`.<br>&emsp;方法返回消息实例|
+|messages.removeMessage(`message`)|移除消息<br>&emsp;`message` - `HTMLElement` 或 `string` (CSS 选择器) 或 数字 (指代消息数组的下标), 指代被移除的消息<br>&emsp;方法返回消息实例|
+|messages.removeMessages(`messages`)|移除多个消息<br>&emsp;`messages` - `array` 包含待移除消息的数组<br>&emsp;方法返回消息实例|
+|messages.scroll(`duration`, `position`)|根据 参数`newMessagesFirst` 指定的值, 将消息滚动到顶部/底部<br>&emsp;`duration` - `number` 滚动执行的毫秒数<br>&emsp; `position` - `number` 滚动的位置, 以像素(px)为单位|
+|`messages.renderMessages()`|根据消息数组渲染消息|
+|`messages.layout()`|强制消息自动布局|
+|`messages.clear()`|清除所有的消息|
+|`messages.destroy()`|销毁 messages 实例|
+
+### Messages Events
+
+Messages will fire the following DOM events on messages element and events on app and messages instance:
+
+Messages 会在 messages 元素、app 和 messages 实例上触发以下 DOM 事件:
+
+#### DOM Events
+
+|Event|Target|Description|
+|--|--|--|
+|`messages:beforedestroy`|Messages Element `<div class="messages">`|事件将在 Messages 实例被销毁之前触发|
+
+#### App and Messages Instance Events
+
+Messages instance emits events on both self instance and app instance. App instance events has same names prefixed with messages.
+
+Messages 实例在自己和 app实例 上触发以下事件。app 实例事件具有以 `message` 为前缀的相同事件名称.
+
+|Event|Target|Arguments|Description|
+|--|--|--|--|
+|`beforeDestroy`|messages|(`messages`)|事件将在 Messages 实例被销毁之前触发|
+|`messagesBeforeDestroy`|app|(`messages`)|事件将在 Messages 实例被销毁之前触发|
+
+### Messages Auto Initialization
+
+If you don't need to use Messages API and your Messages is inside of the page and presented in DOM on moment of page initialization then it can be auto initialized with just adding additional `messages-init` class to messages element, and all required parameters can be passed using `data-` attributes:
+
+当 page 初始化的时候, 消息已经在 DOM 中, 并且你不希望使用 Messages API, 那么给 messages 元素添加 class `message-init`, 所有需要的参数可以通过 `data-` 属性来添加:
+
+```html
+<div class="messages messages-init" data-new-messages-first="true">
+  ...
+</div>
+```
+
+**Parameters that used in camelCase, for example newMessagesFirst, in data- attributes should be used in kebab-case as data-new-messages-first**
+
+参数使用驼峰命名, 如 newMessagesFirst, 在 `data-` 属性中应该使用中划线命名法.
+
+### [Examples](http://framework7.io/docs/messages.html#examples)
+
+参考 [http://framework7.io/docs/messages.html#examples](http://framework7.io/docs/messages.html#examples)
