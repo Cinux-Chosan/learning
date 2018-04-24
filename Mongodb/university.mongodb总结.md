@@ -212,3 +212,65 @@ db.collection("companies").deleteMany(filter, function(err, res) {
     return db.close();
 });
 ```
+
+## Schema Design
+
+### Relationships
+
+#### 一对一
+
+比如有一个 Employee 代表员工, 一个 Resume 代表其简历.
+
+每个员工有一份自己的简历, 我们可以把 Resume 作为一个 Employee 的属性放在 Emploee 下面, 也可以把 Employee 放到 Resume 下面, 这取决于我们的到底要如何使用数据:
+
+一种情况: 如果我们经常需要访问 Employee 的数据, 但并不经常使用 Resume 的数据, 而 Resume 的数据又比较大, 我们不希望在使用 Employee 的时候将这部分数据也一起从数据库中取出来放进内存中, 我们最好就把它们分开, 通过外键进行关联.
+
+第二种情况: 考虑它们在项目中哪个是不断增长的, 哪个不怎么增长. 例如我们不经常对 Employee 写入数据, 但经常会更新 Resume, 或者 Resume 的数据太大等因素
+
+第三种情况: 如果希望对 Employee 和 Resume 使用原子操作, 那就把它们放到一起.
+
+#### 一对多
+
+如果较多的情况不算多, 那就可以放到一起. 比如博客的留言就可以作为博客的一个属性放在一起.
+
+如果较多的情况确实比较多, 比如一个城市有 8 千万人, 那么就把它们分开来放. 例如分别用一个 collection city 来存放所有的城市, 一个 collection people 来放所有的人,
+
+#### 多对多
+
+以教师和学生为例, 它们就应该分在放, 因为可能在已经有教师的时候, 还没有对应的学生. 插入学生之前, 需要为其分配教师.
+
+### Benifits Of Embedding
+
+嵌套的主要的两个好处就是:
+
+- 性能
+  - 性能主要是读取的性能. 磁盘需要一点时间来查找数据的第一个字节所在的区域, 当找到过后, 从他开始读取数据就比较快了. 所以数据放在一起会比分两个 collection 在读取上面更加快速
+
+## Indexes and Performance
+
+mongodb 3.0 提供插件式的存储引擎(介于mongo server 和 磁盘之间的引擎, 它是 mongo server 与 磁盘通信的接口)
+整个流程可以参考 [mongo university 视频](https://university.mongodb.com/course/MongoDB/M101JS/2018_March/chapter/Week_5_Indexes_and_Performance/lesson/5511794cd8ca39285477dfd2/tab/vertical_6cb5df1bc7d1)
+
+现在有两种存储引擎:
+
+- MMAP (默认)
+- Wired Tiger (2014年被 mongodb 收购, 该团队也是创建 Berkeley DB等的团队, 还有 SleepyCat 公司的其他产品)
+
+### MMAP
+
+v1 使用 mmap 系统调用, 可以通过 `man mmap` 查看. 它用于控制磁盘和建立磁盘的虚拟内存, 内存分页和映射等.
+提供 in place update, 即在所要更新的数据原来在磁盘上的位置进行就地更新(与下面的 wired tiger 进行比较)
+
+### Wired Tiger
+
+- 提供 document level concurrency(MMAP 是 collection level); 如果是对相同的 document 进行写, 那么其中一个写操作就会被解除等待重新尝试, 这个操作对实际的应用程序是透明的.
+- 支持压缩: documents 和 indexes . Wired Tiger 会用自己的方式来管理哪些数据会被保留在内存中, 哪些数据会被写入磁盘. 你并不希望压缩后的数据保留在内存中, 因为如果你需要访问的数组在内存中命中, 那你还需要对它进行解压. 但是 wired tiger 就不需要解压, 它在内存中清晰的保存着. 但是在写入磁盘之前, 会对它们进行压缩. 考虑到 mongodb 这种数据库中很多字段名重复, 所以压缩能够节省很多磁盘空间.
+
+不提供 in place update, 每次需要更新数据的时候, 就将之前的数据标记为不再使用, 重新在磁盘上开辟新的空间, 并把数据写到这里. 最后它会回收不再使用的空间.
+
+
+如果希望使用 Wired Tiger 作为存储引擎, 使用 `-storageEngine` 标记, 后面指定为 `wiredTiger`:
+
+``` sh
+mongod -dbpath WT -storageEngine wiredTiger
+```
