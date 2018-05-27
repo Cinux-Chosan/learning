@@ -280,3 +280,93 @@ c = [1,2,3]
 d = [9,8,7,6] 
 zip(c,d) # [(1, 9), (2, 8), (3, 7)]
 ```
+
+### 循环
+`for ... else ...` 和 `while ... else ...`
+```py
+for el in someList:
+  # do something
+  pass
+else:
+  # do something else
+  pass
+```
+
+```py
+while isTruthy:
+  # do something
+  pass
+else:
+  # do something else
+  pass
+```
+
+## 文件
+
+- 读取
+
+```py
+f = open('./test.py', 'r')  # r 为默认模式，即只读
+for line in f:
+    print(line, end="")
+f.close()  # 不要忘记关闭文件描述符
+```
+
+### with 
+
+```py
+with open("test.py","r") as f:
+    print f.read()
+```
+
+### 状态
+
+```py
+import os
+file_stat = os.stat("test.py")   # 查看这个文件的状态 
+```
+
+```py
+import os
+import time
+print(time.localtime(os.stat('test.py').st_atime))
+```
+
+### read/readline/readlines
+
+- read([size])
+- readline([size])
+- readlines([size])：读取出来是包含每一行的数组 
+
+读大文件：可以使用循环和 realine 配合来完成， 也可以使用 fileinput 模块：
+
+```py
+import fileinput
+for line in fileinput.input("test.py"):
+    pass
+```
+
+### seek() 移动文件指针
+
+`seek（offset[，whence]）`
+
+whence的值： 
+
+- `0`，默认值，表示从文件开头开始计算指针偏移的量。这时offset必须是大于等于 0 的整数。 
+- `1`，表示从当前位置开始计算偏移量。offset如果是负数，则表 示从当前位置向前移动，整数表示向后移动。 
+- `2`，表示相对文件末尾移动。
+
+### 迭代
+
+- `iter() ... next()`
+  - `iter()`：参数需要是一个符合迭代协议的对象或者是一个序列对象， 返回值是一个迭代器对象。与`next()`配合使用
+
+文件操作中， `open()` 得到的就是一个迭代器，可以直接通过迭代器的 `next()` 获取文件内容。python3中迭代器没有 `next()` 方法， 需要使用 python 内置的 `next(someIterator)`
+
+
+```py
+# 快速获取文件内容组成列表（仅供参考）：
+list(open('test.py')
+[ line for line in open('208.txt') ]
+open('test.py').readlines()
+```
