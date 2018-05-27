@@ -386,3 +386,56 @@ map(lambda x, y: x+y, lst1, lst2)   #  [7, 9, 11, 13, 5]
 
 - reduce：`reduce（function，iterable[，initializer]）`：Python 3中，reduce()已经从全局命名空间中移除，放到了functools模块 中，如果要是用，需要用from functools import reduce引入之。
 - filter：`filter（function，iterable）`
+
+# 类
+
+- 第一种定义方法：
+
+```py
+class BB(object): 
+    pass 
+```
+
+- 第二种定义方法，在类的前面写上：`__metaclass__==type`，然后定 义类的时候，就不需要在名字后面写（object）了
+
+```py
+__metaclass__ = type
+class CC:
+    pass
+cc = CC()
+cc.__class__ # <class '__main__.CC'>
+type(cc) # <class '__main__.CC'>
+```
+
+**类暂时略过！**
+
+
+# 异常
+
+```py
+try:    
+    do something 
+except:    
+    do something 
+else:    
+    do something
+finally:    
+    do something
+```
+
+## assert语句
+
+- 简单说就是断定什么东西必然是什么，如果不是，就抛出错误。
+
+```py
+assert 1==1 
+assert 1==0 # Traceback (most recent call last):  File "<stdin>", line 1, in <module> AssertionError
+```
+
+这就是断言assert的作用。什么是使用断言的最佳时机？
+如果没有特别的目的，断言应该用于如下情况： 
+
+- 防御性的编程。 
+- 运行时对程序逻辑的检测。 
+- 合约性检查（比如前置条件，后置条件）。 
+- 程序中的常量。 检查文档。
