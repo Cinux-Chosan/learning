@@ -370,3 +370,19 @@ list(open('test.py')
 [ line for line in open('208.txt') ]
 open('test.py').readlines()
 ```
+
+## 函数
+
+- lambda：`lambda arg1, arg2, ...argN : expression using arguments`
+  - lambda x, y: x + y
+- map：`map（function，iterable，...）`
+  - 如果参数很多，则对那些参数并行执行function。
+
+```py
+lst1 = [1,2,3,4,5] 
+lst2 = [6,7,8,9,0] 
+map(lambda x, y: x+y, lst1, lst2)   #  [7, 9, 11, 13, 5]
+```
+
+- reduce：`reduce（function，iterable[，initializer]）`：Python 3中，reduce()已经从全局命名空间中移除，放到了functools模块 中，如果要是用，需要用from functools import reduce引入之。
+- filter：`filter（function，iterable）`
