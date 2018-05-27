@@ -131,7 +131,7 @@ someList.sort(reverse=True)  # 默认从小到大， reverse 为 True 则从大�
 
 [排序相关知识](https://wiki.python.org/moin/HowTo/Sorting?highlight=%28SORT%29)
 
-#### 元祖
+### 元祖
 
 一般认为元组有这些特点，并且也是它使用的情景：
 
@@ -139,3 +139,114 @@ someList.sort(reverse=True)  # 默认从小到大， reverse 为 True 则从大�
 - 如果对不需要修改的数据进行“写保护”，可以使代码更安全，这时使用元组而不是列表。如果必须要改变这些值，则需要执行元组到 列表的转换。 
 - **元组可以在字典（另外一种对象类型，请参考后面的内容）中被用 作key，但是列表不行。因为字典的 key 必须是不可变的，元组本身 是不可改变的**。 
 - 元组可以用在字符串格式化中。
+
+
+### 字典
+
+#### 创建字典
+
+
+```py
+# 方法 1
+person = {"name":"qiwsir", "site":"qiwsir.github.io", "language":"python"}
+
+# 方法 2
+name = (["first", "Google"], ["second", "Yahoo"])
+website = dict(name) # {'second': 'Yahoo', 'first': 'Google'}
+# 或者
+ad = dict(name="qiwsir", age=42) # {'age': 42, 'name': 'qiwsir'}
+
+# 方法 3
+
+website = {}.fromkeys(("third","forth"),"facebook") # {'forth': 'facebook', 'third': 'facebook'}
+```
+
+#### 字典的基本操作
+
+- `len（d）`，返回字典（d）中的键值对的数量。 
+- `d[key]`，返回字典（d）中的键（key）的值。 
+- `d[key]=value`，将值（value）赋给字典（d）中的键（key）。 
+- `del d[key]`，删除字典（d）的键（key）项（将该键值对删除）。 
+- `key in d`，检查字典（d）中是否含有键为key的项
+
+#### 字符串格式化输出
+
+```py
+city_code = {"suzhou":"0512", "tangshan":"0315", "hangzhou":"0571"}
+" Suzhou is a beautiful city, its area code is %(suzhou)s" % city_code # ' Suzhou is a beautiful city, its area code is 0512'
+```
+
+#### 字典的函数
+
+- `copy` 和 `deepcopy``：copy` 会复制一份新的字典出来， 但是其中的引用值不会被复制，修改引用值的时候会影响到其原字典中的值， `deepcopy` 会将引用值也拷贝一份
+
+```py
+# 使用引用值， 需要import copy模块
+import copy
+z = copy.deepcopy(x)
+```
+
+- `clear`：清空字典中所有元素
+
+- `get` 和 `setdefault`：
+  - 使用 `get` 比直接使用下标访问更加靠谱， 如果元素不存在， 下标会报错， 而 `get` 会返回`None`，除此之外， get的第二个参数还可以设置如果不存在时返回的默认值。
+  - `setdefault` 是先要执行 D.get（k，d）操作， 就跟前面一样，如果键 k 不在字典中，就返回默认值 d，然后在字典中增加这个键值对
+
+- `items/iteritems`，`keys/iterkeys`，`values/itervalues`
+
+```py
+dd = {"name":"qiwsir", "lang":"python", "web":"www.itdiffer.com"}
+dd_kv = dd.items() # [('lang', 'python'), ('web', 'www.itdiffer.com'), ('name', 'qiwsir')]
+dd_iter = dd.iteritems()
+list(dd_iter) # [('lang', 'python'), ('web', 'www.itdiffer.com'), ('name', 'qiwsir')]
+```
+
+- `pop` 和 `popitem`
+  - `D.pop（k[，d]）`：删除元素 k，如果不存在并且指定了 d 作为默认值， 则返回 d，否则报错
+  - `D.popitem()` 不是删除最后一个，dict 没有顺序，也就没有最后和最先了，它是随机删除一个，并将所删除的元素返回
+
+- `update`：合并
+
+```py
+d2 {'song': 'I dreamed a dream'}
+d2.update([("name","qiwsir"), ("web","itdiffer.com")])
+d2 {'web': 'itdiffer.com', 'name': 'qiwsir', 'song': 'I dreamed a dream'}
+```
+
+- `has_key`：判断字典中是否存在某个键
+
+### 集合
+
+集合类似于 list 和 dict 的杂合。
+
+集合中无重复元素，并且无序，不能通过数字索引进行访问。
+
+创建集合可以使用 `{el1, el2, ...}` 或者 `set()`，不过需要注意的是， 使用 `{}` 这种可能不小心会创建成 dict，创建集合的元素必须是不可变的
+
+可以使用 `list()` 和 `set()` 在列表和集合之间进行转换。
+
+- add和update
+
+- pop，remove，discard，clear
+  - `pop()` 是从集合中随机选一个元素删除并将这个值返回，但是不 能指定删除某个元素
+  - `remove()` 删除指定元素， 如果不存在则抛出异常
+  - `discard()` 删除指定元素， 如果不存在则不做任何操作
+  - `clear()` 清空
+
+#### 不可变集合 `frozenset()`
+
+#### 集合的运算
+
+- 元素与集合的关系：使用 `in`
+- 集合与集合的关系：
+  - （1）A是否等于B，即两个集合的元素是否完全一样，使用 `A == B`
+  - （2）A是否是B的子集，或者反过来，B是否是A的超集，即A的元 素是否也都是B的元素，且B的元素比A的元素数量多。
+    - 判断集合A是否是集合B的子集，可以使用 `A < B`，返回 True 则是子 集，否则不是。另外，还可以使用函数 `A.issubset（B）` 判断。
+  - （3）A、B的并集，即 A、B 所有元素
+    - `A | B` 也可使用函数 `A.union（B）`
+  - （4）A、B的交集，即A、B所公有的元素
+    - `A & B` 也可使用函数 `A.intersection(B)`
+  - （5）A相对B的差（补），即A相对B不同的部分元素
+    - `A - B` 也可使用函数 A.difference(B)
+  - （6）A、B的对称差集，即 `(A - B) | (B - A)`，与交集相反
+    - `A.symmetric_difference(B) `
