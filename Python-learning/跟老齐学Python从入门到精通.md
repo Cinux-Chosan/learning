@@ -249,4 +249,34 @@ d2 {'web': 'itdiffer.com', 'name': 'qiwsir', 'song': 'I dreamed a dream'}
   - （5）A相对B的差（补），即A相对B不同的部分元素
     - `A - B` 也可使用函数 A.difference(B)
   - （6）A、B的对称差集，即 `(A - B) | (B - A)`，与交集相反
-    - `A.symmetric_difference(B) `
+    - `A.symmetric_difference(B)`
+
+## 语句
+
+### import
+
+```py
+# 方法 1
+import math
+# 方法 2
+form math import pow, pi
+# 方法 3
+from math import *
+```
+
+### 三元表达式
+
+`Y if X else Z`
+
+- 如果 X 为真，那么就返回 Y，否则返回 Z。
+
+### 方法
+
+- `range（start，stop[，step]）`
+- `zip(sequence1, sequence2[, ...])`：参数为多个序列， 返回一个序列，其中每个元素都包含参数中的所有序列对应索引上的值的元祖，返会的列表长度等于最小序列的长度
+
+```py
+c = [1,2,3] 
+d = [9,8,7,6] 
+zip(c,d) # [(1, 9), (2, 8), (3, 7)]
+```
