@@ -445,7 +445,10 @@ assert 1==0 # Traceback (most recent call last):  File "<stdin>", line 1, in <mo
 
 ```py
 import moduleName
+# 如果模块太长， 希望简写
+import someLongModule as m
 ```
+
 
 如果是使用自定义模块, 需要指定引入路径:
 
@@ -455,4 +458,58 @@ sys.path.append('/Users/zhangjianjun/Desktop/learning/Python-learning/libs'); # 
 import mymod
 ```
 
+如果不通过 `sys` 指定路径， 也可以放在 `sys.path` 中的某个目录中， 或者通过指定 `PYTHONPATH` 环境变量。 
+
 如果模块是被当做 python 程序直接执行, 此时 `__name__` 变量的值为 `'__main__'`, 如果是当做模块引入, 则此时 `__name__` 就是该模块的名字
+
+### __all__
+
+在模块中， 以单 `_` 开头的变量和方法为私有变量和方法， 不能直接引用。 通过 `from someModule import *` 的方式也不能引用它们， 但是可以通过 `import someModule` 然后使用模块名 `someModule._somePrivateProperty` 引用。
+
+此时可以指定一个 `__all__` 变量， 如：
+
+`__all__ = ['_private_variable', 'public_teacher']`
+
+此时，整个模块就有且仅有这两个变量可以对外访问， 其它变量都将不可在外部访问。
+
+事实上，当我们使用 `from pprint import *`的时候，就是将 `__all__` 里面的 方法引入，如果没有这个，就会将其他所有属性、方法等引入，包括那 些以双画线或者单画线开头的变量、函数，事实上这些东西很少在引入 模块时被使用。
+
+
+### 包和库
+
+包的概念比模块更大， 库的概念比包更大， 即库可能包含很多包， 包可能包含很多模块。
+
+既然同一个包有多个模块，那么如何引用该目录中的模块？。解决方法就是在该目录中放一个空的 `__init__.py` 文件。 例如，建立一个目录，名曰：`package_qi`，里面依次放了`pm.py`和 `pp.py`两个文件，然后建立一个空文件`__init__.py` 接下来，需要导入这个包（package_qi）中的模块：
+
+```py
+import package_qi.pm
+package_qi.pm.lang() # 'python'
+```
+但是更简便的方法是：
+
+```py
+from package_qi import pm
+pm.lang() # 'python'
+```
+
+### 模块文档，源码
+
+在模块文件的开始部分，在所有类、方法和import之前，写一个用三个引号（`'''` ）包裹的字符串，这就是文档
+
+通过模块的 `someModule.__doc__` 可以查看文档
+通过模块的 `someModule.__file__` 可以查看模块的位置，由此可以查看模块的源代码
+
+
+### 第三方库
+
+#### 安装
+
+- 方法一：利用源码安装
+
+一般从 github 或其他地方得到的源码里面， 会包含 `setup.py` 文件， 通过执行 `python setup.py install` 安装
+
+- 方法二：pip安装
+
+有一个网站专门用来存储第三方库，在这个网站上的所有软件包， 都能用`pip`或者`easy_install`这种安装工具来安装，网站的地址： https://pypi.python.org/pypi。
+
+使用 `pip install someLibName` 安装第三方库。

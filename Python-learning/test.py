@@ -1,9 +1,8 @@
-#!/usr/bin/env python #coding:utf-8
+#!/usr/bin/env python 
+#coding:utf-8
 
-import sys
-import pprint
-sys.path.append("./libs")
-import mymod
+import requests
 
-print(mymod.add(333, 2))
-pprint.pprint(sys.path)
+r = requests.get("https://chosan.cn:3000")
+
+print(r.headers)
