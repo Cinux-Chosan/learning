@@ -3,6 +3,6 @@
 
 import requests
 
-r = requests.get("https://chosan.cn:3000")
+r = requests.get("https://chosan.cn:3000/api/posts")
 
-print(r.headers)
+print(r.text)
