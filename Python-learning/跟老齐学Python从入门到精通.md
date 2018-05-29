@@ -422,6 +422,17 @@ finally:
     do something
 ```
 
+```py
+import sys
+
+try:
+  sys.exit(0) # sys.exit 会抛出 SystemExit 异常, 0 表示异常退出, 也可以使用字符串代表错误消息
+except SystemExit as e:
+  print('SystemExit:', e)
+else:
+  print('没有异常')
+```
+
 ## assert语句
 
 - 简单说就是断定什么东西必然是什么，如果不是，就抛出错误。
@@ -458,7 +469,7 @@ sys.path.append('/Users/zhangjianjun/Desktop/learning/Python-learning/libs'); # 
 import mymod
 ```
 
-如果不通过 `sys` 指定路径， 也可以放在 `sys.path` 中的某个目录中， 或者通过指定 `PYTHONPATH` 环境变量。 
+如果不通过 `sys` 指定路径， 也可以放在 `sys.path` 中的某个目录中， 或者通过指定 `PYTHONPATH` 环境变量。
 
 如果模块是被当做 python 程序直接执行, 此时 `__name__` 变量的值为 `'__main__'`, 如果是当做模块引入, 则此时 `__name__` 就是该模块的名字
 
@@ -513,3 +524,208 @@ pm.lang() # 'python'
 有一个网站专门用来存储第三方库，在这个网站上的所有软件包， 都能用`pip`或者`easy_install`这种安装工具来安装，网站的地址： https://pypi.python.org/pypi。
 
 使用 `pip install someLibName` 安装第三方库。
+
+
+## 标准库
+
+### sys
+
+- sys.argv
+- sys.path
+- sys.exit()
+- sys.stdin, sys.stdout, sys.stderr
+
+```py
+import sys
+sys.stdout = open('./test.md', '+w') # 将输出转到文件 test.md 中
+print('# Python')
+sys.stdout.close()
+```
+
+### copy
+
+```py
+import copy
+copy.__all__ # ['Error', 'copy', 'deepcopy']
+```
+
+### os
+
+- 操作文件: 重命名, 删除文件
+
+```py
+import os
+os.rename('sorceFile', 'destFile') # 可用于目录
+os.remove('pathToFile') # 同 unlink
+```
+
+- 操作目录
+
+```py
+import os
+
+os.listdir('path') # 显示目录中的文件
+os.getcwd() # 得到当前工作目录
+os.chdir(os.pardir) # 改变当前工作目录, os.pardir 为父级目录, 即'..'
+os.makedirs() # 创建目录, 相当于 mkdir -p , 即递归
+os.removedirs() # 删除目录, 递归, 删除时需要目录为空, 可以使用 shutil 的 retree, 不为空时也可删除
+
+import shutil
+shutil.rmtree('path')
+
+os.mkdir() # 创建一个, 不递归
+os.rmdir() # 删除一个, 不递归
+```
+
+- 文件和目录属性
+
+```py
+import os
+import time
+st = os.stat('path') #
+time.ctime(st[8]) # st[8] 为 st_mtime, 即最后修改时间, 显示 'Mon May 28 13:07:07 2018'
+```
+
+- 执行命令
+
+```py
+import os
+os.system('ls /') # 执行 'ls /' 命令
+os.system('/usr/bin/firefox') # 打开 firefox , 不过可能由于系统不同和路径不同, 导致执行失败, 但是有一个 webbrowser 模块专门可以做这件事
+import webbrowser
+webbrowser.open('http://www.chosan.cn')
+```
+
+### heapq
+
+heap 即堆, q 是 queue
+
+使用堆时, 添加和删除它都会自动排序, 相关内容自行了解
+
+### `deque`
+
+`deque` 即 dbouble-ended-queue, 双端队列
+
+python 中, 普通的 list 没有像 JavaScript 中的 `shift` 函数.
+
+此时就可以使用 `deque` 模块
+
+```py
+# 常规方法
+L.pop(0) # 代替shift
+L.insert(0, value) #代替unshift
+
+# unsift还可以使用下面的方式
+L = [value1, value2] + L
+# 或
+T = [value1,value2] # 这种列表运算可能性能上会有牺牲
+T.extend[L]
+L = T
+```
+
+```py
+from collections import deque
+lst = [1, 2, 3]
+qlst = deque(lst)
+qlst.append(5) # 从右边添加
+qlst.appendleft(7) # 从左边添加
+qlst.pop() # 5
+qlst.popLeft() # 7
+qlst.remove(3) # 删除列表中的 3
+qlst.rotate(-1) # 假想将列表首尾连接, 形成一个圆环, 一开始指针在 0 的位置, rotate(n) 表示将指针向左移动 3 (相当于圆环顺时针转 3), 为负则向右移动(圆环逆时针转), 由于首尾相连, 所以超出左右边界会自动从另一端算起
+```
+
+### calendar
+
+```py
+import calendar
+calendar.isleap(year) # 判断某年是否是闰年
+calendar.leapdays(yearStart, yearEnd) # 返回从 yearStart 到 yearEnd 的闰年总数, 包括 yearStart 不包括 yearEnd
+calendar.monthcalendar(year, month) # 返回一个嵌套列表, 每个二级列表代表一个星期, 如果二级列表中没有本月日期则为 0 (可能该星期跨月了)
+calendar.monthrange(year, month) # 返回一个元祖, 里面有两个整数, 第一个整数为该月第一天从周几开始(0 - 6), 第二个数代表该月有多少天
+calendar.weekday(year, month, day) # 根据年月日获取该日期为星期几, 0 - 6
+```
+
+### time
+
+```py
+import time
+time.time() # 获取当前时间戳
+time.localtime() # 得到的结果为时间元祖, 默认参数为 time.time()
+# time.struct_time(tm_year=2018, tm_mon=5, tm_mday=29, tm_hour=17, tm_min=59, tm_sec=1, tm_wday=1, tm_yday=149, tm_isdst=0), 依次为 (年, 月, 日, 时, 分, 秒, 一周中第几天, 一年中第几天, 夏令时)
+time.gmtime() # 类似 localtime, 得到的时间是本地时间, 如果需要国际化, 最好使用格林威治时间
+time.asctime() # 参数格式必须为时间元祖, 默认参数是 time.localtime() 的值, 得到的是当前日期时间和星期
+time.ctime() # 默认参数是 time.time(), 跟 asctime 相同, 只不过参数是时间戳
+time.mktime() # 参数为时间元祖, 将时间元祖转换为时间戳, 类似于 localtime() 的逆过程
+time.strftime() # 将时间元祖按照指定格式转换为字符串, 默认取 localtime(), format 格式参照网络表格
+# 例如:
+time.strftime('%y/%m/%d') # '18/05/29'
+time.strptime() # 将字符串转换为时间元祖
+# 例如:
+time.strptime(time.strftime('%y/%m/%d'), '%y/%m/%d') # time.struct_time(tm_year=2018, tm_mon=5, tm_mday=29, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=149, tm_isdst=-1)
+```
+
+### datetime
+
+datetime 中有如下几个类:
+
+- datetime.date: 日期类, 常用属性有 year/month/day
+- datetime.time: 时间类, 常用有 hour/minute/second/microsecond
+- datetime.datetime: 日期时间类
+- datetime.timedelta: 时间间隔, 即两个时间点之间的时间长度
+- datetime.tzinfo: 时区类
+
+#### date 类
+
+```py
+import datetime
+today = datetime.date.today() # datetime.date(2018, 5, 29)
+print(today) # 2018-05-29
+print(today.ctime()) # Tue May 29 00:00:00 2018
+print(today.timetuple()) # time.struct_time(tm_year=2018, tm_mon=5, tm_mday=29, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=1, tm_yday=149, tm_isdst=-1)
+today.year # 2018
+today.month # 5
+today.day # 29
+to = today.toordinal() # 736843
+print(datetime.date.fromordinal(to)) # 2018-05-29
+import time
+print(datetime.date.fromtimestamp(time.time())) # 2018-05-29
+
+d1 = datetime.date(2018, 3, 1)
+print(d1) # 2018-03-01
+
+d2 = d1.replace(year= 2009, day=29)
+print(d2) # 2009-03-29
+```
+
+#### time 类
+
+```py
+t = datetime.time(1,2,3) # datetime.time(1, 2, 3)
+print(t) # 01:02:03
+t.hour # 1
+t.minute # 2
+t.second # 3
+t.microsecond # 0
+t.tzinfo # None
+```
+
+#### timedelta 类
+
+主要用来做时间运算
+
+```py
+import datetime
+now = datetime.datetime.now()
+after5Hours = now + datetime.timedelta(hours=5)
+after2Weeks = now + datetime.timedelta(weeks=2)
+timeDelta = after2Weeks - after5Hours
+print(now) # 2018-05-29 19:12:10.082722
+print(after5Hours) # 2018-05-30 00:12:10.082722
+print(after2Weeks) # 2018-06-12 19:12:10.082722
+print(after2Weeks - after5Hours) # 13 days, 19:00:00
+```
+
+### urllib
+
+urllib 用户读取互联网数据.
