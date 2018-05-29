@@ -729,3 +729,12 @@ print(after2Weeks - after5Hours) # 13 days, 19:00:00
 ### urllib
 
 urllib 用户读取互联网数据.
+
+
+### JSON
+
+```py
+import json
+
+
+```
