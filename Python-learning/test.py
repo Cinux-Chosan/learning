@@ -1,7 +1,7 @@
-import sys
+import requests
 
-sys.stdout = open('./test.md', '+w')
+r = requests.get('http://chosan.cn')
 
-print('# Python')
+print(r.text)
 
-sys.stdout.close()
+print(r.history)

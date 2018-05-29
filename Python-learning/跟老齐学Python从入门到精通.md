@@ -728,13 +728,135 @@ print(after2Weeks - after5Hours) # 13 days, 19:00:00
 
 ### urllib
 
-urllib 用户读取互联网数据.
+urllib 用户读取互联网数据。
 
+- urlopen（url，data=None，proxies=None）
+  - url：即需要访问的 url 地址
+  - data：需要post的数据
+  - proxies：设置代理
+
+```py
+import urllib.request # python2 中为 urllib
+# 使用 urlopen打开网络文件，就像 open 打开本地文件一样
+req = urllib.request.urlopen('http://chosan.cn')
+print(req.read())
+```
+
+- read()、readline()、readlines()、fileno()、close()：都与文件操作一 样，这里不再赘述。
+- info()：返回头信息。 
+- getcode()：返回http状态码。 
+- geturl()：返回url。
+
+#### 对 url 编码、解码
+
+python3 中， 部分方法在 urllib.parse 中：
+
+```py
+import urllib.parse
+urllib.parse.__all__ # ['urlparse', 'urlunparse', 'urljoin', 'urldefrag', 'urlsplit', 'urlunsplit', 'urlencode', 'parse_qs', 'parse_qsl', 'quote', 'quote_plus', 'quote_from_bytes', 'unquote', 'unquote_plus', 'unquote_to_bytes', 'DefragResult', 'ParseResult', 'SplitResult', 'DefragResultBytes', 'ParseResultBytes', 'SplitResultBytes']
+```
+
+- quote（string[，safe]）：对字符串进行编码。参数 safe 指定了不需 要编码的字符。
+- unquote（string）：对字符串进行解码。 
+- quote_plus（string[，safe]）：与 `urllib.request.quote` 类似，但这个方法 用 `+` 来替换空格，而 `quote` 用 `%20` 来代替空格。 在python3 的 urllib.request 中无此项
+- unquote_plus（string）：对字符串进行解码。 在python3 的 urllib.request 中无此项
+- urlencode（query[，doseq]）：将 dict 或者包含两个元素的元组 列表转换成 url 参数。例如 `{'name':'laoqi'，'age':40}` 将被转换 为`name=laoqi&age=40`。 
+- pathname2url（path）：将本地路径转换成url路径。
+- url2pathname（path）：将url路径转换成本地路径。
+
+```py
+import urllib.request
+du = "http://www.itdiffer.com/name=python book" 
+urllib.request.quote(du) # 'http%3A//www.itdiffer.com/name%3Dpython%20book'
+urllib.request.
+```
+
+虽然 urlopen()能够建立类文件对象，但是，不等于将远程文件保存在本地存储器中，urlretrieve()就是满足这个需要的。先看实例
+
+- urlretrieve(url[, filename[, reporthook[, data]]])
+  - url：文件所在的网址。
+  - filename：可选。将文件保存到本地的文件名，如果不指定，urllib 会生成一个临时文件来保存。
+  - reporthook：可选。是回调函数，当链接服务器和相应数据传输完 毕时触发本函数。 
+  - data：可选。用post方式所发出的数据。
+
+函数执行完毕，返回的结果是一个元组 `（filename，headers）`， filename是保存到本地的文件名，headers 是服务器响应头信息。
+
+```py
+import urllib.request
+# me.jpg是一张存在于服务器上的图片，地址是： http://www.itdiffer.com/images/me.jpg，把它保存到本地存储器中，并且 仍命名为me.jpg。注意，如果只写这个名字，表示存在启动Python交互 模式的那个目录中，否则，可以指定存储具体目录和文件名。
+urllib.request.urlretrieve("http://www.itdiffer.com/images/me.jpg","me.jpg")
+```
+
+#### urllib2
+
+urllib2是另外一个模块，它跟urllib有相似的地方——都是对url相关 的操作，也有不同的地方。
+
+利用urllib2模块可以建立一个 Request对象，建立Request对象的方法就是使用Request类。
+
+```py
+req = urllib2.Request("http://www.itdiffer.com")
+response = urllib2.urlopen(req) 
+page = response.read()
+```
+
+```py
+import urllib.parse
+import urllib2
+url = 'http://www.itdiffer.com/register.py'
+values = {'name' : 'qiwsir', 'location' : 'China', 'language' : 'Python' }
+data = urllib.parse.urlencode(values)
+req = urllib2.Request(url, data)       # 发送请求同时传data表单
+response = urllib2.urlopen(req)        # 接受反馈的信息
+the_page = response.read()           　# 读取反馈的内容
+```
+
+通过 Request 对象， 可以添加 headers 等， 在网站中，有的会通过User-Agent来判断访问者是浏览器还是别的 程序，如果通过别的程序访问，它有可能拒绝。这时候我们编写程序去 访问，就要设置headers了。设置方法是：
+
+
+```py
+headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)' }
+req = urllib2.Request(url, data, headers)
+response = urllib2.urlopen(req)
+```
+
+建立了Request对象之后，它的最直接应用可以作为urlopen()方法的 参数。
+
+除了上面的演示之外，urllib2模块的东西还有很多，比如还可以：
+
+- 设置HTTP Proxy
+- 设置Timeout值
+- 自动redirect
+- 处理cookie
 
 ### JSON
 
+- 基本操作
+
 ```py
 import json
+json.__all__ # ['dump', 'dumps', 'load', 'loads', 'JSONDecoder', 'JSONDecodeError', 'JSONEncoder']
 
+data = [{"name":"qiwsir", "lang":("python", "english"), "age":40}] 
 
+# json 序列化
+# dumps 提供了可选参数， sort_keys=True 时按照字典排序, indent 指定缩进
+# 元祖变为了列表
+jsonData = json.dumps(data) # '[{"name": "qiwsir", "lang": ["python", "english"], "age": 40}]'
+
+# json 反序列化
+# 列表还是列表
+json.loads(jsonData) # [{'name': 'qiwsir', 'lang': ['python', 'english'], 'age': 40}]
+```
+
+- 大JSON字符串
+
+如果数据不是很大，那么上面的操作足够了，但现在是“大数据”时 代了，随便一个什么业务都在说自己是大数据，显然不能总让JSON很 小。前面的操作方法是将数据都读入内存，如果数据量太大了内存会爆 满，这肯定是不行的。怎么办？JSON提供了load()函数和dump()函数解 决这个问题，注意，跟已经用过的函数相比是不同的，请仔细观察。
+
+```py
+import tempfile        #临时文件模块
+data = [{"name":"qiwsir", "lang":("python", "english"), "age":40}]
+f = tempfile.NamedTemporaryFile(mode='w+')
+json.dump(data, f)
+f.flush()
+print(open(f.name, "r").read()) # [{"lang": ["python", "english"], "age": 40, "name": "qiwsir"}]
 ```
