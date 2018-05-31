@@ -78,5 +78,14 @@ class Choice(models.Model):
 
 每个字段都是 [Field](https://docs.djangoproject.com/en/2.0/ref/models/fields/#django.db.models.Field) 类的实例. 如 [CharField](https://docs.djangoproject.com/en/2.0/ref/models/fields/#django.db.models.CharField) 为字符字段、[DateTimeField](https://docs.djangoproject.com/en/2.0/ref/models/fields/#django.db.models.DateTimeField), 这将告诉 Django 每个字段包含的数据类型.
 
-每个 Field 实例的名字(如 question_text 或 pub_date) 就是字段名, 你将会在 python 代码中使用这些值, 数据库会使用它们作为列名.
+每个 Field 实例的名字(如 question_text 或 pub_date) 就是字段名，它们的名字对机器是友好的（相对来说，注释是对人类友好的）, 你将会在 python 代码中使用这些值, 数据库会使用它们作为列名.
 
+Field 参数的第一个位置参数为可选的注释（原文此处为 human-readable name，实际上功能就是起注释的作用），如果没有提供这个参数， Django 就会使用机器可读（machine-readable ）的名字，即字段名。在上面的例子中， 我们只为 `Question.pub_date` 定义了人类可读的名字（human-readable name ，即注释）。所有其他字段的机器可读名称就足以作为其人类可读的名称。
+
+有些 `Field` 类有必要参数，以 `CharField` 为例， 需要你提供 `max_length` 参数， 它不仅用于数据库模式， 还会用于验证，你马上就会看到。
+
+`Field`还可能有其他很多可选参数， 就像上面例子中， 我们把 votes 的默认值设置为 `0`
+
+最后， 还使用了 ForeignKey 来定义关系。 它告诉 Django 每个 Choice 对应一个 Question。 Django支持所有常见的数据库关系： 多对一，多对多，一对一
+
+### Activating models
