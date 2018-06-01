@@ -1,0 +1,16 @@
+2018-06-01 17:31:58.346 CST [12823] LOG:  listening on IPv6 address "::1", port 5432
+2018-06-01 17:31:58.346 CST [12823] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2018-06-01 17:31:58.346 CST [12823] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2018-06-01 17:31:58.360 CST [12824] LOG:  database system was shut down at 2018-06-01 17:30:30 CST
+2018-06-01 17:31:58.364 CST [12823] LOG:  database system is ready to accept connections
+2018-06-01 17:32:07.684 CST [12848] FATAL:  role "postgres" does not exist
+2018-06-01 17:32:28.667 CST [12858] FATAL:  database "zhangjianjun" does not exist
+2018-06-01 17:34:01.339 CST [12879] ERROR:  role "zhangjianjun" already exists
+2018-06-01 17:34:01.339 CST [12879] STATEMENT:  CREATE ROLE zhangjianjun NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;
+2018-06-01 17:35:01.837 CST [12901] FATAL:  database "zhangjianjun" does not exist
+2018-06-01 17:37:04.283 CST [12911] ERROR:  syntax error at or near "select" at character 10
+2018-06-01 17:37:04.283 CST [12911] STATEMENT:  select 1
+	select 1;
+2018-06-01 17:39:25.935 CST [12911] ERROR:  syntax error at or near "select" at character 10
+2018-06-01 17:39:25.935 CST [12911] STATEMENT:  select 1
+	select 1;
