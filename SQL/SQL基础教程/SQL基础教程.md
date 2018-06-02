@@ -2,6 +2,9 @@
 
 ## 第 0 章
 
+- PostgreSQL的安装和连接设置
+- 通过 PostgreSQL执行 SQL语句
+
 ### 安装
 
 参考 [Mac 配置 PostgreSQL 常用操作](https://www.jianshu.com/p/354442add14f)
@@ -17,7 +20,13 @@
 
 ## 第 1 章
 
-### 知识点
+- 数据库是什么
+- 数据库的结构
+- SQL概要
+- 表的创建
+- 表的删除和更新
+
+### 常规知识点
 
 - 用来管理数据库的计算机系统称为数据库管理系统（Database Management System，`DBMS`)
 - 关系数据库（Relational Database，`RDB`）: 管理关系型数据库的系统称为 `RDBMS`
@@ -66,3 +75,452 @@
     - 字符串和日期常数需要使用单引号 `'` 括起来。
     - 数字常数无需加注单引号（直接书写数字即可）。
   - 单词需要用半角空格或者换行来分隔
+
+### 重要知识点
+
+#### 建表
+
+建表之前, 首先要创建数据库
+
+`CREATE DATABASE <数据库名>;`
+
+然后就可以建表了:
+
+```sql
+CREATE TABLE <表名> (
+<列名1> <数据类型> <该列所需约束>,
+<列名2> <数据类型> <该列所需约束>,
+<列名3> <数据类型> <该列所需约束>,
+<列名4> <数据类型> <该列所需约束>,
+...
+<表的约束1>, <表的约束2> ...
+);
+```
+
+使用实例:
+
+```sql
+CREATE TABLE Product
+(product_id CHAR(4) NOT NULL,
+ product_name VARCHAR(100) NOT NULL,
+ product_type VARCHAR(32) NOT NULL,
+ sale_price INTEGER,
+ purchase_price INTEGER,
+ regist_date DATE,
+ PRIMARY KEY (product_id));
+```
+
+##### 数据类型的指定
+
+- `INTEGER`: 用来指定存储整数的列的数据类型（数字型），不能存储小数。
+- `CHAR`: 是用来指定存储字符串的列 的数据类型（字符型）。
+  - `CHAR` 是 CHARACTER（字符）的缩写。可以像 CHAR(10) 或者 CHAR(200) 这样，在 括号中指定该列可以存储的字符串的长度（最大长度）。字符串超出最大 长度的部分是无法输入到该列中的。RDBMS 不同，长度单位也不一样， 既存在使用字符个数的情况，也存在使用字节长度的情况。字符串以定长字符串  的形式存储在被指定为 CHAR 型的列中。所谓定长字符串，就是当列中存储的字符串长度达不到最大长度的时候，使用半 角空格进行补足。例如，我们向 CHAR(8) 类型的列中输入 'abc'的时候， 会以 'abc     '（abc 后面有 5 个半角空格）的形式保存起来。 另外，虽然之前我们说过 SQL 不区分英文字母的大小写，但是表中 存储的字符串却是区分大小写的。也就是说，'ABC' 和 'abc' 代表了两 个不同意义的字符串
+- `VARCHAR`: 同 CHAR 类型一样，VARCHAR 型也是用来指定存储字符串的列的 数据类型（字符串类型）。
+  - 也可以通过括号内的数字来指定字符串的长度（最 大长度）。但该类型的列是以可变长字符串  的形式来保存字符串的 B。定 长字符串在字符数未达到最大长度时会用半角空格补足，但可变长字符串 不同，即使字符数未达到最大长度，也不会用半角空格补足。例如，我们 向 VARCHAR(8) 类型的列中输入字符串 'abc' 的时候，保存的就是字 符串 'abc'。
+  - Oracle中使用VARCHAR2型（Oracle中也有VARCHAR这种数据类型，但并不推荐使用）。
+- `DATE`: 用来指定存储日期（年月日）的列的数据类型（日期型）。
+  - 除了年月日之外，Oracle中使用的DATE型还包含时分秒，但在本书中我们只学 习日期部分。
+
+##### 约束的设置
+
+约束是除了数据类型之外，对列中存储的数据进行限制或者追加条件的功能。
+
+- `NOT NULL`
+- `PRIMARY KEY(key_name)`
+
+#### 表的删除和更新
+
+##### 删除表
+
+```sh
+DROP TABLE <表名>;
+```
+
+除的表是无法恢复的。即使是被误删的表，也无法恢复，只能重新创建，然后重新插入数据。
+
+##### 表定义的更新（ALTER TABLE语句）
+
+有时好不容易把表创建出来之后才发现少了几列，其实这时无需把表删
+除再重新创建，只需使用变更表定义的 `ALTER TABLE` 语句就可以了。
+ALTER 在英语中就是“改变”的意思。
+
+- 添加列: `ALTER TABLE <表名> ADD COLUMN <列的定义>;`
+  - Oracle和SQL Server中不用写COLUMN: `ALTER TABLE <表名> ADD <列名> ;`
+  - 在Oracle中同时添加多列的时候，可以像下面这样使用括号: `ALTER TABLE <表名> ADD (<列名>,<列名>,……);`
+
+使用实例:
+
+```sql
+ALTER TABLE Product ADD COLUMN product_name_pinyin VARCHAR(100);
+```
+
+- 删除列: `ALTER TABLE <表名> DROP COLUMN <列名>;`
+  - Oracle中不用写COLUMN
+  - 在Oracle中同时删除多列的时候，可以使用括号来实现。
+
+使用实例:
+
+```sql
+ALTER TABLE Product DROP COLUMN product_name_pinyin;
+```
+
+##### 常规知识点
+
+- `ALTER TABLE` 语句和 `DROP TABLE` 语句一样，执行之后无法恢复。误添的列可以通过 `ALTER TABLE` 语句删除，或者将表全部删除之后重新再创建。
+- 修改表名可以使用 `RENAME`, 各个数据库的语法都不尽相同，是因为标准 SQL 并没有 RENAME
+
+```sql
+--变更表名
+ALTER TABLE Poduct RENAME TO Product;
+RENAME TABLE Poduct TO Product;
+sp_rename 'Poduct', 'Product';
+RENAME TABLE Poduct to Product;
+```
+
+```sql
+CREATE TABLE users(
+  user_name CHAR(20) NOT NULL,
+  password CHAR(20) NOT NULL,
+  user_id SERIAL NOT NULL,
+  PRIMARY KEY (user_id)
+);
+INSERT INTO users VALUES('zhangjianjun', 'myPassword');
+```
+
+```sql
+-- DML ：插入数据
+-- MySQL 中使用 START TRANSACTION;
+-- 在Oracle和DB2中运行时，无需使用 TRANSACTION
+BEGIN TRANSACTION;  
+INSERT INTO Product VALUES ('0001', 'T恤衫', '衣服',
+1000, 500, '2009-09-20');
+INSERT INTO Product VALUES ('0002', '打孔器', '办公用品',
+500, 320, '2009-09-11');
+INSERT INTO Product VALUES ('0003', '运动T恤', '衣服',
+4000, 2800, NULL);
+INSERT INTO Product VALUES ('0004', '菜刀', '厨房用具',
+3000, 2800, '2009-09-20');
+INSERT INTO Product VALUES ('0005', '高压锅', '厨房用具',
+6800, 5000, '2009-01-15');
+INSERT INTO Product VALUES ('0006', '叉子', '厨房用具',
+500, NULL, '2009-09-20');
+INSERT INTO Product VALUES ('0007', '擦菜板', '厨房用具',
+880, 790, '2008-04-28');
+INSERT INTO Product VALUES ('0008', '圆珠笔', '办公用品',
+100, NULL,'2009-11-11');
+COMMIT;
+```
+
+## 第２章　查询基础
+
+- SELECT语句基础
+- 算术运算符和比较运算符
+- 逻辑运算符
+
+### SELECT语句基础
+
+从表中选取数据时需要使用 SELECT 语句，也就是只从表中选出 （SELECT）必要数据的意思。通过 SELECT 语句查询并选取出必要数据 的过程称为匹配查询或查询（query）。
+
+```sql
+SELECT <列名1>, <列名2>, <列名3>, ... -- SELECT 子句中列举了希望从表中查询出的列的名称, 查询结果中列的顺序和 SELECT 子句中的顺序相同, 想要查询出全部列时，可以使用代表所有列的星号（*），如果使用星号的话就会按照 CREATE TABLE 语句的定义对列进行排序。
+FROM <表名>; -- FROM 子句指定了选取出数据的表的名称
+```
+
+这里SELECT 语句包含了 `SELECT` 和 `FROM` 两个子句（clause）。子句 是 SQL 语句的组成要素，是以 SELECT 或者 FROM 等作为起始的短语。
+
+使用实例:
+
+```sql
+SELECT product_id, product_name, purchase_price
+FROM Product;
+```
+
+```sql
+SELECT *
+FROM Product;
+```
+
+#### 为列设定别名 ( AS 关键字)
+
+```sql
+SELECT product_id AS id,
+product_name AS name,
+purchase_price AS price
+FROM Product;
+```
+
+别名可以使用中文，使用中文时需要用双引号（`"`）括起来。注意不是单引号（`'`）。
+使用双引号（`"`）可以设定包含空格 （空白）的别名。但是如果忘记使 用双引号就可能出错，因此并不推荐。大家可以像product_list这样使用下划线（`_`）来代替空白。
+
+#### 常数的查询
+
+```sql
+SELECT '商品' AS string, 38 AS number, '2009-02-24' AS date,
+product_id, product_name
+FROM Product;
+```
+
+**解释**: 这条查询语句相当于在查询的结果前面添加了两列, 第一列名为 `string`, 值固定为 `商品`, 第二列名为 `number`, 值固定为 `38`, 第三列名为 `date`, 值固定为 `2009-02-24`
+
+结果:
+
+|  string | number | date | product_id | product_name |
+| ---| ---| --- | --- | --- |
+| 商品 | 38 | 2009-02-24 | 0001 | T恤衫 |
+| 商品 | 38 | 2009-02-24 | 0002 | 打孔器 |
+| 商品 | 38 | 2009-02-24 | 0003 | 运动T恤 |
+
+#### 从结果中删除重复行
+
+想知道某一列保存了那些不同的值, 就需要从结果中去处重复的行, 去处重复的行使用 `DISTINCT`
+
+```sql
+SELECT DISTINCT product_type  -- 执行完成过后, 就只包含不同的类型, 相同类型只保留一项
+FROM Product;
+```
+
+```sql
+SELECT DISTINCT product_type, regist_date  -- 多列时, 两条记录中每个字段的值都相同才为重复
+FROM Product;
+```
+
+**注意**: 使用 DISTINCT 时，NULL 也被视为一类数据。NULL 存在于多行中时，也会被合并为一条 NULL 数据。对
+**注意**: DISTINCT 关键字只能用在第一个列名之前, 不能写成 regist_date, DISTINCT product_type。
+
+执行结果:
+
+|  string | number | date | product_id | product_name |
+| --- | --- | --- | --- | --- |
+| 商品 | 38 | 2009-02-24 | 0001 | T恤衫 |
+| 商品 | 38 | 2009-02-24 | 0002 | 打孔器 |
+| 商品 | 38 | 2009-02-24 | 0003 | 运动T恤 |
+
+上面的 SELECT 子句中的第一列 '商品' 是字符串常数，第 2 列 38 是数字 常数，第 3 列 '2009-02-24' 是日期常数，它们将与 product_id 列和 product_name 列一起被查询出来
+
+#### 根据WHERE语句来选择记录
+
+通过 WHERE 子句来指定查询数据的条件
+
+```sql
+SELECT <列名1>, <列名2>, <列名3>, ……
+FROM <表名>
+WHERE <条件表达式>;
+```
+
+使用实例:
+
+```sql
+SELECT product_name, product_type
+FROM Product
+WHERE product_type = '衣服';
+```
+
+执行顺序是: 首先通过 WHERE 子句查询出符合指定条件的记录，然后再选取出 SELECT 语句指 定的列
+**注意**: SQL 中子句的书写顺序是固定的，不能随意更改。`WHERE` 子句必须紧跟在 `FROM` 子句之后，
+
+#### 注释的书写方法
+
+- 单行注释: 书写在 `--` 之后，只能写在同一行。
+- 多行注释: 书写在 `/*` 和 `*/` 之间，可以跨多行
+
+#### 注意事项
+
+- SQL 语句使用换行符或者半角空格来分隔单词，在任何位置进行分隔都可以， 即使像下面这样通篇都是换行符也不会影响SELECT语句的执行。但是这样可能会 由于看不清楚而出错。原则上希望大家能够以子句为单位进行换行（子句过长时， 为方便起见可以换行）。
+
+```sql
+SELECT
+*
+FROM
+Product
+;
+```
+
+另外，像下面这样插入空行（无任何字符的行）会造成执行错误，请特别注意。
+
+```sql
+SELECT *
+
+FROM Product;
+```
+
+### 算术运算符和比较运算符
+
+#### 算术运算
+
+```sql
+SELECT product_name, sale_price,
+sale_price * 2 AS "sale_price_x2"
+FROM Product;
+```
+
+- SQL语句中可以使用的四则运算的主要运算符: `+`, `-`, `*`, `/`
+- SQL 中也可以像平常的运算表达式那样使用括号 `( )`。括号的使用并不仅仅局限于四则运算，还可以用在 SQL 语句的任何表达式当中
+- 需要注意 `NULL`: 所有包含 NULL 的计算，结果肯定是 NULL。通常情况下，类似 5/0 这样除数为 0 的话会发生错误，只有 NULL 除以 0 时不会发生错误，并且结果还是 NULL。
+- FROM子句在SELECT语句中并不是必不可少的，只使用SELECT子句进行计算也是可以的。如 `SELECT (100 + 200) * 3 AS calculation;`, 这样的使用场景比较少, 不过还是有, 例如，不管内容是什么，只希望得到一行临时数据的情况。
+  - 但是也存在像 Oracle 这样不允许省略 SELECT 语句中的 FROM 子句的 RDBMS，请大家注意
+
+#### 比较运算
+
+- `=`: 等于
+- `<>`: 不等于, `!=` 是非标准的
+- `>=`
+- `<=`
+- `>`
+- `<`
+
+```sql
+SELECT product_name, product_type, regist_date
+FROM Product
+WHERE regist_date < '2009-09-27';
+```
+
+**注意**: 不能对`NULL`使用比较运算符
+
+类似于 `purchase_price <> 2800` 这样的查询条件并不能查询出值为 `NULL` 的记录, 即使是 `purchase_price = NULL` 也是不行的, 需要使用运算符 `IS NULL` 或者 `IS NOT NULL`
+
+#### 逻辑运算
+
+- `NOT`: NOT 不能单独使用，必须和其他查询条件组合起来使用。
+
+```sql
+SELECT product_name, product_type, sale_price
+FROM Product
+WHERE NOT sale_price >= 1000;  -- 实际上很多场景可以不使用 NOT, 如此处可以使用 sale_price < 1000, NOT运算符用来否定某一条件，但是不能滥用
+```
+
+- `AND`: 在其两侧的查询条件都成立时整个查询条件才成立，其意思相当于“并且”。
+
+```sql
+SELECT product_name, purchase_price
+ FROM Product
+ WHERE product_type = '厨房用具'
+ AND sale_price >= 3000;  -- 使用 AND 并列条件
+```
+
+- `OR`: 在其两侧的查询条件有一个成立时整个查询条件都成立，其意思相当于“或者”。
+
+```sql
+SELECT product_name, purchase_price
+ FROM Product
+ WHERE product_type = '厨房用具'
+ OR sale_price >= 3000;  -- 使用 OR 运算符
+```
+
+**注意**: `AND`运算符的优先级高于`OR`运算符。想要优先执行OR运算符时可以使用括号。
+
+```sql
+SELECT product_name, product_type, regist_date
+FROM Product
+WHERE product_type = '办公用品'
+AND ( regist_date = '2009-09-11'  -- 使用括号, 否则会被解释为 product_type = '办公用品' AND  regist_date = '2009-09-11' 然后再和 regist_date = '2009-09-20' 构成 OR 条件
+OR regist_date = '2009-09-20');
+```
+
+- 含有`NULL`时的真值, `NULL` 作为除了 `TRUE` 和 `FALSE` 的第三种值, 即 `UNKNOWN`, 需要使用 `IS NULL` 或者 `IS NOT NULL` 来判断
+
+- AND:
+
+||||
+|---|---|---|
+| P | Q | P AND Q |
+| 真 | 真 | 真 |
+| 真 | 假 | 假 |
+| 真 | 不确定 | 不确定 |
+| 假 | 真 | 假 |
+| 假 | 假 | 假 |
+| 假 | 不确定 | 假 |
+| 不确定 | 真 | 不确定 |
+| 不确定 | 假 | 假 |
+| 不确定 | 不确定 | 不确定 |
+
+- OR:
+
+||||
+|---|---|---|
+| P | Q | P OR Q|
+| 真 | 真 | 真|
+| 真 | 假 | 真|
+| 真 | 不确定 | 真|
+| 假 | 真 | 真|
+| 假 | 假 | 假|
+| 假 | 不确定 | 不确定|
+| 不确定 | 真 | 真|
+| 不确定 | 假 | 不确定|
+| 不确定 | 不确定 | 不确定|
+
+- 数据库领域的有识之士们达成了“尽量不使用 NULL”的共识。 这就是为什么在创建 Product 表时要给某些列设置 NOT NULL 约束（禁止录入 NULL）的缘故。
+
+## 聚合与排序
+
+- 对表进行聚合查询
+- 对表进行分组
+- 为聚合结果指定条件
+- 对查询结果进行排序
+
+### 对表进行聚合查询
+
+- 通常，聚合函数会对NULL以外的对象进行汇总。但是只有COUNT函数例外，使用COUNT（*）可以查出包含NULL在内的全部数据的行数。
+
+请大家先记住以下 5 个常用的函数:
+
+- `COUNT`：计算表中的记录数（行数）
+- `SUM`：计算表中数值列中数据的合计值
+- `AVG`：计算表中数值列中数据的平均值
+- `MAX`：求出表中任意列中数据的最大值
+- `MIN`：求出表中任意列中数据的最小值
+
+#### 使用用例
+
+- 计算表中数据的行数
+
+`COUNT`函数的结果根据参数的不同而不同。`COUNT(*)`会得到包含NULL的数据 行数，而`COUNT(<列名>)`会得到NULL之外的数据行数。该特性是 COUNT 函数所特有的，其他函数并不能将星号作为参数（如 果使用星号会出错）。
+
+```sql
+SELECT COUNT(*)  -- 计算所有行的行数
+FROM Product;
+---------
+SELECT COUNT(purchase_price)  -- 计算 purchase_price 中非空行的行数
+FROM Product;
+```
+
+- 计算合计值
+
+```sql
+SELECT SUM(sale_price)
+FROM Product;
+```
+
+```sql
+SELECT SUM(sale_price), SUM(purchase_price)
+FROM Product;
+```
+
+四则运算中如果存在 `NULL`，结果一定是 `NULL`，但是聚合函数会将`NULL` 排除在外, **这与“等价为 0”并不相同**。但`COUNT(*)`例外，并不会排除`NULL`。
+
+- 计算平均值
+
+```sql
+-- 语法和 SUM 函数完全相同, 不会计算 NULL
+SELECT AVG(sale_price)
+FROM Product;
+```
+
+- 计算最大值和最小值
+
+`MAX`/`MIN` 函数和 `SUM`/`AVG` 函数有一点不同，那就是 `SUM`/ `AVG` 函数**只能对数值类型的列使用**，而 `MAX`/`MIN` 函数原则上可以适用于任何数据类型的列。
+
+```sql
+SELECT MAX(sale_price), MIN(purchase_price)
+FROM Product;
+```
+
+- 使用聚合函数删除重复值（关键字`DISTINCT`）
+
+想要计算值的种类时，可以在`COUNT`函数的参数中使用`DISTINCT`。不仅限于 `COUNT` 函数，所有的聚合函数都可以使用 `DISTINCT`
+
+```sql
+SELECT COUNT(DISTINCT product_type)  -- 在 COUNT 中使用 DISTINCT 的例子, 因为必须要在计算行数之前删除 product_type 列中的重复数据。
+FROM Product;
+```
+
+### 对表进行分组

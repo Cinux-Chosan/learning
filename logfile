@@ -14,3 +14,7 @@
 2018-06-01 17:39:25.935 CST [12911] ERROR:  syntax error at or near "select" at character 10
 2018-06-01 17:39:25.935 CST [12911] STATEMENT:  select 1
 	select 1;
+2018-06-01 18:44:01.633 CST [12823] LOG:  received smart shutdown request
+2018-06-01 18:44:01.634 CST [12823] LOG:  worker process: logical replication launcher (PID 12830) exited with exit code 1
+2018-06-01 18:44:01.634 CST [12825] LOG:  shutting down
+2018-06-01 18:44:01.644 CST [12823] LOG:  database system is shut down
