@@ -26,7 +26,7 @@
 - 表的创建
 - 表的删除和更新
 
-### 常规知识点
+### 常规知识点
 
 - 用来管理数据库的计算机系统称为数据库管理系统（Database Management System，`DBMS`)
 - 关系数据库（Relational Database，`RDB`）: 管理关系型数据库的系统称为 `RDBMS`
@@ -686,7 +686,7 @@ HAVING product_name = '圆珠笔';
 
 有些条件既可以写在 `HAVING` 子句当中，又可以写在 `WHERE` 子句当中。这些条件就是聚合键所对应的条件。虽然条件分别写在 WHERE 子句和 HAVING 子句当中返回的结果都完全相同。但笔者却认为，聚合键所对应的条件还是应该书写在 `WHERE` 子句之中。理由如下:
 
-- 逻辑分明
+- 逻辑分明
   - `WHERE` 子句 = 指定行所对应的条件
   - `HAVING` 子句 = 指定组所对应的条件
 - 执行效率
@@ -734,3 +734,39 @@ ORDER BY sale_price, product_id;
 ```
 
 ##### `NULL` 的顺序
+
+在第 2 章中说过（2-2 节），不能对 `NULL` 使用比较运算符，含有 `NULL` 的列作为排序键时，`NULL` 会在结果的开头或末尾汇总显示。究竟是在开头显示还是在末尾显示，并没有特殊规定。某些 DBMS 中可以指定 `NULL` 在开头或末尾显示。
+
+##### 在排序键中使用显示用的别名
+
+在 `GROUP BY` 子句中不能使用 `SELECT` 子句中定义的别名，但是在 `ORDER BY` 子句中却是允许使用别 名的, 原因也是执行顺序的不同:
+
+- 使用 `HAVING` 子句时 `SELECT` 语句的顺序: `FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY`
+
+这只是一个粗略的总结，虽然具体的执行顺序根据 DBMS 的不同而不同. 但一定要记住 `SELECT` 子 句的执行顺序在 `GROUP BY` 子句之后，`ORDER BY` 子句之前。
+
+##### `ORDER BY`子句中可以使用的列
+
+- `ORDER BY` 子句中也可以使用存在于表中、但并不包含在 `SELECT` 子句之中的列
+
+```sql
+SELECT product_name, sale_price, purchase_price
+FROM Product
+ORDER BY product_id;
+```
+
+- `ORDER BY` 子句中也可以使用聚合函数
+
+```sql
+SELECT product_type, COUNT(*)
+FROM Product
+GROUP BY product_type
+ORDER BY COUNT(*);
+```
+
+## 第 4 章 数据更新
+
+- 数据的插入（INSERT语句的使用方法）
+- 数据的删除（DELETE语句的使用方法）
+- 数据的更新（UPDATE语句的使用方法）
+- 事务
