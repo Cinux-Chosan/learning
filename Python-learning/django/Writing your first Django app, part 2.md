@@ -89,3 +89,272 @@ Field 参数的第一个位置参数为可选的注释（原文此处为 human-r
 最后， 还使用了 ForeignKey 来定义关系。 它告诉 Django 每个 Choice 对应一个 Question。 Django支持所有常见的数据库关系： 多对一，多对多，一对一
 
 ### Activating models
+
+很小的一段 model 代码都可能给 Django 跟多信息. 有了它, Django 就可以:
+
+- 给当前 app 创建数据库模式(即 `CREATE TABLE` 语句后面的描述)
+- 给 Question 和 Choice 对象创建一个 Python 的数据库存取 API
+
+但首要工作就是告诉我们的项目 app **polls** 已经安装好了.
+
+      设计哲学
+      Django app 是插件式的, 你可以在多个项目中使用同一个应用, 你也可以发布 app, 因为它们并不需要绑定到某个指定的 Django 版本中进行安装
+
+为了在我们的项目中包含某个应用程序，我们需要在 `INSTALLED_APPS` 中添加对它的配置类的引用。`PollsConfig` 类在 `polls/apps.py` 文件中, 所以带点的路径就是 `polls.apps.PollsConfig`. 我们把它添加到 `mysite/settings.py` 文件的 `INSTALLED_APPS` 中:
+
+```py
+# mysite/settings.py
+INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+
+现在, Django 知道需要包含 **polls** app 了, 运行下面的命令:
+
+`python manage.py makemigrations polls`
+
+会看到下面这样的输出:
+
+                  Migrations for 'polls':
+                  polls/migrations/0001_initial.py:
+                  - Create model Choice
+                  - Create model Question
+                  - Add field question to choice
+
+对 model 做了改动过后(这里实际上是新建了一个), 我们可以通过 `makemigrations`告诉 Django 这些改动需要存储为 _migration_
+
+Migrations 是 Django 用于存储对 model 的更改的文件. 它们被放在 `polls/migrations/` 下面, 这里是文件 `polls/migrations/0001_initial.py`.
+
+- `migrate` 命令用来自动帮你运行 migrations 和管理你的数据库模式.
+- `sqlmigrate` 命令根据 migration 名字返回对应的 SQL, 如:
+
+`python manage.py sqlmigrate polls 0001`
+
+将会看到:
+
+```sql
+BEGIN;
+--
+-- Create model Choice
+--
+CREATE TABLE "polls_choice" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "choice_text" varchar(200) NOT NULL,
+    "votes" integer NOT NULL
+);
+--
+-- Create model Question
+--
+CREATE TABLE "polls_question" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "question_text" varchar(200) NOT NULL,
+    "pub_date" timestamp with time zone NOT NULL
+);
+--
+-- Add field question to choice
+--
+ALTER TABLE "polls_choice" ADD COLUMN "question_id" integer NOT NULL;
+ALTER TABLE "polls_choice" ALTER COLUMN "question_id" DROP DEFAULT;
+CREATE INDEX "polls_choice_7aa0f6ee" ON "polls_choice" ("question_id");
+ALTER TABLE "polls_choice"
+  ADD CONSTRAINT "polls_choice_question_id_246c99a640fbbd72_fk_polls_question_id"
+    FOREIGN KEY ("question_id")
+    REFERENCES "polls_question" ("id")
+    DEFERRABLE INITIALLY DEFERRED;
+
+COMMIT;
+```
+
+注意以下几项:
+
+- 输出结果依赖于使用的数据库, 这里是 PostgreSQL 的结果
+- 数据库表明是结合 app 名(polls) 和小写的 model 名自动生成的 - question 和 choice. (你可以覆盖这种默认表现)
+- 自动添加主键. (你可以覆盖这种默认表现)
+- 为了方便, Django 给外键名追加了 `_id`. (你可以覆盖这种默认表现)
+- 外键是通过 `FOREIGN KEY` 显式定义的. 不必担心 `DEFERRABLE` 部分, 它只是用来告诉 PostSQL 在事务结束之前不执行外键。
+- 自动根据你所使用的数据库进行定制化, 因此像 `auto_increment`(MySQL), `serial`(PostgreSQL) 或者 `integer primary key autoincrement`(SQLite) 这些都会自动为你处理好. 就像使用何种括号(单引号或者双引号)都会自动处理
+- `sqlmigrate` 命令不会自动在你的数据库上运行 migration, 它只是把它打印到屏幕上，这样你就可以看到Django使用了什么 SQL 语句。在检查 Django 将要做什么，或者如果数据库管理员需要对 SQL 脚本进行更改时，这将很有用。
+
+如果你感兴趣, 你还可以运行 `python manage.py check;`, 这行命令将会在不生成 migrations 和访问数据库的情况下检查你项目中的所有问题.
+
+现在, 运行 `migrate` 来在数据库中创建这些 model 的表: `python manage.py migrate`
+
+`migrate` 命令将运行所有还未被应用的 migration 到数据库中, 将数据库中的模式与你在 model 中做的修改进行同步.
+
+Migrations 非常强大，让你在开发项目的时候可以多次更改 model 而不需要你来删除数据库或者表然后重新创建 - 它专门用于实时升级数据库，而不丢失数据。记住改变 model 三部曲:
+
+- 在 `models.py` 中改变 model
+- 运行 `python manage.py makemigrations` 来为这些改变创建 migrations
+- 运行 `python manage.py migrate` 来将这些改变应用到数据库
+
+之所以使用单独的命令来制作和应用 migrations，是因为你将提交 migrations 到你的版本控制系统，并将它们与你的应用程序在一起；它们不仅使你的开发变得更容易，而且也可被其他开发人员在生产中使用。
+
+`manage.py` 的更多信息, 参考[django-admin 文档](https://docs.djangoproject.com/en/2.0/ref/django-admin/)
+
+### Playing with the API
+
+现在进入交互式 Python shell 中使用 Django 带来的 API, 使用如下命令进入 Python shell:
+
+`python manage.py shell`
+
+之所以使用这个来代替简单的 `python` 命令, 是因为 `manage.py` 设置了环境变量 `DJANGO_SETTINGS_MODULE`, 它给 Django 设置了 python import 路径到你的 `mysite/settings.py` 文件.
+
+进入 shell 之后, 浏览 [数据库 API](https://docs.djangoproject.com/en/2.0/topics/db/queries/)
+
+```sh
+>>> from polls.models import Choice, Question  # Import the model classes we just wrote.
+
+# No questions are in the system yet.
+>>> Question.objects.all()
+<QuerySet []>
+
+# Create a new Question.
+# Support for time zones is enabled in the default settings file, so
+# Django expects a datetime with tzinfo for pub_date. Use timezone.now()
+# instead of datetime.datetime.now() and it will do the right thing.
+>>> from django.utils import timezone
+>>> q = Question(question_text="What's new?", pub_date=timezone.now())
+
+# Save the object into the database. You have to call save() explicitly.
+>>> q.save()
+
+# Now it has an ID.
+>>> q.id
+1
+
+# Access model field values via Python attributes.
+>>> q.question_text
+"What's new?"
+>>> q.pub_date
+datetime.datetime(2012, 2, 26, 13, 0, 0, 775217, tzinfo=<UTC>)
+
+# Change values by changing the attributes, then calling save().
+>>> q.question_text = "What's up?"
+>>> q.save()
+
+# objects.all() displays all the questions in the database.
+>>> Question.objects.all()
+<QuerySet [<Question: Question object (1)>]>
+```
+
+等一下, `<Question: Question object (1)>` 这种表现形式对我们并不友好, 我们可以通过给 model 添加一个 `__str__()` 方法来解决这个不友好的问题:
+
+```py
+# polls/models.py
+from django.db import models
+
+class Question(models.Model):
+    # ...
+    def __str__(self):
+        return self.question_text
+
+class Choice(models.Model):
+    # ...
+    def __str__(self):
+        return self.choice_text
+```
+
+给 model 添加 `__str__()` 方法很重要, 不仅是因为方便你使用交互模式, 而且因为 Django 自动生成的 admin 会使用对象的表现形式(but also because objects’ representations are used throughout Django’s automatically-generated admin.).
+
+这些都是常规的 python 函数, 现在来添加一个自定义函数作为演示:
+
+```py
+# polls/models.py
+import datetime
+
+from django.db import models
+from django.utils import timezone
+
+class Question(models.Model):
+    # ...
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+```
+
+注意附加的 `import datetime` 和 `from django.utils import timezone`, 分别引用 python 的标准模块 `datetime` 和 Django `django.utils.timezone` 中的 `time-zone-related` 工具. 如果你对 Python 的 time zone 不熟悉, 可以通过访问 [time zone 支持文档](https://docs.djangoproject.com/en/2.0/topics/i18n/timezones/) 学习
+
+保存上面的更改过后, 通过 `python manage.py shell` 重新进入新的 Python 交互 shell:
+
+```sh
+>>> from polls.models import Choice, Question
+
+# Make sure our __str__() addition worked.
+>>> Question.objects.all()
+<QuerySet [<Question: What\'s up?>]>
+
+# Django provides a rich database lookup API that's entirely driven by
+# keyword arguments.
+>>> Question.objects.filter(id=1)
+<QuerySet [<Question: What\'s up?>]>
+>>> Question.objects.filter(question_text__startswith=\'What\')
+<QuerySet [<Question: What\'s up?>]>
+
+# Get the question that was published this year.
+>>> from django.utils import timezone
+>>> current_year = timezone.now().year
+>>> Question.objects.get(pub_date__year=current_year)
+<Question: What\'s up?>
+
+# Request an ID that doesn't exist, this will raise an exception.
+>>> Question.objects.get(id=2)
+Traceback (most recent call last):
+    ...
+DoesNotExist: Question matching query does not exist.
+
+# Lookup by a primary key is the most common case, so Django provides a
+# shortcut for primary-key exact lookups.
+# The following is identical to Question.objects.get(id=1).
+>>> Question.objects.get(pk=1)
+<Question: What\'s up?>
+
+# Make sure our custom method worked.
+>>> q = Question.objects.get(pk=1)
+>>> q.was_published_recently()
+True
+
+# Give the Question a couple of Choices. The create call constructs a new
+# Choice object, does the INSERT statement, adds the choice to the set
+# of available choices and returns the new Choice object. Django creates
+# a set to hold the "other side" of a ForeignKey relation
+# (e.g. a question's choice) which can be accessed via the API.
+>>> q = Question.objects.get(pk=1)
+
+# Display any choices from the related object set -- none so far.
+>>> q.choice_set.all()
+<QuerySet []>
+
+# Create three choices.
+>>> q.choice_set.create(choice_text=\'Not much\', votes=0)
+<Choice: Not much>
+>>> q.choice_set.create(choice_text=\'The sky\', votes=0)
+<Choice: The sky>
+>>> c = q.choice_set.create(choice_text=\'Just hacking again\', votes=0)
+
+# Choice objects have API access to their related Question objects.
+>>> c.question
+<Question: What\'s up?>
+
+# And vice versa: Question objects get access to Choice objects.
+>>> q.choice_set.all()
+<QuerySet [<Choice: Not much>, <Choice: The sky>, <Choice: Just hacking again>]>
+>>> q.choice_set.count()
+3
+
+# The API automatically follows relationships as far as you need.
+# Use double underscores to separate relationships.
+# This works as many levels deep as you want; there's no limit.
+# Find all Choices for any question whose pub_date is in this year
+# (reusing the 'current_year' variable we created above).
+>>> Choice.objects.filter(question__pub_date__year=current_year)
+<QuerySet [<Choice: Not much>, <Choice: The sky>, <Choice: Just hacking again>]>
+
+# Let's delete one of the choices. Use delete() for that.
+>>> c = q.choice_set.filter(choice_text__startswith=\'Just hacking\')
+>>> c.delete()
+```
