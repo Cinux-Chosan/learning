@@ -286,20 +286,20 @@ class Question(models.Model):
 
 # Make sure our __str__() addition worked.
 >>> Question.objects.all()
-<QuerySet [<Question: What\'s up?>]>
+<QuerySet [<Question: What's up?>]>
 
 # Django provides a rich database lookup API that's entirely driven by
 # keyword arguments.
 >>> Question.objects.filter(id=1)
-<QuerySet [<Question: What\'s up?>]>
->>> Question.objects.filter(question_text__startswith=\'What\')
-<QuerySet [<Question: What\'s up?>]>
+<QuerySet [<Question: What's up?>]>
+>>> Question.objects.filter(question_text__startswith='What')
+<QuerySet [<Question: What's up?>]>
 
 # Get the question that was published this year.
 >>> from django.utils import timezone
 >>> current_year = timezone.now().year
 >>> Question.objects.get(pub_date__year=current_year)
-<Question: What\'s up?>
+<Question: What's up?>
 
 # Request an ID that doesn't exist, this will raise an exception.
 >>> Question.objects.get(id=2)
@@ -311,7 +311,7 @@ DoesNotExist: Question matching query does not exist.
 # shortcut for primary-key exact lookups.
 # The following is identical to Question.objects.get(id=1).
 >>> Question.objects.get(pk=1)
-<Question: What\'s up?>
+<Question: What's up?>
 
 # Make sure our custom method worked.
 >>> q = Question.objects.get(pk=1)
@@ -330,15 +330,15 @@ True
 <QuerySet []>
 
 # Create three choices.
->>> q.choice_set.create(choice_text=\'Not much\', votes=0)
+>>> q.choice_set.create(choice_text='Not much', votes=0)
 <Choice: Not much>
->>> q.choice_set.create(choice_text=\'The sky\', votes=0)
+>>> q.choice_set.create(choice_text='The sky', votes=0)
 <Choice: The sky>
->>> c = q.choice_set.create(choice_text=\'Just hacking again\', votes=0)
+>>> c = q.choice_set.create(choice_text='Just hacking again', votes=0)
 
 # Choice objects have API access to their related Question objects.
 >>> c.question
-<Question: What\'s up?>
+<Question: What's up?>
 
 # And vice versa: Question objects get access to Choice objects.
 >>> q.choice_set.all()
@@ -355,6 +355,74 @@ True
 <QuerySet [<Choice: Not much>, <Choice: The sky>, <Choice: Just hacking again>]>
 
 # Let's delete one of the choices. Use delete() for that.
->>> c = q.choice_set.filter(choice_text__startswith=\'Just hacking\')
+>>> c = q.choice_set.filter(choice_text__startswith='Just hacking')
 >>> c.delete()
+```
+
+- 获取更多 model 关系的信息, 参考 [Accessing related objects](https://docs.djangoproject.com/en/2.0/ref/models/relations/).
+- 如何通过 API 使用双下划线来完成字段的查找, 参考[Field lookups](https://docs.djangoproject.com/en/2.0/topics/db/queries/#field-lookups-intro)
+- 查看数据库 API 的完整信息, 参考[Database API reference](https://docs.djangoproject.com/en/2.0/topics/db/queries/)
+
+### Introducing the Django Admin
+
+      小提示:
+      为你的员工或客户生成管理站点，添加、更改和删除内容是乏味的工作，而且不需要太多的创造力。出于这个原因，Django完全自动为模型创建管理界面。
+
+      Django是在编辑室环境中编写的，在“内容发布者”和“公共”站点之间有着非常清晰的分离。网站管理员使用该系统来添加新闻故事、事件、体育成绩等，并且该内容显示在公共站点上。Django解决了为网站管理员编辑内容创建统一接口的问题。
+
+      admin 不是为网站访问者设计的, 而是为网站管理员设计的.
+
+#### 创建 admin 用户
+
+首先我们需要创建一个能够登陆进管理页面的用户:
+
+`python manage.py createsuperuser`
+
+输入用户名:
+
+`Username: admin`
+
+输入 Email 地址:
+
+`Email address: admin@example.com`
+
+最后就是数据密码, 会让你输入两次, 第二次用于确认:
+
+```sh
+Password: **********
+Password (again): *********
+Superuser created successfully.
+```
+
+#### 启动开发服务器
+
+如果服务器没有启动, 运行 `python manage.py runserver`
+
+然后通过浏览器访问`http://127.0.0.1:8000/admin/`
+
+将看到 ![登陆图](https://docs.djangoproject.com/en/2.0/_images/admin01.png)
+
+由于默认情况下是开启了 [翻译](https://docs.djangoproject.com/en/2.0/topics/i18n/translation/) 的, 所以可能登陆界面使用的是你们国家的语言, 这依赖于你的浏览器设置和 Django 是否有该语言的翻译文件.
+
+#### 进入 admin 页面
+
+现在, 尝试使用前面创建的超级用户账户登陆, 登陆过后你将看到 Django admin 首页:
+
+![Django管理界面首页](https://docs.djangoproject.com/en/2.0/_images/admin02.png)
+
+你应该会看到一些可编辑类型：组(group)和用户(users)。它们由 Django 继承的 `django.contrib.auth` 的认证框架提供。
+
+#### 在 admin 中修改 poll 应用程序
+
+我们的 poll 应用没有显示出来, 去哪儿了呢?
+
+只需要做一件事: 我们需要告诉 admin Question 对象有 admin 接口. 做法就是打开 `polls/admin.py` 文件, 向下面这样编辑它:
+
+```py
+# polls/admin.py
+from django.contrib import admin
+
+from .models import Question
+
+admin.site.register(Question)
 ```
