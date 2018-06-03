@@ -525,17 +525,212 @@ FROM Product;
 
 ### 对表进行分组
 
-- 使用GROUP BY子句可以像切蛋糕那样将表分割。通过使用聚合函数和 GROUP BY子句，可以根据“商品种类”或者“登记日期”等将表分割后再 进行汇总。	
-- 聚合键中包含NULL时，在结果中会以“不确定”行（空行）的形式表现出来。	
-- 使用聚合函数和GROUP BY子句时需要注意以下4点。
-  - 只能写在SELECT子句之中
-  - GROUP BY子句中不能使用SELECT子句中列的别名
-  - GROUP BY子句的聚合结果是无序的
-  - WHERE子句中不能使用聚合函数
+- 使用`GROUP BY`子句可以像切蛋糕那样将表分割。通过使用聚合函数和 `GROUP BY`子句，可以根据“商品种类”或者“登记日期”等将表分割后再进行汇总。
+- 聚合键中包含`NULL`时，在结果中会以“**不确定**”行（空行）的形式表现出来。
+- 使用聚合函数和`GROUP BY`子句时需要注意以下 **4** 点。
+  - 只能写在`SELECT`子句之中
+  - `GROUP BY`子句中不能使用`SELECT`子句中列的别名
+  - `GROUP BY`子句的聚合结果是无序的
+  - `WHERE`子句中不能使用聚合函数
 
 ```sql
 -- GROUP BY 子句
-SELECT <列名1>, <列名2>, <列名3>, ……  
-FROM <表名> 
+SELECT <列名1>, <列名2>, <列名3>, ……
+FROM <表名>
 GROUP BY <列名1>, <列名2>, <列名3>, ……;
 ```
+
+**注意**: `GROUP BY` 子句一定要写在 `FROM` 语句之后（如果有 `WHERE` 子句的话需要写在 `WHERE` 子句之后）。目前, 顺序为 `1. SELECT → 2. FROM → 3. WHERE → 4. GROUP BY`
+
+#### 聚合键中包含`NULL`的情况
+
+当聚合键中包含 `NULL` 时，也会将 `NULL` 作为一组特定的数据, 在结果中会以“**不确定**”行（空行）的形式表现出来。
+
+```sql
+SELECT purchase_price, COUNT(*)
+FROM Product
+GROUP BY purchase_price;
+```
+
+执行结果(purchase_price为空的行即值为 `NULL` 的行):
+
+|purchase_price | count |
+| --- | --- |
+| | 2 |
+| 320 | 1 |
+| 500 | 1 |
+| 5000 | 1 |
+| 2800 | 2 |
+| 790 | 1 |
+
+#### 使用`WHERE`子句时`GROUP BY`的执行结果
+
+```sql
+SELECT <列名1>, <列名2>, <列名3>, ……
+FROM <表名>
+WHERE
+GROUP BY <列名1>, <列名2>, <列名3>, ……;
+```
+
+像这样使用 `WHERE` 子句进行汇总处理时，会先根据 `WHERE` 子句指 定的条件进行过滤，然后再进行汇总处理。请
+
+- `GROUP BY` 和 `WHERE` 并用时:
+- 书写的顺序是: `SELECT → 2. FROM → 3. WHERE → 4. GROUP BY`
+- 执行的顺序是: `FROM → 2. WHERE → 3. GROUP BY → 4. SELECT`
+
+#### 与聚合函数和 `GROUP BY` 子句有关的常见错误
+
+- 错误1: 在`SELECT`子句中书写了多余的列
+  - 在使用 `COUNT` 这样的聚合函数时，`SELECT` 子句中的元素有严格的限制。实际上，使用聚合函数时，`SELECT` 子句中只能存在以下三种元素。
+    - 常数
+    - 聚合函数
+    - `GROUP BY`子句中指定的列名（也就是聚合键）
+
+这里经常会出现的错误就是**把聚合键之外的列名书写在 `SELECT` 子句之中**。
+
+```sql
+-- 错误举例
+SELECT product_name, purchase_price, COUNT(*)
+FROM Product
+GROUP BY purchase_price;
+```
+
+执行结果:
+
+      ERROR：列"product,product_name"必须包含在GROUP BY子句之中，或者必须在聚合  函数内使用 行 1: SELECT product_name, purchase_price, COUNT(*)
+
+错误原因: 列名 product_name 并没有包含在 `GROUP BY` 子句当中。因此，该列名也不能书写在 `SELECT` 子句之中
+
+理解思路: 使用进货单价将表进行分组之后，一行就代表了一个组进货单价, 而不在分组中的其它字段, 到底显示该组中哪一个的值呢? 这里无法确定, 所以他们不能出现在 `SELECT` 中.
+
+---
+
+- 错误2: 在`GROUP BY`子句中写了列的别名
+  - `SELECT` 子句中的项目可以通过 `AS` 关键字来指定别名。但是，在 `GROUP BY` 子句中是不能使用别名的。
+
+```sql
+-- 错误举例
+SELECT product_type AS pt, COUNT(*)
+FROM Product
+GROUP BY pt;
+```
+
+PostgreSQL 执行上述 SQL 语句并不会发生错误，而会得到如下结果。但是这样的写法在其他 DBMS 中并不是通用的，因此 请大家不要使用。
+
+错误原因: 是 SQL 语句在 DBMS 内部的执行顺序造成的—— `SELECT` 子句在 `GROUP BY` 子句之后执行。 在执行 `GROUP BY` 子句时，`SELECT` 子句中定义的别名，DBMS 还并不知道。
+
+---
+
+- 错误3: `GROUP BY`子句的结果能排序吗
+
+答案是：“**随机的**”。想要按照某种特定顺序进行排序的话，需要在 `SELECT` 语句中进行指定。
+
+---
+
+- 错误4: 在 `WHERE` 子句中使用聚合函数
+
+只有 `SELECT` 子句和 `HAVING` 子句（以及之后将要学到的 `ORDER BY` 子句）中能够使用 `COUNT` 等聚合函数。并且，`HAVING` 子 句可以非常方便地实现上述要求。
+
+### 为聚合结果指定条件
+
+- 使用 `COUNT` 函数等对表中数据进行汇总操作时，为其指定条件的不是 `WHERE` 子句，而是 `HAVING` 子句。
+- 聚合函数可以在 `SELECT` 子句、`HAVING` 子句和`ORDER BY`子句中使用。
+- `HAVING` 子句要写在 `GROUP BY` 子句之后。
+- `WHERE` 子句用来指定数据行的条件，`HAVING` 子句用来指定分组的条件。
+
+#### `HAVING` 子句
+
+`WHERE` 子句只能指定记录（行）的条件，而不能用来指定组的条件, 此时便可以用 `HAVING` 子句
+
+```sql
+SELECT <列名1>, <列名2>, <列名3>, ……
+FROM <表名>
+GROUP BY <列名1>, <列名2>, <列名3>, ……
+HAVING <分组结果对应的条件>
+```
+
+`HAVING` 子句必须写在 `GROUP BY` 子句之后，其在 DBMS 内部的执行顺序也排在 `GROUP BY` 子句之后。
+
+使用 `HAVING` 子句时 `SELECT` 语句的书写顺序: `SELECT → FROM → WHERE → GROUP BY → HAVING`
+
+使用举例:
+
+```sql
+-- 从按照商品种类进行分组后的结果中，取出“包含的数据行数为2 行”的组
+SELECT product_type, COUNT(*)
+FROM Product
+GROUP BY product_type
+HAVING COUNT(*) = 2;
+```
+
+#### `HAVING` 子句的构成要素
+
+`HAVING` 子句和包含 `GROUP BY` 子句时的 `SELECT` 子句一样，能 够使用的要素有一定的限制，限制内容也是完全相同的。`HAVING` 子句中 能够使用的 3 种要素如下所示。
+
+- 常数
+- 聚合函数
+- `GROUP BY`子句中指定的列名（即聚合键）
+
+`HAVING COUNT （*）= 2` 这样的条件，其中 `COUNT（*）`是聚合函数，`2` 是常数，全都满足上述要求。反之，如果写成了下面这个样子就会发生错误:
+
+```sql
+SELECT product_type, COUNT(*)
+FROM Product
+GROUP BY product_type
+HAVING product_name = '圆珠笔';
+```
+
+`product_name` 列并不包含在 `GROUP BY` 子句之中，因此不允许写在 `HAVING` 子句里。可以把这种情况想象为使用 `GROUP BY` 子句时的 `SELECT` 子句。 汇总之后得到的表中并不存在 `product_name` 这个列，SQL 当然无法为表中不存在的列设定条件了。
+
+#### 相对于 `HAVING` 子句，更适合写在 `WHERE` 子句中的条件
+
+有些条件既可以写在 `HAVING` 子句当中，又可以写在 `WHERE` 子句当中。这些条件就是聚合键所对应的条件。虽然条件分别写在 WHERE 子句和 HAVING 子句当中返回的结果都完全相同。但笔者却认为，聚合键所对应的条件还是应该书写在 `WHERE` 子句之中。理由如下:
+
+- 逻辑分明
+  - `WHERE` 子句 = 指定行所对应的条件
+  - `HAVING` 子句 = 指定组所对应的条件
+- 执行效率
+  - 通过 `WHERE` 子句指定条件时，由于排序之前就对数据进行了过滤
+  - `HAVING` 子句是在排序之后才对数据进行分组的，因此与 在 `WHERE` 子句中指定条件比起来，需要排序的数据量就会多得多。
+  - 可以对 `WHERE` 子句指定条件所对应的列创建索引，这样也可以大幅提高处理速度。
+
+### 对查询结果进行排序
+
+- 使用 `ORDER BY` 子句对查询结果进行排序。
+- 在 `ORDER BY` 子句中列名的后面使用关键字 `ASC` 可以进行升序排序，使用 `DESC` 关键字可以进行降序排序。
+- `ORDER BY` 子句中可以指定多个排序键。
+- 排序健中包含 `NULL` 时，会在开头或末尾进行汇总。
+- `ORDER BY` 子句中可以使用 `SELECT` 子句中定义的列的别名。
+- `ORDER BY` 子句中可以使用 `SELECT` 子句中未出现的列或者聚合函数。
+- `ORDER BY` 子句中不能使用列的编号。
+
+#### `ORDER BY`子句
+
+不加 `ORDER BY` 的时候, 排序结果是随机的, 即便是看似有序, 也可能下一次顺序大为不同.
+
+```sql
+SELECT <列名1>, <列名2>, <列名3>, ……
+FROM <表名>
+ORDER BY <排序基准列1>, <排序基准列2>, ……
+```
+
+不论何种情况，`ORDER BY` 子句都需要写在 `SELECT` 语句的末尾, 因为对数据行进行排序的操作必须在结果即将返回时执行。
+
+当前书写顺序: `1. SELECT 子句 → 2. FROM 子句 → 3. WHERE 子句 → 4. GROUP BY 子句 → 5. HAVING 子句 → 6. ORDER BY 子句`
+
+- `DESC`: 降序排列
+- `ASC`: 升序排列
+
+**注意**: 省略该关键字时会默认使用升序(`ASC`)进行排序。
+
+##### 指定多个排序键
+
+时指定多个排序键的规则是优先使用左侧的键，如果该列存在相同值的话，再接着参考右侧的键。
+
+```sql
+SELECT product_id, product_name, sale_price, purchase_price
+FROM Product
+ORDER BY sale_price, product_id;
+```
+
+##### `NULL` 的顺序
