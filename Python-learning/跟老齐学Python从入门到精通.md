@@ -743,8 +743,8 @@ print(req.read())
 ```
 
 - read()、readline()、readlines()、fileno()、close()：都与文件操作一 样，这里不再赘述。
-- info()：返回头信息。 
-- getcode()：返回http状态码。 
+- info()：返回头信息。
+- getcode()：返回http状态码。
 - geturl()：返回url。
 
 #### 对 url 编码、解码
@@ -757,16 +757,16 @@ urllib.parse.__all__ # ['urlparse', 'urlunparse', 'urljoin', 'urldefrag', 'urlsp
 ```
 
 - quote（string[，safe]）：对字符串进行编码。参数 safe 指定了不需 要编码的字符。
-- unquote（string）：对字符串进行解码。 
+- unquote（string）：对字符串进行解码。
 - quote_plus（string[，safe]）：与 `urllib.request.quote` 类似，但这个方法 用 `+` 来替换空格，而 `quote` 用 `%20` 来代替空格。 在python3 的 urllib.request 中无此项
 - unquote_plus（string）：对字符串进行解码。 在python3 的 urllib.request 中无此项
-- urlencode（query[，doseq]）：将 dict 或者包含两个元素的元组 列表转换成 url 参数。例如 `{'name':'laoqi'，'age':40}` 将被转换 为`name=laoqi&age=40`。 
+- urlencode（query[，doseq]）：将 dict 或者包含两个元素的元组 列表转换成 url 参数。例如 `{'name':'laoqi'，'age':40}` 将被转换 为`name=laoqi&age=40`。
 - pathname2url（path）：将本地路径转换成url路径。
 - url2pathname（path）：将url路径转换成本地路径。
 
 ```py
 import urllib.request
-du = "http://www.itdiffer.com/name=python book" 
+du = "http://www.itdiffer.com/name=python book"
 urllib.request.quote(du) # 'http%3A//www.itdiffer.com/name%3Dpython%20book'
 urllib.request.
 ```
@@ -776,7 +776,7 @@ urllib.request.
 - urlretrieve(url[, filename[, reporthook[, data]]])
   - url：文件所在的网址。
   - filename：可选。将文件保存到本地的文件名，如果不指定，urllib 会生成一个临时文件来保存。
-  - reporthook：可选。是回调函数，当链接服务器和相应数据传输完 毕时触发本函数。 
+  - reporthook：可选。是回调函数，当链接服务器和相应数据传输完 毕时触发本函数。
   - data：可选。用post方式所发出的数据。
 
 函数执行完毕，返回的结果是一个元组 `（filename，headers）`， filename是保存到本地的文件名，headers 是服务器响应头信息。
@@ -795,7 +795,7 @@ urllib2是另外一个模块，它跟urllib有相似的地方——都是对url�
 
 ```py
 req = urllib2.Request("http://www.itdiffer.com")
-response = urllib2.urlopen(req) 
+response = urllib2.urlopen(req)
 page = response.read()
 ```
 
@@ -836,7 +836,7 @@ response = urllib2.urlopen(req)
 import json
 json.__all__ # ['dump', 'dumps', 'load', 'loads', 'JSONDecoder', 'JSONDecodeError', 'JSONEncoder']
 
-data = [{"name":"qiwsir", "lang":("python", "english"), "age":40}] 
+data = [{"name":"qiwsir", "lang":("python", "english"), "age":40}]
 
 # json 序列化
 # dumps 提供了可选参数， sort_keys=True 时按照字典排序, indent 指定缩进

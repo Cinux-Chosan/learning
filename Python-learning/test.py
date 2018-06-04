@@ -1,7 +1,4 @@
-import requests
+#!/usr/bin/env python
+#coding:utf8
 
-r = requests.get('http://chosan.cn')
-
-print(r.text)
-
-print(r.history)
+print('adsfa')
