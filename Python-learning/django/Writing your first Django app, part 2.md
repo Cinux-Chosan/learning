@@ -368,7 +368,7 @@ True
       小提示:
       为你的员工或客户生成管理站点，添加、更改和删除内容是乏味的工作，而且不需要太多的创造力。出于这个原因，Django完全自动为模型创建管理界面。
 
-      Django是在编辑室环境中编写的，在“内容发布者”和“公共”站点之间有着非常清晰的分离。网站管理员使用该系统来添加新闻故事、事件、体育成绩等，并且该内容显示在公共站点上。Django解决了为网站管理员编辑内容创建统一接口的问题。
+      Django是在编辑室环境中编写的，在“内容发布者”和“公共”站点之间有着非常清晰的分离。网站管理员使用该系统来添加新闻故事、事件、体育成绩等，并且该内容显示在公共站点上。Django 为你省去了每次都为管理员编写一模一样的增删改查的重复工作。
 
       admin 不是为网站访问者设计的, 而是为网站管理员设计的.
 
@@ -412,7 +412,7 @@ Superuser created successfully.
 
 你应该会看到一些可编辑类型：组(group)和用户(users)。它们由 Django 继承的 `django.contrib.auth` 的认证框架提供。
 
-#### 在 admin 中修改 poll 应用程序
+#### 让 poll 应用也能在 admin 页面中编辑
 
 我们的 poll 应用没有显示出来, 去哪儿了呢?
 
@@ -426,3 +426,36 @@ from .models import Question
 
 admin.site.register(Question)
 ```
+
+#### 查看 admin 功能
+
+现在我们注册了 Question, Django 知道需要把它显示到 admin 首页:
+
+![admin 首页](https://docs.djangoproject.com/en/2.0/_images/admin03t.png)
+
+点击 "Questions", 进入 questions 的修改列表. 这个列表展示了数据库中所有的 questions, 并且你可以随便选择一个进行修改. 我们能看到之前创建的 qestion "What's up?":
+
+![what's up](https://docs.djangoproject.com/en/2.0/_images/admin04t.png)
+
+点击 “What’s up?”, 编辑它:
+
+![编辑问题](https://docs.djangoproject.com/en/2.0/_images/admin05t.png)
+
+这里需要注意以下几点:
+
+- 这个表单是根据 Question model 自动生成的
+- 不同的 model 字段类型 (如: `DateTimeField`, `CharField`) 对应不同的 HTML 输入组件, 在 Django admin 中的每个字段都知道如何展示它的类型
+- 每个 `DateTimeField`
+
+页面的底部给出了几个选项：
+
+- Save – Saves changes and returns to the change-list page for this type of object.
+- Save and continue editing – Saves changes and reloads the admin page for this object.
+- Save and add another – Saves changes and loads a new, blank form for this type of object.
+- Delete – Displays a delete confirmation page.
+
+如果 "Date published" 的值和你在 `Writing your first Django app, part 1` 中创建的 question 的时间不一致, 那可能是你没有给设置 `TIME_ZONE` 配置正确的值. 更改它，重新加载页面并检查是否出现正确的值。
+
+点击 "Today" 和 "Now" 快捷方式, 修改 "Date Published" 的值, 然后点击  “Save and continue editing.”  然后点击右上角的 “History” , 你将看到一个列出了所有通过 Django admin 对该对象所做的更改的页面，以及更改这条记录的时间戳和用户名：
+
+![改变记录](https://docs.djangoproject.com/en/2.0/_images/admin06t.png)
