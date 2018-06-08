@@ -4,8 +4,6 @@
 
 ### Database setup
 
-Now, open up `mysite/settings.py`. It’s a normal Python module with module-level variables representing Django settings.
-
 现在, 打开 `mysite/settings.py`, 它是一个以模块级变量代表 Django 配置的普通的Python模块
 
 默认会使用 SQLite, SQLite 包含在 Python 中, 因此不需要安装额外的其他东西来支持它.
@@ -360,8 +358,8 @@ True
 ```
 
 - 获取更多 model 关系的信息, 参考 [Accessing related objects](https://docs.djangoproject.com/en/2.0/ref/models/relations/).
-- 如何通过 API 使用双下划线来完成字段的查找, 参考[Field lookups](https://docs.djangoproject.com/en/2.0/topics/db/queries/#field-lookups-intro)
-- 查看数据库 API 的完整信息, 参考[Database API reference](https://docs.djangoproject.com/en/2.0/topics/db/queries/)
+- 如何通过 API 使用双下划线来完成字段的查找, 参考[Field lookups](https://docs.djangoproject.com/en/2.0/topics/db/queries/#field-lookups-intro)
+- 查看数据库 API 的完整信息, 参考[Database API reference](https://docs.djangoproject.com/en/2.0/topics/db/queries/)
 
 ### Introducing the Django Admin
 
@@ -374,7 +372,7 @@ True
 
 #### 创建 admin 用户
 
-首先我们需要创建一个能够登陆进管理页面的用户:
+首先我们需要创建一个能够登陆进管理页面的用户:
 
 `python manage.py createsuperuser`
 
