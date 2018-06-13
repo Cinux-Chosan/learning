@@ -122,7 +122,7 @@ node dist/main.js
 
 The program should print “Hello from TypeScript!”.
 
-这段程序应该输出 “Hello from TypeScript!”.
+这段程序应该输出 “Hello from TypeScript!”.
 
 ## 添加模块
 
@@ -260,7 +260,7 @@ gulp.task("default", ["copy-html"], function () {
 
 This adds the `copy-html` task and adds it as a dependency of `default`. That means any time `default` is run, `copy-html` has to run first. We’ve also changed `default` to call Browserify with the tsify plugin instead of gulp-typescript. Conveniently, they both allow us to pass the same options object to the TypeScript compiler.
 
-上面这段代码添加了一个 `copy-html` 任务并且用它作为 `default` 任务的依赖. 也就是说任何时候运行 `default` 任务之前就会首先运行 `copy-html` 任务. 这里我们还修改了 `default` 任务, 通过 tsify 插件来调用 Browserify 而不再是 gulp-typescript. 方便的是, 它们都允许我们给 TypeScript 编译器传递相同的配置选项.
+上面这段代码添加了一个 `copy-html` 任务并且用它作为 `default` 任务的依赖. 也就是说任何时候运行 `default` 任务之前就会首先运行 `copy-html` 任务. 这里我们还修改了 `default` 任务, 通过 tsify 插件来调用 Browserify 而不再是 gulp-typescript. 方便的是, 它们都允许我们给 TypeScript 编译器传递相同的配置选项.
 
 After calling `bundle` we use `source` (our alias for vinyl-source-stream) to name our output bundle bundle.js.
 
@@ -272,12 +272,12 @@ Test the page by running gulp and then opening `dist/index.html` in a browser. Y
 
 Notice that we specified `debug: true` to Browserify. This causes tsify to emit source maps inside the bundled JavaScript file. Source maps let you debug your original TypeScript code in the browser instead of the bundled JavaScript. You can test that source maps are working by opening the debugger for your browser and putting a breakpoint inside `main.ts`. When you refresh the page the breakpoint should pause the page and let you debug `greet.ts`.
 
-我们给 Browserify 指定了 `debug: true`. 它会让 tsify 在打包的 JavaScript 文件中保留 source map. Source map 让你能在浏览器中调试原生的 TypeScript 代码而非打包过后的代码. 当你在浏览器调试窗口中的 `main.ts` 文件中打断点后就可以测试 ts 代码了. 当你刷新页面, 页面就会在断点处暂停了. (在 Chrome 中测试时, 直接在 bundle.js 中打断点会自动定位到相应的 ts 中)
+我们给 Browserify 指定了 `debug: true`. 它会让 tsify 在打包的 JavaScript 文件中保留 source map. Source map 让你能在浏览器中调试原生的 TypeScript 代码而非打包过后的代码. 当你在浏览器调试窗口中的 `main.ts` 文件中打断点后就可以测试 ts 代码了. 当你刷新页面, 页面就会在断点处暂停了. (在 Chrome 中测试时, 直接在 bundle.js 中打断点会自动定位到相应的 ts 中)
 
 ## Watchify, Babel, 和 Uglify
 
 Now that we are bundling our code with Browserify and tsify, we can add various features to our build with browserify plugins.
-
+
 我们现在已经使用 Browserify 和 tsify 将代码打包到一起, 另外也可以使用各种 browserify 插件来构建我们的项目了.
 
 - Watchify starts gulp and keeps it running, incrementally compiling whenever you save a file. This lets you keep an edit-save-refresh cycle going in the browser.
