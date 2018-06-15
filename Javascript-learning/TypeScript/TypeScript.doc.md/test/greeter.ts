@@ -1,10 +1,8 @@
-interface LabelledValue {
-  label: string;
+interface ClockConstructor {
+  new (hour: number, minute: number);
 }
 
-function printLabel(labelledObj: LabelledValue) {
-  console.log(labelledObj.label);
+class Clock implements ClockConstructor {
+  currentTime: Date;
+  constructor(h: number, m: number) { }
 }
-
-let myObj = {size: 10, label: "Size 10 Object"};
-printLabel(myObj);

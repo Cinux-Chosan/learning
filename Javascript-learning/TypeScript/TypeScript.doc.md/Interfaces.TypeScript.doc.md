@@ -1,5 +1,7 @@
 # 接口
 
+(接口就是用来约定各种数据结构的, 用于在编译期间做类型检查, 不会编译到输出代码中去)
+
 ## 介绍
 
 One of TypeScript’s core principles is that type-checking focuses on the shape that values have. This is sometimes called “duck typing” or “structural subtyping”. In TypeScript, interfaces fill the role of naming these types, and are a powerful way of defining contracts within your code as well as contracts with code outside of your project.
@@ -288,3 +290,238 @@ mySearch = function(src, sub) {
 ```
 
 ## 可索引类型
+
+Similarly to how we can use interfaces to describe function types, we can also describe types that we can “index into” like `a[10]`, or `ageMap["daniel"]`. Indexable types have an index signature that describes the types we can use to index into the object, along with the corresponding return types when indexing. Let’s take an example:
+
+跟使用接口来描述函数类型一样, 接口同样可以描述像 `a[10]` 或 `ageMap["daniel"]` 这样的索引类型. 索引类型使用索引签名来描述对象的索引的类型以及通过索引返回的值的类型. 看个例子:
+
+```ts
+interface StringArray {
+    [index: number]: string;
+}
+
+let myArray: StringArray;
+myArray = ["Bob", "Fred"];
+
+let myStr: string = myArray[0];
+```
+
+上例中, `StringArray` 接口有一个索引签名, 该签名表明当一个 `StringArray` 通过 `number` 类型进行索引时, 返回 `string` 类型的值.
+
+There are two types of supported index signatures: string and number. It is possible to support both types of indexers, but the type returned from a numeric indexer must be a subtype of the type returned from the string indexer. This is because when indexing with a `number`, JavaScript will actually convert that to a `string` before indexing into an object. That means that indexing with `100` (a `number`) is the same thing as indexing with "`100`" (a `string`), so the two need to be consistent.
+
+索引签名支持两种类型, 即 `string` 和 `number`, 当然可以同时支持这两种类型, 不过 `number` 索引返回的值需要是 `string` 索引返回值的子类型. 因为当使用 `number` 类型作为索引时, JavaScript 会将索引转换为 `string`.
+ 所以实际上 `100`(number) 和 `"100"`(string) 是一样的.
+
+ ```ts
+ class Animal {
+    name: string;
+}
+class Dog extends Animal {
+    breed: string;
+}
+
+// Error: indexing with a numeric string might get you a completely separate type of Animal!
+interface NotOkay {
+    [x: number]: Animal;
+    [x: string]: Dog;
+}
+```
+
+While string index signatures are a powerful way to describe the “dictionary” pattern, they also enforce that all properties match their return type. This is because a string index declares that `obj.property` is also available as `obj["property"]`. In the following example, `name`’s type does not match the string index’s type, and the type-checker gives an error:
+
+字符串索引类型可以用于描述 "字典模式", 因为字符串索引既可以写作 `obj.property` , 也可以写作 `obj["property"]`. 看下面, `name` 的类型和 `string` 类型的 index 的值不匹配, 因此类型检查器就抛出错误:
+
+```ts
+interface NumberDictionary {
+    [index: string]: number;
+    length: number;    // ok, length is a number
+    name: string;      // error, the type of 'name' is not a subtype of the indexer
+}
+```
+
+Finally, you can make index signatures readonly in order to prevent assignment to their indices:
+
+最后, 你也可以像前面那样使用 readonly 来表示该属性是只读的:
+
+```ts
+interface ReadonlyStringArray {
+    readonly [index: number]: string;
+}
+let myArray: ReadonlyStringArray = ["Alice", "Bob"];
+myArray[2] = "Mallory"; // error!
+```
+
+You can’t set `myArray[2]` because the index signature is readonly.
+
+由于 `myArray[2]` 是 readonly 类型, 因此你不能给它赋值.
+
+## Class 类型
+
+Implementing an interface
+
+实现接口
+
+One of the most common uses of interfaces in languages like C# and Java, that of explicitly enforcing that a class meets a particular contract, is also possible in TypeScript.
+
+接口的另一种常用方式就是像 C# 和 JAVA 这样的语言中那样使用接口来要求类必须满足接口约定的条件. 这在 TypeScript 中也是一样的.
+
+```ts
+interface ClockInterface {
+    currentTime: Date;
+}
+
+class Clock implements ClockInterface {
+    currentTime: Date;
+    constructor(h: number, m: number) { }
+}
+```
+
+You can also describe methods in an interface that are implemented in the class, as we do with setTime in the below example:
+
+你可以在接口中描述类需要实现的方法, 如下面的 `setTime` 方法:
+
+```ts
+interface ClockInterface {
+    currentTime: Date;
+    setTime(d: Date);
+}
+
+class Clock implements ClockInterface {
+    currentTime: Date;
+    setTime(d: Date) {
+        this.currentTime = d;
+    }
+    constructor(h: number, m: number) { }
+}
+```
+
+Interfaces describe the public side of the class, rather than both the public and private side. This prohibits you from using them to check that a class also has particular types for the private side of the class instance.
+
+接口描述类的公有(public)部分而非私有(private)部分. This prohibits you from using them to check that a class also has particular types for the private side of the class instance (还没想到如何翻译这句比较好).
+
+### 类的静态和实例的区别
+
+When working with classes and interfaces, it helps to keep in mind that a class has two types: the type of the static side and the type of the instance side. You may notice that if you create an interface with a construct signature and try to create a class that implements this interface you get an error:
+
+当涉及类和接口的时候, 请记住类会涉及到两种类型: 静态类型和实例类型.
+
+## 接口继承
+
+Like classes, interfaces can extend each other. This allows you to copy the members of one interface into another, which gives you more flexibility in how you separate your interfaces into reusable components.
+
+接口可以像类那样相互继承, 这使得你可以将译者接口的成员复制到另一个接口中去, 让你能够写出相互分离的可重用组件.
+
+```ts
+interface Shape {
+    color: string;
+}
+
+interface Square extends Shape {
+    sideLength: number;
+}
+
+let square = <Square>{};
+square.color = "blue";
+square.sideLength = 10;
+```
+
+An interface can extend multiple interfaces, creating a combination of all of the interfaces.
+
+一个接口可以继承多个其他接口, 因此可以创建一个其他接口的组合:
+
+```ts
+interface Shape {
+    color: string;
+}
+
+interface PenStroke {
+    penWidth: number;
+}
+
+interface Square extends Shape, PenStroke {
+    sideLength: number;
+}
+
+let square = <Square>{};
+square.color = "blue";
+square.sideLength = 10;
+square.penWidth = 5.0;
+```
+
+## 混合类型
+
+As we mentioned earlier, interfaces can describe the rich types present in real world JavaScript. Because of JavaScript’s dynamic and flexible nature, you may occasionally encounter an object that works as a combination of some of the types described above.
+
+如前面所说的那样, 接口可以描述 JavaScript 世界中各种各样丰富的类型. 由于 JavaScript 的动态性和灵活性，你很有可能会遇到一个组合了前面所说的那些类型的对象。
+
+One such example is an object that acts as both a function and an object, with additional properties:
+
+一个即作为函数又作为有额外属性的对象的对象就是这样一个例子:
+
+```ts
+interface Counter {
+    (start: number): string;
+    interval: number;
+    reset(): void;
+}
+
+function getCounter(): Counter {
+    let counter = <Counter>function (start: number) { };
+    counter.interval = 123;
+    counter.reset = function () { };
+    return counter;
+}
+
+let c = getCounter();
+c(10);
+c.reset();
+c.interval = 5.0;
+```
+
+When interacting with 3rd-party JavaScript, you may need to use patterns like the above to fully describe the shape of the type.
+
+当和一些第三方的 JavaScript 代码进行交互的时候, 你可能需要通过上面这种模式来尽可能完全的描述你需要的类型.
+
+## 接口继承类
+
+When an interface type extends a class type it inherits the members of the class but not their implementations. It is as if the interface had declared all of the members of the class without providing an implementation. Interfaces inherit even the private and protected members of a base class. This means that when you create an interface that extends a class with private or protected members, that interface type can only be implemented by that class or a subclass of it.
+
+当一个接口继承一个类的时候, 它只继承类的成员而不会继承类的实现方式. 就像这个接口声明了所有的类的成员, 但排除类的具体实现. 接口甚至可以继承基类的私有和保护的成员. 这意味着当你创建了一个继承了包含私有或保护成员的类时, 这个接口就只能被这个类或它的子类所实现.
+
+This is useful when you have a large inheritance hierarchy, but want to specify that your code works with only subclasses that have certain properties. The subclasses don’t have to be related besides inheriting from the base class. For example:
+
+比如你的继承层次结构很深, 并且你要求你的这部分代码只能用于包含特定属性的子类时就非常有用(感觉有点像多态). 子类除了从基类继承之外, 不必强制具有其他关联. 例如:
+
+```ts
+class Control {
+    private state: any;
+}
+
+interface SelectableControl extends Control {
+    select(): void;
+}
+
+class Button extends Control implements SelectableControl {
+    select() { }
+}
+
+class TextBox extends Control {
+    select() { }
+}
+
+// Error: Property 'state' is missing in type 'Image'.
+class Image implements SelectableControl {
+    select() { }
+}
+
+class Location {
+
+}
+```
+
+In the above example, `SelectableControl` contains all of the members of `Control`, including the private `state` property. Since state is a private member it is only possible for descendants of `Control` to implement `SelectableControl`. This is because only descendants of `Control` will have a `state` private member that originates in the same declaration, which is a requirement for private members to be compatible.
+
+在上面的例子中,
+
+Within the `Control` class it is possible to access the `state` private member through an instance of `SelectableControl`. Effectively, a `SelectableControl` acts like a `Control` that is known to have a `select` method. The `Button` and `TextBox` classes are subtypes of `SelectableControl` (because they both inherit from `Control` and have a `select` method), but the `Image` and `Location` classes are not.
