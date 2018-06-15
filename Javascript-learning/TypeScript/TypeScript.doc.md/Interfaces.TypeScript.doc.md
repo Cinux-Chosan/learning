@@ -29,7 +29,7 @@ The type-checker checks the call to `printLabel`. The `printLabel` function has 
 
 We can write the same example again, this time using an interface to describe the requirement of having the `label` property that is a string:
 
-现在我们用接口再来实现上面的例子（用接口来描述我们的需求：参数要一个具有值为字符串的 `label` 属性的对象）：
+现在我们用接口再来实现上面的例子（用接口来描述我们的需求：参数要是一个具有值为字符串的 `label` 属性的对象）：
 
 ```ts
 interface LabelledValue {
