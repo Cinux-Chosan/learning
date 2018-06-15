@@ -1,8 +1,7 @@
 interface ClockConstructor {
-  new (hour: number, minute: number);
+    new (hour: number, minute: number);
 }
 
 class Clock implements ClockConstructor {
-  currentTime: Date;
-  constructor(h: number, m: number) { }
+    currentTime: Date;
 }

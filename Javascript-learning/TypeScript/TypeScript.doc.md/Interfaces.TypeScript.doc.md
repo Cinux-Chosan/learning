@@ -404,7 +404,59 @@ Interfaces describe the public side of the class, rather than both the public an
 
 When working with classes and interfaces, it helps to keep in mind that a class has two types: the type of the static side and the type of the instance side. You may notice that if you create an interface with a construct signature and try to create a class that implements this interface you get an error:
 
-当涉及类和接口的时候, 请记住类会涉及到两种类型: 静态类型和实例类型.
+当涉及类和接口的时候, 请记住类会涉及到两种类型: 静态类型和实例类型。你可能注意到了，如果你创建了一个有构造签名(`new`关键字声明的函数签名)的接口，并且尝试使用一个类来实现这个接口就会报错：
+
+```ts
+interface ClockConstructor {
+    new (hour: number, minute: number);
+}
+
+class Clock implements ClockConstructor {
+    currentTime: Date;
+    constructor(h: number, m: number) { }
+}
+```
+
+This is because when a class implements an interface, only the instance side of the class is checked. Since the constructor sits in the static side, it is not included in this check.
+
+这是因为在用类来实现接口的情况下，只会对类的实例端进行检查。由于 constructor 属于静态端，所以它并不包含在检查当中。（没搞懂，为什么不在检查当中还会报错？）
+
+Instead, you would need to work with the static side of the class directly. In this example, we define two interfaces, `ClockConstructor` for the constructor and `ClockInterface` for the instance methods. Then for convenience we define a constructor function `createClock` that creates instances of the type that is passed to it.
+
+你需要直接使用类的静态类型来做。在这个例子中，我们定义两个接口， `ClockConstructor` 用于定义 constructor， `ClockInterface` 用于定义实例方法。为了方便，我们定义一个 `createClock` 方法来构造参数中传入的构造函数的实例。
+
+```ts
+interface ClockConstructor {
+    new (hour: number, minute: number): ClockInterface;
+}
+interface ClockInterface {
+    tick();
+}
+
+function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {
+    return new ctor(hour, minute);
+}
+
+class DigitalClock implements ClockInterface {
+    constructor(h: number, m: number) { }
+    tick() {
+        console.log("beep beep");
+    }
+}
+class AnalogClock implements ClockInterface {
+    constructor(h: number, m: number) { }
+    tick() {
+        console.log("tick tock");
+    }
+}
+
+let digital = createClock(DigitalClock, 12, 17);
+let analog = createClock(AnalogClock, 7, 32);
+```
+
+Because `createClock`’s first parameter is of type `ClockConstructor`, in `createClock(AnalogClock, 7, 32)`, it checks that `AnalogClock` has the correct constructor signature.
+
+因为 `createClock` 的第一个参数是 `ClockConstructor` 类型， 所以在  `createClock(AnalogClock, 7, 32)` 中， 它检查  `AnalogClock` 具有正确的构造签名。
 
 ## 接口继承
 
@@ -522,6 +574,8 @@ class Location {
 
 In the above example, `SelectableControl` contains all of the members of `Control`, including the private `state` property. Since state is a private member it is only possible for descendants of `Control` to implement `SelectableControl`. This is because only descendants of `Control` will have a `state` private member that originates in the same declaration, which is a requirement for private members to be compatible.
 
-在上面的例子中,
+在上面的例子中, `SelectableControl` 包含了 `Control` 的所有成员， 包括私有的 `state` 属性在内。 由于 state 是私有成员，因此只有 `Control` 的子类才能实现 `SelectableControl`。因为只有 `Control` 的子类才会有来从 `Control` 那里声明来的 `state` 这个私有成员，这也是让私有成员兼容的条件。
 
 Within the `Control` class it is possible to access the `state` private member through an instance of `SelectableControl`. Effectively, a `SelectableControl` acts like a `Control` that is known to have a `select` method. The `Button` and `TextBox` classes are subtypes of `SelectableControl` (because they both inherit from `Control` and have a `select` method), but the `Image` and `Location` classes are not.
+
+在 `Control` 类中通过 `SelectableControl` 的实例能够访问私有成员 `state`。实际上， `SelectableControl` 就像一个具有  `select` 方法的 `Control`。 `Button` 和 `TextBox` 类作为 `SelectableControl` 的子类型（因为它们都继承自 `Control` 并在具有 `select` 方法），但是 `Image` 和 `Location` 类就不是。
