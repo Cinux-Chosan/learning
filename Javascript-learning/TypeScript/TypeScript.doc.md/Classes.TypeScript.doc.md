@@ -1,4 +1,4 @@
-# 类
+# Classes
 
 ## 前言
 
@@ -67,3 +67,69 @@ dog.move(10);
 dog.bark();
 ```
 
+This example shows the most basic inheritance feature: classes inherit properties and methods from base classes. Here, Dog is a derived class that derives from the Animal base class using the extends keyword. Derived classes are often called subclasses, and base classes are often called superclasses.
+
+这个例子演示了继承的最基本特性：一个类继承了基类的属性和方法。这里，`Dog` 是通过关键字 `extends` 派生自基类 `Animal` 的派生类。派生类也就是常说的子类，基类通常称为超类。
+
+Because `Dog` extends the functionality from `Animal`, we were able to create an instance of `Dog` that could both `bark()` and `move()`.
+
+因为 `Dog` 继承了 `Animal` 的功能，因此我们能够创建一个具有 `bark()` 和 `move()` 方法的 `Dog` 实例。
+
+Let’s now look at a more complex example.
+
+看个例子：
+
+```ts
+class Animal {
+    name: string;
+    constructor(theName: string) { this.name = theName; }
+    move(distanceInMeters: number = 0) {
+        console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
+}
+
+class Snake extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 5) {
+        console.log("Slithering...");
+        super.move(distanceInMeters);
+    }
+}
+
+class Horse extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 45) {
+        console.log("Galloping...");
+        super.move(distanceInMeters);
+    }
+}
+
+let sam = new Snake("Sammy the Python");
+let tom: Animal = new Horse("Tommy the Palomino");
+
+sam.move();
+tom.move(34);
+```
+
+This example covers a few other features we didn’t previously mention. Again, we see the extends keywords used to create two new subclasses of Animal: Horse and Snake.
+
+这个例子涵盖了我们之前没有提到的其他一些功能。这里我们再次看到使用 `extends` 关键字来创建了 `Animal` 的两个子类： `Horse` 和 `Snake`.
+
+One difference from the prior example is that each derived class that contains a constructor function must call `super()` which will execute the constructor of the base class. What’s more, before we ever access a property on `this` in a constructor body, we have to call `super()`. This is an important rule that TypeScript will enforce.
+
+与前面的例子不同的一点是这里的每个派生类的构造函数中都包含了一个 `super()`，它用于执行基类的构造函数。。更重要的是，在构造函数中访问类的其它成员属性之前应该首先要执行 `super()` 方法，这是 TypeScript 强调的重要规则之一。
+
+The example also shows how to override methods in the base class with methods that are specialized for the subclass. Here both `Snake` and `Horse` create a `move` method that overrides the `move` from `Animal`, giving it functionality specific to each class. Note that even though `tom` is declared as an `Animal`, since its value is a `Horse`, calling `tom.move(34)` will call the overriding method in `Horse`:
+
+这个例子同时还演示了如何根据子类的特性来覆盖父类的同名函数。`Snake` 和 `Horse` 都创建了一个 `move` 方法来覆盖 `Animal` 的 `move` 方法，这让子类能够定制化自己的功能。请注意，即使 `tom` 是声明为 `Animal` 类型的，由于它是一个 `Horse` 的实例，因此调用 `tom.move(34)` 将会调用 `Horse` 中的 `move` 方法。
+
+```s
+Slithering...
+Sammy the Python moved 5m.
+Galloping...
+Tommy the Palomino moved 34m.
+```
+
+## Public, private, 和 protected 修饰符
+
+### 默认为 public
