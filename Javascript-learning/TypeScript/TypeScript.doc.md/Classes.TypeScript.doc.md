@@ -133,3 +133,74 @@ Tommy the Palomino moved 34m.
 ## Public, private, 和 protected 修饰符
 
 ### 默认为 public
+
+In our examples, we’ve been able to freely access the members that we declared throughout our programs. If you’re familiar with classes in other languages, you may have noticed in the above examples we haven’t had to use the word public to accomplish this; for instance, C# requires that each member be explicitly labeled public to be visible. In TypeScript, each member is public by default.
+
+在我们的例子中，我们能够自由的访问我们在程序中声明的成员。如果你对其他具有类的编程语言熟悉的话，你已经注意到了前面的例子中我们没有使用 `public`; 在 C# 中需要显式把每个成员标记为 `public` 之后才能在外部可见。在 typescript 中，每个成员默认为`public`。
+
+You may still mark a member `public` explicitly. We could have written the `Animal` class from the previous section in the following way:
+
+你仍然可以显式将成员指定为 `public`。前面的例子也可以写成下面这样：
+
+```ts
+class Animal {
+    public name: string;
+    public constructor(theName: string) { this.name = theName; }
+    public move(distanceInMeters: number) {
+        console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
+}
+```
+
+### 理解 `private`
+
+When a member is marked `private`, it cannot be accessed from outside of its containing class. For example:
+
+如果一个成员被标记为 `private`，那它就不能在这个类之外的地方访问，例如：
+
+```ts
+class Animal {
+    private name: string;
+    constructor(theName: string) { this.name = theName; }
+}
+
+new Animal("Cat").name; // Error: 'name' is private;
+```
+TypeScript is a structural type system. When we compare two different types, regardless of where they came from, if the types of all members are compatible, then we say the types themselves are compatible.
+
+TypesScript 是一个结构类型系统。当我们比较两个不同的类型时，不管它们来自哪里，如果它们所有成员的类型都兼容，那么它们两个类型就是兼容的。
+
+However, when comparing types that have `private` and `protected` members, we treat these types differently. For two types to be considered compatible, if one of them has a `private` member, then the other must have a `private` member that originated in the same declaration. The same applies to `protected` members.
+
+然而，当比较具有`private` 和 `protected` 成员的类型时，我们的方式是不一样的。两个类型如果要兼容，则如果其中一个有 `private` 成员，那么另一个也必须有一个源于同一个声明的 `private` 成员。`protected` 成员也同理。
+
+Let’s look at an example to better see how this plays out in practice:
+
+看看实际应用中是什么样子的：
+
+```ts
+class Animal {
+    private name: string;
+    constructor(theName: string) { this.name = theName; }
+}
+
+class Rhino extends Animal {
+    constructor() { super("Rhino"); }
+}
+
+class Employee {
+    private name: string;
+    constructor(theName: string) { this.name = theName; }
+}
+
+let animal = new Animal("Goat");
+let rhino = new Rhino();
+let employee = new Employee("Bob");
+
+animal = rhino;
+animal = employee; // Error: 'Animal' and 'Employee' are not compatible
+```
+
+In this example, we have an `Animal` and a `Rhino`, with `Rhino` being a subclass of `Animal`. We also have a new class `Employee` that looks identical to `Animal` in terms of shape. We create some instances of these classes and then try to assign them to each other to see what will happen. Because `Animal` and `Rhino` share the `private` side of their shape from the same declaration of `private name: string` in `Animal`, they are compatible. However, this is not the case for `Employee`. When we try to assign from an `Employee` to `Animal` we get an error that these types are not compatible. Even though `Employee` also has a `private` member called `name`, it’s not the one we declared in `Animal`.
+
+这个例子中，我们有一个 `Animal` 和 一个`Rhino`，且 `Rhino` 是 `Animal`的子类。还有一个 `Employee` 类看起来和 `Animal` 在结构上相似。我们分别为它们创建实例然后尝试将它们相互赋值看看会发生什么。因为 `Animal` 和 `Rhino` 都具有从 `Animal` 中的 `private name: string` 声明来的 `private` 成员，因此它们是兼容的。然而 `Employee` 的情况就不太一样了。当我们尝试将一个 `Employee` 赋值给 `Animal` 时，我们就会得到一个类型不兼容的错误。尽管 `Employee` 也有一个 `private` 的 `name` 成员，但它并不是 `Animal` 中声明的那一个。
