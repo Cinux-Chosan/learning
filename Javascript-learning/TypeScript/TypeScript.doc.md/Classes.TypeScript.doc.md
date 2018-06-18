@@ -204,3 +204,178 @@ animal = employee; // Error: 'Animal' and 'Employee' are not compatible
 In this example, we have an `Animal` and a `Rhino`, with `Rhino` being a subclass of `Animal`. We also have a new class `Employee` that looks identical to `Animal` in terms of shape. We create some instances of these classes and then try to assign them to each other to see what will happen. Because `Animal` and `Rhino` share the `private` side of their shape from the same declaration of `private name: string` in `Animal`, they are compatible. However, this is not the case for `Employee`. When we try to assign from an `Employee` to `Animal` we get an error that these types are not compatible. Even though `Employee` also has a `private` member called `name`, it’s not the one we declared in `Animal`.
 
 这个例子中，我们有一个 `Animal` 和 一个`Rhino`，且 `Rhino` 是 `Animal`的子类。还有一个 `Employee` 类看起来和 `Animal` 在结构上相似。我们分别为它们创建实例然后尝试将它们相互赋值看看会发生什么。因为 `Animal` 和 `Rhino` 都具有从 `Animal` 中的 `private name: string` 声明来的 `private` 成员，因此它们是兼容的。然而 `Employee` 的情况就不太一样了。当我们尝试将一个 `Employee` 赋值给 `Animal` 时，我们就会得到一个类型不兼容的错误。尽管 `Employee` 也有一个 `private` 的 `name` 成员，但它并不是 `Animal` 中声明的那一个。
+
+### 理解 `protected`
+
+The `protected` modifier acts much like the `private` modifier with the exception that members declared `protected` can also be accessed within deriving classes. For example,
+
+除了声明为 `protected` 的成员可以在派生类中访问之外，`protected` 和 `private` 在其它地方非常相似。
+
+```ts
+class Person {
+    protected name: string;
+    constructor(name: string) { this.name = name; }
+}
+
+class Employee extends Person {
+    private department: string;
+
+    constructor(name: string, department: string) {
+        super(name);
+        this.department = department;
+    }
+
+    public getElevatorPitch() {
+        return `Hello, my name is ${this.name} and I work in ${this.department}.`;
+    }
+}
+
+let howard = new Employee("Howard", "Sales");
+console.log(howard.getElevatorPitch());
+console.log(howard.name); // error
+```
+
+Notice that while we can’t use `name` from outside of `Person`, we can still use it from within an instance method of `Employee` because `Employee` derives from `Person`.
+
+注意，尽管我们不能在 `Person` 之外使用 `name`，但是我们仍然可以在 `Employee` 实例方法中使用它，因为它派生自 `Person`。
+
+A constructor may also be marked `protected`. This means that the class cannot be instantiated outside of its containing class, but can be extended. For example,
+
+构造函数也能标记为 `protected`，这意味着这个类不能在包含它的类之外实例化，但是可以被继承，例如：
+
+```ts
+class Person {
+    protected name: string;
+    protected constructor(theName: string) { this.name = theName; }
+}
+
+// Employee can extend Person
+class Employee extends Person {
+    private department: string;
+
+    constructor(name: string, department: string) {
+        super(name);
+        this.department = department;
+    }
+
+    public getElevatorPitch() {
+        return `Hello, my name is ${this.name} and I work in ${this.department}.`;
+    }
+}
+
+let howard = new Employee("Howard", "Sales");
+let john = new Person("John"); // Error: The 'Person' constructor is protected
+```
+
+## Readonly 修改器(modifier) decorator译为修饰器，modifier译为修改器
+
+You can make properties readonly by using the `readonly` keyword. Readonly properties must be initialized at their declaration or in the constructor.
+
+你可以通过 `readonly` 关键字指定属性为只读。只读属性必须在声明或构造函数中初始化。
+
+```ts
+class Octopus {
+    readonly name: string;
+    readonly numberOfLegs: number = 8;
+    constructor (theName: string) {
+        this.name = theName;
+    }
+}
+let dad = new Octopus("Man with the 8 strong legs");
+dad.name = "Man with the 3-piece suit"; // error! name is readonly.
+```
+
+### 参数属性
+
+In our last example, we had to declare a readonly member `name` and a constructor parameter `theName` in the `Octopus` class, and we then immediately set `name` to `theName`. This turns out to be a very common practice. Parameter properties let you create and initialize a member in one place. Here’s a further revision of the previous `Octopus` class using a parameter property:
+
+在前面的例子中， 我们在不得不在 `Octopus` 类中声明了一个只读的 `name` 和一个构造函数的参数 `theName`，然后在构造函数中立即将 `theName` 赋值给 `name`。这是一种非常普遍的做法。更方便的做法是使用参数属性，参数属性能够让你只在一个地方创建和初始化成员（相当于给 Octopus 声明了一个 theName 成员）。以下是使用参数属性对之前的`Octopus`类进行的进一步修订：
+
+```ts
+class Octopus {
+    readonly numberOfLegs: number = 8;
+    constructor(readonly name: string) {
+    }
+}
+```
+
+Notice how we dropped `theName` altogether and just use the shortened `readonly name: string` parameter on the constructor to create and initialize the `name` member. We’ve consolidated the declarations and assignment into one location.
+
+注意，我们完全删除了 `theName`，只用了构造函数参数 `readonly name: string` 来创建和初始化类的 `name` 成员。我们将声明和赋值合并到了一起。
+
+Parameter properties are declared by prefixing a constructor parameter with an accessibility modifier or readonly, or both. Using private for a parameter property declares and initializes a private member; likewise, the same is done for public, protected, and readonly.
+
+参数属性的声明方式为：在构造函数参数中使用访问修改器或者 readonly 修改器，或者结合两者使用。使用 `private` 参数属性声明的就是 `private` 成员，其它几个也是同理。
+
+## 访问器
+
+TypeScript supports getters/setters as a way of intercepting accesses to a member of an object. This gives you a way of having finer-grained control over how a member is accessed on each object.
+
+TypeScript 支持使用 getters/setters 来拦截对对象的成员访问。这让你可以更细致地控制每个对象上成员的访问方式。
+
+Let’s convert a simple class to use `get` and `set`. First, let’s start with an example without getters and setters.
+
+先从一个简单的类来入手 `get` 和 `set`。首先，看看没有 getters 和 setters 的情况。
+
+```ts
+class Employee {
+    fullName: string;
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+if (employee.fullName) {
+    console.log(employee.fullName);
+}
+```
+
+While allowing people to randomly set `fullName` directly is pretty handy, this might get us in trouble if people can change names on a whim.
+
+虽然这样直接的修改 `fullName` 显得非常方便，但是这也许会给我们带来更多的麻烦。
+
+In this version, we check to make sure the user has a secret passcode available before we allow them to modify the employee. We do this by replacing the direct access to fullName with a set that will check the passcode. We add a corresponding get to allow the previous example to continue to work seamlessly.
+
+在接下来的这个版本中，我们需要检查以确保用户拥有有效密码时才能让他们修改 employee。这里的做法就是通过 `set` 来在直接访问 `fullName` 的时候检查密码。我们还添加一个 `get` 来让之前的例子达到相同的效果。
+
+```ts
+let passcode = "secret passcode";
+
+class Employee {
+    private _fullName: string;
+
+    get fullName(): string {
+        return this._fullName;
+    }
+
+    set fullName(newName: string) {
+        if (passcode && passcode == "secret passcode") {
+            this._fullName = newName;
+        }
+        else {
+            console.log("Error: Unauthorized update of employee!");
+        }
+    }
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+if (employee.fullName) {
+    console.log(employee.fullName);
+}
+```
+
+To prove to ourselves that our accessor is now checking the passcode, we can modify the passcode and see that when it doesn’t match we instead get the message warning us we don’t have access to update the employee.
+
+为了证明访问器正在检查密码，我们可以通过修改密码，然后在密码不匹配的时候给出消息提示。
+
+A couple of things to note about accessors:
+
+关于访问器需要注意的是：
+
+First, accessors require you to set the compiler to output ECMAScript 5 or higher. Downlevelling to ECMAScript 3 is not supported. Second, accessors with a `get` and no `set` are automatically inferred to be `readonly`. This is helpful when generating a `.d.ts` file from your code, because users of your property can see that they can’t change it.
+
+- 第一，访问器需要你将编译器的输出设置为 `ECMAScript 5` 或者更高。不支持降级到 `ECMAScript 3`。
+- 第二，只有`set`没有`get`的访问器自动推断为 `readonly`，在从你的代码生成 `.d.ts` 文件的时候非常有用，因为那些使用这个属性的用户能够看到这个属性是不能更改的。
+
+## 静态属性
+
