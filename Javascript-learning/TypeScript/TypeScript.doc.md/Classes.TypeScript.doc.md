@@ -379,3 +379,187 @@ First, accessors require you to set the compiler to output ECMAScript 5 or highe
 
 ## 静态属性
 
+Up to this point, we’ve only talked about the instance members of the class, those that show up on the object when it’s instantiated. We can also create static members of a class, those that are visible on the class itself rather than on the instances. In this example, we use static on the origin, as it’s a general value for all grids. Each instance accesses this value through prepending the name of the class. Similarly to prepending this. in front of instance accesses, here we prepend Grid. in front of static accesses.
+
+目前为止,我们只讨论了类的实例成员, 即这些成员挂载在实例化的对象上. 我们还能够创建类的静态成员,这些成员挂载在类上而非实例之上. 在下面这个例子中,我们对 `origin` 使用 `static`, 因为它是所有 `Grid` 的通用值. 可以通过类作为前缀来访问这些类的静态属性, 这里的访问方式就是在静态成员前添加前缀 `Grid.`, 就像在实例中通过 `this.` 访问成员一样.
+
+```ts
+class Grid {
+    static origin = {x: 0, y: 0};
+    calculateDistanceFromOrigin(point: {x: number; y: number;}) {
+        let xDist = (point.x - Grid.origin.x);
+        let yDist = (point.y - Grid.origin.y);
+        return Math.sqrt(xDist * xDist + yDist * yDist) / this.scale;
+    }
+    constructor (public scale: number) { }
+}
+
+let grid1 = new Grid(1.0);  // 1x scale
+let grid2 = new Grid(5.0);  // 5x scale
+
+console.log(grid1.calculateDistanceFromOrigin({x: 10, y: 10}));
+console.log(grid2.calculateDistanceFromOrigin({x: 10, y: 10}));
+```
+
+## 抽象类
+
+抽象类作为其他派生类的基类. 它们不能直接被实例化. 与接口不同, 抽象类能够包含实现. 关键字 `abstract` 用来声明抽象类和抽象方法.
+
+```ts
+abstract class Animal {
+    abstract makeSound(): void;
+    move(): void {
+        console.log("roaming the earth...");
+    }
+}
+```
+
+Methods within an abstract class that are marked as abstract do not contain an implementation and must be implemented in derived classes. Abstract methods share a similar syntax to interface methods. Both define the signature of a method without including a method body. However, abstract methods must include the abstract keyword and may optionally include access modifiers.
+
+抽象类中的抽象方法不能包含实现, 必须在派生类中去实现. 抽象方法和接口语法相似, 他们都是只定义方法签名而不包含函数体. 然而, 抽象方法必须包含 `abstract` 关键字, 或者再带一些访问修改器.
+
+```ts
+abstract class Department {
+
+    constructor(public name: string) {
+    }
+
+    printName(): void {
+        console.log("Department name: " + this.name);
+    }
+
+    abstract printMeeting(): void; // must be implemented in derived classes
+}
+
+class AccountingDepartment extends Department {
+
+    constructor() {
+        super("Accounting and Auditing"); // constructors in derived classes must call super()
+    }
+
+    printMeeting(): void {
+        console.log("The Accounting Department meets each Monday at 10am.");
+    }
+
+    generateReports(): void {
+        console.log("Generating accounting reports...");
+    }
+}
+
+let department: Department; // ok to create a reference to an abstract type
+department = new Department(); // error: cannot create an instance of an abstract class
+department = new AccountingDepartment(); // ok to create and assign a non-abstract subclass
+department.printName();
+department.printMeeting();
+department.generateReports(); // error: method doesn't exist on declared abstract type
+```
+
+## 高级部分
+
+### 构造函数
+
+When you declare a class in TypeScript, you are actually creating multiple declarations at the same time. The first is the type of the instance of the class.
+
+当你在 TypeScript 中声明类的时候, 你实际上同一时间创建了很多声明. 第一个声明就是类的实例的类型.
+
+```ts
+class Greeter {
+    greeting: string;
+    constructor(message: string) {
+        this.greeting = message;
+    }
+    greet() {
+        return "Hello, " + this.greeting;
+    }
+}
+
+let greeter: Greeter;
+greeter = new Greeter("world");
+console.log(greeter.greet());
+```
+
+Here, when we say let greeter: Greeter, we’re using Greeter as the type of instances of the class Greeter. This is almost second nature to programmers from other object-oriented languages.
+
+这里, 当使用 `let greeter: Greeter` 来声明 greeter 的时候, 我们实际上使用 `Greeter` 作为了 `Greeter` 类的实例的类型.
+
+We’re also creating another value that we call the constructor function. This is the function that is called when we new up instances of the class. To see what this looks like in practice, let’s take a look at the JavaScript created by the above example:
+
+我们还创建了另一个被称作构造(`constructor`)函数的值. 这个构造函数会在我们使用 `new` 创建类的实例时自动调用. 为了看清楚到底是怎么在运作的, 我们看看上面那段 TypeScript 代码编译出来得 JavaScript 代码:
+
+```js
+let Greeter = (function () {
+    function Greeter(message) {
+        this.greeting = message;
+    }
+    Greeter.prototype.greet = function () {
+        return "Hello, " + this.greeting;
+    };
+    return Greeter;
+})();
+
+let greeter;
+greeter = new Greeter("world");
+console.log(greeter.greet());
+```
+
+Here, `let Greeter` is going to be assigned the constructor function. When we call new and run this function, we get an instance of the class. The constructor function also contains all of the static members of the class. Another way to think of each class is that there is an instance side and a static side.
+
+这里, 通过 `let Greeter` 声明的变量被赋予了一个构造函数. 当我们使用 new 来调用这个函数的时候, 我们就得到了一个类的实例. 构造函数中也包含了类的所有静态成员(通过 prototype 原型链继承). 另一种理解方式就是每个类都有静态的属性和实例的属性.
+
+Let’s modify the example a bit to show this difference:
+
+修改这个例子:
+
+```ts
+class Greeter {
+    static standardGreeting = "Hello, there";
+    greeting: string;
+    greet() {
+        if (this.greeting) {
+            return "Hello, " + this.greeting;
+        }
+        else {
+            return Greeter.standardGreeting;
+        }
+    }
+}
+
+let greeter1: Greeter;
+greeter1 = new Greeter();
+console.log(greeter1.greet());
+
+let greeterMaker: typeof Greeter = Greeter;
+greeterMaker.standardGreeting = "Hey there!";
+
+let greeter2: Greeter = new greeterMaker();
+console.log(greeter2.greet());
+```
+
+In this example, `greeter1` works similarly to before. We instantiate the `Greeter` class, and use this object. This we have seen before.
+
+这个例子中, `greeter1` 没有什么变化, 还是像之前那样声明和使用.
+
+Next, we then use the class directly. Here we create a new variable called `greeterMaker`. This variable will hold the class itself, or said another way its constructor function. Here we use `typeof Greeter`, that is “give me the type of the `Greeter` class itself” rather than the instance type. Or, more precisely, “give me the type of the symbol called `Greeter`,” which is the type of the constructor function. This type will contain all of the static members of Greeter along with the constructor that creates instances of the `Greeter` class. We show this by using `new` on `greeterMaker`, creating new instances of `Greeter` and invoking them as before.
+
+接下来, 我们直接使用类. 这里我们创建了一个名为 `greeterMaker` 的变量. 这个变得保存了类本身, 或者说是另一种访问构造函数的途径. 我们使用 `typeof Greeter` 告诉编译器 "请给我 `Greeter` 类本身的类型" 而非实例类型(因为如果是 Greeter 类型声明的变量, 表示是 Greeter 的实例, 而非 Greeter 类的类型, 我们这里要访问静态属性, 需要类的类型而非类的实例类型). 或者更确切的说, "给我 Greeter 这个符号的类型", 这种类型就是构造函数的类型. 这个类型包含了 `Greeter` 类的所有静态成员以及创建 `Greeter` 实例的构造函数. 通过对 `greeterMaker` 使用 `new` 操作符创建一个 `Greeter` 的实例然后像前面那样调用它来展示这个道理.
+
+### 使用类作为接口
+
+As we said in the previous section, a class declaration creates two things: a type representing instances of the class and a constructor function. Because classes create types, you can use them in the same places you would be able to use interfaces.
+
+如前面所说, 声明一个类实际上创建了两个东西: 代表类实例的类型和构造函数. 因为累创建了类型, 所以你能在使用接口的地方使用类.
+
+```ts
+class Point {
+    x: number;
+    y: number;
+}
+
+interface Point3d extends Point {
+    z: number;
+}
+
+let point3d: Point3d = {x: 1, y: 2, z: 3};
+```
+
+## 完

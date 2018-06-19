@@ -1,9 +1,21 @@
-var Octopus = /** @class */ (function () {
-    function Octopus(theName) {
-        this.numberOfLegs = 8;
-        this.name = theName;
+var Greeter = /** @class */ (function () {
+    function Greeter() {
     }
-    return Octopus;
+    Greeter.prototype.greet = function () {
+        if (this.greeting) {
+            return "Hello, " + this.greeting;
+        }
+        else {
+            return Greeter.standardGreeting;
+        }
+    };
+    Greeter.standardGreeting = "Hello, there";
+    return Greeter;
 }());
-var dad = new Octopus("Man with the 8 strong legs");
-dad.name = "Man with the 3-piece suit"; // error! name is readonly.
+var greeter1;
+greeter1 = new Greeter();
+console.log(greeter1.greet());
+var greeterMaker = Greeter;
+greeterMaker.standardGreeting = "Hey there!";
+var greeter2 = new greeterMaker();
+console.log(greeter2.greet());
