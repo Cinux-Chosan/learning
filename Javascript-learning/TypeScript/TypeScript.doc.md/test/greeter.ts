@@ -1,22 +1,10 @@
-class Greeter {
-    static standardGreeting = "Hello, there";
-    greeting: string;
-    greet() {
-        if (this.greeting) {
-            return "Hello, " + this.greeting;
-        }
-        else {
-            return Greeter.standardGreeting;
-        }
+class Octopus {
+    readonly name: string;
+    readonly numberOfLegs: number = 8;
+    constructor (theName: string) {
+        this.name = theName;
     }
 }
-
-let greeter1: Greeter;
-greeter1 = new Greeter();
-console.log(greeter1.greet());
-
-let greeterMaker: typeof Greeter = Greeter;
-greeterMaker.standardGreeting = "Hey there!";
-
-let greeter2: Greeter = new greeterMaker();
-console.log(greeter2.greet());
+let dad = new Octopus("Man with the 8 strong legs");
+dad.theName;
+dad.name = "Man with the 3-piece suit"; // error! name is readonly.
