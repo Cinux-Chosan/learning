@@ -400,3 +400,33 @@ redis 没有回滚功能, 因此要自己管理.
 
     除 `PERSIST` 命令之外, 使用 `SET` 或者 `GETSET` 命令为键赋值也会同时清除键的过期时间. 其它只对键值进行操作的命令均不会影响键的过期时间.
 
+#### 4.2.4 实现缓存
+
+使用 Redis 作为数据缓存中心时，为了避免 Redis 占用过多内存，可以通过配置 Redis 的清理策略：修改配置文件的 maxmemory 参数以限制 Redis 最大可用内存大小（单位字节），如果超出限制，Redis就会根据 maxmemory-policy 参数指定的策略来删除不需要的键，直到 Redis 占用的内存小于指定内存。
+
+maxmemory-policy 支持规则如下表，其中 LRU（Least Recnently Used）算法即“最近最少使用”，它认为最近最少使用的键在未来也会最少使用，当空间不足时就会删除这些键。
+
+|规则|说明|
+|---|---|
+|volatile-lru|使用LRU算法删除一个键（只对设置了过期时间的键）|
+|allkeys-lru|使用LRU算法删除一个键|
+|volatile-random|随机删除一个键（只对设置了过期时间的键）|
+|allkeys-random|随机删除一个键|
+|volatile-ttl|删除过期时间最近的一个键|
+|noeviction|不删除键，只返回错误|
+
+#### 4.3.2 SORT命令
+
+`sort key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination]`
+
+SORT 命令可以对列表、集合、有序集合进行排序，可用 LIMIT 来限制输出条数，可通过 ASC 或 DESC 来指定排序规则。
+
+如 `SORT mylist`，在没有指定 ALPHA 参数时，SORT 会尝试将所有元素转换成双精度浮点数来进行比较，如果无法转换则会提示错误，如：
+
+```redis
+LPUSH mylistalpha a c e d B C A
+SORT mylistalpha   ## 错误：(error) ERR One or more scores can't be converted into double
+SORT mylistalpha ALPHA  ## 正确
+```
+
+#### 4.3.3 BY 参数
