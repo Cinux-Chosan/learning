@@ -5,7 +5,7 @@ Windows中使用git-bash作为日常终端工具，在使用ssh命令连接到�
 
 `ssh -o ServerAliveInterval=60 root@xx.xx.xx.xx`
 想一劳永逸，可以在ssh-config中配置全局参数
-在git安装目录下的`etc/ssh/ssh_config`文件中，增加一行
+在git安装目录下的`/etc/ssh/ssh_config`文件中，增加一行
 
 `ServerAliveInterval 60`
 现在再使用ssh时，就可以一直保存ssh连接在线了。
