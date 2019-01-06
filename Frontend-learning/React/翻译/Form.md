@@ -226,7 +226,9 @@ Because its value is read-only, it is an **uncontrolled** component in React. It
 
 ## Handling Multiple Inputs
 
-When you need to handle multiple controlled input elements, you can add a name attribute to each element and let the handler function choose what to do based on the value of event.target.name.
+When you need to handle multiple controlled `input` elements, you can add a `name` attribute to each element and let the handler function choose what to do based on the value of `event.target.name`.
+
+当你需要处理多个受控的 `input` 元素时，你可以给每个元素添加一个 `name` 属性，然后让处理函数基于 `event.target.name` 的值来做出相应的响应。
 
 For example:
 
@@ -282,6 +284,8 @@ class Reservation extends React.Component {
 
 Note how we used the ES6 [computed property name syntax](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) to update the state key corresponding to the given input name:
 
+注意这里我们使用了 ES6 的 [计算属性名语法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Object_initializer#%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E5%90%8D) 来更新 state 中与 input name 中指定的属性的值。
+
 ```js
 this.setState({
   [name]: value
@@ -290,20 +294,28 @@ this.setState({
 
 It is equivalent to this ES5 code:
 
+它等同于下面的 ES5 代码：
+
 ```js
 var partialState = {};
 partialState[name] = value;
 this.setState(partialState);
 ```
 
-Also, since setState() automatically [merges a partial state into the current state](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-are-merged), we only needed to call it with the changed parts.
+Also, since `setState()` automatically [merges a partial state into the current state](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-are-merged), we only needed to call it with the changed parts.
+
+由于 `setState()` 会自动与当前 state 进行合并，因此我们调用它的时候只需要传入值发生了改变的部分。
 
 ## Controlled Input Null Value
 
-Specifying the value prop on a [controlled component](https://reactjs.org/docs/forms.html#controlled-components) prevents the user from changing the input unless you desire so. If you’ve specified a value but the input is still editable, you may have accidentally set value to undefined or null.
+Specifying the value prop on a [controlled component](https://reactjs.org/docs/forms.html#controlled-components) prevents the user from changing the input unless you desire so. If you’ve specified a `value` but the input is still editable, you may have accidentally set `value` to `undefined` or `null`.
+
+在受控组件上指定 value 属性会阻止用户通过输入来改变它的值。如果你指定了 `value` 但是仍然可以编辑输入框中的值，那么很有可能是你不小心将 `value` 设置为了 `undefined` 或者 `null`。
 
 
 The following code demonstrates this. (The input is locked at first but becomes editable after a short delay.)
+
+下面的代码演示了这种情况。（输入框中的内容一开始被锁定不可编辑，1 秒钟之后变为可编辑状态）
 
 ```jsx
 ReactDOM.render(<input value="hi" />, mountNode);
@@ -317,7 +329,10 @@ setTimeout(function() {
 
 It can sometimes be tedious to use controlled components, because you need to write an event handler for every way your data can change and pipe all of the input state through a React component. This can become particularly annoying when you are converting a preexisting codebase to React, or integrating a React application with a non-React library. In these situations, you might want to check out [uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html), an alternative technique for implementing input forms.
 
-## Fully-Fledged Solutions
+使用受控组件有时候会非常乏味，因为你需要考虑数据的每一种改变方式同时为它们编写事件处理函数，并通过 React 组件来管理所有的 input 状态。当你将已有的代码迁移到 React 的时候或者将 React 应用与非 React 应用进行整合的时候会非常麻烦。在这些情况下，你可能希望使用[非受控组件](https://reactjs.org/docs/uncontrolled-components.html)，它是受控组件的一种替代方式。
 
-If you’re looking for a complete solution including validation, keeping track of the visited fields, and handling form submission, Formik is one of the popular choices. However, it is built on the same principles of controlled components and managing state — so don’t neglect to learn them.
+## Fully-Fledged Solutions （完全成熟的解决方案）
 
+If you’re looking for a complete solution including validation, keeping track of the visited fields, and handling form submission, [Formik](https://jaredpalmer.com/formik) is one of the popular choices. However, it is built on the same principles of controlled components and managing state — so don’t neglect to learn them.
+
+如果你正在寻找一个完整的解决方案，它包括表单验证、字段追中、处理表单提交等功能，那么 [Formik](https://jaredpalmer.com/formik) 是一个比较好的选择。然而，它同样是建立在和受控组件、状态管理相同的原则上 —— 因此不要忽视对它们的学习。
