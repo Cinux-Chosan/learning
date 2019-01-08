@@ -250,7 +250,7 @@ The `onTemperatureChange` prop will be provided together with the `temperature` 
 
 Before diving into the changes in the `Calculator`, let’s recap our changes to the `TemperatureInput` component. We have removed the local state from it, and instead of reading `this.state.temperature`, we now read `this.props.temperature`. Instead of calling `this.setState()` when we want to make a change, we now call `this.props.onTemperatureChange()`, which will be provided by the `Calculator`:
 
-在改变 `Calculator` 之前，让我们再回顾一下 `TemperatureInput` 组件。我们已经将它的本地状态移除，并从 `this.props.temperature` 中读取值而非 `this.state.temperature`。我们也不再使用 `this.setState()` 而是用父组件 `Calculator` 提供的 `this.props.onTemperatureChange()`:
+在改变 `Calculator` 之前，让我们再回顾一下 `TemperatureInput` 组件。我们已经将它自己的 state 移除，并从 `this.props.temperature` 而非 `this.state.temperature` 中读取值。我们也不再使用 `this.setState()` 而是用父组件 `Calculator` 提供的 `this.props.onTemperatureChange()`:
 
 ```js
 class TemperatureInput extends React.Component {
@@ -285,7 +285,6 @@ We will store the current input’s `temperature` and `scale` in its local state
 
 我们将当前输入的 `temperature` 和 `scale` 保存为 `Calculator` 的本地状态。这就是从输入框中 “提升” 的状态，并作为它们的 “唯一数据来源”。它是我们能够用于呈现两个输入框需要知道的所有数据的最小表示。
 
-
 For example, if we enter 37 into the Celsius input, the state of the `Calculator` component will be:
 
 例如，如果我们在摄氏度中输入 37，那么 `Calculator` 的 state 为： 
@@ -299,7 +298,7 @@ For example, if we enter 37 into the Celsius input, the state of the `Calculator
 
 If we later edit the Fahrenheit field to be 212, the state of the `Calculator` will be:
 
-如果稍后我们再在华氏度中输入 212， `Calculator` 会变为：
+如果稍后我们再在华氏度中输入 212， `Calculator` 的 state 会变为：
 
 ```json
 {
@@ -310,7 +309,11 @@ If we later edit the Fahrenheit field to be 212, the state of the `Calculator` w
 
 We could have stored the value of both inputs but it turns out to be unnecessary. It is enough to store the value of the most recently changed input, and the scale that it represents. We can then infer the value of the other input based on the current `temperature` and `scale` alone.
 
+我们已经能够
+
 The inputs stay in sync because their values are computed from the same state:
+
+两个输入框能保持同步是因为它们的值来自同一个 state：
 
 
 ```js
@@ -362,10 +365,16 @@ class Calculator extends React.Component {
 
 Now, no matter which input you edit, `this.state.temperature` and `this.state.scale` in the `Calculator` get updated. One of the inputs gets the value as is, so any user input is preserved, and the other input value is always recalculated based on it.
 
+现在不管你输入什么，`Calculator` 中的 `this.state.temperature` 和 `this.state.scale` 都能得到更新。其中一个输入框按原样获取值，因此能够保留任何的用户输入，并始终根据它重新计算另一个输入值。
+
 Let’s recap what happens when you edit an input:
 
+再来回顾一下当你编辑输入框的时候发生了些啥：
+
 - React calls the function specified as `onChange` on the DOM `<input>`. In our case, this is the `handleChange` method in the `TemperatureInput` component.
+- React 调用 `<input>` 上的 `onChange` 方法。在我们当前这种情况下是 `TemperatureInput` 的 `handleChange` 方法。
 - The `handleChange` method in the `TemperatureInput` component calls `this.props.onTemperatureChange()` with the new desired value. Its props, including `onTemperatureChange`, were provided by its parent component, the `Calculator`.
+- `TemperatureInput` 组件的 `handleChange` 使用新的值来调用 `this.props.onTemperatureChange()`，它的 props 来自父组件 `Calculator`，并通过父组件传入了 `onTemperatureChange`
 - When it previously rendered, the `Calculator` has specified that `onTemperatureChange` of the Celsius `TemperatureInput` is the `Calculator`’s `handleCelsiusChange` method, and `onTemperatureChange` of the Fahrenheit `TemperatureInput` is the `Calculator`’s `handleFahrenheitChange` method. So either of these two `Calculator` methods gets called depending on which input we edited.
 - Inside these methods, the `Calculator` component asks React to re-render itself by calling `this.setState()` with the new input value and the current scale of the input we just edited.
 - React calls the `Calculator` component’s `render` method to learn what the UI should look like. The values of both inputs are recomputed based on the current temperature and the active scale. The temperature conversion is performed here.
