@@ -55,7 +55,7 @@ Anything inside the `<FancyBorder>` JSX tag gets passed into the `FancyBorder` c
 
 While this is less common, sometimes you might need multiple “holes” in a component. In such cases you may come up with your own convention instead of using `children`:
 
-尽管这可能并不是通常情况，但有时候你确实需要在一个组件中保留多个位置。在这种情况下你可以使用自己的约定来代替 `children`:
+有时候你确实需要在一个组件中保留多个位置，尽管这可能并非一般情况。在这种情况下你可以使用自己的约定来代替 `children`:
 
 ```js
 function SplitPane(props) {
@@ -94,11 +94,11 @@ React elements like `<Contacts />` and `<Chat />` are just objects, so you can p
 
 Sometimes we think about components as being “special cases” of other components. For example, we might say that a `WelcomeDialog` is a special case of `Dialog`.
 
-有时候我们会考虑将一个组件当做另一个组件的 “特例情况”。例如，`WelcomeDialog` 是 `Dialog` 的特殊情况。
+有时候我们会考虑将一个组件当做另一个组件的 “特定情况”。例如，`WelcomeDialog` 是 `Dialog` 的特殊情况。
 
 In React, this is also achieved by composition, where a more “specific” component renders a more “generic” one and configures it with props:
 
-这个在 React 中也可以使用组合来完成，通过使用 props 对一个更 “通用” 的组件进行配置可以得到一个 “特例” 组件。
+这个在 React 中也可以使用组合来完成，通过使用 props 对一个更 “通用” 的组件进行配置可以得到一个 “特定” 组件。
 
 ```js
 function Dialog(props) {
@@ -186,7 +186,7 @@ At Facebook, we use React in thousands of components, and we haven’t found any
 
 Props and composition give you all the flexibility you need to customize a component’s look and behavior in an explicit and safe way. Remember that components may accept arbitrary props, including primitive values, React elements, or functions.
 
-Porps 和 组合的方式为你以一种显式、安全的方式来自定义组件提供了足够的灵活性。记住组件可以接受任意的属性，包括基本类型， React 元素或者函数等。
+Porps 和 组合的方式为你以一种显式、安全的方式来自定义组件提供了足够的灵活性。记住，组件可以接受任意的属性，包括基本类型， React 元素或者函数等。
 
 If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript module. The components may import it and use that function, object, or a class, without extending it.
 
