@@ -2,15 +2,15 @@
 
 React is, in our opinion, the premier way to build big, fast Web apps with JavaScript. It has scaled very well for us at Facebook and Instagram.
 
-在我们看来，React 是使用 JavaScript 来构建大型，快速 Web 应用程序的首选方式。它在Facebook 和 Instagram 中表现非常好。
+在我们看来，React 是使用 JavaScript 来构建大型、快速 Web 应用程序的首选方式。它在Facebook 和 Instagram 中表现非常好。
 
 One of the many great parts of React is how it makes you think about apps as you build them. In this document, we’ll walk you through the thought process of building a searchable product data table using React.
 
-React 可以在你构建你的应用的时候使你对它们进行思考。在这篇文档中，我们将带你使用 React 来构建一个可搜索的产品数据表。
+React 可以使你在构建应用的时候对它们进行思考。在这篇文档中，我们将带你使用 React 来构建一个可搜索的产品数据表。
 
 ## Start With A Mock
 
-译者注：Mock 在这里理解为设计稿更好（或者原型，但设计稿更贴近），下面翻译为设计稿。
+*译者注：Mock 在这里理解为设计稿更好（或者原型，但设计稿更贴近），下面翻译为设计稿。*
 
 Imagine that we already have a JSON API and a mock from our designer. The mock looks like this:
 
@@ -41,23 +41,30 @@ The first thing you’ll want to do is to draw boxes around every component (and
 
 But how do you know what should be its own component? Just use the same techniques for deciding if you should create a new function or object. One such technique is the [single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), that is, a component should ideally only do one thing. If it ends up growing, it should be decomposed into smaller subcomponents.
 
-但是你又怎么知道组件应该由哪些部分组成呢？使用和创建新的函数或者对象一样的决策方式，那就是 [单一责任原则](https://en.wikipedia.org/wiki/Single_responsibility_principle)，即一个组件只负责做一件事情。如果你发现它的功能在增长的话就应该把它拆分成更多实现单一功能的子组件。
+但是你又怎么知道组件应该由哪些部分组成呢？这里要用到和创建新函数或者对象一样的决策方式，那就是 [单一责任原则](https://en.wikipedia.org/wiki/Single_responsibility_principle)，即一个组件只负责做一件事情。如果你发现它的功能在增长的话就应该把它拆分成更多实现单一功能的子组件。
 
 Since you’re often displaying a JSON data model to a user, you’ll find that if your model was built correctly, your UI (and therefore your component structure) will map nicely. That’s because UI and data models tend to adhere to the same information architecture, which means the work of separating your UI into components is often trivial. Just break it up into components that represent exactly one piece of your data model.
 
-如果你经常将 JSON 数据展示给用户，你就会发现如果你的数据层（model）构建准确，那你的 UI （和组件结构）层将会很好的将数据映射出来。
+如果你经常将 JSON 数据展示给用户，你就会发现如果你的数据层（model）构建准确，那你的 UI （和组件结构）层将能够很好的把数据映射出来。
 
 ![](https://reactjs.org/static/thinking-in-react-components-eb8bda25806a89ebdc838813bdfa3601-82965.png)
 
 You’ll see here that we have five components in our simple app. We’ve italicized the data each component represents.
 
-- **FilterableProductTable (orange)**: contains the entirety of the example
-- **SearchBar (blue)**: receives all user input
-- **ProductTable (green)**: displays and filters the data collection based on user input
-- **ProductCategoryRow (turquoise)**: displays a heading for each category
-- **ProductRow (red)**: displays a row for each product
+这儿可以看到我们对这个简单的应用划分了 5 个组件。
 
-If you look at `ProductTable`, you’ll see that the table header (containing the “Name” and “Price” labels) isn’t its own component. This is a matter of preference, and there’s an argument to be made either way. For this example, we left it as part of `ProductTable` because it is part of rendering the data collection which is `ProductTable’s` responsibility. However, if this header grows to be complex (i.e. if we were to add affordances for sorting), it would certainly make sense to make this its own `ProductTableHeader` component.
+- **FilterableProductTable (orange)**: contains the entirety of the example
+>> **FilterableProductTable (橙色)**: 包含整个应用
+- **SearchBar (blue)**: receives all user input
+>> **SearchBar (蓝色)**: 接收用户的输入
+- **ProductTable (green)**: displays and filters the data collection based on user input
+>> **ProductTable (绿色)**: 根据用户的输入对数据进行过滤和展示
+- **ProductCategoryRow (turquoise)**: displays a heading for each category
+>> **ProductCategoryRow (天蓝色)**: 显示每一项分类的标题
+- **ProductRow (red)**: displays a row for each product
+>> **ProductRow (red)**: 展示每项产品
+
+If you look at `ProductTable`, you’ll see that the table header (containing the “Name” and “Price” labels) isn’t its own component. This is a matter of preference, and there’s an argument to be made either way. For this example, we left it as part of `ProductTable` because it is part of rendering the data collection which is `ProductTable`’s responsibility. However, if this header grows to be complex (i.e. if we were to add affordances for sorting), it would certainly make sense to make this its own `ProductTableHeader` component.
 
 Now that we’ve identified the components in our mock, let’s arrange them into a hierarchy. This is easy. Components that appear within another component in the mock should appear as a child in the hierarchy:
 
