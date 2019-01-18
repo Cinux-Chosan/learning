@@ -66,7 +66,11 @@ You’ll see here that we have five components in our simple app. We’ve italic
 
 If you look at `ProductTable`, you’ll see that the table header (containing the “Name” and “Price” labels) isn’t its own component. This is a matter of preference, and there’s an argument to be made either way. For this example, we left it as part of `ProductTable` because it is part of rendering the data collection which is `ProductTable`’s responsibility. However, if this header grows to be complex (i.e. if we were to add affordances for sorting), it would certainly make sense to make this its own `ProductTableHeader` component.
 
+如果你仔细看 `ProductTable`，你会发现表头（包含 “Name” 和 “Price” 标签）并没有独立成一个组件。这只是一个偏好问题，不管是单独作为一个组件还是放在 `ProductTable` 里面都无伤大雅。这个例子中，我们让它成为 `ProductTable` 的一部分，因为它也是渲染数据集的一部分，这正是 `ProductTable` 的职责。然而，如果头部变得复杂（如：我们需要添加可供选择的分类）那我们就应该将它独立成 `ProductTableHeader` 组件。
+
 Now that we’ve identified the components in our mock, let’s arrange them into a hierarchy. This is easy. Components that appear within another component in the mock should appear as a child in the hierarchy:
+
+现在我们已经在设计稿中区分出来了各个组件，下面将它们按如下层级罗列出来。在圈出的设计稿中某个组件内部的组件就是这个组件的子组件：
 
 - `FilterableProductTable`
   - `SearchBar`
