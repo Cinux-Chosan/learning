@@ -163,19 +163,32 @@ For each piece of state in your application:
 你应用中的每一个 state 应该满足：
 
 - Identify every component that renders something based on that state.
+>> 如果每个组件都能基于该 state 做一些渲染。
 - Find a common owner component (a single component above all the components that need the state in the hierarchy).
+>> 找到一个公共的父组件（层级在这些所有这些组件之上的并且需要 state 的某个组件）
 - Either the common owner or another component higher up in the hierarchy should own the state.
+>> 应该由公共父组件或者层级中更高的组件来掌管这个 state
 - If you can’t find a component where it makes sense to own the state, create a new component simply for holding the state and add it somewhere in the hierarchy above the common owner component.
+>> 如果你并不能找到一个组件来掌管这个 state，那么就创建一个新的组件专门来管理 state，并把它置于其它组件之上的层级结构中，使其作为公共父组件。
 
 Let’s run through this strategy for our application:
 
+现在我们就将这个策略应用于当前应用：
+
 - `ProductTable` needs to filter the product list based on state and `SearchBar` needs to display the search text and checked state.
+>> `ProductTable` 需要根据 state 来过滤产品列表，`SearchBar` 需要展示搜索文本和复选框的选中状态。
 - The common owner component is `FilterableProductTable`.
+>> 它们的公共父组件为 `FilterableProductTable`
 - It conceptually makes sense for the filter text and checked value to live in `FilterableProductTable`
+>> 根据上面的策略，我们应该把过滤的文本和选中状态的值放在 `FilterableProductTable` 中。
 
 Cool, so we’ve decided that our state lives in `FilterableProductTable`. First, add an instance property `this.state = {filterText: '', inStockOnly: false}` to `FilterableProductTable`’s `constructor` to reflect the initial state of your application. Then, pass `filterText` and `inStockOnly` to `ProductTable` and `SearchBar` as a prop. Finally, use these props to filter the rows in `ProductTable` and set the values of the form fields in `SearchBar`.
 
+很好，我们已经决定将 state 放在 `FilterableProductTable` 中了。第一步，添加一个实例属性  `this.state = {filterText: '', inStockOnly: false}`  到  `FilterableProductTable` 的 `constructor` 中来初始化 state。然后将 `filterText` 和 `inStockOnly` 作为 prop 属性传递给 `ProductTable` 和 `SearchBar`。最后，在 `ProductTable` 中使用这些 props 来过滤每一行和在 `SearchBar` 设置表单字段的值。 
+
 You can start seeing how your application will behave: set `filterText` to `"ball"` and refresh your app. You’ll see that the data table is updated correctly.
+
+你可以看到应用的具体表现：将 `filterText` 设置为 `"ball"` 再刷新应用，你将会看到数据表也得到了正确的更新。
 
 ## Step 5: Add Inverse Data Flow
 
@@ -184,13 +197,23 @@ You can start seeing how your application will behave: set `filterText` to `"bal
 
 So far, we’ve built an app that renders correctly as a function of props and state flowing down the hierarchy. Now it’s time to support data flowing the other way: the form components deep in the hierarchy need to update the state in `FilterableProductTable`.
 
+目前为止，我们已经构建了一个能够正确渲染数据的应用，它是根据 props 和 state 向下传递数据的。现在我们需要支持数据反向流动：因为层级较深的表单组件需要更新 `FilterableProductTable` 的 state。
+
 React makes this data flow explicit to make it easy to understand how your program works, but it does require a little more typing than traditional two-way data binding.
+
+React 使用至上而下的单向数据流使得你更容易理解程序是如何运转的，但这样的代价就是你需要比传统的双向绑定模型编写更多的代码。
 
 If you try to type or check the box in the current version of the example, you’ll see that React ignores your input. This is intentional, as we’ve set the `value` prop of the `input` to always be equal to the `state` passed in from `FilterableProductTable`.
 
+如果你现在尝试在当前版本的搜索框中输入内容或者点击复选框，你会发现 React 忽略了你的输入。React 故意做成这样的，因为我们将 `input` 的 `value` 属性设置为了始终与从 `FilterableProductTable` 的 `state` 传递过来的相等的值。
+
 Let’s think about what we want to happen. We want to make sure that whenever the user changes the form, we update the state to reflect the user input. Since components should only update their own state, `FilterableProductTable` will pass callbacks to `SearchBar` that will fire whenever the state should be updated. We can use the `onChange` event on the inputs to be notified of it. The callbacks passed by `FilterableProductTable` will call `setState()`, and the app will be updated.
 
+想一下我们期望的效果是怎样的。我们希望不管用户何时对表单做出了修改，我们都能够即时的通过更新 state 反映出来。由于组件只能更新自己的 state，因此 `FilterableProductTable` 通过给 `SearchBar` 传递回调函数的方式来更新自己  state，回调会在 `SearchBar` 中按需调用以达到更新 `FilterableProductTable` 中 state 的能力。我们可以使用 input 的 `onChange` 事件来通知何时需要更新。`FilterableProductTable` 传递过来的回调函数中会调用 `setState()` 更新自己的状态。
+
 Though this sounds complex, it’s really just a few lines of code. And it’s really explicit how your data is flowing throughout the app.
+
+尽管这听起来或许有些复杂，但多不了几行代码。并且这样做使得应用中的数据流向更加明确。
 
 ## And That’s It
 Hopefully, this gives you an idea of how to think about building components and applications with React. While it may be a little more typing than you’re used to, remember that code is read far more than it’s written, and it’s extremely easy to read this modular, explicit code. As you start to build large libraries of components, you’ll appreciate this explicitness and modularity, and with code reuse, your lines of code will start to shrink. :)
