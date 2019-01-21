@@ -217,3 +217,5 @@ Though this sounds complex, it’s really just a few lines of code. And it’s r
 
 ## And That’s It
 Hopefully, this gives you an idea of how to think about building components and applications with React. While it may be a little more typing than you’re used to, remember that code is read far more than it’s written, and it’s extremely easy to read this modular, explicit code. As you start to build large libraries of components, you’ll appreciate this explicitness and modularity, and with code reuse, your lines of code will start to shrink. :)
+
+幸运的是，这里告诉了你如何去构建 React 组件和应用的思路。尽管可能比你之前要编写更多的代码，但记住代码的可读性比编码更重要。并且这些显式、模块化的代码非常易读。随着组件库越来越大，你也会欣然接受这种显式的、模块化的编码方式，并且由于组件之间的可复用性，你需要编写的代码也会变得越来越少。
