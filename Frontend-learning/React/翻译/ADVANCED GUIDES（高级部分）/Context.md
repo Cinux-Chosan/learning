@@ -177,7 +177,7 @@ This pattern is sufficient for many cases when you need to decouple a child from
 
 However, sometimes the same data needs to be accessible by many components in the tree, and at different nesting levels. Context lets you “broadcast” such data, and changes to it, to all components below. Common examples where using context might be simpler than the alternatives include managing the current locale, theme, or a data cache.
 
-然而，有时候相同的数据需要被许多不同层级的组件访问到。 Context 使得你可以向所有的子组件“广播” 数据、修改数据。使用 context 的常规示例在管理当前、主题或者数据缓存时可能比可能比替代方案更简单。
+然而，有时候相同的数据需要被许多不同层级的组件访问到。 Context 使得你可以向所有的子组件“广播” 数据、修改数据。使用 context 的常规示例在管理当前、主题或者数据缓存时可能比上面提到的替代方案更简单。
 
 ## API
 
@@ -193,7 +193,7 @@ Creates a Context object. When React renders a component that subscribes to this
 
 The `defaultValue` argument is **only** used when a component does not have a matching Provider above it in the tree. This can be helpful for testing components in isolation without wrapping them. Note: passing `undefined` as a Provider value does not cause consuming components to use `defaultValue`.
 
-`defaultValue` 参数只用于当。注意：如果传递 `undefined` 作为 Provider 的值不会使得使用的组件使用 `defaultValue`。
+`defaultValue` 参数只在当组件的上级中没有匹配的 Provider 时起作用，这对单独测试组件而不用将它们包装起来时提供了便利。注意：如果传递 `undefined` 作为 Provider 的值不会使得使用的组件使用 `defaultValue`（译者注：测试结果为只要有 Provider 就不会使用 `defaultValue`）。
 
 ### Context.Provider
 
@@ -203,13 +203,95 @@ The `defaultValue` argument is **only** used when a component does not have a ma
 
 Every Context object comes with a Provider React component that allows consuming components to subscribe to context changes.
 
+每个  Context 对象与生俱来一个 Provider React 组件，它使得使用该 Context 的组件能够订阅组 context 发生的改变。
+
 Accepts a `value` prop to be passed to consuming components that are descendants of this Provider. One Provider can be connected to many consumers. Providers can be nested to override values deeper within the tree.
+
+它接收一个 `value` prop 作为传递给 Provider 子组件的值。一个 Provider 可以和多个消费组件相关联。 Provider 也可以嵌套，它会覆盖前面的 Provider 的值。
 
 All consumers that are descendants of a Provider will re-render whenever the Provider’s `value` prop changes. The propagation from Provider to its descendant consumers is not subject to the `shouldComponentUpdate` method, so the consumer is updated even when an ancestor component bails out of the update.
 
+无论何时 Provider 的 `value` 发生改变， Provider 的所有消费者（即子组件）都会发生重绘。这种从 Provider 到它子组件的传播不会受到 `shouldComponentUpdate` 方法的控制，因此即时祖先组件不执行更新，Provider 后面的消费者组件也还是会得到更新的。
+
 Changes are determined by comparing the new and old values using the same algorithm as [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description).
+
+这种改变发生与否是使用与 [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description) 相同的算法来决定的。
 
 **Note**
 
 The way changes are determined can cause some issues when passing objects as value: see [Caveats](https://reactjs.org/docs/context.html#caveats).
 
+这种判断是否发生改变的方式在传入引用类型作为值时会导致一些问题：参考 [注意事项](https://reactjs.org/docs/context.html#caveats)
+
+
+### Class.contextType
+
+```js
+class MyClass extends React.Component {
+  componentDidMount() {
+    let value = this.context;
+    /* perform a side-effect at mount using the value of MyContext */
+  }
+  componentDidUpdate() {
+    let value = this.context;
+    /* ... */
+  }
+  componentWillUnmount() {
+    let value = this.context;
+    /* ... */
+  }
+  render() {
+    let value = this.context;
+    /* render something based on the value of MyContext */
+  }
+}
+MyClass.contextType = MyContext;
+```
+
+The `contextType` property on a class can be assigned a Context object created by [React.createContext()](https://reactjs.org/docs/context.html#reactcreatecontext). This lets you consume the nearest current value of that Context type using `this.context`. You can reference this in any of the lifecycle methods including the render function.
+
+类的 `contextType` 属性能够接受通过 [React.createContext()](https://reactjs.org/docs/context.html#reactcreatecontext) 方法创建的 Context 对象作为值。这使得你可以通过 `this.context` 来获取离该组件最近的 Context 类型当前的值。你可以在任何生命周期函数中访问它，包括 `render` 函数。
+
+**Note:**
+
+You can only subscribe to a single context using this API. If you need to read more than one see [Consuming Multiple Contexts](https://reactjs.org/docs/context.html#consuming-multiple-contexts).
+
+通过该 API 你只能订阅一个 context。如果你需要读取更多的 context 你可以查看 [使用多个 Context ](https://reactjs.org/docs/context.html#consuming-multiple-contexts)
+
+If you are using the experimental [public class fields syntax](https://babeljs.io/docs/plugins/transform-class-properties/), you can use a **static** class field to initialize your `contextType`.
+
+如果你正在使用 [公共类字段语法](https://babeljs.io/docs/plugins/transform-class-properties/)，你可以使用 **static** 来初始化 `contextType`。
+
+```js
+class MyClass extends React.Component {
+  static contextType = MyContext;
+  render() {
+    let value = this.context;
+    /* render something based on the value */
+  }
+}
+```
+
+### Context.Consumer
+
+```js
+<MyContext.Consumer>
+  {value => /* render something based on the context value */}
+</MyContext.Consumer>
+```
+
+A React component that subscribes to context changes. This lets you subscribe to a context within a [function component](https://reactjs.org/docs/components-and-props.html#function-and-class-components).
+
+上面演示了[函数式组件](https://reactjs.org/docs/components-and-props.html#function-and-class-components)订阅 context 的方法。
+
+Requires a [function as a child](https://reactjs.org/docs/render-props.html#using-props-other-than-render). The function receives the current context value and returns a React node. The `value` argument passed to the function will be equal to the `value` prop of the closest Provider for this context above in the tree. If there is no Provider for this context above, the `value` argument will be equal to the `defaultValue` that was passed to `createContext()`.
+
+这种方式需要一个[函数作为子节点](https://reactjs.org/docs/render-props.html#using-props-other-than-render)。该函数接收当前 context 的值并返回一个 React 节点。函数的 `value` 参数等同于层级树中最近的祖先 Provider 的 `value` 属性的值。如果该 context 之前没有 Provider，则 `value` 参数的值等于使用 `createContext()` 提供的 `defaultValue` 的值。
+
+**Note**
+
+For more information about the ‘function as a child’ pattern, see [render props](https://reactjs.org/docs/render-props.html).
+
+如果需要获取更多关于 “函数作为子节点” 的模式，请参考 [render props](https://reactjs.org/docs/render-props.html)。
+
+## Examples
