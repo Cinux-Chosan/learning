@@ -295,3 +295,189 @@ For more information about the ‘function as a child’ pattern, see [render pr
 如果需要获取更多关于 “函数作为子节点” 的模式，请参考 [render props](https://reactjs.org/docs/render-props.html)。
 
 ## Examples
+
+### Dynamic Context
+
+A more complex example with dynamic values for the theme:
+
+下面示例演示了如何在 context 中使用 theme 动态值：
+
+#### theme-context.js
+
+```js
+export const themes = {
+  light: {
+    foreground: '#000000',
+    background: '#eeeeee',
+  },
+  dark: {
+    foreground: '#ffffff',
+    background: '#222222',
+  },
+};
+
+export const ThemeContext = React.createContext(
+  themes.dark // default value
+);
+```
+
+#### themed-button.js
+
+```js
+import {ThemeContext} from './theme-context';
+
+class ThemedButton extends React.Component {
+  render() {
+    let props = this.props;
+    let theme = this.context;
+    return (
+      <button
+        {...props}
+        style={{backgroundColor: theme.background}}
+      />
+    );
+  }
+}
+ThemedButton.contextType = ThemeContext;
+
+export default ThemedButton;
+```
+
+#### app.js
+
+```js
+import {ThemeContext, themes} from './theme-context';
+import ThemedButton from './themed-button';
+
+// An intermediate component that uses the ThemedButton
+function Toolbar(props) {
+  return (
+    <ThemedButton onClick={props.changeTheme}>
+      Change Theme
+    </ThemedButton>
+  );
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      theme: themes.light,
+    };
+
+    this.toggleTheme = () => {
+      this.setState(state => ({
+        theme:
+          state.theme === themes.dark
+            ? themes.light
+            : themes.dark,
+      }));
+    };
+  }
+
+  render() {
+    // The ThemedButton button inside the ThemeProvider
+    // uses the theme from state while the one outside uses
+    // the default dark theme
+    return (
+      <Page>
+        <ThemeContext.Provider value={this.state.theme}>
+          <Toolbar changeTheme={this.toggleTheme} />
+        </ThemeContext.Provider>
+        <Section>
+          <ThemedButton />
+        </Section>
+      </Page>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.root);
+```
+
+### Updating Context from a Nested Component
+
+It is often necessary to update the context from a component that is nested somewhere deeply in the component tree. In this case you can pass a function down through the context to allow consumers to update the context:
+
+#### theme-context.js
+
+```js
+// Make sure the shape of the default value passed to
+// createContext matches the shape that the consumers expect!
+export const ThemeContext = React.createContext({
+  theme: themes.dark,
+  toggleTheme: () => {},
+});
+```
+
+#### theme-toggler-button.js
+
+```js
+import {ThemeContext} from './theme-context';
+
+function ThemeTogglerButton() {
+  // The Theme Toggler Button receives not only the theme
+  // but also a toggleTheme function from the context
+  return (
+    <ThemeContext.Consumer>
+      {({theme, toggleTheme}) => (
+        <button
+          onClick={toggleTheme}
+          style={{backgroundColor: theme.background}}>
+          Toggle Theme
+        </button>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+export default ThemeTogglerButton;
+```
+
+#### app.js
+
+```js
+import {ThemeContext, themes} from './theme-context';
+import ThemeTogglerButton from './theme-toggler-button';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleTheme = () => {
+      this.setState(state => ({
+        theme:
+          state.theme === themes.dark
+            ? themes.light
+            : themes.dark,
+      }));
+    };
+
+    // State also contains the updater function so it will
+    // be passed down into the context provider
+    this.state = {
+      theme: themes.light,
+      toggleTheme: this.toggleTheme,
+    };
+  }
+
+  render() {
+    // The entire state is passed to the provider
+    return (
+      <ThemeContext.Provider value={this.state}>
+        <Content />
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+function Content() {
+  return (
+    <div>
+      <ThemeTogglerButton />
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.root);
+```
