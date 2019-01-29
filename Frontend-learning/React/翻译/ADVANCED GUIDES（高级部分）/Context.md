@@ -399,6 +399,8 @@ ReactDOM.render(<App />, document.root);
 
 It is often necessary to update the context from a component that is nested somewhere deeply in the component tree. In this case you can pass a function down through the context to allow consumers to update the context:
 
+
+
 #### theme-context.js
 
 ```js
