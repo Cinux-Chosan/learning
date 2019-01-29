@@ -399,7 +399,7 @@ ReactDOM.render(<App />, document.root);
 
 It is often necessary to update the context from a component that is nested somewhere deeply in the component tree. In this case you can pass a function down through the context to allow consumers to update the context:
 
-
+有些时候需要在层级树较深层次的组件中更新 context。这种情况你可以通过 context 向下传递一个函数，这个函数可以让 context 的消费者来使用：
 
 #### theme-context.js
 
@@ -483,3 +483,111 @@ function Content() {
 
 ReactDOM.render(<App />, document.root);
 ```
+
+## Consuming Multiple Contexts
+
+To keep context re-rendering fast, React needs to make each context consumer a separate node in the tree.
+
+为了让 context 的重绘更快， React 需要每个 context 的消费者在层级树中是相互分开独立的。
+
+```js
+// Theme context, default to light theme
+const ThemeContext = React.createContext('light');
+
+// Signed-in user context
+const UserContext = React.createContext({
+  name: 'Guest',
+});
+
+class App extends React.Component {
+  render() {
+    const {signedInUser, theme} = this.props;
+
+    // App component that provides initial context values
+    return (
+      <ThemeContext.Provider value={theme}>
+        <UserContext.Provider value={signedInUser}>
+          <Layout />
+        </UserContext.Provider>
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+function Layout() {
+  return (
+    <div>
+      <Sidebar />
+      <Content />
+    </div>
+  );
+}
+
+// A component may consume multiple contexts
+function Content() {
+  return (
+    <ThemeContext.Consumer>
+      {theme => (
+        <UserContext.Consumer>
+          {user => (
+            <ProfilePage user={user} theme={theme} />
+          )}
+        </UserContext.Consumer>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+```
+
+If two or more context values are often used together, you might want to consider creating your own render prop component that provides both.
+
+如果有两个或更多的 context 值经常被使用到，你可能需要考虑使用 render prop 组件来提供这些值。
+
+## Caveats（注意事项）
+
+Because context uses reference identity to determine when to re-render, there are some gotchas that could trigger unintentional renders in consumers when a provider’s parent re-renders. For example, the code below will re-render all consumers every time the Provider re-renders because a new object is always created for `value`:
+
+因为上下文使用引用标识（即引用类型，类似于指针）来确定何时重绘，可能存在的一个性能陷阱就是当 provider 的父组件发生重绘的时候导致 context 的消费者也发生重绘。例如，下面的代码在每次 Provider 组件重绘时都会重绘所有的 context 消费者，因为每次传给 `value` 的都是一个新对象：
+
+```js
+class App extends React.Component {
+  render() {
+    return (
+      <Provider value={{something: 'something'}}>
+        <Toolbar />
+      </Provider>
+    );
+  }
+}
+```
+
+To get around this, lift the value into the parent’s state:
+
+解决这个问题的方法就是将 value 提升到父组件的 state 中去：
+
+```js
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: {something: 'something'},
+    };
+  }
+
+  render() {
+    return (
+      <Provider value={this.state.value}>
+        <Toolbar />
+      </Provider>
+    );
+  }
+}
+```
+
+## Legacy API
+
+**Note**
+
+React previously shipped with an experimental context API. The old API will be supported in all 16.x releases, but applications using it should migrate to the new version. The legacy API will be removed in a future major React version. Read the [legacy context docs here](https://reactjs.org/docs/legacy-context.html).
+
+React 之前附带了试验性的 context API。这些旧的 API 会在所有的  16.x 的版本中得到支持，但是使用这些 API 的应用应该将它迁移到新的版本来。这些遗留的 API 将会在下一个 React 主版本中被移除。参考 [遗留的 context 文档](https://reactjs.org/docs/legacy-context.html)
