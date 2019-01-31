@@ -73,7 +73,7 @@ Then you can use it as a regular component:
 
 Error boundaries work like a JavaScript `catch {}` block, but for components. Only class components can be error boundaries. In practice, most of the time you’ll want to declare an error boundary component once and use it throughout your application.
 
-错误边界的工作模式就像JavaScript中的 `catch {}` 块，但是它是用于组件的。只有类组件（而非函数组件）才能成为错误边界组件。在实践中，大多数时候你可能只希望定义一次错误边界组件然后在整个应用中都可以用到它。 
+错误边界的工作模式就像JavaScript中的 `catch {}` 块，但是它是用于组件的。只有类组件（而非函数组件）才能成为错误边界组件。在实践中，大多数时候你可能只希望定义一次错误边界组件然后在整个应用中都可以用到它。
 
 Note that **error boundaries only catch errors in the components below them in the tree**. An error boundary can’t catch an error within itself. If an error boundary fails trying to render the error message, the error will propagate to the closest error boundary above it. This, too, is similar to how catch {} block works in JavaScript.
 
@@ -161,15 +161,21 @@ However, React components are declarative and specify what should be rendered:
 
 Error boundaries preserve the declarative nature of React, and behave as you would expect. For example, even if an error occurs in a `componentDidUpdate` method caused by a `setState` somewhere deep in the tree, it will still correctly propagate to the closest error boundary.
 
-错误边界组件保留了 React 声明式的本质，
+错误边界组件保留了 React 声明式的本质，有表现的如你所愿。例如，一个层级很深的组件的 `componentDidUpdate` 方法中使用 `setState` 导致的错误也会被离它最近的错误边界组件捕获到。
 
 ## How About Event Handlers?
 
 Error boundaries **do not** catch errors inside event handlers.
 
+错误边界 **不能** 捕获到事件处理函数中的错误。
+
 React doesn’t need error boundaries to recover from errors in event handlers. Unlike the render method and lifecycle methods, the event handlers don’t happen during rendering. So if they throw, React still knows what to display on the screen.
 
+React 不需要错误边界组件来从事件处理函数中的错误中恢复。事件处理函数不像 render 或者生命周期函数那样会在渲染中执行。因此如果它们抛出异常，React 仍知道在界面中渲染什么内容。
+
 If you need to catch an error inside event handler, use the regular JavaScript `try` / `catch` statement:
+
+如果你需要捕获事件处理函数中的错误，使用常规的 JavaScript `try` / `catch` 即可：
 
 ```js
 class MyComponent extends React.Component {
@@ -198,13 +204,18 @@ class MyComponent extends React.Component {
 
 Note that the above example is demonstrating regular JavaScript behavior and doesn’t use error boundaries.
 
+上面的示例使用的是常规的 JavaScript 代码，没有使用 React 的错误边界组件。
+
 ## Naming Changes from React 15
 
 React 15 included a very limited support for error boundaries under a different method name: `unstable_handleError`. This method no longer works, and you will need to change it to `componentDidCatch` in your code starting from the first 16 beta release.
 
+React 15 通过 `unstable_handleError` 方法对错误边界提供了非常有限的支持。该方法已经不再奏效，你需要从首个 16 beta 版本中将它迁移进 `componentDidCatch`。
+
 For this change, we’ve provided a [codemod]
 (https://github.com/reactjs/react-codemod#error-boundaries) to automatically migrate your code.
 
+针对该变化，我们提供了[自动化脚本](https://github.com/reactjs/react-codemod#error-boundaries)来将你的代码自动迁移到新的版本。
 
 
 
