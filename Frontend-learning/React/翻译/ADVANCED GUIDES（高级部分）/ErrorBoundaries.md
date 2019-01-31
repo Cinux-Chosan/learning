@@ -111,25 +111,37 @@ For example, Facebook Messenger wraps content of the sidebar, the info panel, th
 
 We also encourage you to use JS error reporting services (or build your own) so that you can learn about unhandled exceptions as they happen in production, and fix them.
 
+我们同样鼓励你使用 JS 自己的错误报告服务（或者构建属于你的错误报告）以便你能够在生产环境中快速定位到未处理异常并修复它们。
+
 ## Component Stack Traces
 
 React 16 prints all errors that occurred during rendering to the console in development, even if the application accidentally swallows them. In addition to the error message and the JavaScript stack, it also provides component stack traces. Now you can see where exactly in the component tree the failure has happened:
+
+即使应用程序意外掩盖了一些错误，React 16 在开发模式下也会把渲染过程中遇到的所有错误都输出到控制台。除了错误消息和 JavaScript 调用栈，它还提供了组件调用栈的跟踪。因此你可以清楚的看到产生错误的组件在层级树中的具体位置。
 
 ![](https://reactjs.org/static/error-boundaries-stack-trace-f1276837b03821b43358d44c14072945-71000.png)
 
 You can also see the filenames and line numbers in the component stack trace. This works by default in [Create React App](https://github.com/facebookincubator/create-react-app) projects:
 
+你还能从组件调用栈中看到文件名和行号。在 [Create React App](https://github.com/facebookincubator/create-react-app) 项目中默认开启了这项功能：
+
 ![](https://reactjs.org/static/error-boundaries-stack-trace-line-numbers-45611d4fdbd152829b28ae2348d6dcba-4e7a0.png)
 
 If you don’t use Create React App, you can add [this plugin](https://www.npmjs.com/package/babel-plugin-transform-react-jsx-source) manually to your Babel configuration. Note that it’s intended only for development and **must be disabled in production**.
+
+如果你没有使用 Create React App，你可以手动添加 [这个组件](https://www.npmjs.com/package/babel-plugin-transform-react-jsx-source)到你的 Babel 配置中去。注意这个功能只能用在开发环境中，在生产环境中应该将它关闭。
 
 **Note**
 
 Component names displayed in the stack traces depend on the [Function.name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name) property. If you support older browsers and devices which may not yet provide this natively (e.g. IE 11), consider including a `Function.name` polyfill in your bundled application, such as [function.name-polyfill](https://github.com/JamesMGreene/Function.name). Alternatively, you may explicitly set the [displayName](https://reactjs.org/docs/react-component.html#displayname) property on all your components.
 
+在调用栈中显示的组件名是基于 [Function.name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name) 属性而来。在老的浏览器或者设备上可能并没有得到原生的支持（如 IE 11），这种情况下你需要在打包应用程序的时候使用 `Function.name` polyfill。另一种方案就是你给所有的组件显式指定 [displayName](https://reactjs.org/docs/react-component.html#displayname) 属性。
+
 ## How About try/catch?
 
 `try` / `catch` is great but it only works for imperative code:
+
+`try` / `catch` 很好用，但是它只适用于命令式编码：
 
 ```js
 try {
@@ -141,11 +153,15 @@ try {
 
 However, React components are declarative and specify what should be rendered:
 
+然而， React 组件用来指定显示的内容，它是声明式的：
+
 ```js
 <Button />
 ```
 
 Error boundaries preserve the declarative nature of React, and behave as you would expect. For example, even if an error occurs in a `componentDidUpdate` method caused by a `setState` somewhere deep in the tree, it will still correctly propagate to the closest error boundary.
+
+错误边界组件保留了 React 声明式的本质，
 
 ## How About Event Handlers?
 
