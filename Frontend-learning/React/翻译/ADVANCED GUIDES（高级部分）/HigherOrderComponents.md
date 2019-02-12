@@ -131,7 +131,7 @@ You can imagine that in a large app, this same pattern of subscribing to `DataSo
 
 We can write a function that creates components, like `CommentList` and `BlogPost`, that subscribe to `DataSource`. The function will accept as one of its arguments a child component that receives the subscribed data as a prop. Let’s call the function `withSubscription`:
 
-我们可以编写一个用于创建类似 `CommentList` 和 `BlogPost` 这种订阅了 `DataSource` 的组件的函数。这个函数其中一个参数用于接收一个子组件，该子组件通过 props 来获取订阅的数据。这里我们把这个函数命名为 `withSubscription`:
+我们可以编写一个用于创建类似于 `CommentList` 和 `BlogPost` 这种订阅了 `DataSource` 的组件的函数。这个函数其中一个参数用于接收一个子组件，该子组件通过 props 来获取订阅的数据。这里我们把这个函数命名为 `withSubscription`:
 
 ```js
 const CommentListWithSubscription = withSubscription(
@@ -192,17 +192,25 @@ function withSubscription(WrappedComponent, selectData) {
 
 Note that a HOC doesn’t modify the input component, nor does it use inheritance to copy its behavior. Rather, a HOC composes the original component by wrapping it in a container component. A HOC is a pure function with zero side-effects.
 
-注意高阶组件不会修改 input 组件，也不会使用继承来拷贝它们的行为。 相反，高阶组件通过把原来的组件封装在一个容器组件中来包含它。高阶组件应该是一个零副作用的纯函数。
+注意高阶组件不会修改传入的组件，也不会使用继承来拷贝它们的行为。 相反，高阶组件通过把原来的组件封装在一个容器组件中来包含它。高阶组件应该是一个零副作用的纯函数。
 
 And that’s it! The wrapped component receives all the props of the container, along with a new prop, `data`, which it uses to render its output. The HOC isn’t concerned with how or why the data is used, and the wrapped component isn’t concerned with where the data came from.
 
+容器组件把自己所有的 props 都传递给了其内部封装的组件，其中包括一个新的 `data` 属性，内部组件使用这些属性来渲染内容。高阶组件不会关心这些数据被如何使用，内部封装的组件也不关心数据是从何而来的。
+
 Because `withSubscription` is a normal function, you can add as many or as few arguments as you like. For example, you may want to make the name of the `data` prop configurable, to further isolate the HOC from the wrapped component. Or you could accept an argument that configures `shouldComponentUpdate`, or one that configures the data source. These are all possible because the HOC has full control over how the component is defined.
+
+因为 `withSubscription` 是一个普通函数，你可以按需自行添加参数。例如，你可能希望 `data` 属性的名字也是可配置的，这样就可以进一步将内部封装的组件和高阶组件分离开来。或者你需要一个参数来配置 `shouldComponentUpdate` 或者添加配置数据源的参数。这些都是可以实现的，因为高阶组件对其内部的组件该如何定义具有绝对的控制权。
 
 Like components, the contract between `withSubscription` and the wrapped component is entirely props-based. This makes it easy to swap one HOC for a different one, as long as they provide the same props to the wrapped component. This may be useful if you change data-fetching libraries, for example.
 
-## Don’t Mutate the Original Component. Use Composition.
+和普通组件一样，高阶组件 `withSubscription` 和其内部封装的组件之间也是通过 props 进行传值的。这使得将一个高阶组件替换为另一个高阶组件变得非常容易，只要它们为包装的组件提供相同的 props 参数即可。例如，如果你需要替换获取数据的 lib 时非常有用。
+
+## Don’t Mutate the Original Component. Use Composition.（不要修改原组件。尽量使用组合的方式来做）
 
 Resist the temptation to modify a component’s prototype (or otherwise mutate it) inside a HOC.
+
+不要在高阶组件内部修改组件的原型链 prototype（或者修改组件本身）。
 
 ```js
 function logProps(InputComponent) {
@@ -221,9 +229,15 @@ const EnhancedComponent = logProps(InputComponent);
 
 There are a few problems with this. One is that the input component cannot be reused separately from the enhanced component. More crucially, if you apply another HOC to `EnhancedComponent` that also mutates `componentWillReceiveProps`, the first HOC’s functionality will be overridden! This HOC also won’t work with function components, which do not have lifecycle methods.
 
+这种做法会有一些问题。首先，传入的组件不能与 `EnhancedComponent` 组件分开重用（因为传入的组件原型链已经被修改了）。更严重的是，如果你也修改了 `EnhancedComponent` 的 `componentWillReceiveProps`，那第一个高阶组件中的同名方法就会被覆盖！这种高阶组件不能用于函数组件，因为它们没有生命周期函数。
+
 Mutating HOCs are a leaky abstraction—the consumer must know how they are implemented in order to avoid conflicts with other HOCs.
 
+这种会修改传入组件的高阶组件会破坏对组件的抽象 —— 该高阶组件的使用者必须知道它是如何实现的以便可以避免和其它高阶组件之间产生冲突。
+
 Instead of mutation, HOCs should use composition, by wrapping the input component in a container component:
+
+高阶组件应该使用组合来取代对组件的修改行为，那就是将传入的组件封装在一个容器组件中：
 
 ```js
 function logProps(WrappedComponent) {
@@ -242,13 +256,21 @@ function logProps(WrappedComponent) {
 
 This HOC has the same functionality as the mutating version while avoiding the potential for clashes. It works equally well with class and function components. And because it’s a pure function, it’s composable with other HOCs, or even with itself.
 
+与修改传入组件的方式相比，上面使用组合这种方式的高阶组件具有相同的功能，并且还能避免一些潜在的冲突。它在类组件和函数组件中都能良好的工作。由于它是纯函数，它还能够和其它高阶组件进行组合，包括它自己。
+
 You may have noticed similarities between HOCs and a pattern called **container components**. Container components are part of a strategy of separating responsibility between high-level and low-level concerns. Containers manage things like subscriptions and state, and pass props to components that handle things like rendering UI. HOCs use containers as part of their implementation. You can think of HOCs as parameterized container component definitions.
 
-## Convention: Pass Unrelated Props Through to the Wrapped Component
+你可能已经注意到高阶组件和一种称之为 **容器组件** 的模式非常相似。容器组件是用来分离高级和底级概念的策略中的一部分。容器负责管理如订阅、状态之类的事情，并将数据通过属性传递给渲染 UI 的组件。高阶组件使用容器作为其实现的一部分，你可以将高阶组件当做带参数传递的容器组件。
+
+## Convention: Pass Unrelated Props Through to the Wrapped Component（约定：高阶组件应该传递不相关的属性到内部组件）
 
 HOCs add features to a component. They shouldn’t drastically alter its contract. It’s expected that the component returned from a HOC has a similar interface to the wrapped component.
 
+高阶组件用于为组件添加功能和特性。它们不应该对组件本身的功能特性进行大幅修改。从高阶组件返回的组件应该和组件本身具有类似的接口。
+
 HOCs should pass through props that are unrelated to its specific concern. Most HOCs contain a render method that looks something like this:
+
+高阶组件传递的属性应该是和组件的某个特定概念不相关的内容。大多数高阶组件可能都会包含一个下面这样的 render 函数：
 
 ```js
 render() {
@@ -271,6 +293,8 @@ render() {
 ```
 
 This convention helps ensure that HOCs are as flexible and reusable as possible.
+
+这种约定能够帮助确保高阶组件最大的灵活性和可重用性。
 
 ## Convention: Maximizing Composability
 
