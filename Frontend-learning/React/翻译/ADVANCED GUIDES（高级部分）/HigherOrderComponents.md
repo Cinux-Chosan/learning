@@ -296,10 +296,11 @@ This convention helps ensure that HOCs are as flexible and reusable as possible.
 
 这种约定能够帮助确保高阶组件最大的灵活性和可重用性。
 
-## Convention: Maximizing Composability
-
+## Convention: Maximizing Composability（约定：最大化使用组合）
 
 Not all HOCs look the same. Sometimes they accept only a single argument, the wrapped component:
+
+并不是所有的高阶组件看起来都一样。有些组件只接受一个参数 —— 传入的组件：
 
 ```js
 const NavbarWithRouter = withRouter(Navbar);
@@ -307,11 +308,15 @@ const NavbarWithRouter = withRouter(Navbar);
 
 Usually, HOCs accept additional arguments. In this example from Relay, a config object is used to specify a component’s data dependencies:
 
+通常，高阶组件接受额外的参数。这里有个使用 Relay 的例子，它使用了一个配置对象来指定组件的数据依赖：
+
 ```js
 const CommentWithRelay = Relay.createContainer(Comment, config);
 ```
 
 The most common signature for HOCs looks like this:
+
+大多数高阶组件的使用方式看起来是这样的：
 
 ```js
 // React Redux's `connect`
@@ -319,6 +324,8 @@ const ConnectedComment = connect(commentSelector, commentActions)(CommentList);
 ```
 
 What?! If you break it apart, it’s easier to see what’s going on.
+
+什么？！ 如果你把它拆看看，就非常容易看出这里发生了什么。
 
 ```js
 // connect is a function that returns another function
@@ -330,7 +337,11 @@ const ConnectedComment = enhance(CommentList);
 
 In other words, `connect` is a higher-order function that returns a higher-order component!
 
+换句话说， `connect` 是一个返回了一个高阶组件的高阶函数。
+
 This form may seem confusing or unnecessary, but it has a useful property. Single-argument HOCs like the one returned by the `connect` function have the signature `Component => Component`. Functions whose output type is the same as its input type are really easy to compose together.
+
+这种格式让人感觉迷惑并且没有必要，但它有一个很有用的特性。像 `connect` 这样的函数签名为 `Component => Component` 的函数返回了一个单参数的高阶组件，这种输入类型和输出类型一样函数很容易组合在一起。
 
 ```js
 // Instead of doing this...
@@ -348,13 +359,21 @@ const EnhancedComponent = enhance(WrappedComponent)
 
 (This same property also allows `connect` and other enhancer-style HOCs to be used as decorators, an experimental JavaScript proposal.)
 
+（相同属性也使得 `connect` 和其他增强类型的高阶组件可以当做 decorator 使用，这是一种处于试验阶段的 JavaScript 提案。）
+
 The `compose` utility function is provided by many third-party libraries including lodash (as [lodash.flowRight](https://lodash.com/docs/#flowRight)), [Redux](http://redux.js.org/docs/api/compose.html), and [Ramda](http://ramdajs.com/docs/#compose).
 
-## Convention: Wrap the Display Name for Easy Debugging
+很多第三方库提供了这种组合类型的工具函数，如 lodash（[lodash.flowRight](https://lodash.com/docs/#flowRight)）,[Redux](http://redux.js.org/docs/api/compose.html) 和 [Ramda](http://ramdajs.com/docs/#compose).
+
+## Convention: Wrap the Display Name for Easy Debugging（公约：为调试添加 Display Name）
 
 The container components created by HOCs show up in the [React Developer Tools](https://github.com/facebook/react-devtools) like any other component. To ease debugging, choose a display name that communicates that it’s the result of a HOC.
 
+高阶组件创建的容器组件在 [React 开发者工具中](https://github.com/facebook/react-devtools) 和其他组件并没有两样。为了更方便调试，为组件指定一个用于在开发者工具中展示的名称，这样就可以方便看出它来自哪个高阶组件。
+
 The most common technique is to wrap the display name of the wrapped component. So if your higher-order component is named `withSubscription`, and the wrapped component’s display name is `CommentList`, use the display name `WithSubscription(CommentList)`:
+
+最常用的技术就是给封装的组件添加 displayName 属性。如果你的高阶组件名为 `withSubscription`，封装在内部的组件名为 `CommentList`，则使用 `WithSubscription(CommentList)` 作为容器组件的名字：
 
 ```js
 function withSubscription(WrappedComponent) {
@@ -374,11 +393,17 @@ function getDisplayName(WrappedComponent) {
 
 Higher-order components come with a few caveats that aren’t immediately obvious if you’re new to React.
 
-### Don’t Use HOCs Inside the render Method
+如果你是 React 新手，高阶组件带来的陷阱可能对你来说并不那么明显。
+
+### Don’t Use HOCs Inside the render Method（不要在 render 函数中使用高阶组件）
 
 React’s diffing algorithm (called reconciliation) uses component identity to determine whether it should update the existing subtree or throw it away and mount a new one. If the component returned from `render` is identical (`===`) to the component from the previous render, React recursively updates the subtree by diffing it with the new one. If they’re not equal, the previous subtree is unmounted completely.
 
+React 的差异比较算法（称作 reconciliation）使用组件标识来检测应该更新该组件的子树还是将它丢弃重新挂载一个新的子树。如果从 `render` 返回的组件与之前渲染的组件相同（`===`），React 就会通过对比该节点与新节点之间的差异并递归的更新组件的子树。如果它们不相等，那就将之前的子树完全卸载。
+
 Normally, you shouldn’t need to think about this. But it matters for HOCs because it means you can’t apply a HOC to a component within the render method of a component:
+
+通常，你不需要考虑这些。但是对高阶组件来说这就很重要，你不能在组件的 render 方法中使用高阶组件：
 
 ```js
 render() {
