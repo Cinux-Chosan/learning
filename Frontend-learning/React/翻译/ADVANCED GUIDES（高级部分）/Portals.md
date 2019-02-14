@@ -81,7 +81,7 @@ This includes event bubbling. An event fired from inside a portal will propagate
 
 A `Parent` component in `#app-root` would be able to catch an uncaught, bubbling event from the sibling node `#modal-root`.
 
-在 `#app-root` 中的 `Parent` 组件能够捕获到那些未捕获的、从兄弟节点 `#modal-root` 冒泡过来的事件。
+在 `#app-root` 中的 `Parent` 组件能够捕获到那些从兄弟节点 `#modal-root` 冒泡过来的未捕获的事件。
 
 ```js
 // These two containers are siblings in the DOM
@@ -169,4 +169,5 @@ ReactDOM.render(<Parent />, appRoot);
 
 Catching an event bubbling up from a portal in a parent component allows the development of more flexible abstractions that are not inherently reliant on portals. For example, if you render a `<Modal />` component, the parent can capture its events regardless of whether it’s implemented using portals.
 
+在父组件中捕获从 portal 冒泡的事件使得可以开发出更灵活的抽象工具，这些抽象本身并不依赖 portals。例如，如果你渲染一个 `<Modal />` 组件，父组件可以捕获它的事件而不用管它是否是使用 portals 来进行开发。
 
