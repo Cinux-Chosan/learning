@@ -417,15 +417,25 @@ render() {
 
 The problem here isn’t just about performance — remounting a component causes the state of that component and all of its children to be lost.
 
+这里不只是性能的问题 —— 重新挂载一个组件将会导致组件及其子节点的状态缺失。
+
 Instead, apply HOCs outside the component definition so that the resulting component is created only once. Then, its identity will be consistent across renders. This is usually what you want, anyway.
+
+取而代之的是在组件的定义之外创建高阶组件，这样它就只会被创建一次，并且它的标识将在渲染之间保持一致，这通常才是你想要的。
 
 In those rare cases where you need to apply a HOC dynamically, you can also do it inside a component’s lifecycle methods or its constructor.
 
-### Static Methods Must Be Copied Over
+在极少数情况下，你需要动态应用 HOC，你也可以在组件的生命周期方法或其构造函数中执行此操作。
+
+### Static Methods Must Be Copied Over（静态方法也必须被拷贝）
 
 Sometimes it’s useful to define a static method on a React component. For example, Relay containers expose a static method `getFragment` to facilitate the composition of GraphQL fragments.
 
+在某些情况下给组件定义静态方法会非常有用。例如，Relay 容器暴露了一个 `getFragment` 静态方法以便 GraphQL 片段的合成。
+
 When you apply a HOC to a component, though, the original component is wrapped with a container component. That means the new component does not have any of the static methods of the original component.
+
+当你将高阶组件应用于组件的时候，原组件会被封装在一个容器组件中。这就意味着高阶组件返回的新的组件不会有任何原组件的静态方法。
 
 ```js
 // Define a static method
@@ -439,6 +449,8 @@ typeof EnhancedComponent.staticMethod === 'undefined' // true
 
 To solve this, you could copy the methods onto the container before returning it:
 
+为了解决这个问题，你可以在高阶组件返回之前将原组件的静态方法拷贝到容器组件中去：
+
 ```js
 function enhance(WrappedComponent) {
   class Enhance extends React.Component {/*...*/}
@@ -450,6 +462,8 @@ function enhance(WrappedComponent) {
 
 However, this requires you to know exactly which methods need to be copied. You can use [hoist-non-react-statics](https://github.com/mridgway/hoist-non-react-statics) to automatically copy all non-React static methods:
 
+然而，这需要你明确知道哪些方法是需要进行拷贝的。你可以使用 [hoist-non-react-statics](https://github.com/mridgway/hoist-non-react-statics) 来将所有非 React 的静态方法自动拷贝到容器组件上。
+
 ```js
 import hoistNonReactStatic from 'hoist-non-react-statics';
 function enhance(WrappedComponent) {
@@ -460,6 +474,8 @@ function enhance(WrappedComponent) {
 ```
 
 Another possible solution is to export the static method separately from the component itself.
+
+另一个可用的解决方案就是将静态方法和组件分开导出：
 
 ```js
 // Instead of...
@@ -477,5 +493,8 @@ import MyComponent, { someFunction } from './MyComponent.js';
 
 While the convention for higher-order components is to pass through all props to the wrapped component, this does not work for refs. That’s because `ref` is not really a prop — like `key`, it’s handled specially by React. If you add a ref to an element whose component is the result of a HOC, the ref refers to an instance of the outermost container component, not the wrapped component.
 
+尽管高阶组件的公约是将所有的属性传递给内部封装的组件，但对 ref 并不起作用。因为对于 React 来说， `ref` 并非一个真正的属性 —— 就像 `key` 一样，React 会对它们单独处理。如果你使用 ref 来引用高阶组件返回的组件，那么这个引用实际上指向外部的容器组件的实例，而非指向内部封装的那个组件。
+
 The solution for this problem is to use the `React.forwardRef` API (introduced with React 16.3). [Learn more about it in the forwarding refs section](https://reactjs.org/docs/forwarding-refs.html).
 
+这个问题的解决方案是使用 `React.forwardRef` API （在 React 16.3 中引入的特性），[如有需要请前往 forwarding refs 了解更多](https://reactjs.org/docs/forwarding-refs.html)
