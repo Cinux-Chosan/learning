@@ -30,6 +30,8 @@ Components are the primary unit of code reuse in React, but it’s not always ob
 
 For example, the following component tracks the mouse position in a web app:
 
+例如，下面的组件能跟踪鼠标位置：
+
 ```js
 class MouseTracker extends React.Component {
   constructor(props) {
@@ -58,9 +60,15 @@ class MouseTracker extends React.Component {
 
 As the cursor moves around the screen, the component displays its (x, y) coordinates in a `<p>`.
 
+当光标在屏幕上移动时，组件会在 `<p>` 中展示它的 (x, y) 坐标。
+
 Now the question is: How can we reuse this behavior in another component? In other words, if another component needs to know about the cursor position, can we encapsulate that behavior so that we can easily share it with that component?
 
+但现在的问题是：我们要怎样在其他组件中重用该行为？换句话说，如果另一个组件也需要知道光标的位置，我们能否将这种行为进行封装以便可以共享到其他组件中去。
+
 Since components are the basic unit of code reuse in React, let’s try refactoring the code a bit to use a `<Mouse>` component that encapsulates the behavior we need to reuse elsewhere.
+
+由于组件是 React 中重用代码的最小单元，让我们对代码进行重构，使用一个名为 `<Mouse>` 的组件来对这种行为进行封装，以便能够在其它地方使用。
 
 ```js
 // The <Mouse> component encapsulates the behavior we need...
