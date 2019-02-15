@@ -351,4 +351,4 @@ If you’re currently using `this.refs.textInput` to access refs, we recommend u
 
 If the `ref` callback is defined as an inline function, it will get called twice during updates, first with `null` and then again with the DOM element. This is because a new instance of the function is created with each render, so React needs to clear the old ref and set up the new one. You can avoid this by defining the `ref` callback as a bound method on the class, but note that it shouldn’t matter in most cases.
 
-如果 `ref` 回调被当做内联函数定义，则在需要更新 ref 的时候该函数会被调用两次，第一次使用 `null` 作为参数，然后马上又会使用 DOM 元素作为参数来调用。因为在每次 render 的时候都会创建一个新的函数实例，因此 React 需要清除旧的引用然后再设置一个新的引用。你可以通过将 `ref` 回调函数定义为类的一个函数方法来避免这种情况，不过在大多数情况下这无关紧要。
+如果 `ref` 回调被当做内联函数定义，则在需要更新 ref 的时候该函数会被调用两次，第一次使用 `null` 作为参数，然后马上又会使用 DOM 元素作为参数来再次调用。因为在每次 render 的时候都会创建一个新的函数实例，因此 React 需要清除旧的引用然后再设置一个新的引用。你可以通过将 `ref` 回调函数定义为类的一个函数方法来避免这种情况，不过在大多数情况下这无关紧要。
