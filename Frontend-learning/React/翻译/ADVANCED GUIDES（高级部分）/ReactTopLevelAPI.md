@@ -13,7 +13,11 @@ redirect_from:
   - "docs/top-level-api-zh-CN.html"
 ---
 
+<base href="https://reactjs.org/" />
+
 `React` is the entry point to the React library. If you load React from a `<script>` tag, these top-level APIs are available on the `React` global. If you use ES6 with npm, you can write `import React from 'react'`. If you use ES5 with npm, you can write `var React = require('react')`.
+
+`React` 是 React 库的入口。如果通过 `<script>` 标签来加载的 React，则这些顶级 API 可以通过全局变量 `React` 进行访问。在 npm 中，ES 6 使用 `import React from 'react'`，ES 5 使用`var React = require('react')`。
 
 ## Overview {#overview}
 
@@ -21,10 +25,14 @@ redirect_from:
 
 React components let you split the UI into independent, reusable pieces, and think about each piece in isolation. React components can be defined by subclassing `React.Component` or `React.PureComponent`.
 
+React 组件让你可以把 UI 分成独立的、可复用的片段，并且可以对它们进行独立的思考。React 组件可以通过 `React.Component` 或者 `React.PureComponent` 的子类来定义。
+
  - [`React.Component`](#reactcomponent)
  - [`React.PureComponent`](#reactpurecomponent)
 
 If you don't use ES6 classes, you may use the `create-react-class` module instead. See [Using React without ES6](/docs/react-without-es6.html) for more information.
+
+如果你没有使用 ES 6 的类，你可以使用 `create-react-class` 模块来取代。参考 [Using React without ES6](/docs/react-without-es6.html)。 
 
 React components can also be defined as functions which can be wrapped:
 
