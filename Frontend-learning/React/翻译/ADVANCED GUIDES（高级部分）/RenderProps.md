@@ -2,11 +2,11 @@
 
 The term [“render prop”](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce) refers to a technique for sharing code between React components using a prop whose value is a function.
 
-[“render prop”](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce) 指使用其值为函数的属性来在组件中共享代码的技术（实际上就是给组件传递一个名叫 render 的属性，这个属性是一个函数）。
+[“render prop”](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce) 指使用其值为函数的属性来在组件中共享代码的技术（实际上就是给组件传递一个能够返回渲染内容的函数）。
 
 A component with a render prop takes a function that returns a React element and calls it instead of implementing its own render logic.
 
-组件的 render 属性接收一个函数，该函数返回一个 React 元素，组件会调用该 render 属性来取代自己的 render  函数（理解为实际上就是覆盖了组件的 render 方法）。
+render prop 使用能够返回 React 元素的函数来作为组件渲染内容的一部分。
 
 ```js
 <DataProvider render={data => (
