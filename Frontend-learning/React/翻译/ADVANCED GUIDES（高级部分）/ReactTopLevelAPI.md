@@ -89,6 +89,8 @@ Suspense 可以让组件在渲染之前进行 “等待”。目前，Suspense�
 
 *Hooks* are a new addition in React 16.8. They let you use state and other React features without writing a class. Hooks have a [dedicated docs section](https://reactjs.org/docs/hooks-intro.html) and a separate API reference:
 
+*Hooks* 是在 React 16.8 中添加的新特性。它们可以让你在不编写类的时候使用 state 和其他 React 特性。Hooks 有[专门的文档](https://reactjs.org/docs/hooks-intro.html) 和 API 参考。
+
 - [Basic Hooks](https://reactjs.org/docs/hooks-reference.html#basic-hooks)
   - [`useState`](https://reactjs.org/docs/hooks-reference.html#usestate)
   - [`useEffect`](https://reactjs.org/docs/hooks-reference.html#useeffect)
