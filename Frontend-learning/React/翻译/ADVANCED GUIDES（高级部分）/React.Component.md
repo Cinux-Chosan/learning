@@ -259,9 +259,15 @@ componentDidMount()
 
 `componentDidMount()` is invoked immediately after a component is mounted (inserted into the tree). Initialization that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
 
+`componentDidMount()` 在组件被挂载（插入到 DOM 树中）之后立马被调用。需要 DOM 节点的初始化操作应该放在该函数中。如果你需要从加载远程数据，那这里就是实例化网络请求的最佳地方。
+
 This method is a good place to set up any subscriptions. If you do that, don't forget to unsubscribe in `componentWillUnmount()`.
 
+该方法还是执行一些订阅操作的好地方。但不要忘了在 `componentWillUnmount()` 中取消订阅。
+
 You **may call `setState()` immediately** in `componentDidMount()`. It will trigger an extra rendering, but it will happen before the browser updates the screen. This guarantees that even though the `render()` will be called twice in this case, the user won't see the intermediate state. Use this pattern with caution because it often causes performance issues. In most cases, you should be able to assign the initial state in the `constructor()` instead. It can, however, be necessary for cases like modals and tooltips when you need to measure a DOM node before rendering something that depends on its size or position.
+
+你也许会在 `componentDidMount()` 中立即调用 `setState()`。它将会触发额外的渲染操作，但会在浏览器更新屏幕之前发生。这保证了即便是 `render()` 被调用了两次，用户也不会看到发生在中间的状态改变。这么做需要小心，因为这种做法经常会导致性能问题。在大多数情况中，你应该直接在 constructor 中为 state 赋值初始状态。但在某些场景中，如弹窗和提示工具条等，需要在渲染之前对 DOM 节点的大小和位置进行测量的时候 `componentDidMount()` 就显得很有必要。
 
 * * *
 
@@ -273,7 +279,11 @@ componentDidUpdate(prevProps, prevState, snapshot)
 
 `componentDidUpdate()` is invoked immediately after updating occurs. This method is not called for the initial render.
 
+`componentDidUpdate()` 在改变发生之后立马被执行，该方法不会在首次渲染的时候调用。
+
 Use this as an opportunity to operate on the DOM when the component has been updated. This is also a good place to do network requests as long as you compare the current props to previous props (e.g. a network request may not be necessary if the props have not changed).
+
+当组件被更新之后，可以使用该方法来操作 DOM。如果你对比前后 props 发生了改变，也可以在这里发送网络请求（如果 props 没有发生改变，则可能并不需要发送网络请求）
 
 ```js
 componentDidUpdate(prevProps) {
@@ -286,11 +296,17 @@ componentDidUpdate(prevProps) {
 
 You **may call `setState()` immediately** in `componentDidUpdate()` but note that **it must be wrapped in a condition** like in the example above, or you'll cause an infinite loop. It would also cause an extra re-rendering which, while not visible to the user, can affect the component performance. If you're trying to "mirror" some state to a prop coming from above, consider using the prop directly instead. Read more about [why copying props into state causes bugs](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html).
 
+你 **可会会在 `componentDidUpdate()` 中调用 `setState()`**，但请注意你需要**像上面那样把它函数在条件判断中**，否则将会导致无限循环。它还会导致额外的重新渲染，这同样对用户不可见，但影响组件的性能。如果你尝试将 prop 中的属性映射到 state 中，请不要这么做，直接使用 prop 来代替。[为什么将 prop 中的属性映射到 state 会导致bug](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html)
+
 If your component implements the `getSnapshotBeforeUpdate()` lifecycle (which is rare), the value it returns will be passed as a third "snapshot" parameter to `componentDidUpdate()`. Otherwise this parameter will be undefined.
+
+如果组件实现了声明周期函数 `getSnapshotBeforeUpdate()` ，则它返回的值会被作为第三个参数传递给 `componentDidUpdate()`。否则该参数为 `undefined`。
 
 > Note
 >
 > `componentDidUpdate()` will not be invoked if [`shouldComponentUpdate()`](#shouldcomponentupdate) returns false.
+>
+>如果 [`shouldComponentUpdate()`](#shouldcomponentupdate) 返回 false 则不会调用 `componentDidUpdate()` 
 
 * * *
 
@@ -302,7 +318,11 @@ componentWillUnmount()
 
 `componentWillUnmount()` is invoked immediately before a component is unmounted and destroyed. Perform any necessary cleanup in this method, such as invalidating timers, canceling network requests, or cleaning up any subscriptions that were created in `componentDidMount()`.
 
+`componentWillUnmount()` 会在组件被卸载和销毁之前被调用。该函数用于执行一些必要的清理操作，如清除计时器、取消网络请求或者清除一些在 `componentDidMount()` 中创建的订阅操作。
+
 You **should not call `setState()`** in `componentWillUnmount()` because the component will never be re-rendered. Once a component instance is unmounted, it will never be mounted again.
+
+你 **不能在 `componentWillUnmount()`  中调用 `setState()`**，因为组件将永远不会再次被重新渲染。一旦一个组件实例被卸载，则永远不会被再次挂载。
 
 * * *
 
