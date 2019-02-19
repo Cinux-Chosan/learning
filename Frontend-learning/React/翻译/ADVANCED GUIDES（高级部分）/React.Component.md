@@ -165,13 +165,17 @@ When called, it should examine `this.props` and `this.state` and return one of t
 
 The `render()` function should be pure, meaning that it does not modify component state, it returns the same result each time it's invoked, and it does not directly interact with the browser.
 
-
+`render()` 函数应该是一个纯函数，也就是说它不应该修改组件的 state，（在相同条件下）每次调用会返回相同的结果，并且不应该直接和浏览器进行交互。
 
 If you need to interact with the browser, perform your work in `componentDidMount()` or the other lifecycle methods instead. Keeping `render()` pure makes components easier to think about.
+
+如果你需要和浏览器进行交互，请将内容放到 `componentDidMount()` 或者其他生命周期函数中去。保持 `render()` 的纯净可以让组件逻辑更清晰。
 
 > Note
 >
 > `render()` will not be invoked if [`shouldComponentUpdate()`](#shouldcomponentupdate) returns false.
+>
+> 如果 [`shouldComponentUpdate()`](#shouldcomponentupdate) 返回 false 则 `render()` 不会被调用。
 
 * * *
 
@@ -183,14 +187,24 @@ constructor(props)
 
 **If you don't initialize state and you don't bind methods, you don't need to implement a constructor for your React component.**
 
+**如果你不需要初始化 state 或不需要 bind 方法，则你就不必实现组件的 constructor。**
+
 The constructor for a React component is called before it is mounted. When implementing the constructor for a `React.Component` subclass, you should call `super(props)` before any other statement. Otherwise, `this.props` will be undefined in the constructor, which can lead to bugs.
+
+React 组件的 constructor 会在组件挂载之前执行。当实现继承自 `React.Component` 子类的 constructor 时，你需要其他代码最前面执行 `super(props)`。否则，`this.props` 将会是 `undefined`，这就会导致 bug 产生。
 
 Typically, in React constructors are only used for two purposes:
 
+React constructor 只用于一下两种用途：
+
 * Initializing [local state](https://reactjs.org/docs/state-and-lifecycle.html) by assigning an object to `this.state`.
+> 通过给 `this.state` 赋值一个对象来初始化组件的[state](https://reactjs.org/docs/state-and-lifecycle.html)
 * Binding [event handler](https://reactjs.org/docs/handling-events.html) methods to an instance.
+> 给实例绑定一个 [事件处理函数](https://reactjs.org/docs/handling-events.html) 
 
 You **should not call `setState()`** in the `constructor()`. Instead, if your component needs to use local state, **assign the initial state to `this.state`** directly in the constructor:
+
+你 **不应该在 `constructor()` 中调用 `setState()`**。如果组件需要自己的 state，则 **直接在 constructor 中为 `this.state` 赋值即可。**
 
 ```js
 constructor(props) {
@@ -203,11 +217,17 @@ constructor(props) {
 
 Constructor is the only place where you should assign `this.state` directly. In all other methods, you need to use `this.setState()` instead.
 
+Constructor 是唯一可以对 `this.state` 直接赋值的地方。在其它方法中，你需要使用 `this.setState()`。
+
 Avoid introducing any side-effects or subscriptions in the constructor. For those use cases, use `componentDidMount()` instead.
+
+避免在 constructor 中引入任何具有副作用的行为。这些情况一般放在 `componentDidMount()` 中去做。
 
 >Note
 >
 >**Avoid copying props into state! This is a common mistake:**
+>
+> **不要把 props 中的值拷贝到 state 中！这是一个常见的错误：**
 >
 >```js
 >constructor(props) {
@@ -219,10 +239,15 @@ Avoid introducing any side-effects or subscriptions in the constructor. For thos
 >
 >The problem is that it's both unnecessary (you can use `this.props.color` directly instead), and creates bugs (updates to the `color` prop won't be reflected in the state).
 >
+> 因为这完全是没必要的（直接使用 `this.props.color` 即可），并且会导致 bug 产生（对 props 中的 `color` 进行更新并不会反映到 state 对应的值上）
+>
 >**Only use this pattern if you intentionally want to ignore prop updates.** In that case, it makes sense to rename the prop to be called `initialColor` or `defaultColor`. You can then force a component to "reset" its internal state by [changing its `key`](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key) when necessary.
 >
+> **只有在你希望忽略 props 更新的时候才采用该模式。**这种情况下，最好是将 props 的名字改成类似于 `initialColor` 或者 `defaultColor` 这种形式。必要的时候你可以通过 [改变`key` prop](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key) 来强制组件 “重置” 其内部状态。
+>
 >Read our [blog post on avoiding derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html) to learn about what to do if you think you need some state to depend on the props.
-
+>
+>在你认为某些 state 需要依赖于 props 的时候，请阅读 [blog post on avoiding derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html) 来学习该如何做。
 
 * * *
 
