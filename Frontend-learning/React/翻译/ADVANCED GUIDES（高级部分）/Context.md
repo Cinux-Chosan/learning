@@ -203,7 +203,7 @@ The `defaultValue` argument is **only** used when a component does not have a ma
 
 Every Context object comes with a Provider React component that allows consuming components to subscribe to context changes.
 
-每个  Context 对象与生俱来一个 Provider React 组件，它使得使用该 Context 的组件能够订阅组 context 发生的改变。
+每个  Context 对象与生俱来一个 Provider React 组件，它使得使用该 Context 的组件能够订阅 context 发生的改变。
 
 Accepts a `value` prop to be passed to consuming components that are descendants of this Provider. One Provider can be connected to many consumers. Providers can be nested to override values deeper within the tree.
 
@@ -260,7 +260,7 @@ You can only subscribe to a single context using this API. If you need to read m
 
 If you are using the experimental [public class fields syntax](https://babeljs.io/docs/plugins/transform-class-properties/), you can use a **static** class field to initialize your `contextType`.
 
-如果你正在使用 [公共类字段语法](https://babeljs.io/docs/plugins/transform-class-properties/)，你可以使用 **static** 来初始化 `contextType`。
+如果你正在使用 [公有类字段语法](https://babeljs.io/docs/plugins/transform-class-properties/)，你可以使用 **static** 来初始化 `contextType`。
 
 ```js
 class MyClass extends React.Component {
