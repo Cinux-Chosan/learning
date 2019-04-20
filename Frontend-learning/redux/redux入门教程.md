@@ -10,7 +10,7 @@
 
 ## 内容
 
-很多朋友在刚接触 redux 的时候会很迷茫。这里我们先从为什么要使用 redux 开始。
+很多朋友在刚接触 redux 的时候会感到各种迷茫。如果你也有同样的迷茫，那请跟着我的思路一步一步来。这里我们先从为什么要使用 redux 开始。
 
 React 官方文档中提到一种情况，简单说来就是多层组件之间的传值问题，假设有如下层次结构的 3 个组件：
 
@@ -28,7 +28,7 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 
 我们需要把它干掉！
 
-怎么干掉呢？我们可以把数据从组件中抽离出来，数据全都存放在一个叫 Store 的对象里，组件要用到对应的数据时，去 Store 中拿就 OK 了，Store 中数据如果发生了变化，通知对应的组件更新即可，现在思路就简单多了：
+怎么干掉呢？我们可以把数据从组件中抽离出来单独存放在一个对象里，假设这个对象就叫 Store。组件要用到对应的数据时，去 Store 中拿就 OK 了，Store 中数据如果发生了变化，通知对应的组件更新即可，现在思路就简单多了：
 
       - A <------------>  ---------
         - B <----------> |  Store  |
@@ -45,4 +45,14 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 
 此外，redux 还有其他使用场景，如：
 
+- props 需要向下传递多层组件
+- 在不同的视图之间缓存数据提升访问速度
+- 应用越来越大，管理的数据越来越多的情况
 
+      以上引用自 https://daveceddia.com/what-does-redux-do/
+
+- A lot of the time your app's state tree could be considerably different than the UI tree
+- Many components may need to access the same state and display it in different ways
+- Hot reloading components will wipe out your existing component tree, including any state stored inside of them. Keeping the state separate from the UI tree allows the UI tree to be swapped out and reloaded with the updated components, while keeping your current development state the same.
+
+      引用自 https://stackoverflow.com/questions/39260769/redux-vs-plain-react/39261546#39261546
