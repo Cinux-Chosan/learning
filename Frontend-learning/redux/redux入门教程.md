@@ -10,7 +10,7 @@
 
 ## 内容
 
-很多朋友在刚接触 redux 的时候会感到各种迷茫。如果你也有同样的迷茫，那请跟着我的思路一步一步来。这里我们先从为什么要使用 redux 开始。
+很多朋友在刚接触 redux 的时候会感到各种迷茫。如果你是刚接触 redux 的迷茫小孩，那请跟着我的思路一步一步来。这里我们先从为什么要使用 redux 开始。
 
 React 官方文档中提到一种情况，简单说来就是多层组件之间的传值问题，假设有如下层次结构的 3 个组件：
 
@@ -37,9 +37,9 @@ C 属于 B 的子组件，B 属于 A 的子组件。
                               |
       - D <-------------------
 
-此时 C 还是 B 的子组件，B 还是 A 的子组件，但 A、B、C 都订阅了 Store 中的数据，此外还添加了组件 D，它同样从 Store 订阅了数据。当 A 更新 Store 中的数据时，Store 会通知所有其他组件，包括 D（如果 D 也用到了该数据）。
+此时 C 还是 B 的子组件，B 还是 A 的子组件，但 A、B、C 都订阅了 Store 中的数据，此外还添加了组件 D，它同样从 Store 订阅了数据。当 ABCD 中任意一个组件更新了 Store 中的数据时，Store 就会通知所有其他组件重新获取数据。
 
-这样一来，数据完全就可以共享了，还不用关心是不是在同一层级中（向下传值的情况无法解决多个组件不在同一层级树中组件值共享的问题）。
+这样一来，数据完全就可以共享了，并且还不用关心是不是在同一层级中（向下传值的情况无法解决不同层级树中组件值共享的问题）。
 
 你如果理解了上面的模型，你其实就已经懂 Redux 了。
 
@@ -47,12 +47,11 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 
 - props 需要向下传递多层组件
 - 在不同的视图之间缓存数据提升访问速度
+- 同一份数据可能有多个不同的 UI 展示方式时
+- 防止热重载时组件内的状态数据被清除掉
 - 应用越来越大，管理的数据越来越多的情况
 
-      以上引用自 https://daveceddia.com/what-does-redux-do/
+## 参考资料
 
-- A lot of the time your app's state tree could be considerably different than the UI tree
-- Many components may need to access the same state and display it in different ways
-- Hot reloading components will wipe out your existing component tree, including any state stored inside of them. Keeping the state separate from the UI tree allows the UI tree to be swapped out and reloaded with the updated components, while keeping your current development state the same.
-
-      引用自 https://stackoverflow.com/questions/39260769/redux-vs-plain-react/39261546#39261546
+- [What Does Redux Do? (and when should you use it?)](https://daveceddia.com/what-does-redux-do/)
+- [Redux vs plain React](https://stackoverflow.com/questions/39260769/redux-vs-plain-react/39261546#39261546)
