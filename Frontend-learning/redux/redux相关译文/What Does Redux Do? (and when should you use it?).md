@@ -167,3 +167,5 @@ Read [Part 2 of this series](https://daveceddia.com/how-does-redux-work) where w
 You can [read this in Russian](http://howtorecover.me/cto-delaet-redux) thanks to translation [by howtorecover.me](http://howtorecover.me/).
 
 你可以查看 [howtorecover.me](http://howtorecover.me/) 翻译的[俄语版](http://howtorecover.me/cto-delaet-redux)。
+
+[点击查看原文](https://daveceddia.com/what-does-redux-do/)
