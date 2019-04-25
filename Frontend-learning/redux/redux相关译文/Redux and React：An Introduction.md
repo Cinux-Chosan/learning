@@ -6,19 +6,19 @@ In this post I’m going to briefly explain what [redux](https://github.com/reac
 
 ## What We’ll Cover
 
-- What is redux?
-- Actions
-- Action creators
-- Reducers
-- Creating a store
-- Store methods
-    - getState
-    - dispatch
-- Combining reducers
-- Provider
-- Connecting a component
-    - mapStateToProps
-    - mapDispatchToProps
+- [What is redux?](#what-is-redux)
+- [Actions](#actions)
+- [Action creators](#action-creators)
+- [Reducers](#reducers)
+- [Creating a store](#creating-a-store)
+- [Store methods](#store-methods)
+    - [getState](#getstate)
+    - [dispatch](#dispatch)
+- [Combining reducers](#combining-reducers)
+- [Provider](#provider)
+- [Connecting a component](#connecting-a-component)
+    - [mapStateToProps](#mapstatetoprops)
+    - [mapDispatchToProps](#mapdispatchtoprops)
 
 ## What is redux?
 
