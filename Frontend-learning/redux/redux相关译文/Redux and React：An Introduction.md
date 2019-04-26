@@ -4,17 +4,17 @@ In this post I’m going to briefly explain what [redux](https://github.com/reac
 
 ## What We’ll Cover
 
-- [What is redux?](#what-is-redux)
+- [What is redux?](#what-is-redux什么是-redux)
 - [Actions](#actions)
-- [Action creators](#action-creators)
+- [Action creators](#action-creators-action-制造机)
 - [Reducers](#reducers)
-- [Creating a store](#creating-a-store)
-- [Store methods](#store-methods)
+- [Creating a store](#creating-a-store-创建一个-store)
+- [Store methods](#store-methods-store-中的方法)
   - [getState](#getstate)
-    - [dispatch](#dispatch)
-- [Combining reducers](#combining-reducers)
+  - [dispatch](#dispatch)
+- [Combining reducers](#combining-reducers-合并-reducer)
 - [Provider](#provider)
-- [Connecting a component](#connecting-a-component)
+- [Connecting a component](#connecting-a-component-关联到组件)
   - [mapStateToProps](#mapstatetoprops)
   - [mapDispatchToProps](#mapdispatchtoprops)
 
