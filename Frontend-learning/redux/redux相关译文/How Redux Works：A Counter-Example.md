@@ -303,21 +303,35 @@ Since `connect` pulls data from the Redux store, and we haven’t set up a store
 
 因为 `connect` 从 Redux 存储中获取数据，然而此时我们并没有设置一个存储（store）或者告诉应用如何找到它，产生这个错误也是理所当然的。Redux 此时并不知道发生了什么。
 
-## Provide a Store
+## Provide a Store 【提供存储（Store）】
 
 Redux holds the global state for the entire app, and by wrapping the entire app with the `Provider` component from `react-redux`, every component in the app tree will be able to use `connect` to access the Redux store if it wants to.
 
+通过将整个应用包装在 `react-redux` 提供的 `Provider` 组件中，可以让 Redux 掌管整个应用的全局状态数据（state），应用中的每个组件都能通过 `connect` 访问到 Redux 存储（store）。
+
 This means `App`, and children of `App` (like `Counter`), and children of their children, and so on – all of them can now access the Redux store, but only if they are explicitly wrapped by a call to `connect`.
+
+这意味着 `App` 和它的子级元素（如 `Counter`）以及子级的子级元素等等都能访问到 Redux 存储（store），但它们必须显式的包装在 `connect` 函数调用中。
 
 I’m not saying to actually do that – `connect`ing every single component would be a bad idea (messy design, and slow too).
 
+我并不是说要将每个组件都通过 `connect` 关联到 Redux，这不是什么好主意（这是杂乱的设计，并且会降低性能）。
+
 This `Provider` thing might seem like total magic right now. It is a little bit; it actually uses React’s “context” feature under the hood.
+
+`Provider` 看起来像是具有魔力一样。确实有点。它实际上是使用了 React 提供的 “context” 特性。
 
 It’s like a secret passageway connected to every component, and using `connect` opens the door to the passageway.
 
+它就像一个连接到每个组件的秘密通道，`connect` 打开了这条秘密通道的大门。
+
 Imagine pouring syrup on a pile of pancakes, and how it manages to make its way into ALL the pancakes even though you just poured it on the top one. `Provider` does that for Redux.
 
+想象一下把糖浆倒在一堆煎饼上，尽管你是倒在最上面它也会想方设法流到下面的煎饼上。`Provider` 就相当于是 Redux 的糖浆。
+
 In `src/index.js`, import the `Provider` and wrap the contents of `App` with it.
+
+在 `src/index.js` 中，引入 `Provider` 然后用它将 `App` 包装起来。
 
 ```jsx
 import { Provider } from 'react-redux';
@@ -333,9 +347,13 @@ const App = () => (
 
 We’re still getting that error though – that’s because `Provider` needs a store to work with. It’ll take the store as a prop, but we need to create one first.
 
-## Create the Store
+我们还是会看到那个错误 —— 因为 `Provider` 还需要一个存储（store）。它需要接收一个 store 作为属性，但我们还没创建它，先来创建一个。
+
+## Create the Store 【创建存储（Store）】
 
 Redux comes with a handy function that creates stores, and it’s called `createStore`. Yep. Let’s make a store and pass it to Provider:
+
+Redux 与生俱来一个创建存储（store）的函数，它叫 `createStore`。来吧，我们先创建一个 store 然后传给 Provider：
 
 ```jsx
 import { createStore } from 'redux';
@@ -351,11 +369,17 @@ const App = () => (
 
 Another error, but different this time:
 
+另一个错误：
+
       Expected the reducer to be a function.
 
 So, here’s the thing about Redux: it’s not very smart. You might expect that by creating a store, it would give you a nice default value for the state inside that store. Maybe an empty object?
 
+所以，一点关于 Redux 的事情就是：它并不是太智能。你可能觉得它应该在
+
 But no: Redux makes zero assumptions about the shape of your state. It’s up to you! It could be an object, or a number, or a string, or whatever you need. So we have to provide a function that will return the state. That function is called a **reducer** (we’ll see why in a minute). So let’s make the simplest one possible, pass it into `createStore`, and see what happens:
+
+然而并不是：Redux 并不会对你的 state 做任何假设。这完全取决于你！它可以是一个对象、一个数字、字符串或者任何你希望的结构。因此我们需要提供一个能够返回 state 的函数。这个函数就被称作 **reducer** （稍后我们会对它进行说明）。我们用最简单的方式来实现，直接将它传给 `createStore`，看看会发生什么：
 
 ```js
 function reducer() {
@@ -366,18 +390,25 @@ function reducer() {
 const store = createStore(reducer);
 ```
 
-## The Reducer Should Always Return Something
+## The Reducer Should Always Return Something 【Reducer 始终应该有返回值】
 
 The error is different now:
 
-      Cannot read property ‘count’ of undefined
+现在报的错又有所不同了：
 
+      Cannot read property ‘count’ of undefined
 
 It’s breaking because we’re trying to access `state.count`, but `state` is undefined. Redux expected our `reducer` function to return a value for `state`, except that it (implicitly) returned `undefined`. Things are rightfully broken.
 
+导致执行中断的原因是因为我们访问 `state.count`，而 `state` 又未定义。Redux 期望我们提供的 `reducer` 函数能够为 `state` 返回一个值，而非返回 `undefined`。因此理所当然的在这里出现了中断。
+
 The reducer is expected to return the state. It’s actually supposed to take the current state and return the new state, but nevermind; we’ll come back to that.
 
+Redux 预期 reducer 会返回 state。它实际上假设会得到当前的 state 作为参数，返回新的 state，但没关系，我们一会儿会过来看。
+
 Let’s make the reducer return something that matches the shape we need: an object with a `count` property.
+
+我们让 reducer 返回我们需要的 state 结构：一个包含 `count` 属性的对象。
 
 ```js
 function reducer() {
@@ -389,11 +420,17 @@ function reducer() {
 
 Hey! It works! The count now appears as “42”. Awesome.
 
+哈！起作用了！现在计数值（count）是 “42”。真棒。
+
 Just one thing though: the count is forever stuck at 42.
 
-## The Story So Far
+但还有一件事：计数值 count 永远都是 42。
+
+## The Story So Far 【总结一下目前为止所做的事情】
 
 Before we get into how to actually update the counter, let’s look at what we’ve done up til now:
+
+在深入了解如何更新计数值前，我们先来看看目前为止我们做了些什么：
 
 - We wrote a mapStateToProps function that does what the name says: transforms the Redux state into an object containing props.
 - We connected the Redux store to our Counter component with the connect function from react-redux, using the mapStateToProps function to configure how the connection works.

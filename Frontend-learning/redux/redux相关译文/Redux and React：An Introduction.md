@@ -1,7 +1,5 @@
 # [Redux and React: An Introduction](http://jakesidsmith.com/blog/post/2017-11-18-redux-and-react-an-introduction/)
 
-
-
 In this post I’m going to briefly explain what [redux](https://github.com/reactjs/redux/) is, all of the basic elements, and how to set up a React project with redux as your data storage / flow solution using [react-redux](https://github.com/reactjs/react-redux/). You will need some prior knowledge of React; JSX, state, props, context; and ES6 syntax, and classes.
 
 ## What We’ll Cover
@@ -12,15 +10,15 @@ In this post I’m going to briefly explain what [redux](https://github.com/reac
 - [Reducers](#reducers)
 - [Creating a store](#creating-a-store)
 - [Store methods](#store-methods)
-    - [getState](#getstate)
+  - [getState](#getstate)
     - [dispatch](#dispatch)
 - [Combining reducers](#combining-reducers)
 - [Provider](#provider)
 - [Connecting a component](#connecting-a-component)
-    - [mapStateToProps](#mapstatetoprops)
-    - [mapDispatchToProps](#mapdispatchtoprops)
+  - [mapStateToProps](#mapstatetoprops)
+  - [mapDispatchToProps](#mapdispatchtoprops)
 
-## What is redux?
+## What is redux？【什么是 redux】
 
 Redux is a [flux](https://facebook.github.io/flux/docs/in-depth-overview.html) based state container for handling javascript application state. It is a popular choice for storing application state mainly due to its three defining principles:
 
@@ -54,7 +52,7 @@ const increment = {
 };
 ```
 
-## Action Creators
+## Action Creators 【Action 制造机】
 
 Action creators are simply a function that allow us to abstract away the creation of actions, allowing us to easily dispatch an action without having to define all of its properties.
 
@@ -103,7 +101,7 @@ There are several things are important to understand when defining a reducer:
 - Our reducer cannot return an undefined value
 - Our reducer will be triggered by any action that is dispatched, so we should return the existing state if the action is not relevant to this reducer (that’s what the default case is for).
 
-## Creating A Store
+## Creating A Store 【创建一个 Store】
 
 Now that you understand the basics of actions and reducers we can actually put them to use and create a store.
 
@@ -118,16 +116,13 @@ export const store = createStore(count);
 
 With this example our “count” reducer will make up the entirety of our store state, so calling the method `store.getState()` will simply return a number. Let’s talk a bit about some of the available store methods…
 
-## Store Methods
-
+## Store Methods 【Store 中的方法】
 
 We wont actually need to call any of these methods ourselves, (and I’d actually avoid this at all costs), as the tools we’ll cover shortly will handle this for us, but for the purposes of describing how the store composes our state, and how actions are dispatched it’s important to cover briefly.
 
 ### getState
 
 `store.getState()` is pretty self explanatory - it simply returns the current state of the store.
-
-
 
 ### dispatch
 
@@ -143,8 +138,7 @@ This would cause our “count” reducer to then be called with the current stor
 
 Note that we are not passing the action creator itself to the dispatch function, but instead the action that is returned by it.
 
-
-## Combining Reducers
+## Combining Reducers 【合并 Reducer】
 
 For most applications we are going to want to store more than a single number, which we can then access from an object tree. In order to save us a lot of hassle handling all of the store state in a single reducer we can use a function provided by redux to combine our reducers into an object tree.
 
@@ -225,7 +219,7 @@ ReactDOM.render(<App />, document.getElementById('app'));
 
 You can also manually supply the store to a connected component (which we’ll cover in a second), which is useful when testing components. I would not, however, recommend giving any of your components direct access to the store in your application.
 
-## Connecting A Component
+## Connecting A Component 【关联到组件】
 
 The final piece of the puzzle is the `connect` function provided by react-redux. This allows us to map parts of the store state to a component, and at the same time, automatically wrap our actions with the `dispatch` method so that we don’t have to worry about calling it ourselves.
 
@@ -368,7 +362,7 @@ class Counter extends Component {
 export default connect(mapStateToProps)(Counter);
 ```
 
-## We’re Done!
+## We’re Done! 【完结】
 
 That’s pretty much all you need to know to get started using redux with react, but there are plenty of other complexities to learn to really master redux, and more tools that can be used with redux and react to allow some other functionality e.g.
 
