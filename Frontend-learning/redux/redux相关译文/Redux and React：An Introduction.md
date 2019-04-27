@@ -4,19 +4,19 @@ In this post I’m going to briefly explain what [redux](https://github.com/reac
 
 我打算在这篇文章中简要的介绍一下什么是 [redux](https://github.com/reactjs/redux/)、它所有的基本元素以及如何结合 [react-redux](https://github.com/reactjs/react-redux/) 来配置一个用 Redux 作为数据存储/流动解决方案的 React 项目。
 
-## What We’ll Cover 【我们会覆盖以下知识点】
+## What We’ll Cover 【本文会覆盖以下知识点】
 
-- [What is redux?](#what-is-redux什么是-redux)
-- [Actions](#actions)
-- [Action creators](#action-creators-action-制造机)
+- [什么是 redux](#what-is-redux什么是-redux)
+- [Action](#actions)
+- [Action 生成器](#action-creators-action-制造机)
 - [Reducers](#reducers)
-- [Creating a store](#creating-a-store-创建一个-store)
-- [Store methods](#store-methods-store-中的方法)
+- [创建一个 store](#creating-a-store-创建一个-store)
+- [Store 中的方法](#store-methods-store-中的方法)
   - [getState](#getstate)
   - [dispatch](#dispatch)
-- [Combining reducers](#combining-reducers-合并-reducer)
+- [合并 reducer](#combining-reducers-合并-reducer)
 - [Provider](#provider)
-- [Connecting a component](#connecting-a-component-关联到组件)
+- [关联组件](#connecting-a-component-关联到组件)
   - [mapStateToProps](#mapstatetoprops)
   - [mapDispatchToProps](#mapdispatchtoprops)
 
