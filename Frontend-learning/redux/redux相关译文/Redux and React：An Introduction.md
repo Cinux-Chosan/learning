@@ -2,14 +2,14 @@
 
 In this post I’m going to briefly explain what [redux](https://github.com/reactjs/redux/) is, all of the basic elements, and how to set up a React project with redux as your data storage / flow solution using [react-redux](https://github.com/reactjs/react-redux/). You will need some prior knowledge of React; JSX, state, props, context; and ES6 syntax, and classes.
 
-我打算在这篇文章中简要的介绍一下什么是 [redux](https://github.com/reactjs/redux/)、它所有的基本元素以及如何结合 [react-redux](https://github.com/reactjs/react-redux/) 来配置一个用 Redux 作为数据存储/流动解决方案的 React 项目。
+我打算在这篇文章中简要的介绍一下什么是 [redux](https://github.com/reactjs/redux/)、组成它的基本元素以及如何结合 [react-redux](https://github.com/reactjs/react-redux/) 来配置一个以 Redux 作为数据存储/流动解决方案的 React 项目。
 
 ## What We’ll Cover 【本文会覆盖以下知识点】
 
 - [什么是 redux](#what-is-redux什么是-redux)
 - [Action](#actions)
-- [Action 生成器](#action-creators-action-制造机)
-- [Reducers](#reducers)
+- [Action 生成器](#action-creators-action-生成器)
+- [Reducer](#reducers)
 - [创建一个 store](#creating-a-store-创建一个-store)
 - [Store 中的方法](#store-methods-store-中的方法)
   - [getState](#getstate)
@@ -24,7 +24,7 @@ In this post I’m going to briefly explain what [redux](https://github.com/reac
 
 Redux is a [flux](https://facebook.github.io/flux/docs/in-depth-overview.html) based state container for handling javascript application state. It is a popular choice for storing application state mainly due to its three defining principles:
 
-Redux 是一个基于 [flux](https://facebook.github.io/flux/docs/in-depth-overview.html) 的用于处理 JavaScript 应用程序状态的一个状态容器。它之所以在存储应用状态方面如此流行主要是因为它的以下三原则：
+Redux 是一个基于 [flux](https://facebook.github.io/flux/docs/in-depth-overview.html) 的用于处理 JavaScript 应用程序状态的状态容器（即存储和管理状态数据）。它之所以在存储应用程序状态方面如此流行主要是因为它的以下三原则：
 
 - A single object tree stores all of your application state
 
@@ -32,7 +32,7 @@ Redux 是一个基于 [flux](https://facebook.github.io/flux/docs/in-depth-overv
 
 - State is readonly and changes are triggered by actions
 
-> state 是只读的，只会通过触发 action 来改变
+> state 是只读的，只能通过 action 来触发改变
 
 - The state can only be manipulated by pure functions that are triggered by your actions
 You can read a bit more about redux [here](https://redux.js.org/docs/introduction/).
@@ -43,7 +43,7 @@ You can read a bit more about redux [here](https://redux.js.org/docs/introductio
 
 An action is simply an object that describes a change you want to make to your state. These are somewhat similar to event objects.
 
-Action 就是一个描述如何修改 state 的对象。它在某种程度上和事件对象有点相似。
+一个 action 就是一个描述你需要如何去修改 state 的对象。它在某种程度上和事件对象有点相似。
 
 A standard pattern for actions is the following structure:
 
@@ -58,15 +58,15 @@ const action = {
 
 This is the structure we’ll use to describe all of our actions in this post as it keeps our actions very consistent.
 
-当前文章所有的 action 都会使用这个结构，因为它使得我们的 action 结构非常一致。
+本文所有的 action 都会使用这个结构，因为它使得我们的 action 结构保持非常的一致。
 
 The type is similar to an event type and is required for all actions, and the payload is the data that will be used to transform our state.
 
-Type 就如同事件的 type，并且所有的 action 都必须拥有该字段。payload 就是通过 action 传递进来的数据，我们将要用它来完成对 state 的修改。
+Type 就如同事件的 type，并且所有的 action 都必须拥有该字段。payload 就是通过 action 传递的数据，我们将要用它来完成对 state 的修改（注意 payload 并非必须，如果没有数据要传递则不需要该字段）。
 
 Not all actions need a payload though, as some actions like incrementing a number do not require any additional data e.g.
 
-并非所有的 action 都需要用到 payload，因为比如像增加计数的 action 并不需要任何额外的数据。
+并非所有的 action 都需要用到 payload，比如像增加计数的 action 并不需要任何额外的数据。
 
 ```js
 const increment = {
@@ -74,19 +74,19 @@ const increment = {
 };
 ```
 
-## Action Creators 【Action 制造机】
+## Action Creators 【Action 生成器】
 
 Action creators are simply a function that allow us to abstract away the creation of actions, allowing us to easily dispatch an action without having to define all of its properties.
 
-Action 制造机其实就是一个简单的函数，它把创建 action 的操作抽象出来，让我们可以轻松的 dispatch 一个 action 而不用去每次都对 action 的所有属性定义一遍。
+Action 生成器其实就是一个简单的函数，它把创建 action 的操作抽象出来，让我们可以轻松的发送一个 action 而不用每次都对 action 的所有属性进行定义（简化了 action 的定义流程）。
 
 You may often hear action creators being referring to as actions, but for the purposes of this post I’ll refer to them as separate entities.
 
-你可能经常会听到把 action 制造机当成 action 的说法，但是本文会把它们当做两个独立的事物来区分开。
+你可能经常会听到把 action 生成器当成 action 的说法，但是本文会把它们当做两个独立的事物来进行区分。
 
 Here’s an example of a simple action creator:
 
-下面是一个简单的 action 制造机示例：
+下面是一个简单的 action 生成器示例：
 
 ```js
 export const ADD_NUMBER = 'ADD_NUMBER';
@@ -99,7 +99,7 @@ export const addNumber = (number) => ({
 
 Now we can use this later to quickly create an action with some additional data attached to it e.g.
 
-比如现在我们就可以使用它来快速创建一个关联了一些额外数据（这里指 payload 被指定为了 7）的 action。
+现在我们就可以使用它来快速创建一个带有额外数据（指通过 addNumber 将 7 传递给 action 作为数据）的 action。
 
 ```js
 const action = addNumber(7);
@@ -109,7 +109,7 @@ const action = addNumber(7);
 
 A reducer is the pure function that we will use to transform our store state. Reducers are triggered whenever an action is dispatched and receive both the current state of that reducer (which will be undefined to begin with) and the action that was dispatched.
 
-Reducer 是用于转换 state 的纯函数。不管何时 Reducer 都是通过 dispatch action 来触发，它会收到当前 state（首次调用为 undefined） 和 action 作为参数。 
+Reducer 是用于转换 state 的纯函数。不管何时 reducer 的触发都只有通过发送 action 来完成，它会收到当前自己的 state（首次调用时 state 为 undefined） 和发送出来的 action 作为参数。 
 
 Here’s a simple example of a reducer that keeps track of a number and handles the “add number” action that we defined above.
 
@@ -135,7 +135,7 @@ There are several things are important to understand when defining a reducer:
 
 - Our state will be undefined to begin with, so we’ll want to give this a sensible default value (0 in this case)
 
-> state 一开始为 undefined，因此我们需要给它一个默认值（前面的例子我们以 0 为默认值）
+> state 一开始为 undefined，因此我们需要给它一个合适的默认值（上面的例子我们是以 0 为默认值）
 
 - Our reducer cannot return an undefined value
 
@@ -143,9 +143,11 @@ There are several things are important to understand when defining a reducer:
 
 - Our reducer will be triggered by any action that is dispatched, so we should return the existing state if the action is not relevant to this reducer (that’s what the default case is for).
 
-> reducer 会被任意 dispatch 的 action 触发，因此如果 reducer 和 action 无关时我们需要在 reducer 中返回已经存在的 state（也就是 switch 中的 default 情况下）。
+> reducer 会被任何 action 触发，因此如果 reducer 和当前 action 无关时我们需要在 reducer 中将之前已经存在的 state 返回（也就是 switch 中的 default 情况下）。
 
 ## Creating A Store 【创建一个 Store】
+
+--------待校验------
 
 Now that you understand the basics of actions and reducers we can actually put them to use and create a store.
 
