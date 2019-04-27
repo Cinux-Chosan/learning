@@ -432,32 +432,57 @@ Before we get into how to actually update the counter, let’s look at what we�
 
 在深入了解如何更新计数值前，我们先来看看目前为止我们做了些什么：
 
-- We wrote a mapStateToProps function that does what the name says: transforms the Redux state into an object containing props.
-- We connected the Redux store to our Counter component with the connect function from react-redux, using the mapStateToProps function to configure how the connection works.
-- We created a reducer function to tell Redux what our state should look like.
-We used the ingeniously-named createStore function to create a store, and passed it the reducer.
-- We wrapped our whole app in the Provider component that comes with react-redux, and passed it our store as a prop.
+- We wrote a `mapStateToProps` function that does what the name says: transforms the Redux state into an object containing props.
+
+> 写了一个 `mapStateToProps` 函数，它完成的操作就如它名字表示的那样：将 Redux 中的状态数据转换到一个对象中去。
+
+- We connected the Redux store to our `Counter` component with the `connect` function from `react-redux`, using the `mapStateToProps` function to configure how the connection works.
+
+> 使用 `react-redux` 提供的 `connect` 函数将 Redux store 关联到 `Counter` 组件，使用 `mapStateToProps` 函数来配置具体如何进行关联。
+
+- We created a `reducer` function to tell Redux what our state should look like.
+
+> 创建了一个 `reducer` 函数来告诉 Redux 我们希望 state 应该是什么结构。
+
+- We used the ingeniously-named `createStore` function to create a store, and passed it the `reducer`.
+
+> 使用 `createStore` 来创建 store 并传给 `reducer`。
+
+- We wrapped our whole app in the `Provider` component that comes with `react-redux`, and passed it our store as a prop.
+
+> 用 `react-redux` 提供的 `Provider` 组件来包装整个应用，并把 store 作为属性传递给它。
+
 - The app works flawlessly, except the fact that the counter is stuck at 42.
+
+> 除了计数值一直是 42 之外，应用完美运行。
 
 With me so far?
 
-## Interactivity (Making It Work)
+还在跟着我的节奏一起吗？
+
+## Interactivity (Making It Work) 【互动 （使其发挥作用）】
 
 So far this is pretty lame, I know. You could’ve written a static HTML page with the number “42” and 2 broken buttons in 60 seconds flat, yet here you are, reading how to overcomplicate that very same thing with React and Redux and who knows what else.
+
+
 
 I promise this next section will make it all worthwhile.
 
 Actually, no. I take that back. A simple Counter app is a great teaching tool, but Redux is absolutely overkill for something like this. React state is perfectly fine for something so simple. Heck, even plain JS would work great. Pick the right tool for the job. Redux is not always that tool. But I digress.
 
-## Initial State
+## Initial State 【初态（state）】
 
 So we need a way to tell Redux to change the counter.
 
+因此我们需要一种方式了告诉 Redux 改变计数值。
+
 Remember the `reducer` function we wrote? (of course you do, it was 2 minutes ago)
 
-Remember how I mentioned it takes the current state and returns the new state? Well, I lied again. It actually takes the current state and an action, and then it returns the new state. We should have written it like this:
+还记得我们写的 `reducer` 函数吗？（当然，那才 2 分钟之前）
 
 Remember how I mentioned it takes the current state and returns the new state? Well, I lied again. It actually takes the current state and an action, and then it returns the new state. We should have written it like this:
+
+还记得我之前说的它以当前 state 作为参数返回一个新的 state 吗？我有一次说了谎。实际上它是以当前 state 和一个 action 作为入参，返回新的 state。我们应该这样写：
 
 ```js
 function reducer(state, action) {
@@ -469,7 +494,11 @@ function reducer(state, action) {
 
 The very first time Redux calls this function, it will pass `undefined` as the `state`. That is your cue to return the initial state. For us, that’s probably an object with a `count` of 0.
 
+Redux 在最初调用这个函数的时候会以 `undefined` 作为 `state`。这就是你为什么要返回初始状态。对于我们来说，它应该是一个包含 `count` 值为 0 的对象。
+
 It’s common to write the initial state above the reducer, and use ES6’s default argument feature to provide a value for the `state` argument when it’s undefined.
+
+将初始 state 写在 reducer 前面是一种很普遍的做法，ES6 的默认值参数也会在当 `state` 为 undefined 的时候为它提供一个值。
 
 ```js
 const initialState = {
@@ -483,11 +512,17 @@ function reducer(state = initialState, action) {
 
 Try this out. It should still work, except now the counter is stuck at 0 instead of 42. Awesome.
 
+尝试一下。它应该也能工作，只是计数值现在一直是 0 而不是 42 了。棒。
+
 ## Action
 
 We’re finally ready to talk about the `action` parameter. What is it? Where does it come from? How can we use it to change the damn counter?
 
+我们终于要谈到 `action` 参数了。它是什么？它来自哪里？我们需要如何用它来改变该死的计数值？
+
 An “action” is a JS object that describes a change that we want to make. The only requirement is that the object needs to have a `type` property, and its value should be a string. Here’s an example of an action:
+
+一个 “action” 就是一个描述我们希望如何去改变 state 的 JS 对象。它唯一必须的属性就是 `type`，它的值应该是一个字符串。下面是一个 action 的示例：
 
 ```js
 {
@@ -497,6 +532,8 @@ An “action” is a JS object that describes a change that we want to make. The
 
 Here’s another one:
 
+另一个 action 示例：
+
 ```js
 {
   type: "DECREMENT"
@@ -505,11 +542,17 @@ Here’s another one:
 
 Are the gears turning in your head? Do you know what we’re gonna do next?
 
-## Respond to Actions
+你脑海中是否已经跑起来了呢？你知道接下来我们要做什么了吗？
+
+## Respond to Actions 【对 Action 做出响应】
 
 Remember the reducer’s job is to take the current state and an action and figure out the new state. So if the reducer received an action like `{ type: "INCREMENT" }`, what might you want to return as the new state?
 
+记住，reducer 的工作就是用当前的 state 和一个 action 参数来确定接下来的 state 该是什么样子。因此如果 reducer 接收一个像 `{ type: "INCREMENT" }` 这样的 action，你希望以什么作为新的 state 返回呢？
+
 If you answered something like this, you’re on the right track:
+
+如果你回答了这样的问题，说明你还走在正确的轨道上：
 
 ```js
 function reducer(state = initialState, action) {
@@ -524,6 +567,8 @@ function reducer(state = initialState, action) {
 ```
 
 It’s common to use a `switch` statement with `case`s for each action you want to handle. Change your reducer to look like this:
+
+一种通常的做法是使用 `switch` 语句来处理每一种情况。将 reducer 改成下面这样：
 
 ```js
 function reducer(state = initialState, action) {
@@ -542,15 +587,21 @@ function reducer(state = initialState, action) {
 }
 ```
 
-### Always Return a State
+### Always Return a State 【总是需要返回一个 state】
 
 You’ll notice that there’s always the fallback case where all it does is `return state`. This is important, because Redux can (will) call your reducer with actions that it doesn’t know what to do with. In fact, the very first action you’ll receive is `{ type: "@@redux/INIT" }`. Try putting a `console.log(action)` above the `switch` and see.
 
+你会发现默认情况下始终都会 `return state`。这是很重要的做法，因为 Redux 会用一些并不知道该如何处理的 action 来调用你的 reducer。实际上，你最开始收到的 action 是 `{ type: "@@redux/INIT" }`。尝试在 `switch` 前面放个 `console.log(action)` 看看吧。
+
 Remember that the reducer’s job is to return a new state, even if that state is unchanged from the current one. You never want to go from “having a state” to “state = undefined”, right? That’s what would happen if you left off the `default` case. Don’t do that.
 
-### Never Change State
+记住，reducer 的工作就是返回一个新的 state，即便新的 state 和当前 state 并没有任何改变。你肯定不希望从 “有 state” 的情况变成 “state 为 undefined” 的情况，是吧？但如果你漏了 `default` 的情况就会发生这样的事情。千万别那么做。
+
+### Never Change State 【永远不要修改 state】
 
 One more thing to never do: do not mutate the `state`. State is immutable. You must never change it. That means you can’t do this:
+
+千万不要做的另一件事就是：不要修改 `state`。state 是不可修改的。永远都不要修改它。因此你不能像下面这样做：
 
 ```js
 function brokenReducer(state = initialState, action) {
@@ -574,35 +625,63 @@ function brokenReducer(state = initialState, action) {
 
 You also can’t do things like `state.foo = 7`, or `state.items.push(newItem)`, or `delete state.something`.
 
+你也不能做像 `state.foo = 7` 或 `state.items.push(newItem)` 或 `delete state.something` 这样的事情。
+
 Think of it like a game where the only thing you can do is `return { ... }`. It’s a fun game. Maddening at first. But you’ll get better at it with practice.
+
+把它当做是一个游戏，你唯一能做的就是 `return { ... }`。这是一个有趣的游戏，一开始会抓狂，但慢慢会越来越好。
 
 I put together a short guide on [how to do immutable updates](https://daveceddia.com/react-redux-immutability-guide/), showing 7 common patterns for updating state within objects and arrays.
 
-### All These Rules…
+我整理了一份关于 [如何执行不可变更新操作](https://daveceddia.com/react-redux-immutability-guide/) 的总结，它展示了 7 种关于更新 state 中对象和数组的常用模式。
+
+### All These Rules… 【所有的规则】
 
 Always return a state, never change state, don’t connect every component, eat your broccoli, don’t stay out past 11… it’s exhausting. It’s like a rules factory, and I don’t even know what that is.
 
+总是需要返回一个 state。永远不要修改它，不要关联每一个组件，多吃西兰花，11 点后不要呆在外面...... 这是些磨人的规则。看起来就像是规则工厂，然而我也不知道它是个什么东西。
+
 Yeah, Redux can be like an overbearing parent. But it comes from a place of love. Functional programming love.
+
+是的，Redux 看起来就像是一个霸道的家长。但它来自一个有爱的地方。函数式编程之爱。
 
 Redux is built on the idea of immutability, because mutating global state is the road to ruin.
 
+Redux 基于不变性原则。因为修改全局 state 就是在走向毁灭。
+
 Have you ever kept a global object and used it to pass state around an app? It works great at first. Nice and easy. And then the state starts changing in unpredictable ways and it becomes impossible to find the code that’s changing it.
+
+你曾经是否维护了一个全局对象并且用它来在整个应用中传递 state？一开始没什么问题。既简单又漂亮。然后 state 开始以不可预测的方式进行修改并且几乎不可能找到是哪里在对它进行修改。
 
 Redux avoids these problems with some simple rules. State is read-only, and actions are the only way to modify it. Changes happen one way, and one way only: action -> reducer -> new state. The reducer function must be “pure” – it cannot modify its arguments.
 
+Redux 使用一些简单的规则来避免这些问题。State 是只读的，并且 action 是唯一可以修改它的方式。改变是单向的，而且只能是单向的：action -> reducer -> 新 state。reducer 必须是纯函数 —— 它不会修改自己的参数。
+
 There are even addon packages that let you log every action that comes through, rewind and replay them, and anything else you could imagine. Time-travel debugging was one of the original motivations for creating Redux.
 
-## Where Do Actions Come From?
+甚至有一些插件可以记录每一个通过的 action，能够进行回退和重播它们，或者任何其它你能够想到的事情。时间回退（time-travel）调试是创建 Redux 最初的动机之一。
+
+## Where Do Actions Come From? 【Action 来自哪里】
 
 One piece of this puzzle remains: we need a way to feed an action into our reducer function so that we can increment and decrement the counter.
 
+难题仍然存在：我们需要一种方式能够将 action 提供给 reducer 函数以便能够对计数值进行增减。
+
 Actions are not born, but they are **dispatched**, with a handy function called `dispatch`.
+
+Action 不是凭空来的，而是被一个称作 `dispatch` 的函数 **派发** 过来的。
 
 The `dispatch` function is provided by the instance of the Redux store. That is to say, you can’t just `import { dispatch }` and be on your way. You can call `store.dispatch(someAction)`, but that’s not very convenient since the `store` instance is only available in one file.
 
+`dispatch` 函数是 Redux store 实例提供的一个方法。也就是说，你不能只 `import { dispatch }` 并继续。你可以调用 `store.dispatch(someAction)`，但这也并不方便，因为 `store` 实例只能在一个文件中可用。
+
 As luck would have it, the `connect` function has our back. In addition to injecting the result of `mapStateToProps` as props, `connect` also injects the `dispatch` function as a prop. And with that bit of knowledge, we can finally get the counter working again.
 
+幸运的是，我们得到了 `connect` 函数的支持。除了将 `mapStateToProps` 的结果作为属性注入意外，`connect` 还将 `dispatch` 函数作为属性注入。有了这些，我们就可以让计数器再次运作了。
+
 Here is the final component in all its glory. If you’ve been following along, the only things that changed are the implementations of `increment` and `decrement`: they now call the `dispatch` prop, passing it an action.
+
+下面是组件的最终效果。如果你一直跟着我在做，唯一需要改变的就是 `increment` 和 `decrement` 的实现：现在它们调用 `dispatch` 属性，给它传递一个 action 入参。
 
 ```jsx
 import React from 'react';
@@ -642,17 +721,26 @@ export default connect(mapStateToProps)(Counter);
 
 The code for the entire project (all two files of it) can be found [on Github](https://github.com/dceddia/redux-intro).
 
-## What Now?
+完整的项目代码可以在 [Github](https://github.com/dceddia/redux-intro) 获取到。
+
+## What Now? 【现在】
 
 With the Counter app under your belt, you are well-equipped to learn more about Redux.
 
+有了计数器应用的经验，你就可以去了解更多关于 Redux 的知识了。
+
       “What?! There’s more?!”
+      “什么？！还有更多？！”
 
 There is much I haven’t covered here, in hopes of making this guide easily digestible – action constants, action creators, middleware, thunks and asynchronous calls, selectors, and on and on. There’s a lot. The [Redux docs](https://redux.js.org/) are well-written and cover all that and more.
 
+还有很多我这里没有覆盖到的知识点，为了让这篇指南易于消化 —— action 常量，action 创建器，中间件，thunk 和异步调用，选择器等等这些都没有包含在这里。 [Redux 文档](https://redux.js.org/) 写的不错，它包含了上面的所有内容。
+
 But you’ve got the basic idea now. Hopefully you understand how data flows in Redux (`dispatch(action) -> reducer -> new state -> re-render`), and what a reducer does, and what an action is, and how that all fits together.
+
+但是你现在已经有基础知识了。希望你了解 Redux 中数据流是如何传播的 (`dispatch(action) -> reducer -> new state -> re-render`)，reducer 是做什么的， action 是做什么的，它们是如何协作的。
 
 I’m putting together a new course that will cover all of this and more! You can read more about that [here](https://daveceddia.com/refactoring-to-redux/).
 
-
+我正在整理一门新的课程，它会包含所有这些内容！你可以到[这里](https://daveceddia.com/refactoring-to-redux/)来看它。
 
