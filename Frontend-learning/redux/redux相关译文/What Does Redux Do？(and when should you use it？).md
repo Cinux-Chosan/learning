@@ -30,7 +30,7 @@ And no, the problem it solves is not “state management.” That’s super vagu
 
 这个问题并不是 “状态管理。”，这是一种非常模糊的说法。React 已经做了状态管理。Redux 只是辅助状态管理，但这并不是它解决的问题。
 
-## It’s About Data Flow （）
+## It’s About Data Flow （关于数据流）
 
 If you’ve used React for more than a few minutes, you probably know about props and one-way data flow. Data is passed down the component tree via props. Given a component like this:
 
@@ -160,7 +160,7 @@ If your app will be large, maintaining vast data, related and not – consider u
 
 Read [Part 2 of this series](https://daveceddia.com/how-does-redux-work) where we’ll dive into the details of Redux: how to set it up, and how the important pieces fit together (actions and reducers and stores oh my!).
 
-阅读 [本系列第二部分](https://daveceddia.com/how-does-redux-work)，我们将深入 Redux：如何配置它，如何将各个重要的部分组合起来（action、reducer 和 store）。
+阅读 [本系列第二部分](https://daveceddia.com/how-does-redux-work)（[点击查看中文译文](https://github.com/Cinux-Chosan/learning/blob/master/Frontend-learning/redux/redux%E7%9B%B8%E5%85%B3%E8%AF%91%E6%96%87/How%20Redux%20Works%EF%BC%9AA%20Counter-Example.md)），我们将深入 Redux：如何配置它，如何将各个重要的部分组合起来（action、reducer 和 store）。
 
 ## Translations 【翻译】
 
