@@ -20,7 +20,7 @@ The best question to start with is, Why should we use Redux at all?
 
 And the answer isn’t “because everyone else on the internet is using it.” (I don’t doubt that’s why a lot of people are using it, but let’s go deeper.)
 
-问题的答案并不是 “因为互联网人都在用它。”
+问题的答案并不是 “因为网上其他人都在用。”（我并不是怀疑这就是很多人使用它的原因，但我们需要看得更深入一点）
 
 The reason Redux is useful is that it solves a problem.
 
