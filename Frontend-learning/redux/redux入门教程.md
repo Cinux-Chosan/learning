@@ -118,7 +118,10 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 > - state 需要有一个默认值
 >   - 解释：因为 redux 在初始化时会去调用每一个 reducer 获取对应的初始 state，此时 state 参数为 undefined，action 为 `{ type: "@@redux/INIT" }`
 
-      题外话：为什么叫 reducer？各位是否记得 JavaScript 数组有一个方法叫 reduce，它的参数是其上一次的执行结果和本次加入执行的数据，执行完成后返回的结果又会作为参数加入到下一轮的执行中，redux 中的 reducer 和它有异曲同工之妙，每一次调用它的第一个参数都是上一次计算得出的 state，并且每次返回的 state 都会作为下一次执行的参数。
+      题外话：
+      为什么叫 reducer？
+      各位是否记得 JavaScript 数组有一个方法叫 reduce，它的参数是其上一次的执行结果和本次加入执行的数据，执行完成后返回的结果又会作为参数加入到下一轮的执行中。      
+      redux 中的 reducer 和它有异曲同工之妙，每一次调用它的第一个参数都是上一次计算得出的 state，并且每次返回的 state 都会作为下一次执行的参数，因此叫 reducer。
 
 
 
