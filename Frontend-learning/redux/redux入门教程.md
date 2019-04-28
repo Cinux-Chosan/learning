@@ -113,8 +113,10 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 > 上面是一个 reducer 的示例，它满足 reducer 的几点要求：
 >
 > - 必须要有返回值，不能是 `undefined`
-> - 如果 action 不需要在当前 reducer 中处理，则直接将之前的 state 返回（因为每个 reducer 都可以对任意 action 做出响应，redux 并不知道哪个 reducer 会处理当前 action，因此每一次 redux 都会用 action 去调用所有的 reducer，在无关的 reducer 中我们不需要对 state 做任何处理而直接返回，在上面就是 switch 中的 default）
-> - state 需要有一个默认值（因为 redux 在初始化时会去调用每一个 reducer 获取对应的初始 state，此时 state 参数为 undefined，action 为 `{ type: "@@redux/INIT" }`）
+> - 如果 action 不需要在当前 reducer 中处理，则直接将之前的 state 返回
+>   - 解释：因为每个 reducer 都可以对任意 action 做出响应，redux 并不知道哪个 reducer 会处理当前 action，因此每一次 redux 都会用 action 去调用所有的 reducer，在无关的 reducer 中我们不需要对 state 做任何处理而直接返回，在上面就是 switch 中的 default
+> - state 需要有一个默认值
+>   - 解释：因为 redux 在初始化时会去调用每一个 reducer 获取对应的初始 state，此时 state 参数为 undefined，action 为 `{ type: "@@redux/INIT" }`
 
       题外话：为什么叫 reducer？各位是否记得 JavaScript 数组有一个方法叫 reduce，它的参数是其上一次的执行结果和本次加入执行的数据，执行完成后返回的结果又会作为参数加入到下一轮的执行中，redux 中的 reducer 和它有异曲同工之妙，每一次调用它的第一个参数都是上一次计算得出的 state，并且每次返回的 state 都会作为下一次执行的参数。
 
