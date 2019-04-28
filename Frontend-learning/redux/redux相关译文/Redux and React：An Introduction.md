@@ -128,7 +128,6 @@ export const count = (state = 0, action) => {
 };
 ```
 
-
 There are several things are important to understand when defining a reducer:
 
 定义 reducer 的时候有几点需要注意的地方：
