@@ -71,9 +71,9 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 
 #### 1. 我有一个更新数据的需求
 
-> 上面第一步 “我有一个更新数据的需求” 可以理解为 “我想要发生一个更新数据的操作”，更新即是动作，动作的英文是 **action**。
+> 这一步可以理解为 “ 我想要发生一个更新数据的操作 ”，更新即是动作，动作的英文是 **action**。
 >
-> 在 redux 中，我们约定用一个对象来描述一个动作，这个代表动作的对象在 redux 中就被称作 `action`。就像事件对象有一个 type 属性一个，这个对象也必须有一个 `type` 字段对它进行标识，如：
+> 在 redux 中，我们约定用一个对象来描述一个动作，这个代表动作的对象在 redux 中就被称作 `action`。唯一需要注意的一点就是这个对象必须有一个 `type` 字段对它进行标识，这一点和 JavaScript 中的事件对象有点类似，如：
 >
 > ```js
 > { type: "ADD_NUMBER" }
@@ -85,7 +85,7 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 
 #### 2. 我把这个需求告诉 Store
 
-> 上面第二步 “我把这个需求告诉 Store” 实际上就是要将更新动作派发（或发送）给 Store，派发的英文是 **dispatch**
+> 这一步实际上就是要将更新动作派发（或发送）给 Store，派发的英文是 **dispatch**
 >
 > 在 redux 中，store 就是一个存放所有数据的对象，存放的数据我们称之为 state（状态），store 和 state 的关系就如同篮子和水果的关系，篮子里面可以装很多水果，store 就是篮子，state 就是其中的水果。
 >
@@ -114,7 +114,7 @@ C 属于 B 的子组件，B 属于 A 的子组件。
 >
 > - 必须要有返回值，不能是 `undefined`
 > - 如果 action 不需要在当前 reducer 中处理，则直接将之前的 state 返回
->   - 解释：因为每个 reducer 都可以对任意 action 做出响应，redux 并不知道哪个 reducer 会处理当前 action，因此每一次 redux 都会用 action 去调用所有的 reducer，在无关的 reducer 中我们不需要对 state 做任何处理而直接返回，在上面就是 switch 中的 default
+>   - 解释：因为每个 reducer 都可以对任意 action 做出响应，redux 并不知道哪个 reducer 会处理当前 action，因此每一次 redux 都会用 action 去调用所有的 reducer，如果当前 reducer 不需要对 state 做任何处理则直接返回，在上面就是 switch 中的 default
 > - state 需要有一个默认值
 >   - 解释：因为 redux 在初始化时会去调用每一个 reducer 获取对应的初始 state，此时 state 参数为 undefined，action 为 `{ type: "@@redux/INIT" }`
 
