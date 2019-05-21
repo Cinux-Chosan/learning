@@ -12,7 +12,7 @@
 - [bluebird](https://www.npmjs.com/package/bluebird)
   - Bluebird is a fully featured promise library with focus on innovative features and performance
 - [dotenv](https://www.npmjs.com/package/dotenv)
-  - loads environment variables from a .env file into process.env. 
+  - loads environment variables from a .env file into process.env.
 - [errorhandler](https://www.npmjs.com/package/errorhandler)
   - This middleware is only intended to be used in a development environment, as the full error stack traces and internal details of any object passed to this module will be sent back to the client when an error occurs.
 - [connect](https://www.npmjs.com/package/connect)
@@ -39,13 +39,13 @@
   ```js
     const request = require('supertest');
     const express = require('express');
-    
+
     const app = express();
-    
+
     app.get('/user', function(req, res) {
     res.status(200).json({ name: 'john' });
     });
-    
+
     request(app)
     .get('/user')
     .expect('Content-Type', /json/)
@@ -59,3 +59,8 @@
   - Run multiple commands concurrently。多个任务同时运行，并可追踪其输出和执行是否成功等。
 - [ts-node](https://www.npmjs.com/package/ts-node)
   - TypeScript execution and REPL for node.js, with source map support. Works with typescript@>=2.0。即 ts 命令行执行终端。
+
+
+## 来自 [nwb](https://github.com/insin/nwb.git)
+
+-
