@@ -63,4 +63,37 @@
 
 ## 来自 [nwb](https://github.com/insin/nwb.git)
 
--
+
+- [chalk](https://www.npmjs.com/package/chalk)
+  - Terminal string styling done right
+  ```js
+  // Combine styled and normal strings
+  log(chalk.blue('Hello') + ' World' + chalk.red('!'));
+  
+  // Compose multiple styles using the chainable API
+  log(chalk.blue.bgRed.bold('Hello world!'));
+  ```
+- [minimist](https://www.npmjs.com/package/minimist)
+  - parse argument options。即解析命令行参数
+  ```sh
+    $ node example/parse.js -x 3 -y 4 -n5 -abc --beep=boop foo bar baz
+  ```
+  ```js
+    { _: [ 'foo', 'bar', 'baz' ],
+      x: 3,
+      y: 4,
+      n: 5,
+      a: true,
+      b: true,
+      c: true,
+      beep: 'boop' }
+  ```
+- [Inquirer.js](https://www.npmjs.com/package/inquirer)
+  - A collection of common interactive command line user interfaces. 常用交互式命令行用户界面的集合。
+- [ora](https://www.npmjs.com/package/ora)
+  - Elegant terminal spinner
+- [run-series](https://www.npmjs.com/package/run-series)
+  - npm install run-series
+- [copy-template-dir] (https://www.npmjs.com/package/copy-template-dir)
+  - High throughput template dir writes. Supports variable injection using the mustache `{{ }}` syntax.
+  - 高吞吐量模板目录写入。支持使用 mustache 的 `{{}}` 语法注入变量。可用于编写 cli 工具时给模板注入变量。
