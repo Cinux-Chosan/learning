@@ -7,6 +7,8 @@
   - A logger for just about everything.
 - [async](https://www.npmjs.com/package/async)
   - Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.
+- [neo-async](https://www.npmjs.com/package/neo-async) （来自webpack）
+  - Neo-Async 被认为是 Async 的直接替代品，几乎完全覆盖了它的功能并且运行速度更快。
 - [bcrypt.js](https://www.npmjs.com/package/bcryptjs)
   - 不可逆加密工具，bcrypt 的 js 版本。参考 [使用Bcrypt对密码进行加密与解密验证](http://www.cnblogs.com/yspace/p/10105386.html)
 - [bluebird](https://www.npmjs.com/package/bluebird)
@@ -88,6 +90,10 @@
       c: true,
       beep: 'boop' }
   ```
+- [Commander.js](https://www.npmjs.com/package/commander)
+  - node.js 命令行界面的完整解决方案，受 Ruby commander 启发。
+- [yargs](https://www.npmjs.com/package/yargs)
+  - 同 minimist 和  commander 一样，也是命令行解析工具
 - [Inquirer.js](https://www.npmjs.com/package/inquirer)
   - A collection of common interactive command line user interfaces. 常用交互式命令行用户界面的集合。
 - [ora](https://www.npmjs.com/package/ora)
@@ -97,3 +103,9 @@
 - [copy-template-dir] (https://www.npmjs.com/package/copy-template-dir)
   - High throughput template dir writes. Supports variable injection using the mustache `{{ }}` syntax.
   - 高吞吐量模板目录写入。支持使用 mustache 的 `{{}}` 语法注入变量。可用于编写 cli 工具时给模板注入变量。
+
+
+# 来自 [webpack](https://www.npmjs.com/package/webpack)
+
+- [neo-async](https://www.npmjs.com/package/neo-async)
+  - Neo-Async 被认为是 Async 的直接替代品，几乎完全覆盖了它的功能并且运行速度更快。
