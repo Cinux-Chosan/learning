@@ -254,3 +254,8 @@
 
 - [prettier](https://www.npmjs.com/package/prettier)
   - Prettier is an opinionated code formatter
+
+- [memoize-one](https://www.npmjs.com/package/memoize-one)
+  - A memoization library that only caches the result of the most recent arguments.
+  - 对函数结果进行缓存，如果再次传入相同的参数则返回缓存的结果，而不用再次执行函数获得结果。
+
