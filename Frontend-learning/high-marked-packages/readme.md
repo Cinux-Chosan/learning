@@ -259,3 +259,9 @@
   - A memoization library that only caches the result of the most recent arguments.
   - 对函数结果进行缓存，如果再次传入相同的参数则返回缓存的结果，而不用再次执行函数获得结果。
 
+- [bytes](https://www.npmjs.com/package/bytes)
+  - Utility to parse a string bytes (ex: 1TB) to bytes (1099511627776) and vice-versa.
+  - 将表示字节的单位与字节数量进行相互转换
+
+- [Browserslist](https://www.npmjs.com/package/browserslist)
+  - 
