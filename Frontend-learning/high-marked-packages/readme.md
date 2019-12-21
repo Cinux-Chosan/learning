@@ -265,3 +265,8 @@
 
 - [Browserslist](https://www.npmjs.com/package/browserslist)
   - 
+
+
+- [connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)
+  - SPA 使用 history 模式的 nodejs 端解决方案，可以方便的配合前端 SPA
+  使用 history API
