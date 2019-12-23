@@ -3,7 +3,7 @@ function add(...args) {
         [].push.apply(args, moreArgs)
         return push
     }
-    push.toString = () => {
+    push.valueOf = () => {
         return args.reduce((prev, next) => prev + next, 0)
     }
     return push
