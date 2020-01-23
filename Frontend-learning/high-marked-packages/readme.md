@@ -269,3 +269,17 @@
 - [connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)
   - SPA 使用 history 模式的 nodejs 端解决方案，可以方便的配合前端 SPA
   使用 history API
+
+- [mathjs](https://www.npmjs.com/package/mathjs)
+  - 内置一些常量和函数，并且可以直接计算字符串，解析字符串等，单位换算等
+  ```js
+    evaluate('12.7 cm to inch')    // 5 inch
+    evaluate('sin(45 deg) ^ 2')    // 0.5
+    derivative('x^2 + x', 'x')     // 2 * x + 1
+  ```
+
+- [bignumber](https://www.npmjs.com/package/bignumber.js)
+  - 处理 js 任意精度的计算问题。
+
+- [jsdom](https://www.npmjs.com/package/jsdom)
+  - 使用纯 JavaScript 实现了很多 web 标准。
