@@ -269,3 +269,9 @@
 - [connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)
   - SPA 使用 history 模式的 nodejs 端解决方案，可以方便的配合前端 SPA
   使用 history API
+
+- [archiver](https://www.npmjs.com/package/archiver)
+  - 文件归档，即压缩，目录压缩
+
+- [ismobilejs](https://www.npmjs.com/package/ismobilejs)
+  - 在浏览器端和 Nodejs 中，检测是否是手机环境，Nodejs 中通过请求 header 来判断
