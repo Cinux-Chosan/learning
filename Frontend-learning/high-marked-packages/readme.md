@@ -277,6 +277,11 @@
   - SPA 使用 history 模式的 nodejs 端解决方案，可以方便的配合前端 SPA
   使用 history API
 
+- [archiver](https://www.npmjs.com/package/archiver)
+  - 文件归档，即压缩，目录压缩
+
+- [ismobilejs](https://www.npmjs.com/package/ismobilejs)
+  - 在浏览器端和 Nodejs 中，检测是否是手机环境，Nodejs 中通过请求 header 来判断
 - [mathjs](https://www.npmjs.com/package/mathjs)
   - 内置一些常量和函数，并且可以直接计算字符串，解析字符串等，单位换算等
   ```js
@@ -307,3 +312,7 @@
 
   - [scrape-it](https://www.npmjs.com/package/scrape-it)
     - 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
+
+## 一些有趣的玩具
+- L2Dwidget 
+  - 给你的网站领养一只喵喵~
