@@ -1,4 +1,8 @@
 
+## 重要
+- [ajv](https://www.npmjs.com/package/ajv/v/0.1.4)
+  - json 模式校验，如在编译之前校验配置文件是否符合模式等
+
 ## 以下来自项目 https://github.com/microsoft/TypeScript-Node-Starter.git package.json 的摘录
 
 - [shelljs](https://www.npmjs.com/package/shelljs)
@@ -30,7 +34,6 @@
 
   ```js
     chai.should();
-
     foo.should.be.a('string');
     foo.should.equal('bar');
     foo.should.have.lengthOf(3);
@@ -75,6 +78,10 @@
   // Compose multiple styles using the chainable API
   log(chalk.blue.bgRed.bold('Hello world!'));
   ```
+
+- [cli-color](https://www.npmjs.com/package/cli-color)
+  - 同 chalk，也是在命令行输出多种颜色的字体
+
 - [minimist](https://www.npmjs.com/package/minimist)
   - parse argument options。即解析命令行参数
   ```sh
@@ -283,3 +290,20 @@
 
 - [jsdom](https://www.npmjs.com/package/jsdom)
   - 使用纯 JavaScript 实现了很多 web 标准。
+
+- [UAParser.js](https://www.npmjs.com/package/ua-parser-js)
+  - 基于 User-Agent 获取用户的浏览器名、设备名、OS 名、CPU架构等，可在浏览器和服务端使用
+
+- [qrcode](https://www.npmjs.com/package/qrcode)
+  - node 二维码生成器
+
+- [chokidar](https://www.npmjs.com/package/chokidar)
+  - 跨平台高性能监听文件变化的包
+
+  ## 一些有趣的 lib
+
+  - [image-to-ascii](https://www.npmjs.com/package/image-to-ascii)
+    - 把图片转换成命令行符号显示，支持彩色图片
+
+  - [scrape-it](https://www.npmjs.com/package/scrape-it)
+    - 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
