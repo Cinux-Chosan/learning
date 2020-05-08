@@ -61,9 +61,7 @@ import { CatsModule } from "./cats/cats.module";
 export class AppModule {}
 ```
 
-> tip
->
-> > 创建功能模块的命令是 `nest g module <模块名>`
+> 小提示： 创建功能模块的命令是 `nest g module <模块名>`
 
 ## 什么是共享模块？
 
@@ -143,9 +141,7 @@ export class DatabaseModule {
 }
 ```
 
-> tip:
->
-> > `forRoot` 可以同步或异步（如通过 `Promise`）返回一个动态模块。
+> 小提示: `forRoot` 可以同步或异步（如通过 `Promise`）返回一个动态模块。
 
 上面的代码默认定义了一个 `Connection` provider。但是它还会根据传给 `forRoot` 的 `entities` 和 `options` 参数动态创建了一些 provider。动态创建的 provider 和默认 provider 会进行合并（即不是覆盖）。
 
