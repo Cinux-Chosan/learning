@@ -1,4 +1,4 @@
-# Modules
+# 模块（Modules）
 
 一个 module 就是一个以 `@Module()` 装饰的类。`@Module()` 用于 nest 组织代码结构。
 
@@ -60,6 +60,10 @@ import { CatsModule } from "./cats/cats.module";
 })
 export class AppModule {}
 ```
+
+> tip
+>
+> > 创建功能模块的命令是 `nest g module <模块名>`
 
 ## 什么是共享模块？
 
