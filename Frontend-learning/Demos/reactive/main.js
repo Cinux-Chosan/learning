@@ -3,6 +3,8 @@ const obj = {
     age: 18
 }
 
+let whoNeedsMe = null
+
 function reactive(obj, key) {
     const depList = []
     const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -28,3 +30,7 @@ function observe(obj) {
         reactive(obj, key)
     })
 }
+
+observe(obj)
+
+obj.name
