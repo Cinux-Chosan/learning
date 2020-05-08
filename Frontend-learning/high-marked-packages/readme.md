@@ -372,6 +372,15 @@
 * [download-git-repo](https://www.npmjs.com/package/download-git-repo)
   - 使用 nodejs 下载并提取一个 git 仓库（GitHub，GitLab，Bitbucket）。
 
+* [millisecond](https://www.npmjs.com/package/millisecond)
+  - 时间转换，将人类语言的时间转换成毫秒数，如 `ms('1 second')` 返回 `1000`
+  
+* [ms](https://www.npmjs.com/package/ms)
+  - 时间转换，在人类语言的时间和毫秒之间相互转换。
+
+* [stream-wormhole](https://www.npmjs.com/package/stream-wormhole)
+  - 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
+
 ## 一些有趣的 lib
 
 - [image-to-ascii](https://www.npmjs.com/package/image-to-ascii)
