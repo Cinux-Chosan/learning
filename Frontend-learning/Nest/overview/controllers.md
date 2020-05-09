@@ -175,3 +175,109 @@ export class AccountController {
   }
 }
 ```
+
+## 异步处理
+
+Nest 异步处理可以使用 Promise 或 [RxJS Observable stream](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html)
+
+- Promise 方式：
+
+```ts
+@Get()
+async findAll(): Promise<any[]> {
+  return [];
+}
+```
+
+- [RxJS Observable stream](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html) 方式
+
+```ts
+@Get()
+findAll(): Observable<any[]> {
+  return of([]);
+}
+```
+
+## POST 请求参数
+
+前面说到，我们使用 `@Body()` 来获取 Post 请求参数：
+
+```ts
+// cats.controller.ts
+
+@Post()
+async create(@Body() createCatDto: CreateCatDto) { // 通过 @Body() 获取 Post 参数
+  return 'This action adds a new cat';
+}
+```
+
+但由于我们是使用的 typescript，我们需要先定义 CreateCatDto，由于 class 会编译为实例而 interface 会在编译阶段删除，因此我们推荐使用 class 方式：
+
+```ts
+// create-cat.dto.ts
+
+export class CreateCatDto {
+  name: string;
+  age: number;
+  breed: string;
+}
+```
+
+## 错误处理
+
+后面的章节会专门针对错误处理进行讲解
+
+## 如何运行代码
+
+到目前为止我们只是定义了 CatsController，但 Nest 并不知道它的存在，因此我们需要通过**模块**来告诉 Nest，现在我们只有一个根模块 —— `AppModule`。
+
+> 小提示：为什么我们要通过模块来告诉 Nest 某个 Controller 的存在呢？因为在 Nest 中，每个 Controller 总是需要属于某个特定的模块。
+
+```ts
+// app.module.ts
+
+import { Module } from "@nestjs/common";
+import { CatsController } from "./cats/cats.controller";
+
+@Module({
+  controllers: [CatsController] // 在根模块中加入 CatsController 后 Nest 就会自动取实例化和挂载它
+})
+export class AppModule {}
+```
+
+## 完整示例
+
+```ts
+// cats.controller.ts
+
+import { Controller, Get, Query, Post, Body, Put, Param, Delete } from "@nestjs/common";
+import { CreateCatDto, UpdateCatDto, ListAllEntities } from "./dto";
+
+@Controller("cats")
+export class CatsController {
+  @Post()
+  create(@Body() createCatDto: CreateCatDto) {
+    return "This action adds a new cat";
+  }
+
+  @Get()
+  findAll(@Query() query: ListAllEntities) {
+    return `This action returns all cats (limit: ${query.limit} items)`;
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return `This action returns a #${id} cat`;
+  }
+
+  @Put(":id")
+  update(@Param("id") id: string, @Body() updateCatDto: UpdateCatDto) {
+    return `This action updates a #${id} cat`;
+  }
+
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return `This action removes a #${id} cat`;
+  }
+}
+```
