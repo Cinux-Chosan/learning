@@ -6,7 +6,7 @@
 
 ## 第一级初始化
 
-Vue 的初始化是分层的，也就是说在导出 Vue 之前的整个引用链上都会对 Vue 进行初始化，我们先从最底层代码说起（文件位于`src/core/instance/index.js`）：
+Vue 的初始化是分层的，也就是说在导出 Vue 之前的整个引用链上都会对 Vue 进行多次初始化，我们先从最底层代码说起，即第一级初始化（文件位于`src/core/instance/index.js`）：
 
 ```ts
 import { initMixin } from "./init";
@@ -31,6 +31,8 @@ renderMixin(Vue);
 
 export default Vue;
 ```
+
+上面的代码很精简，只是调用了几个初始化函数，我们分别看看每个初始化函数都做了什么操作：
 
 - `initMixin`
 
@@ -152,6 +154,8 @@ export function initGlobalAPI(Vue: GlobalAPI) {
 }
 ```
 
+其功能总结如下：
+
 - 添加 `Vue.config`
 - 添加 `Vue.util`，其中包含如下函数：
   - `warn`
@@ -177,7 +181,7 @@ export function initGlobalAPI(Vue: GlobalAPI) {
   - 添加 `Vue.cid = 0`
   - 添加 `Vue.extend`
 - `initAssetRegisters`
-  - 创建资源的注册函数，用于注册资源，如 `Vue.component('my-comp', MyComp)`，资源包括
+  - 创建资源的注册函数，用于之后在代码中注册资源，如 `Vue.component('my-comp', MyComp)`，资源包括
     - `component`：添加 `Vue.component` 方法
     - `directive`：添加 `Vue.directive` 方法
     - `filter`：添加 `Vue.filter` 方法
@@ -195,7 +199,7 @@ export function initGlobalAPI(Vue: GlobalAPI) {
 
 ## 第三级初始化
 
-第三级初始化的代码位于 `src/platforms/web/runtime/index.js`，这里的初始化逻辑就和特定平台有强关联性了，这些方法用于 Vue 在平台中渲染 virtual DOM 时使用，先来看看代码：
+第三级初始化的代码位于 `src/platforms` 下，这里的初始化逻辑就和特定平台有强关联性了，这些方法用于 Vue 在特定平台中渲染 virtual DOM 时使用，我们以 web 平台举例（除此之外还有 weex），代码位于 `src/platforms/web/runtime/index.js`，先来看看代码：
 
 ```ts
 import Vue from "core/index";
