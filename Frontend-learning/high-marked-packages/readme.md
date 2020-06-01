@@ -51,7 +51,7 @@
 
   const app = express();
 
-  app.get("/user", function (req, res) {
+  app.get("/user", function(req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -60,7 +60,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function (err, res) {
+    .end(function(err, res) {
       if (err) throw err;
     });
   ```
@@ -370,16 +370,24 @@
   - js 高速压缩/解压包，可运行在浏览器端
 
 * [download-git-repo](https://www.npmjs.com/package/download-git-repo)
+
   - 使用 nodejs 下载并提取一个 git 仓库（GitHub，GitLab，Bitbucket）。
 
 * [millisecond](https://www.npmjs.com/package/millisecond)
+
   - 时间转换，将人类语言的时间转换成毫秒数，如 `ms('1 second')` 返回 `1000`
-  
+
 * [ms](https://www.npmjs.com/package/ms)
+
   - 时间转换，在人类语言的时间和毫秒之间相互转换。
 
 * [stream-wormhole](https://www.npmjs.com/package/stream-wormhole)
+
   - 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
+
+* [director](https://www.npmjs.com/package/director)
+
+  - Director 是一个可用于客户端和服务端的路由工具（不过感觉很老了，虽然 star 数有 5.5k，但最后提交代码是在 2015 年）
 
 ## 一些有趣的 lib
 
@@ -388,9 +396,11 @@
   - 把图片转换成命令行符号显示，支持彩色图片
 
 - [scrape-it](https://www.npmjs.com/package/scrape-it)
+
   - 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
 
 ## 一些有趣的玩具
 
 - L2Dwidget
+
   - 给你的网站领养一只喵喵~
