@@ -370,27 +370,69 @@
   - js 高速压缩/解压包，可运行在浏览器端
 
 * [download-git-repo](https://www.npmjs.com/package/download-git-repo)
+
   - 使用 nodejs 下载并提取一个 git 仓库（GitHub，GitLab，Bitbucket）。
 
 * [millisecond](https://www.npmjs.com/package/millisecond)
+
   - 时间转换，将人类语言的时间转换成毫秒数，如 `ms('1 second')` 返回 `1000`
-  
+
 * [ms](https://www.npmjs.com/package/ms)
+
   - 时间转换，在人类语言的时间和毫秒之间相互转换。
 
-* [stream-wormhole](https://www.npmjs.com/package/stream-wormhole)
-  - 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
+* [iterare](https://www.npmjs.com/package/iterare)
+
+  - ES6 Iterator library for applying multiple transformations to a collection in a single iteration.
+  - 建立在[iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)之上，将对一个集合（可迭代对象）的多次操作转换为单次迭代，使用场景如：
+
+```js
+// 这段代码实际上迭代了四此，Array.form 一次，filter 一次，map 一次，然后还有转换回去一次，如果数据量太大实际上性能损耗非常严重
+// RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
+new Set(
+  Array.from(uris)
+    .filter((uri) => uri.startsWith("file://"))
+    .map((uri) => uri.substr("file:///".length))
+);
+```
+
+```js
+// 只需要迭代一次
+import iterate from "iterare";
+
+iterate(uris)
+  .filter((uri) => uri.startsWith("file://"))
+  .map((uri) => uri.substr("file:///".length))
+  .toSet();
+```
+
+- [stream-wormhole](https://www.npmjs.com/package/stream-wormhole)
+
+- 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
 
 ## 一些有趣的 lib
 
-- [image-to-ascii](https://www.npmjs.com/package/image-to-ascii)
+- [WD.js](https://www.npmjs.com/package/wd)
 
-  - 把图片转换成命令行符号显示，支持彩色图片
+- node.js Webdriver/Selenium 2 client
 
-- [scrape-it](https://www.npmjs.com/package/scrape-it)
-  - 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
+* [image-to-ascii](https://www.npmjs.com/package/image-to-ascii)
+
+- 把图片转换成命令行符号显示，支持彩色图片
+
+* [scrape-it](https://www.npmjs.com/package/scrape-it)
+
+- 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
 
 ## 一些有趣的玩具
 
 - L2Dwidget
-  - 给你的网站领养一只喵喵~
+- 给你的网站领养一只喵喵~
+
+```
+
+```
+
+```
+
+```
