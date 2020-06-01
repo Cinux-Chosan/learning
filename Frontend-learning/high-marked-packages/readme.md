@@ -408,31 +408,28 @@ iterate(uris)
 
 - [stream-wormhole](https://www.npmjs.com/package/stream-wormhole)
 
-- 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
+  - 把 stream 内容发送给虫洞... 即把 stream 内容消耗掉，在某些情况下需要这样做。
+
+* [director](https://www.npmjs.com/package/director)
+
+  - Director 是一个可用于客户端和服务端的路由工具（不过感觉很老了，虽然 star 数有 5.5k，但最后提交代码是在 2015 年）
 
 ## 一些有趣的 lib
 
 - [WD.js](https://www.npmjs.com/package/wd)
 
-- node.js Webdriver/Selenium 2 client
+  - node.js Webdriver/Selenium 2 client
 
 * [image-to-ascii](https://www.npmjs.com/package/image-to-ascii)
 
-- 把图片转换成命令行符号显示，支持彩色图片
+  - 把图片转换成命令行符号显示，支持彩色图片
 
 * [scrape-it](https://www.npmjs.com/package/scrape-it)
 
-- 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
+  - 简单的爬虫，其实理解成一个 HTML 解析器更好，它可以根据 css 选择器筛选出页面中的数据并返回。但是对于一些单页应用就无力了。视情况而用。
 
 ## 一些有趣的玩具
 
 - L2Dwidget
-- 给你的网站领养一只喵喵~
 
-```
-
-```
-
-```
-
-```
+  - 给你的网站领养一只喵喵~
