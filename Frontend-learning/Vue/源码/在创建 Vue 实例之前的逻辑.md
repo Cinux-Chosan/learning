@@ -36,34 +36,34 @@ export default Vue;
 
 - `initMixin`
 
-  - 添加 `Vue.prototype._init`
+  - 添加方法 `Vue.prototype._init`
 
 - `stateMixin`
 
-  - 添加 `Vue.prototype.$data`
-  - 添加 `Vue.prototype.$props`
-  - 添加 `Vue.prototype.$set`
-  - 添加 `Vue.prototype.$delete`
-  - 添加 `Vue.prototype.$watch`
+  - 添加属性 `Vue.prototype.$data`
+  - 添加属性 `Vue.prototype.$props`
+  - 添加方法 `Vue.prototype.$set`
+  - 添加方法 `Vue.prototype.$delete`
+  - 添加方法 `Vue.prototype.$watch`
 
 - `eventsMixin`
 
-  - 添加 `Vue.prototype.$on`
-  - 添加 `Vue.prototype.$once`
-  - 添加 `Vue.prototype.$off`
-  - 添加 `Vue.prototype.$emit`
+  - 添加方法 `Vue.prototype.$on`
+  - 添加方法 `Vue.prototype.$once`
+  - 添加方法 `Vue.prototype.$off`
+  - 添加方法 `Vue.prototype.$emit`
 
 - `lifecycleMixin`
 
-  - 添加 `Vue.prototype._update`
-  - 添加 `Vue.prototype.$forceUpdate`
-  - 添加 `Vue.prototype.$destroy`
+  - 添加方法 `Vue.prototype._update`
+  - 添加方法 `Vue.prototype.$forceUpdate`
+  - 添加方法 `Vue.prototype.$destroy`
 
 - `renderMixin`
 
   - 给 `Vue.prototype` 添加渲染相关的辅助函数，如 `createTextVNode`、`createEmptyVNode` 等
-  - 添加 `Vue.prototype.$nextTick`
-  - 添加 `Vue.prototype._render`
+  - 添加方法 `Vue.prototype.$nextTick`
+  - 添加方法 `Vue.prototype._render`
 
 以上就是最初的每个初始化函数所做的操作，我把这个操作称之为第一级初始化，完成第一级初始化之后，将 Vue 导出。
 
@@ -156,30 +156,30 @@ export function initGlobalAPI(Vue: GlobalAPI) {
 
 其功能总结如下：
 
-- 添加 `Vue.config`
-- 添加 `Vue.util`，其中包含如下函数：
+- 添加属性 `Vue.config`
+- 添加属性 `Vue.util`，其中包含如下函数：
   - `warn`
   - `extend`
   - `mergeOptions`
   - `defineReactive`
-- 添加 `Vue.set`
-- 添加 `Vue.delete`
-- 添加 `Vue.nextTick`
-- 添加 `Vue.observable`
-- 添加 `Vue.options`
+- 添加方法 `Vue.set`
+- 添加方法 `Vue.delete`
+- 添加方法 `Vue.nextTick`
+- 添加方法 `Vue.observable`
+- 添加属性 `Vue.options`
   - 初始化 `Vue.options.components = {}`
   - 初始化 `Vue.options.directives = {}`
   - 初始化 `Vue.options.filters = {}`
-- 添加 `Vue.options._base = Vue`
+- 添加属性 `Vue.options._base = Vue`
 - 将 `builtInComponents` 复制到 `Vue.options.components` 中，其中只有一个组件：
   - `KeepAlive`
 - `initUse`
-  - 添加 `Vue.use`
+  - 添加方法 `Vue.use`
 - `initMixin`
-  - 添加 `Vue.mixin`
+  - 添加方法 `Vue.mixin`
 - `initExtend`
-  - 添加 `Vue.cid = 0`
-  - 添加 `Vue.extend`
+  - 添加属性 `Vue.cid = 0`
+  - 添加方法 `Vue.extend`
 - `initAssetRegisters`
   - 创建资源的注册函数，用于之后在代码中注册资源，如 `Vue.component('my-comp', MyComp)`，资源包括
     - `component`：添加 `Vue.component` 方法
@@ -188,10 +188,10 @@ export function initGlobalAPI(Vue: GlobalAPI) {
 
 执行完上面的初始化之后，再
 
-- 添加 `Vue.prototype.$isServer`
-- 添加 `Vue.prototype.$ssrContext`
-- 添加 `Vue.FunctionalRenderContext`
-- 添加 `Vue.version`
+- 添加属性 `Vue.prototype.$isServer`
+- 添加属性 `Vue.prototype.$ssrContext`
+- 添加属性 `Vue.FunctionalRenderContext`
+- 添加属性 `Vue.version`
 
 执行完这些初始化之后，再次将 Vue 导出。
 
@@ -260,21 +260,23 @@ export default Vue;
 
 从这部分代码我们可以清晰的看到，第三级初始化实际上做的工作如下：
 
-- 添加 `Vue.config.mustUseProp`
-- 添加 `Vue.config.isReservedTag`
-- 添加 `Vue.config.isReservedAttr`
-- 添加 `Vue.config.getTagNamespace`
-- 添加 `Vue.config.isUnknownElement`
+- 添加方法 `Vue.config.mustUseProp`
+- 添加方法 `Vue.config.isReservedTag`
+- 添加方法 `Vue.config.isReservedAttr`
+- 添加方法 `Vue.config.getTagNamespace`
+- 添加方法 `Vue.config.isUnknownElement`
 - 将 `platformDirectives` 拷贝到 `Vue.options.directives` 中，其中包括：
 
   - `model`：用于支持 `v-model` 功能
   - `show`：用于支持 `v-show` 功能
 
 - 将 `platformComponents` 拷贝到 `Vue.options.components` 中，其中包括：
+
   - `Transition`
   - `TransitionGroup`
-- 添加 `Vue.prototype.__patch__`
-- 添加 `Vue.prototype.$mount`
+
+- 添加方法 `Vue.prototype.__patch__`
+- 添加方法 `Vue.prototype.$mount`
 - 根据环境启用浏览器的 Vue devtool 插件
 
 ---
@@ -388,4 +390,4 @@ export default Vue;
 从上面代码可以看出，其功能主要如下：
 
 - 对 `Vue.prototype.$mount` 进行函数劫持
-- 添加 `Vue.compile`
+- 添加方法 `Vue.compile`
