@@ -3,12 +3,14 @@
 - [ajv](https://www.npmjs.com/package/ajv/v/0.1.4)
   - json 模式校验，如在编译之前校验配置文件是否符合模式等
 
-## 以下来自项目 https://github.com/microsoft/TypeScript-Node-Starter.git package.json 的摘录
+<!-- ## 以下来自项目 https://github.com/microsoft/TypeScript-Node-Starter.git package.json 的摘录 -->
 
 - [shelljs](https://www.npmjs.com/package/shelljs)
   - Unix shell commands for Node.js
 - [winston](https://www.npmjs.com/package/winston)
   - A logger for just about everything.
+* [log4js](https://www.npmjs.com/package/log4js)
+  - log4j 的 js 版本。灵活的日志管理模块
 - [async](https://www.npmjs.com/package/async)
   - Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.
 - [neo-async](https://www.npmjs.com/package/neo-async) （来自 webpack）
@@ -51,7 +53,7 @@
 
   const app = express();
 
-  app.get("/user", function (req, res) {
+  app.get("/user", function(req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -60,7 +62,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function (err, res) {
+    .end(function(err, res) {
       if (err) throw err;
     });
   ```
@@ -391,8 +393,8 @@
 // RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
 new Set(
   Array.from(uris)
-    .filter((uri) => uri.startsWith("file://"))
-    .map((uri) => uri.substr("file:///".length))
+    .filter(uri => uri.startsWith("file://"))
+    .map(uri => uri.substr("file:///".length))
 );
 ```
 
@@ -401,8 +403,8 @@ new Set(
 import iterate from "iterare";
 
 iterate(uris)
-  .filter((uri) => uri.startsWith("file://"))
-  .map((uri) => uri.substr("file:///".length))
+  .filter(uri => uri.startsWith("file://"))
+  .map(uri => uri.substr("file:///".length))
   .toSet();
 ```
 
@@ -413,6 +415,11 @@ iterate(uris)
 * [director](https://www.npmjs.com/package/director)
 
   - Director 是一个可用于客户端和服务端的路由工具（不过感觉很老了，虽然 star 数有 5.5k，但最后提交代码是在 2015 年）
+
+* [defu](https://www.npmjs.com/package/defu)
+
+  - Recursively assign default properties. Lightweight and Fast!
+  - 递归设置默认值
 
 ## 一些有趣的 lib
 
