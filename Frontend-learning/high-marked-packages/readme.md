@@ -9,8 +9,10 @@
   - Unix shell commands for Node.js
 - [winston](https://www.npmjs.com/package/winston)
   - A logger for just about everything.
+
 * [log4js](https://www.npmjs.com/package/log4js)
   - log4j 的 js 版本。灵活的日志管理模块
+
 - [async](https://www.npmjs.com/package/async)
   - Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.
 - [neo-async](https://www.npmjs.com/package/neo-async) （来自 webpack）
@@ -420,6 +422,20 @@ iterate(uris)
 
   - Recursively assign default properties. Lightweight and Fast!
   - 递归设置默认值
+
+* [schema-utils](https://www.npmjs.com/package/schema-utils)
+
+  - webpack 用于校验 loader 和 plugin 的 options 参数
+
+* [concurrently](https://www.npmjs.com/package/concurrently)
+
+  - 同步运行多个程序
+
+## 一些不那么高的但比较有用的模块
+
+* [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
+
+  - 强制跳转到 https 协议
 
 ## 一些有趣的 lib
 
