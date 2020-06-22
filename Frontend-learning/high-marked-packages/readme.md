@@ -92,7 +92,20 @@
 
   - 同 chalk，也是在命令行输出多种颜色的字体
 
-- [minimist](https://www.npmjs.com/package/minimist)
+- [consola](https://www.npmjs.com/package/consola)
+  - Elegant Console Logger for Node.js and Browser
+    - Easy to use
+    - Fancy output with fallback for minimal environments
+    - Pluggable reporters
+    - Consistent command line interface (CLI) experience
+    - Tag support
+    - Redirect console and stdout/stderr to the consola and easily restore redirect.
+    - Browser support
+    - Pause/Resume support
+    - Mocking support
+    - Spam prevention by throttling logs
+
+* [minimist](https://www.npmjs.com/package/minimist)
   - parse argument options。即解析命令行参数
   ```sh
     $ node example/parse.js -x 3 -y 4 -n5 -abc --beep=boop foo bar baz
@@ -107,19 +120,19 @@
       c: true,
       beep: 'boop' }
   ```
-- [Commander.js](https://www.npmjs.com/package/commander)
+* [Commander.js](https://www.npmjs.com/package/commander)
   - node.js 命令行界面的完整解决方案，受 Ruby commander 启发。
-- [yargs](https://www.npmjs.com/package/yargs)
+* [yargs](https://www.npmjs.com/package/yargs)
   - 同 minimist 和 commander 一样，也是命令行解析工具
-- [nopt](https://www.npmjs.com/package/nopt)
+* [nopt](https://www.npmjs.com/package/nopt)
   - 同 minimist 和 commander 一样，也是命令行解析工具
-- [Inquirer.js](https://www.npmjs.com/package/inquirer)
+* [Inquirer.js](https://www.npmjs.com/package/inquirer)
   - A collection of common interactive command line user interfaces. 常用交互式命令行用户界面的集合。
-- [ora](https://www.npmjs.com/package/ora)
+* [ora](https://www.npmjs.com/package/ora)
   - Elegant terminal spinner
-- [run-series](https://www.npmjs.com/package/run-series)
+* [run-series](https://www.npmjs.com/package/run-series)
   - npm install run-series
-- [copy-template-dir](https://www.npmjs.com/package/copy-template-dir)
+* [copy-template-dir](https://www.npmjs.com/package/copy-template-dir)
   - High throughput template dir writes. Supports variable injection using the mustache `{{ }}` syntax.
   - 高吞吐量模板目录写入。支持使用 mustache 的 `{{}}` 语法注入变量。可用于编写 cli 工具时给模板注入变量。
 
@@ -431,11 +444,31 @@ iterate(uris)
 
   - 同步运行多个程序
 
+- [pify](https://www.npmjs.com/package/pify)
+
+  - 将回调函数形式的函数转换为 promise 格式的函数，即 promisify
+
+- [upath](https://www.npmjs.com/package/upath)
+
+  - 处理路径分隔分在 windows 和 unix 上的差异
+
+- [qrcode-generator](https://www.npmjs.com/package/qrcode-generator)
+
+  - 生成二维码
+
+- [qrcode](https://www.npmjs.com/package/qrcode)
+
+  - 生成二维码/条码
+
 ## 一些不那么高的但比较有用的模块
 
-* [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
+- [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
 
   - 强制跳转到 https 协议
+
+- [browser-sync](https://www.npmjs.com/package/browser-sync)
+
+  - 在构建网站的时候同步多个页面、设备的静态资源。类似于 webpack devServer 热替换模块
 
 ## 一些有趣的 lib
 
