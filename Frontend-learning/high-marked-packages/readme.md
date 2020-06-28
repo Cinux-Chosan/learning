@@ -3,12 +3,16 @@
 - [ajv](https://www.npmjs.com/package/ajv/v/0.1.4)
   - json 模式校验，如在编译之前校验配置文件是否符合模式等
 
-## 以下来自项目 https://github.com/microsoft/TypeScript-Node-Starter.git package.json 的摘录
+<!-- ## 以下来自项目 https://github.com/microsoft/TypeScript-Node-Starter.git package.json 的摘录 -->
 
 - [shelljs](https://www.npmjs.com/package/shelljs)
   - Unix shell commands for Node.js
 - [winston](https://www.npmjs.com/package/winston)
   - A logger for just about everything.
+
+* [log4js](https://www.npmjs.com/package/log4js)
+  - log4j 的 js 版本。灵活的日志管理模块
+
 - [async](https://www.npmjs.com/package/async)
   - Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.
 - [neo-async](https://www.npmjs.com/package/neo-async) （来自 webpack）
@@ -51,7 +55,7 @@
 
   const app = express();
 
-  app.get("/user", function (req, res) {
+  app.get("/user", function(req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -60,7 +64,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function (err, res) {
+    .end(function(err, res) {
       if (err) throw err;
     });
   ```
@@ -404,8 +408,8 @@
 // RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
 new Set(
   Array.from(uris)
-    .filter((uri) => uri.startsWith("file://"))
-    .map((uri) => uri.substr("file:///".length))
+    .filter(uri => uri.startsWith("file://"))
+    .map(uri => uri.substr("file:///".length))
 );
 ```
 
@@ -414,8 +418,8 @@ new Set(
 import iterate from "iterare";
 
 iterate(uris)
-  .filter((uri) => uri.startsWith("file://"))
-  .map((uri) => uri.substr("file:///".length))
+  .filter(uri => uri.startsWith("file://"))
+  .map(uri => uri.substr("file:///".length))
   .toSet();
 ```
 
@@ -427,25 +431,44 @@ iterate(uris)
 
   - Director 是一个可用于客户端和服务端的路由工具（不过感觉很老了，虽然 star 数有 5.5k，但最后提交代码是在 2015 年）
 
-* [browser-sync](https://www.npmjs.com/package/browser-sync)
+* [defu](https://www.npmjs.com/package/defu)
 
-  - 在构建网站的时候同步多个页面、设备的静态资源。类似于 webpack devServer 热替换模块
+  - Recursively assign default properties. Lightweight and Fast!
+  - 递归设置默认值
 
-* [pify](https://www.npmjs.com/package/pify)
+* [schema-utils](https://www.npmjs.com/package/schema-utils)
+
+  - webpack 用于校验 loader 和 plugin 的 options 参数
+
+* [concurrently](https://www.npmjs.com/package/concurrently)
+
+  - 同步运行多个程序
+
+- [pify](https://www.npmjs.com/package/pify)
 
   - 将回调函数形式的函数转换为 promise 格式的函数，即 promisify
 
-* [upath](https://www.npmjs.com/package/upath)
+- [upath](https://www.npmjs.com/package/upath)
 
   - 处理路径分隔分在 windows 和 unix 上的差异
 
-* [qrcode-generator](https://www.npmjs.com/package/qrcode-generator)
+- [qrcode-generator](https://www.npmjs.com/package/qrcode-generator)
 
   - 生成二维码
 
-* [qrcode](https://www.npmjs.com/package/qrcode)
+- [qrcode](https://www.npmjs.com/package/qrcode)
 
   - 生成二维码/条码
+
+## 一些不那么高的但比较有用的模块
+
+- [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
+
+  - 强制跳转到 https 协议
+
+- [browser-sync](https://www.npmjs.com/package/browser-sync)
+
+  - 在构建网站的时候同步多个页面、设备的静态资源。类似于 webpack devServer 热替换模块
 
 ## 一些有趣的 lib
 
