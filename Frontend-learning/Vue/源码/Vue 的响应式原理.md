@@ -201,7 +201,7 @@ defineReactive(data, "children"); // 2
 
 先看 `defineReactive(data, "name")`，它会经历如下步骤：
 
-- 创建依赖管理对象 dep 用于管理 `data.name` 的依赖，和上面一样，你先假定 `dep` 就是一个数组，里面存放了依赖于 `data.name` 的属性
+- 创建依赖管理对象 dep 用于管理 `data.name` 的依赖，和上面一样，你先假定 `dep` 就是一个数组，里面存放了依赖于 `data.name` 值的
 -
 
 ## observe
