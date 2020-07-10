@@ -68,7 +68,8 @@
       if (err) throw err;
     });
   ```
-
+- [assert-plus](https://www.npmjs.com/package/assert-plus)
+  - 提供了比 node  assert 更多实用的功能，并且可以根据环境禁用
 - [concurrently](https://www.npmjs.com/package/concurrently)
   - Run multiple commands concurrently。多个任务同时运行，并可追踪其输出和执行是否成功等。
 - [ts-node](https://www.npmjs.com/package/ts-node)
