@@ -19,6 +19,8 @@
   - Neo-Async 被认为是 Async 的直接替代品，几乎完全覆盖了它的功能并且运行速度更快。
 - [bcrypt.js](https://www.npmjs.com/package/bcryptjs)
   - 不可逆加密工具，bcrypt 的 js 版本。参考 [使用 Bcrypt 对密码进行加密与解密验证](http://www.cnblogs.com/yspace/p/10105386.html)
+- [crypto-js](https://www.npmjs.com/package/crypto-js)
+  - 标准加密工具
 - [bluebird](https://www.npmjs.com/package/bluebird)
   - Bluebird is a fully featured promise library with focus on innovative features and performance
 - [dotenv](https://www.npmjs.com/package/dotenv)
@@ -68,8 +70,9 @@
       if (err) throw err;
     });
   ```
+
 - [assert-plus](https://www.npmjs.com/package/assert-plus)
-  - 提供了比 node  assert 更多实用的功能，并且可以根据环境禁用
+  - 提供了比 node assert 更多实用的功能，并且可以根据环境禁用
 - [concurrently](https://www.npmjs.com/package/concurrently)
   - Run multiple commands concurrently。多个任务同时运行，并可追踪其输出和执行是否成功等。
 - [ts-node](https://www.npmjs.com/package/ts-node)
@@ -461,6 +464,13 @@ iterate(uris)
 
   - 生成二维码/条码
 
+- [hash-sum](https://www.npmjs.com/package/hash-sum)
+
+  - hash 生成器，可以用于对象等。
+
+- [table](https://www.npmjs.com/package/table)
+  - 将数据格式化为字符串表格，非常适合在控制台输出表格
+
 ## 一些不那么高的但比较有用的模块
 
 - [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
@@ -470,6 +480,9 @@ iterate(uris)
 - [browser-sync](https://www.npmjs.com/package/browser-sync)
 
   - 在构建网站的时候同步多个页面、设备的静态资源。类似于 webpack devServer 热替换模块
+
+- [configstore](https://www.npmjs.com/package/configstore)
+  - 存放和加载用户信息而不用关心具体存放在什么位置
 
 ## 一些有趣的 lib
 
