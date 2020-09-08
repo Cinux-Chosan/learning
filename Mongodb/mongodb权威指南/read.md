@@ -48,7 +48,7 @@ db.user.update({name: 'chosan'}, { $pull: { faverates: 'eating' }})
 
 - 基于数组下标的修改：数组下标从 0 开始，因此可以使用 `db.user.update({ "name": "chosan" }, { $set: { "comments.1.text": "How are you!" }})`
 
-- 基于查询结果的下标修改：很多情况下不查询文档根本不知道要对第几个元素进行修改，因此可以使用定位操作符 `$`，用来定位查询文档已经匹配的数组元素。
+- 基于查询结果的下标修改：很多情况下不查询文档根本不知道要对第几个元素进行修改，因此可以使用定位操作符 `$`，用来定位查询文档已经匹配的数组元素。但 `$` 只匹配第一项
 
 ```js
 db.user.update({ "comments.text": "How are you!" }, { $set: { "comments.$.text": "chosan" }}) // 修改 comments 数组中 text 为 "How are you!" 的元素的 text 值
