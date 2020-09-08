@@ -55,7 +55,7 @@
 
   const app = express();
 
-  app.get("/user", function(req, res) {
+  app.get("/user", function (req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -64,7 +64,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function(err, res) {
+    .end(function (err, res) {
       if (err) throw err;
     });
   ```
@@ -408,8 +408,8 @@
 // RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
 new Set(
   Array.from(uris)
-    .filter(uri => uri.startsWith("file://"))
-    .map(uri => uri.substr("file:///".length))
+    .filter((uri) => uri.startsWith("file://"))
+    .map((uri) => uri.substr("file:///".length))
 );
 ```
 
@@ -418,8 +418,8 @@ new Set(
 import iterate from "iterare";
 
 iterate(uris)
-  .filter(uri => uri.startsWith("file://"))
-  .map(uri => uri.substr("file:///".length))
+  .filter((uri) => uri.startsWith("file://"))
+  .map((uri) => uri.substr("file:///".length))
   .toSet();
 ```
 
@@ -460,6 +460,9 @@ iterate(uris)
 
   - 生成二维码/条码
 
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
+  - 密码加密库
+
 ## 一些不那么高的但比较有用的模块
 
 - [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
@@ -489,3 +492,6 @@ iterate(uris)
 - L2Dwidget
 
   - 给你的网站领养一只喵喵~
+
+- [autocannon](https://www.npmjs.com/package/autocannon)
+  - 接口压力测试
