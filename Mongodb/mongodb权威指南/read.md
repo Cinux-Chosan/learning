@@ -95,3 +95,55 @@ db.users.find({ id_num: { $not: { $mod: [5, 1] } } }); // 返回"id_num"为2、3
 ```js
 db.user.find({ info: { $in: [null], $exsists: true } });
 ```
+
+### 数组查询
+
+- `$all`：通过多个元素来匹配数组，即希望当前元素作为数组元素的子集，即全部包含
+
+```js
+db.user.find({ fruit: { $all: ["apple", "peach"] } }); // 匹配 fruit 中包含 apple 和 peach 的元素
+```
+
+- 下标匹配
+
+```js
+db.user.find({ "fruit.2": "peach" } }); // 匹配 fruit 中第三个元素时 peach 的项
+```
+
+- `$size`：匹配数组长度
+
+```js
+db.user.find({ fruit: { $size: 3 } } }); // 匹配 fruit 长度为 3 的项
+```
+
+- `$slice`：截取数组，但值得注意的是除非特别声明，否则使用 `$slice` 时除了返回查询的键，还会返回文档中其他所有的键。
+
+```js
+db.user.find(criteria, { comments: { $slice: 10 } }); // 前十条
+db.user.find(criteria, { comments: { $slice: -10 } }); // 后十条
+db.user.find(criteria, { comments: { $slice: [20, 10] } }); // 从 21 - 30
+```
+
+- `$`：在不知道下标的情况下，使用 `$` 可以表示匹配中的元素。
+
+```js
+db.user.find({ "comments.text": "Hello, Chosan!" }, { "comments.$": 1 }); // 返回 comments 数组，只包含 text 为 "Hello, Chosan!" 的数组项而不返回其他数组元素
+```
+
+- `$elemMatch`：匹配数组中的每一项
+
+```js
+// 会查出 x: 15， 也会查出 x: [5, 25]，因为如果 x 是数组，则只要其中任意一个元素满足条件，即认为满足匹配条件
+db.user.find({ x: { $gt: 10, $lt: 20 } });
+// $elemMatch 表示每个元素都要匹配条件，但是 $elemMatch 不会匹配数组，因此不会匹配出 x: 15 这样的文档
+db.user.find({ x: { $elemMatch: { $gt: 10, $lt: 20 } } });
+```
+
+- `.`：子文档查询，通过字段嵌套来达到子文档查询的效果，如：
+
+```js
+// { name: { first: "Zhang", last: "San", email: "123@163.com" } }
+db.user.find({ "name.first": "Zhang", "name.last": "San" }); // 可以查询出来
+db.user.find({ name: { first: "Zhang", last: "San", email: "123@163.com" } }); // 可以查询出来
+db.user.find({ name: { first: "Zhang", last: "San" } }); // 不能查询出来！！！ 因为内嵌文档的匹配必须整个文档完全匹配，这里少了 email 字段。
+```
