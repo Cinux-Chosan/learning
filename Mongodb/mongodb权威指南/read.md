@@ -95,3 +95,5 @@ db.users.find({ id_num: { $not: { $mod: [5, 1] } } }); // 返回"id_num"为2、3
 ```js
 db.user.find({ info: { $in: [null], $exsists: true } });
 ```
+
+### 数组查询
