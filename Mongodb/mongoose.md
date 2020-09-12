@@ -17,8 +17,8 @@ const blogSchema = new Schema({
   hidden: Boolean,
   meta: {
     votes: Number,
-    favs: Number
-  }
+    favs: Number,
+  },
 });
 ```
 
@@ -79,7 +79,7 @@ doc._id instanceof mongoose.Types.ObjectId; // true
 const animalSchema = new Schema({ name: String, type: String });
 
 // 通过模式的 methods 给文档添加实例方法
-animalSchema.methods.findSimilarTypes = function(cb) {
+animalSchema.methods.findSimilarTypes = function (cb) {
   return mongoose.model("Animal").find({ type: this.type }, cb);
 };
 
@@ -101,11 +101,11 @@ dog.findSimilarTypes((err, dogs) => {
 
 ```js
 // 将函数添加到对应模式的 statics 对象中
-animalSchema.statics.findByName = function(name) {
+animalSchema.statics.findByName = function (name) {
   return this.find({ name: new RegExp(name, "i") });
 };
 // 或者通过对应模式的 static() 方法添加
-animalSchema.static("findByBreed", function(breed) {
+animalSchema.static("findByBreed", function (breed) {
   return this.find({ breed });
 });
 
@@ -121,7 +121,7 @@ animals = animals.concat(await Animal.findByBreed("Poodle"));
 查询函数就像是实例方法，但是它是用于扩展 mongoose 查询的。
 
 ```js
-animalSchema.query.byName = function(name) {
+animalSchema.query.byName = function (name) {
   return this.where({ name: new RegExp(name, "i") });
 };
 
@@ -155,8 +155,8 @@ Animal.findOne()
 const personSchema = new Schema({
   name: {
     first: String,
-    last: String
-  }
+    last: String,
+  },
 });
 
 // compile our model
@@ -164,14 +164,14 @@ const Person = mongoose.model("Person", personSchema);
 
 // create a document
 const axl = new Person({
-  name: { first: "Axl", last: "Rose" }
+  name: { first: "Axl", last: "Rose" },
 });
 
 // 不使用虚拟节点打印全名
 console.log(axl.name.first + " " + axl.name.last); // Axl Rose
 
 // 使用虚拟节点打印全名
-personSchema.virtual("fullName").get(function() {
+personSchema.virtual("fullName").get(function () {
   return this.name.first + " " + this.name.last;
 });
 
@@ -191,8 +191,8 @@ const personSchema = new Schema({
   n: {
     type: String,
     // 现在读取 name 会从 n 取值，对 n 赋值也会修改 name 的值
-    alias: "name"
-  }
+    alias: "name",
+  },
 });
 
 // 修改 name 的值会传递给 n
@@ -212,8 +212,8 @@ const childSchema = new Schema(
   {
     n: {
       type: String,
-      alias: "name"
-    }
+      alias: "name",
+    },
   },
   { _id: false }
 );
@@ -225,9 +225,9 @@ const parentSchema = new Schema({
     f: {
       type: String,
       // 内联形式的嵌套别名需要书写字段的完整路径
-      alias: "name.first"
-    }
-  }
+      alias: "name.first",
+    },
+  },
 });
 ```
 
@@ -287,13 +287,13 @@ var schema = new Schema({
   ofArrays: [[]],
   ofArrayOfNumbers: [[Number]],
   nested: {
-    stuff: { type: String, lowercase: true, trim: true }
+    stuff: { type: String, lowercase: true, trim: true },
   },
   map: Map,
   mapOfString: {
     type: Map,
-    of: String
-  }
+    of: String,
+  },
 });
 
 // example use
@@ -330,8 +330,8 @@ const schema = new Schema({
   name: { type: String },
   nested: {
     firstName: { type: String },
-    lastName: { type: String }
-  }
+    lastName: { type: String },
+  },
 });
 ```
 
@@ -342,8 +342,8 @@ const holdingSchema = new Schema({
   asset: {
     // 让 Mongoose 知道 asset 是一个对象，它有 asset.type 和 asset.ticker 两个字段
     type: { type: String },
-    ticker: String
-  }
+    ticker: String,
+  },
 });
 ```
 
@@ -353,12 +353,12 @@ const holdingSchema = new Schema({
 // 两种定义字段的方式：后者可以在 test 中添加更多元信息，如 lowercase: true 表示总是需要转换成小写
 
 var schema1 = new Schema({
-  test: String // `test` is a path of type String
+  test: String, // `test` is a path of type String
 });
 
 var schema2 = new Schema({
   // The `test` object contains the "SchemaType options"
-  test: { type: String } // `test` is a path of type string
+  test: { type: String }, // `test` is a path of type string
 });
 ```
 
@@ -378,10 +378,10 @@ SchemaType 中有以下元字段：
 const numberSchema = new Schema({
   integerOnly: {
     type: Number,
-    get: v => Math.round(v),
-    set: v => Math.round(v),
-    alias: "i"
-  }
+    get: (v) => Math.round(v),
+    set: (v) => Math.round(v),
+    alias: "i",
+  },
 });
 
 const Number = mongoose.model("Number", numberSchema);
@@ -406,9 +406,9 @@ var schema2 = new Schema({
   test: {
     type: String,
     index: true,
-    unique: true // Unique index. If you specify `unique: true`
+    unique: true, // Unique index. If you specify `unique: true`
     // specifying `index: true` is optional if you do `unique: true`
-  }
+  },
 });
 ```
 
@@ -482,16 +482,16 @@ const Any = new Schema({ any: mongoose.Mixed });
 // make the path mixed.
 const Any = new Schema({
   any: {
-    type: { foo: String }
-  } // "any" will be Mixed - everything inside is ignored.
+    type: { foo: String },
+  }, // "any" will be Mixed - everything inside is ignored.
 });
 // However, as of Mongoose 5.8.0, this behavior can be overridden with typePojoToMixed.
 // In that case, it will create a single nested subdocument type instead.
 const Any = new Schema(
   {
     any: {
-      type: { foo: String }
-    } // "any" will be a single nested subdocument.
+      type: { foo: String },
+    }, // "any" will be a single nested subdocument.
   },
   { typePojoToMixed: false }
 );
@@ -525,7 +525,7 @@ var ToyBoxSchema = new Schema({
   toys: [ToySchema],
   buffers: [Buffer],
   strings: [String],
-  numbers: [Number]
+  numbers: [Number],
   // ... etc
 });
 ```
@@ -556,8 +556,8 @@ const userSchema = new Schema({
   // 通过 of 来指定 Map 值的类型
   socialMediaHandles: {
     type: Map,
-    of: String
-  }
+    of: String,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -566,8 +566,8 @@ console.log(
   new User({
     socialMediaHandles: {
       github: "vkarpov15",
-      twitter: "@code_barbarian"
-    }
+      twitter: "@code_barbarian",
+    },
   }).socialMediaHandles
 );
 ```
@@ -576,7 +576,7 @@ console.log(
 
 ```js
 const user = new User({
-  socialMediaHandles: {}
+  socialMediaHandles: {},
 });
 
 // Good
@@ -612,8 +612,8 @@ const userSchema = new Schema({
   name: String,
   picture: {
     type: String,
-    get: v => `${root}${v}`
-  }
+    get: (v) => `${root}${v}`,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -627,14 +627,14 @@ doc.toObject({ getters: false }).picture; // '/123.png'
 
 ```js
 const schema = new Schema({
-  arr: [{ url: String }]
+  arr: [{ url: String }],
 });
 
 const root = "https://s3.amazonaws.com/mybucket";
 
 // 不用这么做！
-schema.path("arr").get(v => {
-  return v.map(el => Object.assign(el, { url: root + el.url }));
+schema.path("arr").get((v) => {
+  return v.map((el) => Object.assign(el, { url: root + el.url }));
 });
 
 // Later
@@ -642,7 +642,7 @@ doc.arr.push({ key: String });
 doc.arr[0]; // 'undefined' because every `doc.arr` creates a new array!
 
 // Good, do this instead of declaring a getter on `arr`
-schema.path("arr.0.url").get(v => `${root}${v}`);
+schema.path("arr.0.url").get((v) => `${root}${v}`);
 ```
 
 总之，声明数组或嵌套文档的 getter 需要特别小心！
@@ -707,20 +707,20 @@ var Tank = mongoose.model("Tank", schema);
 var Tank = mongoose.model("Tank", yourSchema);
 
 var small = new Tank({ size: "small" });
-small.save(function(err) {
+small.save(function (err) {
   if (err) return handleError(err);
   // saved!
 });
 
 // 或者通过下面的方式
 
-Tank.create({ size: "small" }, function(err, small) {
+Tank.create({ size: "small" }, function (err, small) {
   if (err) return handleError(err);
   // saved!
 });
 
 // 插入多个数据
-Tank.insertMany([{ size: "small" }], function(err) {});
+Tank.insertMany([{ size: "small" }], function (err) {});
 ```
 
 注意，在 model 使用的数据库连接尚未打开之前，所有创建和删除操作都不会成功。每个 model 都有一个关联的数据库连接实例。当你使用 `mongoose.model()` 的时候，该 model 会自动使用 mongoose 默认连接实例。
@@ -732,10 +732,7 @@ Tank.insertMany([{ size: "small" }], function(err) {});
 可以结合 MongoDB 丰富的查询语法，使用每个 model 的 `find`、`findById`、`findOne`或者 `where` 这些静态方法来查询文档。
 
 ```js
-Tank.find({ size: "small" })
-  .where("createdDate")
-  .gt(oneYearAgo)
-  .exec(callback);
+Tank.find({ size: "small" }).where("createdDate").gt(oneYearAgo).exec(callback);
 ```
 
 ### 删除
@@ -743,7 +740,7 @@ Tank.find({ size: "small" })
 使用静态方法 `deleteOne()` 和 `deleteMany()` 来移除文档。
 
 ```js
-Tank.deleteOne({ size: "large" }, function(err) {
+Tank.deleteOne({ size: "large" }, function (err) {
   if (err) return handleError(err);
   // deleted at most one tank document
 });
@@ -754,7 +751,7 @@ Tank.deleteOne({ size: "large" }, function(err) {
 每个 model 都有自己的 `update` 方法来修改数据库的文档而不用返回到应用程序中。
 
 ```js
-Tank.updateOne({ size: "large" }, { name: "T-90" }, function(err, res) {
+Tank.updateOne({ size: "large" }, { name: "T-90" }, function (err, res) {
   // Updated at most one doc, `res.modifiedCount` contains the number
   // of docs that MongoDB updated
 });
@@ -772,12 +769,12 @@ Change Streams 提供了一种监听所有插入和更新操作的途径。
 async function run() {
   // 创建一个 model
   const personSchema = new mongoose.Schema({
-    name: String
+    name: String,
   });
   const Person = mongoose.model("Person", personSchema, "Person");
 
   // 创建一个 change stream。当数据库发生改变的时候会触发 'change' 事件
-  Person.watch().on("change", data => console.log(new Date(), data));
+  Person.watch().on("change", (data) => console.log(new Date(), data));
 
   // 插入一条文档会触发上面定义的 change stream
   console.log(new Date(), "Inserting doc");
@@ -786,3 +783,97 @@ async function run() {
 ```
 
 ## `[文档（document）](https://mongoosejs.com/docs/documents.html)`
+
+在 Mongoose 中 Document 和 Model 是不同的类。Model 是 Document 类的子类。当你使用 Model 构造函数的时候，即创建了一个文档（document）。
+
+```js
+const MyModel = mongoose.model("Test", new Schema({ name: String }));
+const doc = new MyModel();
+
+doc instanceof MyModel; // true
+doc instanceof mongoose.Model; // true
+doc instanceof mongoose.Document; // true
+```
+
+在 Mongoose 中，一个 “文档” 通常指一个 model 的实例。你不应该绕过 model 直接创建 Document 类的实例。
+
+### 检索
+
+当你在 Mongoose 中使用类似于 `findOne()` 之类的方法加载文档时，你就得到了一个 Mongoose 中的文档。
+
+```js
+const doc = await MyModel.findOne();
+
+doc instanceof MyModel; // true
+doc instanceof mongoose.Model; // true
+doc instanceof mongoose.Document; // true
+```
+
+### 更新
+
+Mongoose 文档可以追踪字段的改变。你可以直接使用 JavaScript 赋值语句直接对一个文档进行修改，Mongoose 会将其转换为 MongoDB update 操作符。
+
+```js
+doc.name = "foo";
+
+// Mongoose 会发送一个 `updateOne({ _id: doc._id }, { $set: { name: 'foo' } })` 到 MongoDB
+// 这说明 Mongoose 将上面的赋值操作转换为了 MongoDB 操作符
+await doc.save();
+```
+
+在 Mongoose 中通常通过 `save()` 方法来更新文档。使用 `save()` 会对文档进行完整的验证以及应用中间件。
+
+当 `save()` 不能满足需要时，也可以使用 MongoDB 的 update 方法，但是这样的话 Mongoose 只能做数据转换、应用中间件以及做有限的验证。
+
+```js
+// Update all documents in the `mymodels` collection
+await MyModel.updateMany({}, { $set: { name: "foo" } });
+```
+
+注意，`update()`、`unpdateMany()` 以及 `findOneAndUpdate()` 等不会执行 `save()` 中间件。如果需要执行 `save` 的中间件需要先查询然后调用 `save()`。
+
+### 校验
+
+在 save 之前，文档会被类型转换和校验。Mongoose 首先会将字段类型转换为指定的类型，然后对它们进行校验。在 Mongoose 内部实现中，保存前会调用文档的 `validate()` 方法。
+
+```js
+const schema = new Schema({ name: String, age: { type: Number, min: 0 } });
+const Person = mongoose.model("Person", schema);
+
+let p = new Person({ name: "foo", age: "bar" });
+// Cast to Number failed for value "bar" at path "age"
+await p.validate();
+
+let p2 = new Person({ name: "foo", age: -1 });
+// Path `age` (-1) is less than minimum allowed value (0).
+await p2.validate();
+```
+
+Mongoose 也支持使用 `runValidators` 选项来做有限的校验。默认情况下，Mongoose 会将 `findOne()`、`updateOne()` 的参数进行类型转换，但并不会做校验。因此你需要通过 `runValidators: true` 来开启校验。
+
+```js
+// Cast to number failed for value "bar" at path "age"
+await Person.updateOne({}, { age: "bar" });
+
+// Path `age` (-1) is less than minimum allowed value (0).
+await Person.updateOne({}, { age: -1 }, { runValidators: true });
+```
+
+### 重写文档
+
+Mongoose 中有两种方式可以重写文档，即替换整个文档的所有字段。
+
+- 调用 `Document#overwrite()` 方法，然后调用 `save()`
+- 使用 `Model.replaceOne()`
+
+```js
+const doc = await Person.findOne({ _id });
+
+// 方法 1
+// 仅设置 `name` 字段，并消除所有其它字段
+doc.overwrite({ name: "Jean-Luc Picard" });
+await doc.save();
+
+// 方法 2
+await Person.replaceOne({ _id }, { name: 'Jean-Luc Picard' });
+```
