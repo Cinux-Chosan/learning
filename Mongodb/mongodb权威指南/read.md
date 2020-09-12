@@ -159,5 +159,22 @@ db.user.find({ name: { first: "Zhang", last: "San" } }); // 不能查询出来�
 - 限制（limiting）
 - 跳过（skipping）
 
-
 - `$match`：对文档进行筛选，可以使用所有常规的查询操作符，如 `$gt`、`$lt`、`$in` 等。
+- `$project`：对字段进行筛选，可以指定返回哪些字段，也可以通过 `{ newField: "$fieldName" }` 的方式重命名字段
+
+```js
+db.user.aggregate({ $project: { userId: "$_id", _id: 0 } }); // 使用 _id 的值作为 userId 的值，并且过滤掉 _id
+```
+
+### 表达式
+
+- `$add`
+- `$subtract`
+- `$multiply`
+- `$divide`
+- `$mod`
+
+```js
+db.user.aggregate({ $project: { total: { $add: ["$salary", "$bonus"] } } });
+db.user.aggregate({ $project: { total: { $subtract: [{ $add: ["$salary", "$bonus"] }, "$tax"] } } });
+```
