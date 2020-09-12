@@ -464,17 +464,16 @@ iterate(uris)
 
   - 生成二维码/条码
 
-<<<<<<< HEAD
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
+
   - 密码加密库
-=======
+  
 - [hash-sum](https://www.npmjs.com/package/hash-sum)
 
   - hash 生成器，可以用于对象等。
 
 - [table](https://www.npmjs.com/package/table)
   - 将数据格式化为字符串表格，非常适合在控制台输出表格
->>>>>>> fc297bd88c35af04d71ac7f4809da1bced97ae77
 
 ## 一些不那么高的但比较有用的模块
 
