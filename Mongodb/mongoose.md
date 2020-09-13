@@ -1152,3 +1152,381 @@ const schema = new Schema(
 ```
 
 总之，Mongoose 会将数组中的对象转换为 schema，但是单独的对象不会被转换为 schema。
+
+## 查询（Queries）
+
+Mongoose Model 提供了很多静态方法进行 CRUD 操作。每个方法都返回一个 Mongoose Query 对象。
+
+Mongoose query 有两种执行方式：
+
+- 提供 callback，Mongoose 会将结果填充到 callback 中
+- 使用 `.then` 方式的 promise
+
+### 简介
+
+#### 执行
+
+当使用 callback 方式执行 query 时，语法和 MongoDB shell 语法相同：
+
+```js
+var Person = mongoose.model("Person", yourSchema);
+
+// 查找每个名字后半部分为 'Ghost' 的人，返回其 `name` 和 `occupation` 字段
+Person.findOne({ "name.last": "Ghost" }, "name occupation", function (err, person) {
+  if (err) return handleError(err);
+  // 打印 "Space Ghost is a talk show host".
+  console.log("%s %s is a %s.", person.name.first, person.name.last, person.occupation);
+});
+```
+
+通过 `callback(error, result)` 方式调用 query：
+
+- 如果产生错误，`error` 会包含错误信息，`result` 为 `null`
+- 如果没有错误，`error` 为 `null`， `result` 包含 query 查询结果。
+
+```js
+// 查找每个 `name.last` 为 'Ghost' 的人
+var query = Person.findOne({ "name.last": "Ghost" });
+
+// 指定返回 `name` 和 `occupation` 字段
+query.select("name occupation");
+
+// 执行 query
+query.exec(function (err, person) {
+  if (err) return handleError(err);
+  // 输出 "Space Ghost is a talk show host."
+  console.log("%s %s is a %s.", person.name.first, person.name.last, person.occupation);
+});
+```
+
+上例中，query 就是一个 Query 类型。Query 可以使用链式语法，这样可以不用指定一个完整的 JSON 对象：
+
+```js
+// 直接指定 JSON 对象的方式
+Person.find({
+  occupation: /host/,
+  "name.last": "Ghost",
+  age: { $gt: 17, $lt: 66 },
+  likes: { $in: ["vaporizing", "talking"] },
+})
+  .limit(10)
+  .sort({ occupation: -1 })
+  .select({ name: 1, occupation: 1 })
+  .exec(callback);
+
+// 使用 Query 链式语法
+Person.find({ occupation: /host/ })
+  .where("name.last")
+  .equals("Ghost")
+  .where("age")
+  .gt(17)
+  .lt(66)
+  .where("likes")
+  .in(["vaporizing", "talking"])
+  .limit(10)
+  .sort("-occupation")
+  .select("name occupation")
+  .exec(callback);
+```
+
+#### Query 不是 Promise
+
+Mongoose query 不是 promise，它们只是具有 `.then` 方法，这样对 [`co`](https://www.npmjs.com/package/co) 和 `async/await` 会很方便。与 promise 不同的是，调用 query 的 `.then()` 方法会导致 query 执行多次。
+
+例如，下面的代码会执行 3 次 `updateMany()` 方法，一次是由于 callback，另外两次是由于 `.then()`
+
+```js
+const q = MyModel.updateMany({}, { isDeleted: true }, function () {
+  console.log("Update 1");
+});
+
+q.then(() => console.log("Update 2"));
+q.then(() => console.log("Update 3"));
+```
+
+因此，不要混用 callback 和 promise 方式！
+
+#### 引用其它文档
+
+在 MongoDB 中没有 join，但有时候我们又需要引用到其他集合中的文档。这就需要用到 [`population`](https://mongoosejs.com/docs/populate.html)。参考[这里](https://mongoosejs.com/docs/api.html#query_Query-populate)
+
+#### 流式查询
+
+你可以以流的方式对 MongoDB 中的数据进行查询。在 Mongoose 中你需要调用 `Query#cursor()` 方法来返回一个 `QueryCursor`：
+
+```js
+const cursor = Person.find({ occupation: /host/ }).cursor();
+
+for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
+  console.log(doc); // 一次输出一个
+}
+
+// 或者
+for await (const doc of Person.find()) {
+  console.log(doc); // 一次输出一个
+}
+```
+
+默认情况下，MongoDB 会在 10 分钟后关闭 cursor，因此再调用 next() 会抛出类似 `MongoError: cursor id 123 not found` 这样的错误，将 `noCursorTimeout` 设置为 `true` 即可。
+
+```js
+// MongoDB won't automatically close this cursor after 10 minutes.
+const cursor = Person.find().cursor().addCursorFlag("noCursorTimeout", true);
+```
+
+但是如果 cursor 在 30 分钟内不活动，则即便是设置了 `noCursorTimeout` 也会被关闭。
+
+参考：
+
+- [cursor timeouts](https://stackoverflow.com/questions/21853178/when-a-mongodb-cursor-will-expire)
+- [session idle timeouts](https://docs.mongodb.com/manual/reference/method/cursor.noCursorTimeout/#session-idle-timeout-overrides-nocursortimeout)
+
+#### 聚合
+
+聚合可以做很多 query 也可以做的事情。例如下面展示如何使用 `aggregate` 来查找 `name.last = 'Ghost'` 的文档：
+
+```js
+const docs = await Person.aggregate([{ $match: { "name.last": "Ghost" } }]);
+```
+
+然而，可以用并不代表你应该用。通常情况下，你应该尽可能使用 query，只有在必要的时候才使用 `aggregate()`。
+
+与 query 不同，Mongoose 不会处理 aggregate 的结果，它返回的永远是普通的 JavaScript 对象（POJO），而非 Mongoose 文档。
+
+```js
+const docs = await Person.aggregate([{ $match: { "name.last": "Ghost" } }]);
+
+docs[0] instanceof mongoose.Document; // false
+```
+
+另外，与 query 的过滤不同，Mongoose 不会转换 aggregate 链。这意味着你需要自己确保传递给 aggregate 调用链的参数拥有正确的类型：
+
+```js
+const doc = await Person.findOne();
+
+const idString = doc._id.toString();
+
+// Finds the `Person`, because Mongoose casts `idString` to an ObjectId
+const queryRes = await Person.findOne({ _id: idString });
+
+// Does **not** find the `Person`, because Mongoose doesn't cast aggregation
+// pipelines.
+const aggRes = await Person.aggregate([{ $match: { _id: idString } }]);
+```
+
+### [Query Casting](https://mongoosejs.com/docs/tutorials/query_casting.html)
+
+### [How to Use findOneAndUpdate() in Mongoose](https://mongoosejs.com/docs/tutorials/findoneandupdate.html)
+
+### [Faster Mongoose Queries With Lean](https://mongoosejs.com/docs/tutorials/lean.html)
+
+## 验证
+
+在讲解验证之前，我们应该记住以下几点：
+
+- 验证定义在 SchemaType 中
+- 验证是中间件，Mongoose 默认对每个 schema 执行 `pre('save')` 来注册验证
+- 你可以通过设置 [validateBeforeSave](https://mongoosejs.com/docs/guide.html#validateBeforeSave) 选项来关闭保存前的自动校验
+- 你可以通过 `doc.validate(callback)` 或者 `doc.validateSync()` 来手动执行校验
+- 你可以通过 `doc.invalidate(...)` 手动将一个字段标记为不合法
+- 值为 `undefined` 的字段不会被校验，除非指定了 `required` 为 `true`
+- 校验是异步递归的。当你调用 `Model#save()` 方法的时候，子文档的校验也会得到执行。如果执行报错，`Model#save(callback)` 中的 callback 会收到错误
+- 可以自定义校验逻辑
+
+```js
+var schema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+});
+var Cat = db.model("Cat", schema);
+
+// This cat has no name :(
+var cat = new Cat();
+cat.save(function (error) {
+  assert.equal(error.errors["name"].message, "Path `name` is required.");
+
+  error = cat.validateSync();
+  assert.equal(error.errors["name"].message, "Path `name` is required.");
+});
+```
+
+### 内置校验器
+
+Mongoose 有一些内置校验器：
+
+- 所有的 SchemaType 都有内置 `required` 校验器，该校验器使用 SchemaType 的 `checkRequired()` 方法来检测值是否满足 required 校验器的规则。
+- Number 有 `min` 和 `max` 校验器
+- String 有 `enum`、`match`、`minlength` 和 `maxlength` 校验器
+
+每个校验器都提供了特定的规则并且可以自定义错误消息：
+
+```js
+var breakfastSchema = new Schema({
+  eggs: {
+    type: Number,
+    min: [6, "Too few eggs"],
+    max: 12,
+  },
+  bacon: {
+    type: Number,
+    required: [true, "Why no bacon?"],
+  },
+  drink: {
+    type: String,
+    enum: ["Coffee", "Tea"],
+    required: function () {
+      return this.bacon > 3;
+    },
+  },
+});
+var Breakfast = db.model("Breakfast", breakfastSchema);
+
+var badBreakfast = new Breakfast({
+  eggs: 2,
+  bacon: 0,
+  drink: "Milk",
+});
+var error = badBreakfast.validateSync();
+assert.equal(error.errors["eggs"].message, "Too few eggs");
+assert.ok(!error.errors["bacon"]);
+assert.equal(error.errors["drink"].message, "`Milk` is not a valid enum value for path `drink`.");
+
+badBreakfast.bacon = 5;
+badBreakfast.drink = null;
+
+error = badBreakfast.validateSync();
+assert.equal(error.errors["drink"].message, "Path `drink` is required.");
+
+badBreakfast.bacon = null;
+error = badBreakfast.validateSync();
+assert.equal(error.errors["bacon"].message, "Why no bacon?");
+```
+
+### `unique` 选项不是校验器
+
+大多数新手会认为 `unique` 是一个校验器，但实际上并不是。它适用于定义 [MongoDB 唯一索引](https://docs.mongodb.com/manual/core/index-unique/)的。参考 [FAQ](https://mongoosejs.com/docs/faq.html)
+
+```js
+const uniqueUsernameSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+  },
+});
+const U1 = db.model("U1", uniqueUsernameSchema);
+const U2 = db.model("U2", uniqueUsernameSchema);
+
+const dup = [{ username: "Val" }, { username: "Val" }];
+U1.create(dup, (err) => {
+  // Race condition! This may save successfully, depending on whether
+  // MongoDB built the index before writing the 2 docs.
+});
+
+// You need to wait for Mongoose to finish building the `unique`
+// index before writing. You only need to build indexes once for
+// a given collection, so you normally don't need to do this
+// in production. But, if you drop the database between tests,
+// you will need to use `init()` to wait for the index build to finish.
+U2.init()
+  .then(() => U2.create(dup))
+  .catch((error) => {
+    // Will error, but will *not* be a mongoose validation error, it will be
+    // a duplicate key error.
+    // See: https://masteringjs.io/tutorials/mongoose/e11000-duplicate-key
+    assert.ok(error);
+    assert.ok(!error.errors);
+    assert.ok(error.message.indexOf("duplicate key error") !== -1);
+  });
+```
+
+### 自定义校验器
+
+如果内置校验器无法满足需要，可以自定义校验器，通过传递一个包含 `validator` 的 `validate` 对象即可。更多细节参考 [SchemaType#validate() API docs](https://mongoosejs.com/docs/api.html#schematype_SchemaType-validate)
+
+```js
+var userSchema = new Schema({
+  phone: {
+    type: String,
+    validate: {
+      validator: function (v) {
+        return /\d{3}-\d{3}-\d{4}/.test(v);
+      },
+      message: (props) => `${props.value} is not a valid phone number!`,
+    },
+    required: [true, "User phone number required"],
+  },
+});
+
+var User = db.model("user", userSchema);
+var user = new User();
+var error;
+
+user.phone = "555.0123";
+error = user.validateSync();
+assert.equal(error.errors["phone"].message, "555.0123 is not a valid phone number!");
+
+user.phone = "";
+error = user.validateSync();
+assert.equal(error.errors["phone"].message, "User phone number required");
+
+user.phone = "201-555-0123";
+// Validation succeeds! Phone number is defined
+// and fits `DDD-DDD-DDDD`
+error = user.validateSync();
+assert.equal(error, null);
+```
+
+### 异步自定义校验器
+
+自定义校验器也可以是异步的。如果校验器函数返回一个 promise，Mongoose 会等待该 promise 完成。如果 promise 变为拒绝态或者完成后的值为 `false`，则 Mongoose 会认为校验出错。
+
+```js
+const userSchema = new Schema({
+  name: {
+    type: String,
+    // You can also make a validator async by returning a promise.
+    validate: () => Promise.reject(new Error("Oops!")),
+  },
+  email: {
+    type: String,
+    // There are two ways for an promise-based async validator to fail:
+    // 1) If the promise rejects, Mongoose assumes the validator failed with the given error.
+    // 2) If the promise resolves to `false`, Mongoose assumes the validator failed and creates an error with the given `message`.
+    validate: {
+      validator: () => Promise.resolve(false),
+      message: "Email validation failed",
+    },
+  },
+});
+
+const User = db.model("User", userSchema);
+const user = new User();
+
+user.email = "test@test.co";
+user.name = "test";
+user.validate().catch((error) => {
+  assert.ok(error);
+  assert.equal(error.errors["name"].message, "Oops!");
+  assert.equal(error.errors["email"].message, "Email validation failed");
+});
+```
+
+### [Validation Errors](https://mongoosejs.com/docs/validation.html#validation-errors)
+
+### [Cast Errors](https://mongoosejs.com/docs/validation.html#cast-errors)
+
+### [Required Validators On Nested Objects](https://mongoosejs.com/docs/validation.html#required-validators-on-nested-objects)
+
+### [Update Validators](https://mongoosejs.com/docs/validation.html#update-validators)
+
+### [Update Validators and this](https://mongoosejs.com/docs/validation.html#update-validators-and-this)
+
+### [The context option](https://mongoosejs.com/docs/validation.html#the-context-option)
+
+### [Update Validators Only Run On Updated Paths](https://mongoosejs.com/docs/validation.html#update-validators-only-run-on-updated-paths)
+
+### [Update Validators Only Run For Some Operations](https://mongoosejs.com/docs/validation.html#update-validators-only-run-for-some-operations)
+
+### [On $push and $addToSet](https://mongoosejs.com/docs/validation.html#on-$push-and-$addtoset)
