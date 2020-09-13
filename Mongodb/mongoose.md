@@ -875,5 +875,280 @@ doc.overwrite({ name: "Jean-Luc Picard" });
 await doc.save();
 
 // 方法 2
-await Person.replaceOne({ _id }, { name: 'Jean-Luc Picard' });
+await Person.replaceOne({ _id }, { name: "Jean-Luc Picard" });
 ```
+
+## 子文档
+
+子文档即嵌套在文档中的文档。在 Mongoose 中，这意味着能够将 schema 嵌套在其它 schema 里面，嵌套的 schema 可以应用中间件、自定义校验逻辑、虚拟节点等其它顶级 schema 可用的特性。
+
+```js
+var childSchema = new Schema({ name: "string" });
+
+var parentSchema = new Schema({
+  // 子文档数组
+  children: [childSchema],
+  // 单独的嵌套子文档。 注意，独立的嵌套子文档需要 mongoose >= 4.2.0
+  child: childSchema,
+});
+```
+
+子文档与一般文档最主要的区别是子文档不能单独保存，它只能跟随所依附的顶层文档一起保存。
+
+```js
+var Parent = mongoose.model("Parent", parentSchema);
+var parent = new Parent({ children: [{ name: "Matt" }, { name: "Sarah" }] });
+parent.children[0].name = "Matthew";
+
+// `parent.children[0].save()` 是一个空函数，它只会触发中间件，但并不会实际保存子文档。你需要调用顶级文档的 save() 方法
+parent.save(callback);
+```
+
+Aside from code reuse, one important reason to use subdocuments is to create a path where there would otherwise not be one to allow for validation over a group of fields (e.g. dateRange.fromDate <= dateRange.toDate).
+
+子文档也可以有自己的 `save()` 和 `validate()` 中间件。调用父级的 `save()` 会触发所有子文档的 `save()`，`validate()` 也是一样。
+
+```js
+childSchema.pre("save", function (next) {
+  if ("invalid" == this.name) {
+    return next(new Error("#sadpanda"));
+  }
+  next();
+});
+
+var parent = new Parent({ children: [{ name: "invalid" }] });
+parent.save(function (err) {
+  console.log(err.message); // #sadpanda
+});
+```
+
+子文档的 `pre('save')` 和 `pre('validate')` 会在顶级文档的 `pre('validate')` 之后以及顶级文档的 `pre('save')` 之前调用。因为内置中间件就是先校验后 `save()`
+
+```js
+// 下例会按序输出 1-4
+var childSchema = new mongoose.Schema({ name: "string" });
+
+childSchema.pre("validate", function (next) {
+  console.log("2");
+  next();
+});
+
+childSchema.pre("save", function (next) {
+  console.log("3");
+  next();
+});
+
+var parentSchema = new mongoose.Schema({
+  child: childSchema,
+});
+
+parentSchema.pre("validate", function (next) {
+  console.log("1");
+  next();
+});
+
+parentSchema.pre("save", function (next) {
+  console.log("4");
+  next();
+});
+```
+
+### 子文档 vs 嵌套字段
+
+在 Mongoose 中，子文档和嵌套字段是不同的，以下就是这两种模式：
+
+```js
+// Subdocument
+const subdocumentSchema = new mongoose.Schema({
+  child: new mongoose.Schema({ name: String, age: Number }),
+});
+const Subdoc = mongoose.model("Subdoc", subdocumentSchema);
+
+// Nested path
+const nestedSchema = new mongoose.Schema({
+  child: { name: String, age: Number },
+});
+const Nested = mongoose.model("Nested", nestedSchema);
+```
+
+这两个看起来很相似，在 MongoDB 中的结构也是一样的，不过在 Mongoose 中它们有所不同：
+
+- 嵌套字段永远不会存在 child === undefined 的情况，即便是你没有单独设置 child，也总是可以设置 `child` 的属性而不会报 undefined 错误。但是子文档的实例就可以出现 child === undefined 的情况。
+- 在 Mongoose 5 中，`Document#set()` 会合并嵌套字段，但是如果是子文档，则会覆盖。
+
+```js
+const doc1 = new Subdoc({});
+doc1.child === undefined; // true
+doc1.child.name = "test"; // Throws TypeError: cannot read property...
+
+const doc2 = new Nested({});
+doc2.child === undefined; // false
+console.log(doc2.child); // Prints 'MongooseDocument { undefined }'
+doc2.child.name = "test"; // Works
+```
+
+```js
+const doc1 = new Subdoc({ child: { name: "Luke", age: 19 } });
+doc1.set({ child: { age: 21 } });
+doc1.child; // { age: 21 }
+
+const doc2 = new Nested({ child: { name: "Luke", age: 19 } });
+doc2.set({ child: { age: 21 } });
+doc2.child; // { name: Luke, age: 21 }
+```
+
+### 查找子文档
+
+每个子文档默认有一个 `_id` 字段。Mongoose 文档数组有一个 `id()` 方法用于从一个文档数组中查找指定 `_id` 的文档：
+
+```js
+var doc = parent.children.id(_id);
+```
+
+### 向文档数组添加子文档
+
+Mongoose 数组的 push、unshift、addToSet 等都会首先做类型转换：
+
+```js
+var Parent = mongoose.model("Parent");
+var parent = new Parent();
+
+// create a comment
+parent.children.push({ name: "Liesl" });
+var subdoc = parent.children[0];
+console.log(subdoc); // { _id: '501d86090d371bab2c0341c5', name: 'Liesl' }
+subdoc.isNew; // true
+
+parent.save(function (err) {
+  if (err) return handleError(err);
+  console.log("Success!");
+});
+```
+
+子文档也可以直接通过 Mongoose 数组的 create 方法来创建，这样就不用手动将它添加到数组中：
+
+```js
+var newdoc = parent.children.create({ name: "Aaron" });
+```
+
+### 删除子文档
+
+每个子文档自身都有一个 `remove` 方法。
+
+对于数组中的子文档而言，这个方法相当于调用 `.pull()`。
+
+对于单个子文档而言，这个方法等同于将它设置为 `null`。
+
+```js
+// 等同于 `parent.children.pull(_id)`
+parent.children.id(_id).remove();
+// 等同于 `parent.child = null`
+parent.child.remove();
+parent.save(function (err) {
+  if (err) return handleError(err);
+  console.log("the subdocs were removed");
+});
+```
+
+### 获取子文档父级
+
+有时候你可能需要获取子文档的父级，可以通过 `parent()` 方法来获取：
+
+```js
+const schema = new Schema({
+  docArr: [{ name: String }],
+  singleNested: new Schema({ name: String }),
+});
+const Model = mongoose.model("Test", schema);
+
+const doc = new Model({
+  docArr: [{ name: "foo" }],
+  singleNested: { name: "bar" },
+});
+
+doc.singleNested.parent() === doc; // true
+doc.docArr[0].parent() === doc; // true
+```
+
+如果嵌套太深，你可以直接通过 `ownerDocument()` 方法直接获取顶层文档。
+
+```js
+const schema = new Schema({
+  level1: new Schema({
+    level2: new Schema({
+      test: String,
+    }),
+  }),
+});
+const Model = mongoose.model("Test", schema);
+
+const doc = new Model({ level1: { level2: "test" } });
+
+doc.level1.level2.parent() === doc; // false
+doc.level1.level2.parent() === doc.level1; // true
+doc.level1.level2.ownerDocument() === doc; // true
+```
+
+### 数组声明的替代写法
+
+如果创建 schema 时使用了对象数组，Mongoose 会自动将对象转换成 schema：
+
+```js
+var parentSchema = new Schema({
+  children: [{ name: "string" }],
+});
+// 等同于
+var parentSchema = new Schema({
+  children: [new Schema({ name: "string" })],
+});
+```
+
+### 单独子文档声明的替代写法
+
+与文档数组不同，Mongoose 5 不会将 schema 中的对象转换为 schema。下例中 nested 中是嵌套字段而非子文档：
+
+```js
+const schema = new Schema({
+  nested: {
+    prop: String,
+  },
+});
+```
+
+在某些时候你希望定义嵌套字段的同时定义 validator 和 getter/setter 时会出现意想不到的结果：
+
+```js
+const schema = new Schema({
+  nested: {
+    // 不要这么做，在 Mongoose 5 中这样会使得 `nested` 变成一个 mixed 字段
+    type: { prop: String },
+    required: true,
+  },
+});
+
+const schema = new Schema({
+  nested: {
+    // 这才是正确的做法
+    type: new Schema({ prop: String }),
+    required: true,
+  },
+});
+```
+
+以对象的方式声明 nested 会让它变成一个 Mixed 类型。为了让 Mongoose 自动将 `type: { prop: String }` 转换为 `type: new Schema({ prop: String })`，你需要将 `typePojoToMixed` 设置为 `false`：
+
+```js
+const schema = new Schema(
+  {
+    nested: {
+      // Because of `typePojoToMixed`, Mongoose knows to
+      // wrap `{ prop: String }` in a `new Schema()`.
+      type: { prop: String },
+      required: true,
+    },
+  },
+  { typePojoToMixed: false }
+);
+```
+
+总之，Mongoose 会将数组中的对象转换为 schema，但是单独的对象不会被转换为 schema。
