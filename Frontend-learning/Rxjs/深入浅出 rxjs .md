@@ -242,21 +242,40 @@ defaultIfEmpty<T, R>(defaultValue: R = null): OperatorFunction<T, T | R>
 
 ## 数据过滤流
 
-| 操作符                                          | 功能描述                                                             |
-| ----------------------------------------------- | -------------------------------------------------------------------- |
-| filter                                          | 过滤掉不满足条件的数据                                               |
-| first                                           | 获得满足条件的第一个数据                                             |
-| last                                            | 获得满足条件的最后一个数据                                           |
-| take                                            | 获取前 n 个数据                                                      |
-| takeLast                                        | 获取后 n 个数据                                                      |
-| takeWhile 和 takeUntil                          | 用于控制停止获取数据的时机                                           |
-| skip                                            | 忽略前 n 个数据                                                      |
-| skipWhile 和 skipUntil                          | 用于控制获取数据的时机                                               |
-| throttleTime、debounceTime 和 auditTime         | 基于时间的数据流量筛选                                               |
-| throttle、debounce、audit                       | 基于 Observable 的数据流量筛选，相当于使用 Observable 来控制筛选时机 |
-| sample 和 sampleTime                            | 对数据进行采样，每隔一段时间获取一次最新数据                         |
-| distinct                                        | 去除重复数据                                                         |
-| distinctUntilChanged 和 distinceUntilKeyChanged | 当前元素与上一个元素去重处理，如 1,1,2,2,2,2,3,1,2 会得到 1,2,3,1,2  |
-| ignoreElements                                  | 忽略流中的所有数据                                                   |
-| elementAt                                       | 选取指定位置的数据                                                   |
-| single                                          | 判断是否只有一个数据满足条件                                         |
+| 操作符                                              | 功能描述                                                                                                                                     |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `filter`                                            | 过滤掉不满足条件的数据                                                                                                                       |
+| `first`                                             | 获得满足条件的第一个数据                                                                                                                     |
+| `last`                                              | 获得满足条件的最后一个数据                                                                                                                   |
+| `take`                                              | 获取前 n 个数据                                                                                                                              |
+| `takeLast`                                          | 获取后 n 个数据                                                                                                                              |
+| `takeWhile` 和 `takeUntil`                          | 用于控制停止获取数据的时机，takeUntil 更形象的比喻是水龙头，打开的时候一直源源不断的从上游往下流数据，关闭的时候就再也不会继续流数据到下游了 |
+| `skip`                                              | 忽略前 n 个数据                                                                                                                              |
+| `skipWhile` 和 `skipUntil`                          | 用于控制获取数据的时机                                                                                                                       |
+| `throttleTime`、`debounceTime`和 `auditTime`        | 基于时间的数据流量筛选                                                                                                                       |
+| `throttle`、`debounce`、`audit`                     | 基于 Observable 的数据流量筛选，相当于使用 Observable 来控制筛选时机                                                                         |
+| `sample` 和 `sampleTime`                            | 对数据进行采样，每隔一段时间获取一次最新数据                                                                                                 |
+| `distinct`                                          | 去除重复数据                                                                                                                                 |
+| `distinctUntilChanged` 和 `distinceUntilKeyChanged` | 当前元素与上一个元素去重处理，如 1,1,2,2,2,2,3,1,2 会得到 1,2,3,1,2                                                                          |
+| `ignoreElements`                                    | 忽略流中的所有数据                                                                                                                           |
+| `elementAt`                                         | 选取指定位置的数据                                                                                                                           |
+| `single`                                            | 判断是否只有一个数据满足条件                                                                                                                 |
+
+## 转化类
+
+| 操作符                                                                  | 功能描述                           |
+| ----------------------------------------------------------------------- | ---------------------------------- |
+| `map`                                                                   | 将上游元素通过函数转换为新的元素   |
+| `mapTo`                                                                 | 将每个元素映射为同一个元素         |
+| `pluck`                                                                 | 提从上游数据中提取指定字段，可嵌套 |
+| `window`、 `windowTime`、 `windowCount`、 `windowWhen`、 `windowToggle` |                                    |
+| `buffer`、 `bufferTime`、 `bufferCount`、 `bufferWhen`、 `bufferToggle` |                                    |
+| `concatMap`、 `mergeMap`、 `switchMap`、 `exhaustMap`                   |                                    |
+| `scan`、`mergeScan`                                                     |                                    |
+
+### 数据分组
+
+
+groupBy
+
+partition
