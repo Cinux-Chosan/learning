@@ -10,24 +10,22 @@
 // 和 for(let i = 0; i < 10; i+=2) 一样
 generate(
   0,
-  x => x < 10,
-  x => x + 2
+  (x) => x < 10,
+  (x) => x + 2
 );
 
 generate(
   "", // 步骤 1
-  value => value.length < 10, // 步骤 2
-  value => value + "x", // 步骤 4， 相当于是 for 括号中的 final-expression，这里产出的值会传递给循环内其他使用 value 的地方
-  value => value + "1" // 步骤 3， 相当于是 for 的循环体，这里产出的值会流到下游，不会影响循环中的值
+  (value) => value.length < 10, // 步骤 2
+  (value) => value + "x", // 步骤 4， 相当于是 for 括号中的 final-expression，这里产出的值会传递给循环内其他使用 value 的地方
+  (value) => value + "1" // 步骤 3， 相当于是 for 的循环体，这里产出的值会流到下游，不会影响循环中的值
 );
 ```
 
 - `repeat<T>(count: number = -1): MonoTypeOperatorFunction<T>`：当上游完成后，重复前面的流 count 次
 
 ```js
-interval(1000)
-  .pipe(take(3), repeat(2))
-  .subscribe(console.log);
+interval(1000).pipe(take(3), repeat(2)).subscribe(console.log);
 ```
 
 - `interval(period: number = 0, scheduler: SchedulerLike = async): Observable<number>`：没隔 period 毫秒生产一个数据
@@ -99,3 +97,166 @@ Observable 管理数据，高阶 Observable 管理 Observable，即 Observable �
 - `mergeAll`
 - `zipAll`
 - `combineAll`
+
+#### concatAll<T>(): OperatorFunction<ObservableInput<T>, T>
+
+将高阶 Observable 转换为一阶，它会订阅每个内部 Observable，当前面的 Observable 完成才会继续订阅后面的 Observable
+
+```ts
+const ho$ = interval(1000).pipe(
+  take(2),
+  map((x) =>
+    interval(1500).pipe(
+      map((y) => x + ":" + y),
+      take(2)
+    )
+  ),
+  concatAll()
+);
+
+ho$.subscribe(console.log);
+// 0:0
+// 0:1
+// 1:0
+// 1:1
+```
+
+### mergeAll<T>(concurrent: number = Number.POSITIVE_INFINITY): OperatorFunction<ObservableInput<T>, T>
+
+只要发现上游产生一个 Observable 就会立即订阅，并抽取其数据
+
+### zipAll<T, R>(project?: (...values: any[]) => R): OperatorFunction<T, R>
+
+```ts
+const ho$ = interval(1000).pipe(
+  take(2),
+  map((x) =>
+    interval(1500).pipe(
+      map((y) => x + ":" + y),
+      take(2)
+    )
+  ),
+  zipAll()
+);
+
+ho$.subscribe(console.log);
+// [ '0:0', '1:0' ]
+// [ '0:1', '1:1' ]
+```
+
+### combineAll<T, R>(project?: (...values: any[]) => R): OperatorFunction<T, R>
+
+```ts
+const ho$ = interval(1000).pipe(
+  take(2),
+  map((x) =>
+    interval(1500).pipe(
+      map((y) => x + ":" + y),
+      take(2)
+    )
+  ),
+  combineAll()
+);
+
+ho$.subscribe(console.log);
+// [ '0:0', '1:0' ]
+// [ '0:1', '1:0' ]
+// [ '0:1', '1:1' ]
+```
+
+对于高阶 Observable 而言，就像是第一个 interval 产生了两个新的 Observable，然后通过高阶组件的合并操作符来执行对应的逻辑，就像上面的例子一样，实际上相当于是：
+
+```ts
+first$ = interval(1500).pipe(
+  map((y) => 0 + ":" + y),
+  take(2)
+);
+
+setTimeout(() => {
+  second$ = interval(1500).pipe(
+    map((y) => 1 + ":" + y),
+    take(2)
+  );
+
+  combineLatest(first$, second$);
+}, 1000);
+```
+
+### switchAll<T>(): OperatorFunction<ObservableInput<T>, T>
+
+将高阶 Observable 转换为一阶 Observable。并且只取最新生成的 Observable。每当有新的 Observable 生成就会退订旧的 Observable 并订阅新的 Observable
+
+### exhaust<T>(): OperatorFunction<any, T>
+
+将高阶 Observable 转换为一阶 Observable。并且如果之前的 Observable 没有完成，中间产生的 Observable 将会被忽略。直到上一个 Observable 完成之后才会订阅后续产生的 Observable
+
+## 辅助类操作符
+
+| 操作符                | 功能描述                             |
+| --------------------- | ------------------------------------ |
+| `count`               | 统计数据流中所有数据个数             |
+| `max` 和 `min`        | 获取流中最大或最小值                 |
+| `reduce`              | 对数据进行规约                       |
+| `every`               | 判断是否所有数据满足条件             |
+| `find` 和 `findIndex` | 找到第一个满足条件的数据             |
+| `isEmpty`             | 判断一个流是否不包含任何数据         |
+| `defaultEmpty`        | 如果一个流为空就默认产生一个指定数据 |
+
+`count`、`max`、`min`、`reduce` 等数据统计类操作符只有当上游数据完结时才会将唯一结果传递给下游
+
+```ts
+// count 函数签名
+count<T>(predicate?: (value: T, index: number, source: Observable<T>) => boolean): OperatorFunction<T, number>
+
+const numbers = range(1, 7);
+const result = numbers.pipe(count(i => i % 2 === 1)); // 如果不传入判断条件的函数，则默认统计所有个数
+result.subscribe(x => console.log(x));
+// Results in:
+// 4
+```
+
+min、max、reduce 等都和 JavaScript 中的函数使用方法一致
+
+---
+
+```ts
+// every 函数签名
+every<T>(predicate: (value: T, index: number, source: Observable<T>) => boolean, thisArg?: any): OperatorFunction<T, boolean>
+
+// 用法
+of(1, 2, 3, 4, 5, 6).pipe(
+    every(x => x < 5),
+)
+.subscribe(x => console.log(x)); // -> false
+```
+
+find 和 findIndex 使用方式和 JavaScript 中一致
+
+isEmpty 判断流是否为空，当流吐出第一个数据时返回 false，否则一直等待流结束返回 true
+
+```ts
+// 在当前版本 6 以上，defaultEmpty 改名为 defaultIfEmpty
+// 如果上游为空，则吐出一个默认值。如果要吐出多个值是做不到的
+defaultIfEmpty<T, R>(defaultValue: R = null): OperatorFunction<T, T | R>
+```
+
+## 数据过滤流
+
+| 操作符                                          | 功能描述                                                             |
+| ----------------------------------------------- | -------------------------------------------------------------------- |
+| filter                                          | 过滤掉不满足条件的数据                                               |
+| first                                           | 获得满足条件的第一个数据                                             |
+| last                                            | 获得满足条件的最后一个数据                                           |
+| take                                            | 获取前 n 个数据                                                      |
+| takeLast                                        | 获取后 n 个数据                                                      |
+| takeWhile 和 takeUntil                          | 用于控制停止获取数据的时机                                           |
+| skip                                            | 忽略前 n 个数据                                                      |
+| skipWhile 和 skipUntil                          | 用于控制获取数据的时机                                               |
+| throttleTime、debounceTime 和 auditTime         | 基于时间的数据流量筛选                                               |
+| throttle、debounce、audit                       | 基于 Observable 的数据流量筛选，相当于使用 Observable 来控制筛选时机 |
+| sample 和 sampleTime                            | 对数据进行采样，每隔一段时间获取一次最新数据                         |
+| distinct                                        | 去除重复数据                                                         |
+| distinctUntilChanged 和 distinceUntilKeyChanged | 当前元素与上一个元素去重处理，如 1,1,2,2,2,2,3,1,2 会得到 1,2,3,1,2  |
+| ignoreElements                                  | 忽略流中的所有数据                                                   |
+| elementAt                                       | 选取指定位置的数据                                                   |
+| single                                          | 判断是否只有一个数据满足条件                                         |
