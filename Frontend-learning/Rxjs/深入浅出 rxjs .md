@@ -10,22 +10,24 @@
 // 和 for(let i = 0; i < 10; i+=2) 一样
 generate(
   0,
-  (x) => x < 10,
-  (x) => x + 2
+  x => x < 10,
+  x => x + 2
 );
 
 generate(
   "", // 步骤 1
-  (value) => value.length < 10, // 步骤 2
-  (value) => value + "x", // 步骤 4， 相当于是 for 括号中的 final-expression，这里产出的值会传递给循环内其他使用 value 的地方
-  (value) => value + "1" // 步骤 3， 相当于是 for 的循环体，这里产出的值会流到下游，不会影响循环中的值
+  value => value.length < 10, // 步骤 2
+  value => value + "x", // 步骤 4， 相当于是 for 括号中的 final-expression，这里产出的值会传递给循环内其他使用 value 的地方
+  value => value + "1" // 步骤 3， 相当于是 for 的循环体，这里产出的值会流到下游，不会影响循环中的值
 );
 ```
 
 - `repeat<T>(count: number = -1): MonoTypeOperatorFunction<T>`：当上游完成后，重复前面的流 count 次
 
 ```js
-interval(1000).pipe(take(3), repeat(2)).subscribe(console.log);
+interval(1000)
+  .pipe(take(3), repeat(2))
+  .subscribe(console.log);
 ```
 
 - `interval(period: number = 0, scheduler: SchedulerLike = async): Observable<number>`：没隔 period 毫秒生产一个数据
@@ -105,9 +107,9 @@ Observable 管理数据，高阶 Observable 管理 Observable，即 Observable �
 ```ts
 const ho$ = interval(1000).pipe(
   take(2),
-  map((x) =>
+  map(x =>
     interval(1500).pipe(
-      map((y) => x + ":" + y),
+      map(y => x + ":" + y),
       take(2)
     )
   ),
@@ -130,9 +132,9 @@ ho$.subscribe(console.log);
 ```ts
 const ho$ = interval(1000).pipe(
   take(2),
-  map((x) =>
+  map(x =>
     interval(1500).pipe(
-      map((y) => x + ":" + y),
+      map(y => x + ":" + y),
       take(2)
     )
   ),
@@ -149,9 +151,9 @@ ho$.subscribe(console.log);
 ```ts
 const ho$ = interval(1000).pipe(
   take(2),
-  map((x) =>
+  map(x =>
     interval(1500).pipe(
-      map((y) => x + ":" + y),
+      map(y => x + ":" + y),
       take(2)
     )
   ),
@@ -168,13 +170,13 @@ ho$.subscribe(console.log);
 
 ```ts
 first$ = interval(1500).pipe(
-  map((y) => 0 + ":" + y),
+  map(y => 0 + ":" + y),
   take(2)
 );
 
 setTimeout(() => {
   second$ = interval(1500).pipe(
-    map((y) => 1 + ":" + y),
+    map(y => 1 + ":" + y),
     take(2)
   );
 
@@ -275,7 +277,14 @@ defaultIfEmpty<T, R>(defaultValue: R = null): OperatorFunction<T, T | R>
 
 ### 数据分组
 
-
 groupBy
 
 partition
+
+## 异常处理
+
+| 操作符                 | 功能描述                                         |
+| ---------------------- | ------------------------------------------------ |
+| `catch`                | 捕获并处理上游产生的异常                         |
+| `retry` 和 `retryWhen` | 上游产生异常时重试                               |
+| `finally`              | 无论是否出错都要执行，同 JavaScript 中的 finally |
