@@ -464,10 +464,14 @@ iterate(uris)
 
   - 生成二维码/条码
 
+- [jsqr](https://github.com/cozmo/jsQR)
+
+  - 识别二维码
+
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 
   - 密码加密库
-  
+
 - [hash-sum](https://www.npmjs.com/package/hash-sum)
 
   - hash 生成器，可以用于对象等。
