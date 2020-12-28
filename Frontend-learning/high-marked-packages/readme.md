@@ -8,10 +8,16 @@
 - [shelljs](https://www.npmjs.com/package/shelljs)
   - Unix shell commands for Node.js
 - [winston](https://www.npmjs.com/package/winston)
+
   - A logger for just about everything.
 
-* [log4js](https://www.npmjs.com/package/log4js)
+- [log4js](https://www.npmjs.com/package/log4js)
+
   - log4j 的 js 版本。灵活的日志管理模块
+
+- [morgan](https://www.npmjs.com/package/morgan)
+
+  - HTTP request logger middleware for node.js
 
 - [async](https://www.npmjs.com/package/async)
   - Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.
@@ -57,7 +63,7 @@
 
   const app = express();
 
-  app.get("/user", function (req, res) {
+  app.get("/user", function(req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -66,7 +72,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function (err, res) {
+    .end(function(err, res) {
       if (err) throw err;
     });
   ```
@@ -237,126 +243,122 @@
 
   - Markdown parser done right. Fast and easy to extend.
 
-* [morgan](https://www.npmjs.com/package/morgan)
-
-  - HTTP request logger middleware for node.js
-
-* [npm-package-arg](https://www.npmjs.com/package/npm-package-arg)
+- [npm-package-arg](https://www.npmjs.com/package/npm-package-arg)
 
   - 根据传给 npm install 的参数解析出具体信息。如版本号等
 
-* [node-portfinder](https://www.npmjs.com/package/portfinder)
+- [node-portfinder](https://www.npmjs.com/package/portfinder)
 
   - 用于寻找可用端口，从 8000 起
 
-* [promise.prototype.finally](https://www.npmjs.com/package/promise.prototype.finally)
+- [promise.prototype.finally](https://www.npmjs.com/package/promise.prototype.finally)
 
   - ES Proposal spec-compliant shim for Promise.prototype.finally
 
-* [arch](https://www.npmjs.com/package/arch)
+- [arch](https://www.npmjs.com/package/arch)
 
   - This module is used by WebTorrent Desktop to determine if the user is on a 32-bit vs. 64-bit operating system to offer the right app installer.
 
-* [resolve](https://www.npmjs.com/package/resolve)
+- [resolve](https://www.npmjs.com/package/resolve)
 
   - implements the node `require.resolve()` algorithm such that you can require.resolve() on behalf of a file asynchronously and synchronously
   - 同步或异步 resolve 文件
 
-* [sane](https://www.npmjs.com/package/sane)
+- [sane](https://www.npmjs.com/package/sane)
 
   - I've been driven to insanity by node filesystem watcher wrappers. Sane aims to be fast, small, and reliable file system watcher.
   - 观察文件或目录变动
 
-* [semver](https://www.npmjs.com/package/semver)
+- [semver](https://www.npmjs.com/package/semver)
 
   - npm 根据语义检测版本号是否合法
 
-* [Sort Package.json](https://www.npmjs.com/package/sort-package-json)
+- [Sort Package.json](https://www.npmjs.com/package/sort-package-json)
 
   - 用于对 package.json 的字段进行排序，依照一些[众所周知的顺序](https://github.com/keithamus/sort-package-json/blob/HEAD/index.js)
 
-* [node-temp](https://www.npmjs.com/package/temp)
+- [node-temp](https://www.npmjs.com/package/temp)
 
   - Handles generating a unique file/directory name under the appropriate system temporary directory, changing the file to an appropriate mode, and supports automatic removal (if asked)
 
-* [tree-sync](https://www.npmjs.com/package/tree-sync)
+- [tree-sync](https://www.npmjs.com/package/tree-sync)
 
   - 同步两个目录的文件，即一边修改之后，同步改动到另一个目录中
 
-* [uuid](https://www.npmjs.com/package/uuid)
+- [uuid](https://www.npmjs.com/package/uuid)
 
   - Simple, fast generation of [RFC4122](http://www.ietf.org/rfc/rfc4122.txt) UUIDS.
 
-* [node-walk](https://www.npmjs.com/package/walk)
+- [node-walk](https://www.npmjs.com/package/walk)
 
   - nodejs walk implementation. This is somewhat of a port python's os.walk, but using Node.JS conventions.
   - 遍历目录文件
 
-* [node-walk-sync](https://www.npmjs.com/package/walk-sync)
+- [node-walk-sync](https://www.npmjs.com/package/walk-sync)
 
   - Return an array containing all recursive files and directories under a given directory, similar to Unix find. Follows symlinks. Bare-bones, but very fast.
   - 和上面的 node-walk 一样，只不过是同步版本
 
-* [yam](https://www.npmjs.com/package/yam)
+- [yam](https://www.npmjs.com/package/yam)
 
   - 支持带注释的 json
 
-* [which](https://www.npmjs.com/package/which)
+- [which](https://www.npmjs.com/package/which)
 
   - Like the unix which utility.
 
-* [supertest](https://www.npmjs.com/package/supertest)
+- [supertest](https://www.npmjs.com/package/supertest)
 
   - test HTTP 请求
 
-* [strip-ansi](https://www.npmjs.com/package/strip-ansi)
+- [strip-ansi](https://www.npmjs.com/package/strip-ansi)
 
   - Strip [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) from a string
 
-* [mocha](https://www.npmjs.com/package/mocha)
+- [mocha](https://www.npmjs.com/package/mocha)
 
   - Simple, flexible, fun JavaScript test framework for Node.js & The Browser
 
-* [nock](https://www.npmjs.com/package/nock)
+- [nock](https://www.npmjs.com/package/nock)
 
   - HTTP server mocking and expectations library for Node.js
   - HTTP 服务端模拟
 
-* [nyc](https://www.npmjs.com/package/nyc)
+- [nyc](https://www.npmjs.com/package/nyc)
 
   - Istanbul's state of the art command line interface, with support for
   - 还没明白
 
-* [prettier](https://www.npmjs.com/package/prettier)
+- [prettier](https://www.npmjs.com/package/prettier)
 
   - Prettier is an opinionated code formatter
 
-* [memoize-one](https://www.npmjs.com/package/memoize-one)
+- [memoize-one](https://www.npmjs.com/package/memoize-one)
 
   - A memoization library that only caches the result of the most recent arguments.
   - 对函数结果进行缓存，如果再次传入相同的参数则返回缓存的结果，而不用再次执行函数获得结果。
 
-* [bytes](https://www.npmjs.com/package/bytes)
+- [bytes](https://www.npmjs.com/package/bytes)
 
   - Utility to parse a string bytes (ex: 1TB) to bytes (1099511627776) and vice-versa.
   - 将表示字节的单位与字节数量进行相互转换
 
-* [Browserslist](https://www.npmjs.com/package/browserslist)
+- [Browserslist](https://www.npmjs.com/package/browserslist)
 
   -
 
-* [connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)
+- [connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)
 
   - SPA 使用 history 模式的 nodejs 端解决方案，可以方便的配合前端 SPA
     使用 history API
 
-* [archiver](https://www.npmjs.com/package/archiver)
+- [archiver](https://www.npmjs.com/package/archiver)
 
   - 文件归档，即压缩，目录压缩
 
-* [ismobilejs](https://www.npmjs.com/package/ismobilejs)
+- [ismobilejs](https://www.npmjs.com/package/ismobilejs)
   - 在浏览器端和 Nodejs 中，检测是否是手机环境，Nodejs 中通过请求 header 来判断
-* [mathjs](https://www.npmjs.com/package/mathjs)
+- [mathjs](https://www.npmjs.com/package/mathjs)
 
   - 内置一些常量和函数，并且可以直接计算字符串，解析字符串等，单位换算等
 
@@ -366,43 +368,43 @@
   derivative("x^2 + x", "x"); // 2 * x + 1
   ```
 
-* [bignumber](https://www.npmjs.com/package/bignumber.js)
+- [bignumber](https://www.npmjs.com/package/bignumber.js)
 
   - 处理 js 任意精度的计算问题。
 
-* [jsdom](https://www.npmjs.com/package/jsdom)
+- [jsdom](https://www.npmjs.com/package/jsdom)
 
   - 使用纯 JavaScript 实现了很多 web 标准。
 
-* [UAParser.js](https://www.npmjs.com/package/ua-parser-js)
+- [UAParser.js](https://www.npmjs.com/package/ua-parser-js)
 
   - 基于 User-Agent 获取用户的浏览器名、设备名、OS 名、CPU 架构等，可在浏览器和服务端使用
 
-* [qrcode](https://www.npmjs.com/package/qrcode)
+- [qrcode](https://www.npmjs.com/package/qrcode)
 
   - node 二维码生成器
 
-* [chokidar](https://www.npmjs.com/package/chokidar)
+- [chokidar](https://www.npmjs.com/package/chokidar)
 
   - 跨平台高性能监听文件变化的包
 
-* [pako](https://www.npmjs.com/package/pako)
+- [pako](https://www.npmjs.com/package/pako)
 
   - js 高速压缩/解压包，可运行在浏览器端
 
-* [download-git-repo](https://www.npmjs.com/package/download-git-repo)
+- [download-git-repo](https://www.npmjs.com/package/download-git-repo)
 
   - 使用 nodejs 下载并提取一个 git 仓库（GitHub，GitLab，Bitbucket）。
 
-* [millisecond](https://www.npmjs.com/package/millisecond)
+- [millisecond](https://www.npmjs.com/package/millisecond)
 
   - 时间转换，将人类语言的时间转换成毫秒数，如 `ms('1 second')` 返回 `1000`
 
-* [ms](https://www.npmjs.com/package/ms)
+- [ms](https://www.npmjs.com/package/ms)
 
   - 时间转换，在人类语言的时间和毫秒之间相互转换。
 
-* [iterare](https://www.npmjs.com/package/iterare)
+- [iterare](https://www.npmjs.com/package/iterare)
 
   - ES6 Iterator library for applying multiple transformations to a collection in a single iteration.
   - 建立在[iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)之上，将对一个集合（可迭代对象）的多次操作转换为单次迭代，使用场景如：
@@ -412,8 +414,8 @@
 // RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
 new Set(
   Array.from(uris)
-    .filter((uri) => uri.startsWith("file://"))
-    .map((uri) => uri.substr("file:///".length))
+    .filter(uri => uri.startsWith("file://"))
+    .map(uri => uri.substr("file:///".length))
 );
 ```
 
@@ -422,8 +424,8 @@ new Set(
 import iterate from "iterare";
 
 iterate(uris)
-  .filter((uri) => uri.startsWith("file://"))
-  .map((uri) => uri.substr("file:///".length))
+  .filter(uri => uri.startsWith("file://"))
+  .map(uri => uri.substr("file:///".length))
   .toSet();
 ```
 
@@ -467,13 +469,27 @@ iterate(uris)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 
   - 密码加密库
-  
+
 - [hash-sum](https://www.npmjs.com/package/hash-sum)
 
   - hash 生成器，可以用于对象等。
 
 - [table](https://www.npmjs.com/package/table)
+
   - 将数据格式化为字符串表格，非常适合在控制台输出表格
+
+- [cpy](https://www.npmjs.com/package/cpy)
+
+  - 在代码中执行力快速的文件拷贝
+
+  - 相关：
+    - [cp-file](https://www.npmjs.com/package/cp-file)：拷贝单个文件
+    - [move-file](https://www.npmjs.com/package/move-file)：移动单个文件
+    - [make-dir](https://www.npmjs.com/package/make-dir)：创建目录，如果需要同时也会创建父目录
+      - 相关：https://www.npmjs.com/package/make-dir#related
+
+- [cpy-cli](https://www.npmjs.com/package/cpy-cli)
+  - cpy 的 cli 版本，例如可用于 `package.json#script#postinstall` 中。
 
 ## 一些不那么高的但比较有用的模块
 
