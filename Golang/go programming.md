@@ -168,8 +168,226 @@ const (
 
 在 go 中，尽管常量可以有类型，但是大多数情况其实并没有为它们指定类型。编译器会选择精度更大的类型来表示它们，并且它们的计算比机器运算更加精准，你可以假设它有至少 256 位精度。
 
-未指定类型的常量不仅保留了高精度，并且可以参与比指定类型的常量更多的计算中而不需要进行类型转换。
+只有常量可以是无类型的，即初始化时未指定类型。无类型的常量赋值给变量时或出现在显式声明了类型的变量右侧的表达式中时会隐式转换成对应的类型。不管显式还是隐式转换，都需要目标类型可以表示常量的原始值，实数和复数允许舍入。
+
+未指定类型的常量不仅保留了高精度，并且可以参与到比指定类型的常量更多的计算中而不需要进行类型转换。
+
+无类型的整数会转换成 int 类型，因此其大小无法保证（因为在不同的机型上 int 可能是 32 位也可能是 64 位）。但是 float 会转换为 float64，complex 为 complex128，这是因为在不知道浮点数数据类型大小的情况下很难编写出准确的数值计算算法。
 
 ## 4. Composite Types
 
 数组和结构体都是固定大小，slice 和 map 都是动态大小的结构
+
+### 4.1 Arrays
+
+用数组字面量初始化数组的时候，如果类型长度那里使用 `...` 则会自动使用后面的初始值来定义数组长度：
+
+```go
+q := [...]int{1, 2, 3}
+fmt.Printf("%T\n", q) // "[3]int"
+```
+
+数组大小也是类型的一部分，也就是说 `[3]int` 和 `[4]int` 是不同的类型。数组的大小必须是常量表达式，也就是说其值再编译时就能被确定。
+
+使用数组字面量初始化数组也可以指定索引：
+
+```go
+type Currency int
+
+const (
+    USD Currency = iota
+    EUR
+    GBP
+    RMB
+)
+
+symbol := [...]string{USD: "$", EUR: "€", GBP: "£", RMB: "¥"}
+
+fmt.Println(RMB, symbol[RMB]) // "3 ¥"
+```
+
+因此我们可以使用下面的方式声明一个长度为 100 的数组，其中除了最后一个值是 -1，其它所有值都是 0:
+
+```go
+r := [...]int{99: -1}
+```
+
+如果数组元素的类型兼容则认为数组类型也是兼容的。因此我们可以直接使用 `==` 来比较两个数组，它表示所有对应的元素都相同：
+
+```go
+a := [2]int{1, 2}
+b := [...]int{1, 2}
+c := [2]int{1, 3}
+fmt.Println(a == b, a == c, b == c) // "true false false"
+d := [3]int{1, 2}
+fmt.Println(a == d) // compile error: cannot compare [2]int == [3]int
+```
+
+- 在 go 中，调用函数的时候会把每个参数的值复制一份传递到函数内，因此传递大量数据时性能不佳。由于函数接收到的参数并非原始值，而是一份复制品，因此在函数内做的任何修改都不会影响到原始值。当然我们可以使用传入指针来解决这些问题。
+
+### 4.2 Slices
+
+Slice 是一种能够访问底层数组的轻量级数据结构。slice 由三部分组成：指针、长度和容量。指针指向 slice 在底层数组中的第一个元素，容量为 slice 起始位置到数组末尾的长度。`len` 和 `cap` 分别返回其长度和容量。
+
+- slice 超出容量会 panic，但是如果未超出容量只是超出 slice 本身的长度，则会延伸 slice，即访问容量以内的元素不会 panic，即便溢出了当前 slice。
+
+- 由于 slice 包含其在底层数组中首个元素的指针，因此将其作为参数传递给函数将会使得函数可以修改底层数组。换句话说，对 slice 的拷贝实际上又创建了一份对底层数组的引用。
+
+- 与数组不同的是 slice 并不兼容，因此不能用 `==` 来检测两个 slice 是否包含相同的元素（因为可以用它来检测两个 slice 是否引用了相同的地址）。标准库中提供了 `bytes.Equal` 方法来比较 `[]byte` 类型，但是其它类型则需要我们自己来编码判断。
+
+- 任何可能改变 slice 长度和容量或者会使得 slice 指向一个新的底层数组的函数都应该需要更新原来的 slice 变量，即 `s = append(s, r)` 这种形式。
+
+```go
+var x []int
+x = append(x, 1)
+x = append(x, 2, 3)
+x = append(x, 4, 5, 6)
+x = append(x, x...) // append the slice x
+fmt.Println(x)      // "[1 2 3 4 5 6 1 2 3 4 5 6]"
+```
+
+```go
+func appendInt(x []int, y ...int) []int {
+    var z []int
+    zlen := len(x) + len(y)
+    // ...expand z to at least zlen...
+    copy(z[len(x):], y)
+    return z
+}
+```
+
+- slice 可以用于模拟栈
+
+```go
+stack = append(stack, v) // push v
+top := stack[len(stack)-1] // top of stack
+stack = stack[:len(stack)-1] // pop
+```
+
+### 4.3 Maps
+
+在 go 中，map 是对 hash 表的引用。
+
+- 创建 map
+
+```go
+ages := make(map[string]int) // mapping from strings to ints
+```
+
+```go
+ages := map[string]int{
+    "alice":   31,
+    "charlie": 34,
+}
+```
+
+```go
+ages := make(map[string]int)
+ages["alice"] = 31
+ages["charlie"] = 34
+```
+
+- 添加元素
+
+```go
+ages["alice"] = 32
+```
+
+- 删除元素
+
+```go
+delete(ages, "alice") // remove element ages["alice"]
+```
+
+- 获取元素，如果 key 不存在则返回 0 值
+
+```go
+ages["bob"] = ages["bob"] + 1 // happy birthday!
+// 且 ++ 或者 += 这类赋值语句也能对 map 元素使用
+ages["bob"] += 1
+```
+
+有时候我们确实希望判断是否存在某个元素：
+
+```go
+age, ok := ages["bob"] // ok 为 true 表示存在
+if !ok { /* "bob" is not a key in this map; age == 0. */ }
+```
+
+或者简写为：
+
+```go
+if age, ok := ages["bob"]; !ok { /* ... */ }
+```
+
+但是 map 元素毕竟不是变量，不能获取其地址：
+
+```go
+_ = &ages["bob"] // compile error: cannot take address of map element
+```
+
+其中一个原因是因为 map 增长的过程中可能会对已经存在的元素进行 hash 到新的存储位置，从而可能使原来的地址无效。
+
+- 遍历 map
+
+```go
+for name, age := range ages {
+    fmt.Printf("%s\t%d\n", name, age)
+}
+```
+
+对 map 的遍历是无序的，因为其 hash 函数在不同的实现中可能不同，如果要保证有序，则需要先对键进行排序：
+
+```go
+import "sort"
+
+var names []string
+for name := range ages {
+    names = append(names, name)
+}
+sort.Strings(names)  // 排序
+for _, name := range names {
+    fmt.Printf("%s\t%d\n", name, ages[name])
+}
+```
+
+由于我们实际上可以提前获取到 names 的大小，因此我们可以一次性分配一个足够容量的 slice ，从而避免每次容量不够时导致插入都执行重新分配和复制的操作：
+
+```go
+names := make([]string, 0, len(ages))
+```
+
+- 和 slice 一样，map 不能直接使用 `==` 来比较，如果要比较需要自己编码实现：
+
+```go
+func equal(x, y map[string]int) bool {
+    if len(x) != len(y) {
+        return false
+    }
+    for k, xv := range x {
+        if yv, ok := y[k]; !ok || yv != xv {
+            return false
+        }
+    }
+    return true
+}
+```
+
+- go 中没有提供 set 类型。由于 map 的 key 是唯一的，因此 map 可以用于表示 set
+
+```go
+map[string]bool
+```
+
+- 关于需要使用 slice 作为索引的结构，可以自定义 key 的比较函数：
+
+```go
+var m = make(map[string]int)
+
+func k(list []string) string { return fmt.Sprintf("%q", list) }
+
+func Add(list []string)       { m[k(list)]++ }
+func Count(list []string) int { return m[k(list)] }
+```
+
+## 4.4 Structs
