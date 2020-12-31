@@ -701,3 +701,53 @@ func SearchIssues(terms []string) (*IssuesSearchResult, error) {
 
 最后，调用 `Decode` 后就填充了变量 `result`。
 
+### 4.6 Text and HTML Templates
+
+暂时忽略
+
+## 5. Functions
+
+### 5.1 Function Declarations
+
+```go
+func name(parameter-list) (result-list) {
+    body
+}
+```
+
+- 如果函数没有返回值或者只返回一个不具名的值，则返回值那里不需要括号，否则需要括号包起来。
+
+- 返回结果也可以有名字，这种情况则相当于定义了一个局部变量并且初始化成了 0 值，定义了返回值的函数必须要有 `return`，除非它明显无法运行到函数最后，例如最终调用了一个 panic 或者无限循环。
+
+- 相同的类型可以连续合并声明，最后再写类型：
+
+```go
+func f(i, j, k int, s, t string)                { /* ... */ }
+func f(i int, j int, k int, s string, t string) { /* ... */ }
+```
+
+下面展示四种定义两个参数和一个返回结果的函数，它们都是 `int` 类型：
+
+```go
+func add(x int, y int) int   { return x + y }
+func sub(x, y int) (z int)   { z = x - y; return }
+func first(x int, _ int) int { return x }
+func zero(int, int) int      { return 0 }
+
+fmt.Printf("%T\n", add)   // "func(int, int) int"
+fmt.Printf("%T\n", sub)   // "func(int, int) int"
+fmt.Printf("%T\n", first) // "func(int, int) int"
+fmt.Printf("%T\n", zero)  // "func(int, int) int"
+```
+
+函数的类型有时候也叫函数的签名。如果两个函数具有相同的参数类型和返回值类型，则认为它们是同类型的。
+
+- 参数通过值传递，因此函数接收到的每个参数都是拷贝的一份值 —— 修改这个值不会影响到函数外部。但是如果值是引用类型，如指针、slice、map、function、channel，则对引用类型的修改会间接修改到它们所引用的值，这种情况下就会影响到函数外部的值。
+
+- 有时可能会遇到一个没有主体的函数声明，表示该函数是用 Go 以外的语言实现的。这样的声明定义了函数签名：
+
+```go
+package math
+
+func Sin(x float64) float64 // implemented in assembly language
+```
