@@ -615,4 +615,89 @@ Year  int  `json:"released"`
 Color bool `json:"color,omitempty"`
 ```
 
-字段标记可以是任意字符串，但是按照惯例一般解释为以空格区分的 `key:"value"` 键值对。
+字段标记可以是任意字符串，但是按照惯例一般解释为以空格区分的 `key:"value"` 键值对。由于它们包含双引号，因此通常写作原始字符串的形式。其中 `json` 键控制 `encoding/json` 库的表现，类似的其它 `encoding/...` 库遵循相同的约定。 `json` 的第一个字段表示转成 json 后的字段名，`omitempty` 表示如果该字段为空或 0 值则不输出该字段。
+
+与编码相反的方向在 go 中称作 unmarshaling，通过 `json.Unmarshal` 来完成：
+
+```go
+var titles []struct{ Title string }
+if err := json.Unmarshal(data, &titles); err != nil {
+    log.Fatalf("JSON unmarshaling failed: %s", err)
+}
+fmt.Println(titles) // "[{Casablanca} {Cool Hand Luke} {Bullitt}]"
+```
+
+上例中，当 `json.Unmarshal` 完成时，它将数据填充进了 titles，由于 titles 是一个 struct 的 slice，且该 struct 只有 `Title` 字段，因此结果中也只有 `Title` 字段，这样可以选择哪些值需要被获取，哪些值需要被忽略。
+
+---
+
+go 在 JSON 解码的过程中是大小写**不敏感**的，因此只有在 JSON 字段中是下划线字段名但是 go 中不是的时候才需要使用字段标记：
+
+```go
+package github
+
+import "time"
+
+const IssuesURL = "https://api.github.com/search/issues"
+
+type IssuesSearchResult struct {
+    TotalCount int `json:"total_count"`
+    Items      []*Issue
+}
+
+type Issue struct {
+    Number    int
+    HTMLURL   string `json:"html_url"`
+    Title     string
+    State     string
+    User      *User
+    CreatedAt time.Time `json:"created_at"`
+    Body      string    // in Markdown format
+}
+
+type User struct {
+    Login   string
+    HTMLURL string `json:"html_url"`
+}
+```
+
+```go
+package github
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "net/url"
+    "strings"
+)
+
+// SearchIssues queries the GitHub issue tracker.
+func SearchIssues(terms []string) (*IssuesSearchResult, error) {
+    q := url.QueryEscape(strings.Join(terms, " "))
+    resp, err := http.Get(IssuesURL + "?q=" + q)
+    if err != nil {
+        return nil, err
+    }
+
+    // We must close resp.Body on all execution paths.
+    // (Chapter 5 presents 'defer', which makes this simpler.)
+    if resp.StatusCode != http.StatusOK {
+        resp.Body.Close()
+        return nil, fmt.Errorf("search query failed: %s", resp.Status)
+    }
+
+    var result IssuesSearchResult
+    if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+        resp.Body.Close()
+        return nil, err
+    }
+    resp.Body.Close()
+    return &result, nil
+}
+```
+
+之前的例子使用 `json.Unmarshal` 来把 `[]byte` 类型解码成单个 JSON 实体，这里使用流式的解码方式：`json.Decoder`，它能够从一个流中解码出多个 JSON 实体。与此同时，还有一个对应的流式编码器：`json.Encoder`。
+
+最后，调用 `Decode` 后就填充了变量 `result`。
+
