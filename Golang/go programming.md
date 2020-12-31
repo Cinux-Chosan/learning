@@ -391,3 +391,228 @@ func Count(list []string) int { return m[k(list)] }
 ```
 
 ## 4.4 Structs
+
+struct 是一种聚合类型，它将多个任意类型的值组合在一起形成一个实体。
+
+```go
+type Employee struct {
+    ID        int
+    Name      string
+    Address   string
+    DoB       time.Time
+    Position  string
+    Salary    int
+    ManagerID int
+}
+
+var dilbert Employee
+```
+
+struct 的属性也是变量，因此可以获得其地址，或者通过指针进行访问：
+
+```go
+position := &dilbert.Position
+*position = "Senior " + *position // promoted, for outsourcing to Elbonia
+```
+
+- struct 中的字段不能再包含自身的类型，即 struct `S` 中不能再包含类型为 `S` 的字段，但是可以包含 `*S` 类型，这使得我们可以实现链表或者树等递归数据结构。
+
+#### 4.4.1 Struct Literals
+
+- 第一种方式：
+
+```go
+type Point struct{ X, Y int }
+
+p := Point{1, 2}
+```
+
+此种方式需要保持顺序与声明的顺序一致
+
+- 第二种方式（更常用）：
+
+```go
+anim := gif.GIF{LoopCount: nframes}
+```
+
+这种使用键值对的方式就不需要关心字段的顺序了。
+
+另外，如果字段是小写，在其它 package 中无法引用和初始化：
+
+```go
+package p
+type T struct{ a, b int } // a and b are not exported
+
+package q
+import "p"
+var _ = p.T{a: 1, b: 2} // compile error: can't reference a, b
+var _ = p.T{1, 2}       // compile error: can't reference a, b
+```
+
+- 在 go 中函数接收到的都是参数的复制值，struct 也是如此，因此使用指针的情况更常见
+
+```go
+pp := &Point{1, 2}
+```
+
+同
+
+```go
+pp := new(Point)
+*pp = Point{1, 2}
+```
+
+但前者可以用在表达式中，如函数调用。
+
+#### 4.4.2 Comparing Structs
+
+- 如果所有的 struct 字段都兼容，则认为 struct 是兼容的，因此可以用 `==` 和 `!=` 来判断。`==` 按顺序比较两个 struct 的字段。
+
+- struct 类型也可以作为 map 的键
+
+#### 4.4.3 Struct Embedding and Anonymous Fields
+
+- struct 嵌套
+
+```go
+type Point struct {
+    X, Y int
+}
+
+type Circle struct {
+    Center Point
+    Radius int
+}
+
+type Wheel struct {
+    Circle Circle
+    Spokes int
+}
+
+var w Wheel
+w.Circle.Center.X = 8
+w.Circle.Center.Y = 8
+w.Circle.Radius = 5
+w.Spokes = 20
+```
+
+上面的方式访问字段变得很麻烦，要写一长串的属性路径。
+
+go 允许我们仅使用类型来声明字段 —— 即匿名字段。字段的类型必须是一个具名类型或者具名类型的指针。
+
+```go
+type Circle struct {
+    Point
+    Radius int
+}
+
+type Wheel struct {
+    Circle
+    Spokes int
+}
+
+// 使用匿名的方式，我们可以直接访问叶子节点的属性，而不用指明中间字段：
+
+var w Wheel
+w.X = 8        // equivalent to w.Circle.Point.X = 8
+w.Y = 8        // equivalent to w.Circle.Point.Y = 8
+w.Radius = 5   // equivalent to w.Circle.Radius = 5
+w.Spokes = 20
+```
+
+实际上匿名字段是有名字的，它们的名字就是其类型名，只不过这些名字在选择其子属性的属性访问操作符(`.`)中是可以省略的。
+
+但是在声明的时候不能省略，以下声明方式会报错：
+
+```go
+w = Wheel{8, 8, 5, 20}                       // compile error: unknown fields
+w = Wheel{X: 8, Y: 8, Radius: 5, Spokes: 20} // compile error: unknown fields
+```
+
+结构体字面量初始化时必须遵循声明时的格式，因此需要像下面的方式这样：
+
+```go
+// 方式 1
+w = Wheel{Circle{Point{8, 8}, 5}, 20}
+
+// 方式 2
+w = Wheel{
+    Circle: Circle{
+        Point:  Point{X: 8, Y: 8},
+        Radius: 5,
+    },
+    Spokes: 20, // NOTE: trailing comma necessary here (and at Radius)
+}
+
+// # 号使得 Printf 的 %v 输出的格式和 Go 语法类似，对于 struct 而言，会打印每个字段的名字
+
+fmt.Printf("%#v\n", w)
+// Output:
+// Wheel{Circle:Circle{Point:Point{X:8, Y:8}, Radius:5}, Spokes:20}
+
+w.X = 42
+
+fmt.Printf("%#v\n", w)
+// Output:
+// Wheel{Circle:Circle{Point:Point{X:42, Y:8}, Radius:5}, Spokes:20}
+```
+
+同样，小写的类型在 package 外是无法被访问的。
+
+实际上匿名字段不一定要是 struct 类型，任何具名类型或者具名指针类型都可以。但是为什么要嵌入一个没有子字段的类型呢？
+
+答案就是 struct 的方法。实际上，外部 struct 不仅可以获得嵌套类型的属性，还可以获得其方法。这种机制是简单对象行为构成复杂对象行为的主要方式。
+
+### 4.5 JSON
+
+go 中提供了 `encoding/json`, `encoding/xml`, `encoding/asn1` 等标准库来编解码这些格式的数据。这些标准库都有类似的 API。
+
+```go
+type Movie struct {
+    Title  string
+    Year   int  `json:"released"`
+    Color  bool `json:"color,omitempty"`
+    Actors []string
+}
+
+var movies = []Movie{
+    {Title: "Casablanca", Year: 1942, Color: false,
+        Actors: []string{"Humphrey Bogart", "Ingrid Bergman"}},
+    {Title: "Cool Hand Luke", Year: 1967, Color: true,
+        Actors: []string{"Paul Newman"}},
+    {Title: "Bullitt", Year: 1968, Color: true,
+        Actors: []string{"Steve McQueen", "Jacqueline Bisset"}},
+    // ...
+}
+```
+
+转换成 JSON 的过程叫 marshaling，使用 `json.Marshal`：
+
+```go
+data, err := json.Marshal(movies)
+if err != nil {
+    log.Fatalf("JSON marshaling failed: %s", err)
+}
+fmt.Printf("%s\n", data)
+```
+
+`Marshal` 得到的是一个 `[]byte` 类型的值，其中没有无关的空白字符。但是不易于阅读，如果需要易于阅读，使用 `json.MarshalIndent`，它可以指定每一行的前缀和每个层级的缩进：
+
+```go
+data, err := json.MarshalIndent(movies, "", "    ") // 指定前缀和缩进
+if err != nil {
+    log.Fatalf("JSON marshaling failed: %s", err)
+}
+fmt.Printf("%s\n", data)
+```
+
+Marshaling 使用 struct 字段名作为 json 对象中字段的名字，这是通过反射来完成的。只有导出了的字段会被 json 编码，即首字母大写的字段。
+
+也许你发现 `Year` 字段在结果中是 `released`，`Color` 变成了 `color`。这是因为字段标记的原因。字段标记就是字段后面那一段字符串，它指定该字段的元数据。
+
+```go
+Year  int  `json:"released"`
+Color bool `json:"color,omitempty"`
+```
+
+字段标记可以是任意字符串，但是按照惯例一般解释为以空格区分的 `key:"value"` 键值对。
