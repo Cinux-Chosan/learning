@@ -751,3 +751,426 @@ package math
 
 func Sin(x float64) float64 // implemented in assembly language
 ```
+
+### 5.2 Recursion
+
+下面将会使用一个非标准库 `golang.org/x/net/html` 来解析 HTML。`golang.org/x/...` 里面的库也是 Go 团队管理和维护，一般用于网络、郭启华文本处理、移动平台、图像处理、密码学和开发工具等。某些是因为还在开发中，还有一些是因为只会在某些特定情况下才会用得到。
+
+- 某些语言使用固定大小的函数调用栈，从 64kb 到 2mb 不等，在递归深层级时可能会栈溢出，但是 go 中使用动态大小的栈，一开始很小，然后根据需要慢慢扩容，一次不需要担心堆栈溢出的问题。
+
+### 5.3 Multiple Return Values
+
+- go 的垃圾回收机制会回收未使用或不再使用的内存，但是并不会释放操作系统资源或者网络资源等（如打开的文件句柄等），这些资源需要显示关闭。
+
+### 5.4 Errors
+
+- 使用 `log.Fatalf` 报告错误，如同所有 log 函数一样，默认情况下它会加上日期和时间前缀。
+
+```go
+if err := WaitForServer(url); err != nil {
+    log.Fatalf("Site is down: %v\n", err)
+}
+```
+
+也可以自定义前缀并且不显示日期和时间：
+
+```go
+
+log.SetPrefix("wait: ")
+log.SetFlags(0)
+```
+
+- 有一些错误是需要和其他错误进行区分的，如 `io.EOF` 表示读取操作已经读到最后，不能继续读取了。
+
+### 5.5 Function values
+
+函数可以作为值：
+
+```go
+func add1(r rune) rune { return r + 1 }
+
+fmt.Println(strings.Map(add1, "HAL-9000")) // "IBM.:111"
+fmt.Println(strings.Map(add1, "VMS"))      // "WNT"
+
+fmt.Println(strings.Map(add1, "Admix"))    // "Benjy"
+```
+
+再举一个例子：
+
+```go
+// forEachNode calls the functions pre(x) and post(x) for each node
+// x in the tree rooted at n. Both functions are optional.
+// pre is called before the children are visited (preorder) and
+// post is called after (postorder).
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+    if pre != nil {
+        pre(n)
+    }
+
+    for c := n.FirstChild; c != nil; c = c.NextSibling {
+        forEachNode(c, pre, post)
+    }
+
+    if post != nil {
+        post(n)
+    }
+}
+```
+
+### 5.6 Anonymous Functions
+
+匿名函数，又叫函数字面量。它是一个表达式。
+
+如：
+
+```go
+strings.Map(func(r rune) rune { return r + 1 }, "HAL-9000")
+```
+
+匿名函数使得我们可以在使用的地方才定义，而且它能够访问外层的作用域。
+
+如果匿名函数需要递归自身，则必须先声明一个变量，然后将匿名函数赋值给这个变量：
+
+```go
+var visitAll func(items []string)
+
+visitAll = func(items []string) {
+    for _, item := range items {
+        if !seen[item] {
+            seen[item] = true
+            visitAll(m[item])
+            order = append(order, item)
+        }
+    }
+}
+```
+
+不能将两部分合并在一起，否则函数字面量不会存在于变量 visitAll 的作用域内，因此无法通过 visitAll 来调用递归调用自身。下面是错误的方法：
+
+```go
+visitAll := func(items []string) {
+    // ...
+    visitAll(m[item]) // compile error: undefined: visitAll
+    // ...
+}
+```
+
+#### 5.6.1 Caveat: Capturing Iteration Variables
+
+```go
+var rmdirs []func()
+for _, d := range tempDirs() {
+    dir := d               // NOTE: necessary!
+    os.MkdirAll(dir, 0755) // creates parent directories too
+    rmdirs = append(rmdirs, func() {
+        os.RemoveAll(dir)
+    })
+}
+
+// ...do some work...
+
+for _, rmdir := range rmdirs {
+    rmdir() // clean up
+}
+``
+```
+
+上面的代码中每次将 d 赋值给 dir 变量，如果缺少了这一步，在 append 的匿名函数中直接使用 d 将会导致所有 d 都是同一个值，因为 d 是 for 声明的局部变量，每次遍历都会更新变量 d，导致所有匿名函数中的 d 都是最后一个元素，因此需要将 d 赋值给一个 for 内部的局部变量，也可以再次声明同名的局部变量：
+
+```go
+for _, dir := range tempDirs() {
+    dir := dir // declares inner dir, initialized to outer dir
+    // ...
+}
+```
+
+### 5.7 Variadic Functions
+
+变长参数函数值参数长度可以为任意值的函数。
+
+最常见的就是 `Printf`，它可以接收非固定长度的参数。
+
+这种函数通过最后一个参数使用 `...` 来声明，它表示可以使用任意长度的该类型来调用当前函数：
+
+```go
+func sum(vals ...int) int {
+    total := 0
+    for _, val := range vals {
+        total += val
+    }
+    return total
+}
+
+fmt.Println(sum())           //  "0"
+fmt.Println(sum(3))          //  "3"
+fmt.Println(sum(1, 2, 3, 4)) //  "10"
+```
+
+go 在背后会分配一个新的数组，将参数拷贝进去然后将整个数组的 slice 传递给函数，因此上面最后一行调用和下面等价：
+
+```go
+values := []int{1, 2, 3, 4}
+fmt.Println(sum(values...)) // "10"
+```
+
+尽管使用 `...int` 声明的函数表现和直接传递 slice 声明的函数表现类似，但是它们是不同的函数类型。
+
+```go
+func f(...int) {}
+func g([]int)  {}
+
+fmt.Printf("%T\n", f) // "func(...int)"
+fmt.Printf("%T\n", g) // "func([]int)"
+```
+
+### 5.8 Deferred Function Calls
+
+- 从语法上讲，`defer` 语句是以关键字`defer`为前缀的普通函数或方法调用。函数和参数表达式在声明 `defer` 时进行求值，但实际调用被推迟到包含`defer`语句的函数完成时，无论是正常情况下`return` 还是异常情况下 panic 最后都会执行 defer
+
+- 可以声明多个 `defer` 调用，但是他们的执行顺序与声明顺序相反
+
+- 释放资源的 `defer` 应该在获取到资源后马上执行
+
+```go
+package ioutil
+
+func ReadFile(filename string) ([]byte, error) {
+    f, err := os.Open(filename)
+    if err != nil {
+        return nil, err
+    }
+    defer f.Close()
+    return ReadAll(f)
+}
+```
+
+```go
+var mu sync.Mutex
+var m = make(map[string]int)
+
+func lookup(key string) int {
+    mu.Lock()
+    defer mu.Unlock()
+    return m[key]
+}
+```
+
+```go
+func bigSlowOperation() {
+    defer trace("bigSlowOperation")() // don't forget the extra parentheses
+    // ...lots of work...
+    time.Sleep(10 * time.Second) // simulate slow operation by sleeping
+}
+
+func trace(msg string) func() {
+    start := time.Now()
+    log.Printf("enter %s", msg)
+    return func() { log.Printf("exit %s (%s)", msg, time.Since(start)) }
+}
+
+// $ go build gopl.io/ch5/trace
+// $ ./trace
+// 2015/11/18 09:53:26 enter bigSlowOperation
+// 2015/11/18 09:53:36 exit bigSlowOperation (10.000589217s)
+```
+
+- defer 函数在 return 更新了函数返回值变量之后调用。
+
+```go
+func double(x int) (result int) {
+    defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
+    return x + x
+}
+
+_ = double(4)
+// Output:
+// "double(4) = 8"
+```
+
+由于匿名函数内部可以访问外面的变量，因此它能够获取到函数返回结果
+
+defer 函数甚至可以修改当前函数返回给调用者的值：
+
+```go
+func triple(x int) (result int) {
+    defer func() { result += x }()
+    return double(x)
+}
+
+fmt.Println(triple(4)) // "12"
+```
+
+- 由于 defer 函数在函数运行到最后之前不会执行，因此在循环中的 defer 需要特别注意。下面的代码可能会消耗完所有的文件描述符，因为在所有文件被处理完成之前没有一个文件描述符会被关闭：
+
+```go
+for _, filename := range filenames {
+    f, err := os.Open(filename)
+    if err != nil {
+        return err
+    }
+    defer f.Close() // NOTE: risky; could run out of file descriptors
+    // ...process f...
+}
+```
+
+一种解决方案就是将循环体抽离到另一个函数中：
+
+```go
+for _, filename := range filenames {
+    if err := doFile(filename); err != nil {
+        return err
+    }
+}
+
+func doFile(filename string) error {
+    f, err := os.Open(filename)
+    if err != nil {
+        return err
+    }
+    defer f.Close()
+    // ...process f...
+}
+```
+
+### 5.9 Panic
+
+在一次典型的 panic 中，所有的正常执行都被停止，所有在 goroutine 中的 defer 函数被执行，然后程序崩溃并抛出一个错误消息。这个错误消息包含了 panic 的值，通常是一串显示调用栈以及错误原因的消息。
+
+内置的 panic 函数可以直接调用，并接受任意值作为其参数。
+
+并非所有出错都有必要使用 panic，只有一些不可能发生或明显导致程序无法执行的情况才使用 panic，另外，某些明显会在运行时被检测到的错误也没必要主动使用 panic：
+
+```go
+func Reset(x *Buffer) {
+    if x == nil {
+        panic("x is nil") // unnecessary!
+    }
+    x.elements = nil
+}
+```
+
+虽然 go 中的 panic 和其它语言中的异常机制很像，但它们的使用场景却很不一样。由于 panic 会导致程序崩溃，因此一些预期的错误也不应该使用 panic，比如用户输入错误导致的问题，这些情况最好是使用 error
+
+下面的 Compile 函数用于编译正则表达式，如果传入的格式有问题则会返回一个 error。如果调用者确定自己的程序不会传入错误的格式，则对调用者来说检查返回值 error 显得没那么必要而且很麻烦，这种情况下就可以提供一个函数来通过 panic 的方式处理错误，即 MustCompile 函数：
+
+```go
+package regexp
+
+func Compile(expr string) (*Regexp, error) { /* ... */ }
+
+func MustCompile(expr string) *Regexp {
+    re, err := Compile(expr)
+    if err != nil {
+        panic(err)
+    }
+    return re
+}
+```
+
+`MustCompile` 使得客户端可以很方便的初始化包级别的正则变量：
+
+```go
+var httpSchemeRE = regexp.MustCompile(`^https?:`) // "http:" or "https:"
+```
+
+但 `MustCompile` 不应该以不可信的输入值来调用。Must 前缀也是这种函数的命名约定 —— 很肯定直接使用不会有问题，真要有问题也只会是那些几乎不可能的情况或会导致程序崩溃的情况。
+
+当发生 panic 时，所有 defer 函数都会被执行，从栈顶一直传播到 `main` 中：
+
+```go
+func main() {
+    f(3)
+}
+
+func f(x int) {
+    fmt.Printf("f(%d)\n", x+0/x) // panics if x == 0
+    defer fmt.Printf("defer %d\n", x)
+    f(x - 1)
+}
+
+// f(3)
+// f(2)
+// f(1)
+// defer 1
+// defer 2
+// defer 3
+```
+
+作为诊断程序的目的，runtime 库允许程序员使用相同的机制来转存堆栈信息：
+
+```go
+func main() {
+    defer printStack()
+    f(3)
+}
+
+func printStack() {
+    var buf [4096]byte
+    n := runtime.Stack(buf[:], false)
+    os.Stdout.Write(buf[:n])
+}
+```
+
+Readers familiar with exceptions in other languages may be surprised that runtime.Stack can print information about functions that seem to have already been “unwound.” Go’s panic mechanism runs the deferred functions before it unwinds the stack.
+
+### 5.10 Recover
+
+虽然出现了 panic，但有的情况是需要从错误中恢复的，或者至少应该在退出前做一些清理工作。比如一个 web 服务器遇到了未知异常可以关闭连接而不是使得整个客户端挂起，或者在开发测试阶段应该告诉客户端错误信息。
+
+如果在 defer 函数中调用了内置的 recover 函数，并且此时声明 defer 的函数发生了 panic，则 recover 会终止 panic 状态并返回 panic 的值。异常函数将从 panic 处停止执行但正常返回。
+
+如果其它情况调用 recover 不会有任何影响，它只会返回 nil
+
+```go
+func Parse(input string) (s *Syntax, err error) {
+    defer func() {
+        if p := recover(); p != nil {
+            err = fmt.Errorf("internal error: %v", p)
+        }
+    }()
+    // ...parser...
+}
+```
+
+上例中， defer 函数中把 panic 转换为了 error。更高级的用法可能是在错误消息中包含 runtime.Stack 中完整的调用栈信息返回给调用者。
+
+通常，不应该尝试恢复其它 package 中抛出的 panic。公共 API 应该使用 error 来向调用者报告错误。
+
+有选择性的 recover 才是最安全的。我们可以不同的类型作为 panic 的值并检测 recover 得到的值是否是该类型来分别处理 panic，如果是我们想要处理的 panic 则将其转换为 error，如果不是我们需要处理的 panic 则继续将其以 panic 的方式向上传播：
+
+```go
+// soleTitle returns the text of the first non-empty title element
+// in doc, and an error if there was not exactly one.
+func soleTitle(doc *html.Node) (title string, err error) {
+    type bailout struct{}
+
+    defer func() {
+        switch p := recover(); p {
+        case nil:
+            // no panic
+        case bailout{}:
+            // "expected" panic
+            err = fmt.Errorf("multiple title elements")
+        default:
+            panic(p) // unexpected panic; carry on panicking
+        }
+    }()
+
+    // Bail out of recursion if we find more than one non-empty title.
+    forEachNode(doc, func(n *html.Node) {
+        if n.Type == html.ElementNode && n.Data == "title" &&
+            n.FirstChild != nil {
+            if title != "" {
+                panic(bailout{}) // multiple title elements
+            }
+            title = n.FirstChild.Data
+        }
+    }, nil)
+    if title == "" {
+        return "", fmt.Errorf("no title element")
+    }
+    return title, nil
+}
+```
+
+## 6. Methods
