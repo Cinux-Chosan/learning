@@ -1,6 +1,15 @@
-const { empty, interval, of } = require("rxjs");
-const { startWith, mergeMap } = require("rxjs/operators");
+function bindCallback(fn) {
+  return function(...args) {
+    return {
+      subscribe: fn.bind(this, ...args) 
+    };
+  };
+}
 
-interval(1000)
-  .pipe(mergeMap((x) => (x % 2 === 1 ? of("a", "b", "c") : empty())))
-  .subscribe((x) => console.log(x));
+const fn = function(name, callback) {
+  setTimeout(() => {
+    callback(`My name is ${name}`);
+  }, 600);
+};
+const bound = bindCallback(fn);
+bound('Chosan').subscribe(console.log)
