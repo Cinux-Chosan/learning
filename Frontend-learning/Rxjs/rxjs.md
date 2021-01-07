@@ -3,15 +3,18 @@
 ## Creation Operators
 
 - `ajax`
+
+---
+
 - bindCallback：将回调函数 API 转换成返回 Observable 的函数，该 Observable 吐出一个值后立即 complete
 
-> 入参为函数且函数最后一个参数应该是一个回调函数，函数执行完成会用执行结果为入参调用该函数。
+> > 入参为函数且函数最后一个参数应该是一个回调函数，函数执行完成会用执行结果为入参调用该函数。
 
-> 返回值也是一个函数，调用该函数会以相同的参数调用传给 bindCallback 的函数，并返回一个 Observable，**在每次 Observable 被 subscribe 的时候会执行传入的函数**
+> > 返回值也是一个函数，调用该函数会以相同的参数调用传给 bindCallback 的函数，并返回一个 Observable，**在每次 Observable 被 subscribe 的时候会执行传入的函数**
 
-> `bindCallback` 并不是 operator，因为它的输入和输出都不是 Observable。入参为最后一个参数为回调函数的函数，在函数执行完成时会调用该回调函数。
+> > `bindCallback` 并不是 operator，因为它的输入和输出都不是 Observable。入参为最后一个参数为回调函数的函数，在函数执行完成时会调用该回调函数。
 
-> 除了最后一个参数，`bindCallback` 返回的函数和传入的函数参数相同。
+> > 除了最后一个参数，`bindCallback` 返回的函数和传入的函数参数相同。
 
 ```js
 const getJSONAsObservable = bindCallback(jQuery.getJSON);
@@ -26,7 +29,7 @@ result.subscribe(
 
 ```js
 function bindCallback(fn) {
-  return function(...args) {
+  return function (...args) {
     return {
       subscribe: fn.bind(this, ...args),
     };
@@ -34,7 +37,7 @@ function bindCallback(fn) {
 }
 
 // use case
-const fn = function(name, callback) {
+const fn = function (name, callback) {
   setTimeout(() => {
     callback(`My name is ${name}`);
   }, 600);
@@ -43,7 +46,11 @@ const bound = bindCallback(fn);
 bound("Chosan").subscribe(console.log); // My name is Chosan
 ```
 
+---
+
 - bindNodeCallback：同 `bindCallback`，但入参函数格式需要为 `callback(error, result)`。如果 `error` 不为 `null` 则会导致 Observable 执行 `error`，否则执行 `next` 并立即 `complete`
+
+---
 
 - `defer`：创建一个 Observable，在订阅时会通过工厂函数创建另一个 Observable，主要用于惰性创建 Observable
 
@@ -56,6 +63,8 @@ defer(() => of("a"));
 ```js
 const defer = (factor) => factor();
 ```
+
+---
 
 - empty：创建一个直接 complete 的 Observable
 
@@ -70,6 +79,8 @@ interval(1000)
 ```js
 function empty() {}
 ```
+
+---
 
 - from：将数组、类数组对象、Promise、可迭代对象或者类 Observable 对象转换成 Observable
 
@@ -100,8 +111,16 @@ async function from(input) {
 }
 ```
 
+---
+
 - fromEvent
+
+---
+
 - fromEventPattern
+
+---
+
 - `generate`：类似于 for 循环，其三个参数和 for 循环中三个部分一样的功能，传递给下游的数据就类似于 for 循环体中的功能：
 
 ```js
@@ -133,6 +152,8 @@ function generate(init, condition, iterate) {
 }
 ```
 
+---
+
 - interval：定时触发一个整数值，从 0 开始递增，类似于 setInterval：
 
 ```js
@@ -148,6 +169,8 @@ setInterval(() => {
 }, 1000);
 ```
 
+---
+
 - of：吐出所有参数值
 
 ```js
@@ -161,6 +184,8 @@ function of(...args) {
   args.forEach((arg) => console.log(arg));
 }
 ```
+
+---
 
 - range：根据初始值创建一系列递增数据
 
@@ -176,7 +201,12 @@ function range(start = 0, count) {
 }
 ```
 
+---
+
 - throwError
+
+---
+
 - timer：
 
 ```js
@@ -197,6 +227,8 @@ function timer(dueTime, interval) {
   }, dueTime);
 }
 ```
+
+---
 
 - iif：接收一个函数和两个 Observable，每次 subscribe 的时候根据函数返回值动态决定使用哪个 Observable，类似于三元表达式。如果返回的不是 Observable 而是 undefined 则直接 complete。
 
