@@ -1,5 +1,7 @@
 # Rxjs
 
+下文“道理类似于”相关的代码只是个人用 js 大概表达了一下 rxjs 中对应操作符的意思，并不是实现，仅简单的逻辑对应关系。
+
 ## Creation Operators
 
 - `ajax`
@@ -8,13 +10,13 @@
 
 - bindCallback：将回调函数 API 转换成返回 Observable 的函数，该 Observable 吐出一个值后立即 complete
 
-> > 入参为函数且函数最后一个参数应该是一个回调函数，函数执行完成会用执行结果为入参调用该函数。
+> 入参为函数且函数最后一个参数应该是一个回调函数，函数执行完成会用执行结果为入参调用该函数。
 
-> > 返回值也是一个函数，调用该函数会以相同的参数调用传给 bindCallback 的函数，并返回一个 Observable，**在每次 Observable 被 subscribe 的时候会执行传入的函数**
+> 返回值也是一个函数，调用该函数会以相同的参数调用传给 bindCallback 的函数，并返回一个 Observable，**在每次 Observable 被 subscribe 的时候会执行传入的函数**
 
-> > `bindCallback` 并不是 operator，因为它的输入和输出都不是 Observable。入参为最后一个参数为回调函数的函数，在函数执行完成时会调用该回调函数。
+> `bindCallback` 并不是 operator，因为它的输入和输出都不是 Observable。入参为最后一个参数为回调函数的函数，在函数执行完成时会调用该回调函数。
 
-> > 除了最后一个参数，`bindCallback` 返回的函数和传入的函数参数相同。
+> 除了最后一个参数，`bindCallback` 返回的函数和传入的函数参数相同。
 
 ```js
 const getJSONAsObservable = bindCallback(jQuery.getJSON);
