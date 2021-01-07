@@ -1,15 +1,15 @@
-function bindCallback(fn) {
-  return function(...args) {
-    return {
-      subscribe: fn.bind(this, ...args) 
-    };
-  };
-}
+const { interval, of } = require("rxjs");
+const { bufferCount, groupBy, mergeMap, reduce, tap } = require('rxjs/operators')
 
-const fn = function(name, callback) {
-  setTimeout(() => {
-    callback(`My name is ${name}`);
-  }, 600);
-};
-const bound = bindCallback(fn);
-bound('Chosan').subscribe(console.log)
+of(
+  { id: 1, name: 'JavaScript' },
+  { id: 2, name: 'Parcel' },
+  { id: 2, name: 'webpack' },
+  { id: 1, name: 'TypeScript' },
+  { id: 3, name: 'TSLint' }
+).pipe(
+  groupBy(p => p.id),
+  tap(console.log),
+  mergeMap((group$) => group$.pipe(reduce((acc, cur) => [...acc, cur], []))),
+)
+  .subscribe(p => console.log(p));
