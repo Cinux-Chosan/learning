@@ -1,0 +1,32 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add rxjs
+
+PATH: 
+  /Users/zhangjianjun301/mongo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/zhangjianjun301/mongo/bin:/Users/zhangjianjun301/Desktop/personal/bin://Users/zhangjianjun301/.my_bins:/Users/zhangjianjun301/Desktop/personal/bin://Users/zhangjianjun301/.my_bins
+
+Yarn version: 
+  1.19.1
+
+Node version: 
+  12.10.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: getaddrinfo ENOTFOUND maven.paic.com.cn
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:60:26)
+
+npm manifest: 
+  {
+    "name": "rx-test",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
