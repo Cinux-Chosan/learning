@@ -1,15 +1,11 @@
 const { interval, of } = require("rxjs");
-const { bufferCount, groupBy, mergeMap, reduce, tap } = require('rxjs/operators')
-
-of(
-  { id: 1, name: 'JavaScript' },
-  { id: 2, name: 'Parcel' },
-  { id: 2, name: 'webpack' },
-  { id: 1, name: 'TypeScript' },
-  { id: 3, name: 'TSLint' }
-).pipe(
-  groupBy(p => p.id),
-  tap(console.log),
-  mergeMap((group$) => group$.pipe(reduce((acc, cur) => [...acc, cur], []))),
-)
-  .subscribe(p => console.log(p));
+const { bufferCount, groupBy, mergeMap, reduce, tap, windowTime, map, mergeAll, take, audit, throttle } = require("rxjs/operators");
+let i = 0;
+interval(400)
+  .pipe(
+    throttle((ev) => {
+      console.log("xxxxx" + i++, );
+      return interval(1000);
+    })
+  )
+  .subscribe(console.log);
