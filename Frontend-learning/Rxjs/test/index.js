@@ -1,11 +1,10 @@
-const { interval, of } = require("rxjs");
-const { bufferCount, groupBy, mergeMap, reduce, tap, windowTime, map, mergeAll, take, audit, throttle } = require("rxjs/operators");
-let i = 0;
-interval(400)
-  .pipe(
-    throttle((ev) => {
-      console.log("xxxxx" + i++, );
-      return interval(1000);
-    })
-  )
-  .subscribe(console.log);
+const { of, interval, concat } = require("rxjs");
+const { mergeMap, map, mergeAll } = require('rxjs/operators')
+const letters = of('a', 'b', 'c');
+// const result = letters.pipe(
+//   mergeMap(x => interval(1000).pipe(map(i => x + i))),
+// );
+// result.subscribe(x => console.log(x));
+
+concat([1, 2, 3])
+  .subscribe(console.log)
