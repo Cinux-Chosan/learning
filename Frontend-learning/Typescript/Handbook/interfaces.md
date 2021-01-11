@@ -354,6 +354,8 @@ c.interval = 5.0;
 
 当一个接口继承 class 的时候，只会继承 class 的成员但不会继承它们的实现方式。interface 甚至能继承 class 的 private 和 protected 成员。这意味着当你通过继承一个具有 private 和 protected 属性的 class 来创建 interface 时，该 interface 只能被该 class 或其子类实现。
 
+This is useful when you have a large inheritance hierarchy, but want to specify that your code works with only subclasses that have certain properties. The subclasses don’t have to be related besides inheriting from the base class. For example:
+
 ```ts
 class Control {
   private state: any;
@@ -372,13 +374,13 @@ class TextBox extends Control {
 }
 
 class ImageControl implements SelectableControl {
-Class 'ImageControl' incorrectly implements interface 'SelectableControl'.
-  Types have separate declarations of a private property 'state'.
+  // Error: Class 'ImageControl' incorrectly implements interface 'SelectableControl'.
+  // Error: Types have separate declarations of a private property 'state'.
   private state: any;
   select() {}
 }
 ```
 
-在上面的例子中，`SelectableControl` 包含了 `Control` 中的所有成员，包括 private `state` 属性。由于 `state` 是一个私有成员，因此只有 `Control` 的子类来实现 `SelectableControl`。因为只有 `Control` 的子类才有同源的私有 `state` 成员，这是需要兼容私有成员的必要条件。
+在上面的例子中，`SelectableControl` 包含了 `Control` 中的所有成员，包括私有的 `state` 属性。由于 `state` 是一个私有成员，因此只能 `Control` 的子类来实现 `SelectableControl`。因为只有 `Control` 的子类才有同源的私有 `state` 成员，这是需要兼容私有成员的必要条件。
 
 在 `Control` 类中，通过 `SelectableControl` 的实例可以访问到私有的 `state` 属性。事实上，`SelectableControl` 的角色类似于 `Control`。`Button` 和 `TextBox` 都是 `SelectableControl` 的子类型（因为他们都继承自 `Control` 并且有一个 `select` 方法）。`ImageControl` 类有自己的私有 `state` 成员而非继承自 `Control`，所以它不能实现 `SelectableControl`。

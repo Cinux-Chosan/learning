@@ -1,15 +1,22 @@
-interface Counter {
-  (start: number): string;
-  interval: number;
-  reset(): void;
+class Control {
+  private state: any;
 }
 
-function Counter() {
-  return "123";
+interface SelectableControl extends Control {
+  select(): void;
 }
 
-Counter.interval = 1;
-Counter.reset = () => {};
-Counter.x = () => {};
+class Button extends Control implements SelectableControl {
+  select() {}
+}
 
-Counter.x();
+class TextBox extends Control {
+  select() {}
+}
+
+//   class ImageControl implements SelectableControl {
+//   Class 'ImageControl' incorrectly implements interface 'SelectableControl'.
+//     Types have separate declarations of a private property 'state'.
+//     private state: any;
+//     select() {}
+//   }
