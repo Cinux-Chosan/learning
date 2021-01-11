@@ -1174,3 +1174,38 @@ func soleTitle(doc *html.Node) (title string, err error) {
 ```
 
 ## 6. Methods
+
+在我们看来，对象就是具有一系列属性和方法的某个变量或者值。方法就是和某个类型相关联的函数。
+
+### 6.1 Method Declarations
+
+方法的定义和普通函数的定义一样，但在方法名前面有一个额外的参数。该参数将方法和自己的类型关联起来：
+
+```go
+package geometry
+
+import "math"
+
+type Point struct{ X, Y float64 }
+
+// traditional function
+func Distance(p, q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}
+
+// same thing, but as a method of the Point type
+func (p Point) Distance(q Point) float64 {
+    return math.Hypot(q.X-p.X, q.Y-p.Y)
+}
+```
+
+上面的例子中，`p` 称作方法的接收者(`receiver`)。在 Go 中不使用像 `this` 或者 `self` 之类的变量作为 receiver。在 go 中 receiver 就和其它参数一样。而且一般变量名就使用类型的第一个字母，如 `p` 对应 `Point`。
+
+```go
+p := Point{1, 2}
+q := Point{4, 6}
+fmt.Println(Distance(p, q)) // "5", function call
+fmt.Println(p.Distance(q))  // "5", method call
+```
+
+Go 能为同一个 package 中的具名类型添加方法，只要它底层的类型不是指针或者接口(interface)
