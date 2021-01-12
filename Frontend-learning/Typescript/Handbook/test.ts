@@ -1,5 +1,6 @@
-interface Fuc {
-  (name: string): string;
+class Handler {
+  info: string;
+  onClickGood = (e: Event) => {
+    this.info = e.type;
+  };
 }
-
-const f: Fuc = (name: string) => 1;
