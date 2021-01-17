@@ -1,6 +1,7 @@
-class Handler {
-  info: string;
-  onClickGood = (e: Event) => {
-    this.info = e.type;
-  };
+declare enum Enum {
+  A = 1,
+  B,
+  C = 2,
 }
+
+const a = Enum.B;
