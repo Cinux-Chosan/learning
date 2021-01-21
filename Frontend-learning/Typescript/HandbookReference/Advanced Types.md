@@ -189,3 +189,58 @@ if (padder instanceof StringPadder) {
 2. 该类型的构造函数签名返回的所有类型的联合类型
 
 ## Nullable types
+
+typescript 有两个特殊类型：`null` 和 `undefined`，它们可以赋值给任意类型，你也无法阻止它们被赋值给其他类型。
+
+[`--strictNullChecks`](https://www.typescriptlang.org/tsconfig#strictNullChecks) 解决了这个问题：当你声明一个变量的时候，它不会自动包含 `null` 和 `undefined`，你可以通过显式使用联合类型来包含它们：
+
+```ts
+let exampleString = "foo";
+exampleString = null;
+// Error: Type 'null' is not assignable to type 'string'.
+
+let stringOrNull: string | null = "bar";
+stringOrNull = null;
+
+stringOrNull = undefined;
+// Error: Type 'undefined' is not assignable to type 'string | null'.
+```
+
+注意，为了满足 JavaScript 语义，typescript 对待 `null` 和 `undefined` 是有区别的。`string | null` 和 `string | undefined` 以及 `string | undefined | null` 都是不一样的。
+
+自从 typescript 3.7 开始，你可以使用[可选链](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining)
+
+### Optional parameters and properties
+
+如果指定了 [--strictNullChecks](https://www.typescriptlang.org/tsconfig#strictNullChecks)，可选参数会自动添加 `| undefined`：
+
+```ts
+function f(x: number, y?: number) {
+  return x + (y ?? 0);
+}
+
+f(1, 2);
+f(1);
+f(1, undefined);
+f(1, null);
+// Error: Argument of type 'null' is not assignable to parameter of type 'number | undefined'.
+```
+
+对于可选属性也是一样的：
+
+```ts
+class C {
+  a: number;
+  b?: number;
+}
+
+let c = new C();
+
+c.a = 12;
+c.a = undefined;
+// Error: Type 'undefined' is not assignable to type 'number'.
+c.b = 13;
+c.b = undefined;
+c.b = null;
+// Error: Type 'null' is not assignable to type 'number | undefined'.
+```
