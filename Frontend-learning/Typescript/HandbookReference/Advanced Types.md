@@ -87,3 +87,105 @@ const underWater3: Fish[] = zoo.filter<Fish>((pet) => isFish(pet));
 其中用于 filter 的回调函数需要是 `类型断言` 的格式，即返回类型是 `parameterName is Type`。因此上面第三种写法无法通过。
 
 ### Using the in operator
+
+`in` 操作符也充当了作为缩小类型的表达式。
+
+对于 `n in x` 这个表达式，`n` 是一个字符串类型，`x` 是一个联合类型。在该条件为 `true` 的分支中类型会缩小为那些具有 `n` 的类型，`false` 条件分支中类型会缩小为没有 `n` 的类型，对于可能存在 `n` 的类型，则在运行时会决定：
+
+```ts
+function move(pet: Fish | Bird) {
+  if ("swim" in pet) {
+    return pet.swim();
+  }
+  return pet.fly();
+}
+```
+
+## typeof type guards
+
+用类型断言来写一个使用联合类型的 `padLeft` 方法：
+
+```ts
+function isNumber(x: any): x is number {
+  return typeof x === "number";
+}
+
+function isString(x: any): x is string {
+  return typeof x === "string";
+}
+
+function padLeft(value: string, padding: string | number) {
+  if (isNumber(padding)) {
+    return Array(padding + 1).join(" ") + value;
+  }
+  if (isString(padding)) {
+    return padding + value;
+  }
+  throw new Error(`Expected string or number, got '${padding}'.`);
+}
+```
+
+然而，如果需要定义一个函数来缩小类型其实显得很冗余。并不需要将 `typeof x === 'number'` 封装到一个方法中来调用，因为在 typescript 中它本身就是一种类型守卫，因此可以下面这样写：
+
+```ts
+function padLeft(value: string, padding: string | number) {
+  if (typeof padding === "number") {
+    return Array(padding + 1).join(" ") + value;
+  }
+  if (typeof padding === "string") {
+    return padding + value;
+  }
+  throw new Error(`Expected string or number, got '${padding}'.`);
+}
+```
+
+这些 `typeof` 类型守卫可以用于 `"undefined"`, `"number"`, `"string"`, `"boolean"`, `"bigint"`, `"symbol"`, `"object"`, `"function"` 类型，其他类型不会被识别。
+
+## instanceof type guards
+
+`instanceof` 和 `typeof` 类似。`instanceof` 类型守卫使用构造函数来缩小类型范围。
+
+```ts
+interface Padder {
+  getPaddingString(): string;
+}
+
+class SpaceRepeatingPadder implements Padder {
+  constructor(private numSpaces: number) {}
+  getPaddingString() {
+    return Array(this.numSpaces + 1).join(" ");
+  }
+}
+
+class StringPadder implements Padder {
+  constructor(private value: string) {}
+  getPaddingString() {
+    return this.value;
+  }
+}
+
+function getRandomPadder() {
+  return Math.random() < 0.5 ? new SpaceRepeatingPadder(4) : new StringPadder("  ");
+}
+
+let padder: Padder = getRandomPadder();
+//       ^ = let padder: Padder
+
+if (padder instanceof SpaceRepeatingPadder) {
+  padder;
+  //       ^ = Could not get LSP result: er;>
+  //       <  /
+}
+if (padder instanceof StringPadder) {
+  padder;
+  //       ^ = Could not get LSP result: er;>
+  //       <  /
+}
+```
+
+`instanceof` 右边需要一个构造函数，typescript 将会按照下面的顺序将其类型范围缩小为:
+
+1. 如果构造函数的 `prototype` 类型不是 `any`，则为其 `prototype` 的类型
+2. 该类型的构造函数签名返回的所有类型的联合类型
+
+## Nullable types
