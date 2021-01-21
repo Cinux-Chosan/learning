@@ -84,6 +84,6 @@ const underWater3: Fish[] = zoo.filter<Fish>((pet) => isFish(pet));
 // Error: Signature '(pet: Fish | Bird): boolean' must be a type predicate.
 ```
 
-其中用于 filter 的回调函数需要是 `类型断言` 的格式，即返回类型是 `parameterName is Type`
+其中用于 filter 的回调函数需要是 `类型断言` 的格式，即返回类型是 `parameterName is Type`。因此上面第三种写法无法通过。
 
 ### Using the in operator
