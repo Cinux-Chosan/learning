@@ -244,3 +244,25 @@ c.b = undefined;
 c.b = null;
 // Error: Type 'null' is not assignable to type 'number | undefined'.
 ```
+
+### Type guards and type assertions
+
+由于空类型使用联合类型来实现，因此你需要使用类型守卫来移除 `null`：
+
+```ts
+function f(stringOrNull: string | null): string {
+  if (stringOrNull === null) {
+    return "default";
+  } else {
+    return stringOrNull;
+  }
+}
+```
+
+由于这样消除 `null` 显得有些多余，你可以使用 terser 操作符来完成：
+
+```ts
+function f(stringOrNull: string | null): string {
+  return stringOrNull ?? "default"; // 同 stringOrNull !== null && stringOrNull !== void 0 ? stringOrNull : "default";
+}
+```

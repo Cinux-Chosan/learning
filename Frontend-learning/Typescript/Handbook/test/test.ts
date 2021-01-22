@@ -1,7 +1,3 @@
-declare enum Enum {
-  A = 1,
-  B,
-  C = 2,
+function f(stringOrNull: string | null): string {
+  return stringOrNull ?? "default";
 }
-
-const a = Enum.B;
