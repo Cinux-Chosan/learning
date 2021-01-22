@@ -212,7 +212,7 @@ stringOrNull = undefined;
 
 ### Optional parameters and properties
 
-如果指定了 [--strictNullChecks](https://www.typescriptlang.org/tsconfig#strictNullChecks)，可选参数会自动添加 `| undefined`：
+如果指定了 [--strictNullChecks](https://www.typescriptlang.org/tsconfig#strictNullChecks)，可选参数还是会自动添加 `| undefined`：
 
 ```ts
 function f(x: number, y?: number) {
@@ -266,3 +266,27 @@ function f(stringOrNull: string | null): string {
   return stringOrNull ?? "default"; // 同 stringOrNull !== null && stringOrNull !== void 0 ? stringOrNull : "default";
 }
 ```
+
+在编译器不能移除 `null` 或者 `undefined` 的情况下你可以使用类型断言操作符来手动移除它们，语法就是加上 `!` 后缀：`identifier!` 表示从 `identifier` 的类型中移除 `null` 和 `undefined`：
+
+```ts
+interface UserAccount {
+  id: number;
+  email?: string;
+}
+
+const user = getUser("admin");
+user.id;
+// Error: Object is possibly 'undefined'.
+
+if (user) {
+  user.email.length;
+  // Error: Object is possibly 'undefined'.
+}
+
+// Instead if you are sure that these objects or fields exist, the
+// postfix ! lets you short circuit the nullability
+user!.email!.length;
+```
+
+## Type Aliases
