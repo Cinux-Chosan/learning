@@ -290,3 +290,455 @@ user!.email!.length;
 ```
 
 ## Type Aliases
+
+类型别名为类型创建一个新的名字。类型别名类似于接口，但是可以用于命名原始类型、联合类型、元祖和其它任意类型：
+
+```ts
+type Second = number;
+
+let timeInSecond: number = 10;
+let time: Second = 10;
+```
+
+别名并不会创建一个新的类型，它只是对已有类型的一个引用。
+
+和 interface 差不多，别名也可以是泛型的，我们可以添加类型参数：
+
+```ts
+type Container<T> = { value: T };
+```
+
+当然它内部属性也可以使用它自身的类型：
+
+```ts
+type Tree<T> = {
+  value: T;
+  left?: Tree<T>;
+  right?: Tree<T>;
+};
+```
+
+与交叉类型结合：
+
+```ts
+type LinkedList<Type> = Type & { next: LinkedList<Type> };
+
+interface Person {
+  name: string;
+}
+
+let people = getDriversLicenseQueue();
+people.name;
+people.next.name;
+people.next.next.name;
+people.next.next.next.name;
+//                  ^ = (property) next: LinkedList
+```
+
+## Interfaces vs. Type Aliases
+
+虽然类型别名和 interface 很像，但也有细微差别。
+
+大多数 interface 的特性都可以用于 `type`，主要的区别是类型不可以添加新的属性，但是 interface 可以继承：
+
+```ts
+// interface 继承
+interface Animal {
+  name: string;
+}
+
+interface Bear extends Animal {
+  honey: boolean;
+}
+
+const bear = getBear();
+bear.name;
+bear.honey;
+```
+
+```ts
+// 通过交叉类型来继承类型
+type Animal = {
+  name: string;
+};
+
+type Bear = Animal & {
+  honey: Boolean;
+};
+
+const bear = getBear();
+bear.name;
+bear.honey;
+```
+
+但是面对添加新字段的时候：
+
+```ts
+// 给现有 interface 添加新字段
+interface Window {
+  title: string;
+}
+
+interface Window {
+  ts: import("typescript");
+}
+
+const src = 'const a = "Hello World"';
+window.ts.transpileModule(src, {});
+```
+
+```ts
+// 类型一旦创建不能修改
+type Window = {
+  title: string;
+};
+
+type Window = {
+  ts: import("typescript");
+};
+
+// Error: Duplicate identifier 'Window'.
+```
+
+尽可能使用 interface 而不是类型别名。
+
+如果不能使用 interface 而是要使用联合类型、元祖类型的时候，类型别名通常是更好的选择。
+
+## Enum Member Types
+
+略
+
+## Polymorphic this types
+
+略
+
+## Index types
+
+索引类型可以让编译器检查使用动态属性名的代码，下面是在 JavaScript 中获取对象子集的常用方式：
+
+```ts
+function pluck(o, propertyNames) {
+  return propertyNames.map((n) => o[n]);
+}
+```
+
+使用索引类型查询（index type query）和索引存取（indexed access）操作符使得你能够在 typescript 中使用这个函数：
+
+```ts
+function pluck<T, K extends keyof T>(o: T, propertyNames: K[]): T[K][] {
+  return propertyNames.map((n) => o[n]);
+}
+
+interface Car {
+  manufacturer: string;
+  model: string;
+  year: number;
+}
+
+let taxi: Car = {
+  manufacturer: "Toyota",
+  model: "Camry",
+  year: 2014,
+};
+
+// Manufacturer and model are both of type string,
+// so we can pluck them both into a typed string array
+let makeAndModel: string[] = pluck(taxi, ["manufacturer", "model"]);
+
+// If we try to pluck model and year, we get an
+// array of a union type: (string | number)[]
+let modelYear = pluck(taxi, ["model", "year"]);
+```
+
+编译器会检查 `manufacturer` 和 `model` 是否真的是 `Car` 的属性。这个例子引入了一系列新的类型操作符：
+
+1. 第一个就是 `keyof T`，它就是索引类型查询操作符。对于类型 `T` 而言，`keyof T` 是 `T` 中公有属性名的联合类型，例如：
+
+```ts
+let carProps: keyof Car;
+//         ^ = let carProps: keyof Car
+```
+
+`keyof Car` 就是 `"manufacturer" | "model" | "year"`。不同点是如果你向 Car 中添加了其他属性，则 `keyof Car` 会自动包含新加入的属性。
+
+```ts
+// error, Type '"unknown"' is not assignable to type '"manufacturer" | "model" | "year"'
+pluck(taxi, ["year", "unknown"]);
+```
+
+2. 第二个操作符是 `T[K]`，即索引存取操作符。它表示获取类型 `T` 中属性 `K` 的类型：
+
+```ts
+function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
+  return o[propertyName]; // o[propertyName] is of type T[K]
+}
+```
+
+在上面的函数中，`o: T` 和 `propertyName: K` 得到的 `o[propertyName]: T[K]` 类型，它根据不同的属性名得到不同的类型：
+
+```ts
+let manufacturer: string = getProperty(taxi, "manufacturer");
+let year: number = getProperty(taxi, "year");
+
+let unknown = getProperty(taxi, "unknown");
+// Error: Argument of type '"unknown"' is not assignable to parameter of type 'keyof Car'.
+```
+
+## Index types and index signatures
+
+索引签名参数类型必须是 `string` 或者 `number`。对于一个字符串索引签名的类型，`keyof T` 是 `string | number`（因为在 JavaScript 中可以通过 `object["42"]` 或者 `object[42]` 来访问对象的属性）。`T[string]` 就是索引签名的类型：
+
+```ts
+interface Dictionary<T> {
+  [key: string]: T;
+}
+let keys: keyof Dictionary<number>;
+//     ^ = let keys: string | number
+let value: Dictionary<number>["foo"];
+//      ^ = let value: number
+```
+
+对于数字索引签名的类型而言，`keyof T` 仅仅是 `number`：
+
+```ts
+interface Dictionary<T> {
+  [key: number]: T;
+}
+
+let keys: keyof Dictionary<number>;
+//     ^ = let keys: number
+let numberValue: Dictionary<number>[42];
+//     ^ = let numberValue: number
+let value: Dictionary<number>["foo"];
+// Error: Property 'foo' does not exist on type 'Dictionary<number>'.
+```
+
+## Mapped types
+
+一种常见的场景是将已有类型的每个属性变成可选的：
+
+```ts
+interface PersonSubset {
+  name?: string;
+  age?: number;
+}
+```
+
+也可能是想将它们转换成 `readonly`：
+
+```ts
+interface PersonReadonly {
+  readonly name: string;
+  readonly age: number;
+}
+```
+
+typescript 提供了一种基于某个类型创建新类型的方式 —— 即 mapped 类型。在 mapped 类型中，新的类型会对原类型的每个属性进行转换。例如，你可以将它们转换成可选参数或者只读参数：
+
+```ts
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
+
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+};
+```
+
+然后像下面这样使用它们：
+
+```ts
+type PersonPartial = Partial<Person>;
+//   ^ = type PersonPartial = {
+//       name?: string | undefined;
+//       age?: number | undefined;
+//   }
+type ReadonlyPerson = Readonly<Person>;
+//   ^ = type ReadonlyPerson = {
+//       readonly name: string;
+//       readonly age: number;
+//   }
+```
+
+注意，该语法描述的是类型而非属性成员。你可以使用交叉类型来添加成员：
+
+```ts
+// Use this:
+type PartialWithNewMember<T> = {
+  [P in keyof T]?: T[P];
+} & { newMember: boolean }
+
+// This is an error!
+type WrongPartialWithNewMember<T> = {
+  [P in keyof T]?: T[P];
+  newMember: boolean; // Error：'boolean' only refers to a type, but is being used as a value here.
+'}' expected.
+}
+// Error：Declaration or statement expected.
+```
+
+来看一个简单的映射类型：
+
+```ts
+type Keys = "option1" | "option2";
+type Flags = { [K in Keys]: boolean };
+```
+
+这种语法类似于在索引签名类型中存在一个 `for .. in`，其中有三部分：
+
+1. 类型变量 K 与每个属性绑定
+2. 字符串字面量联合类型 `Keys` 包含了需要迭代的属性名
+3. 属性的返回类型
+
+上面的例子类型和属性名都是硬编码的，但是一般情况下都是基于已有类型，这就是需要 `keyof` 和 `索引存取类型` 的原因：
+
+```ts
+type NullablePerson = { [P in keyof Person]: Person[P] | null };
+//   ^ = type NullablePerson = {
+//       name: string | null;
+//       age: number | null;
+//   }
+type PartialPerson = { [P in keyof Person]?: Person[P] };
+//   ^ = type PartialPerson = {
+//       name?: string | undefined;
+//       age?: number | undefined;
+//   }
+```
+
+泛型版本更加有用：
+
+```ts
+type Nullable<T> = { [P in keyof T]: T[P] | null };
+type Partial<T> = { [P in keyof T]?: T[P] };
+```
+
+在这些例子中，属性列表是 `keyof T`，结果类型是 `T[P]` 的衍生。对于使用泛型类型的 mapped 类型来说是一个很好的模板。这是因为这种转换是[同形态](https://wikipedia.org/wiki/Homomorphism)的，意思就是仅对 `T` 的属性进行映射，没有其它依赖。编译器知道它能够拷贝所有已经存在的属性修饰符，如果 `Person.name` 是 readonly 的，`Partial<Person>.name` 也会包含 readonly 并且还是 optional 参数。
+
+再来一个例子，`T[P]` 被包含在 `Proxy<T>` 中：
+
+```ts
+type Proxy<T> = {
+  get(): T;
+  set(value: T): void;
+};
+
+type Proxify<T> = {
+  [P in keyof T]: Proxy<T[P]>;
+};
+
+function proxify<T>(o: T): Proxify<T> {
+  // ... wrap proxies ...
+}
+
+let props = { rooms: 4 };
+let proxyProps = proxify(props);
+//  ^ = let proxyProps: Proxify<{
+//      rooms: number;
+//  }>
+```
+
+由于 `Readonly<T>` 和 `Partial<T>` 太过于通用，它们和 `Pcik`、`Record` 等直接被包含在 typescript 标准库中：
+
+```ts
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P];
+};
+
+type Record<K extends keyof any, T> = {
+  [P in K]: T;
+};
+```
+
+`Readonly`、`Partial` 和 `Pick` 都是同形态的，但是 `Record` 不是，因为 `Record` 并不是接收一个输入类型来拷贝属性：
+
+```ts
+type ThreeStringProps = Record<"prop1" | "prop2" | "prop3", string>;
+```
+
+非同形态的类型实际上会创建新的属性，因此它们不能从任何地方拷贝属性修饰符。
+
+注意 `keyof any` 代表任意可以作为索引的类型，简单说来就是 `string | number | symbol`。
+
+## Inference from mapped types
+
+现在你知道如何把一个类型的属性进行封装了，下一步就是如何将它们解封？
+
+```ts
+function unproxify<T>(t: Proxify<T>): T {
+  let result = {} as T;
+  for (const k in t) {
+    result[k] = t[k].get();
+  }
+  return result;
+}
+
+let originalProps = unproxify(proxyProps);
+//  ^ = let originalProps: {
+//      rooms: number;
+//  }
+```
+
+注意，解封只对同形态的 mapped 类型生效。Record 不是同形态的 mapped 类型。如果某个 mapped 类型不是同形态的，则你不得不在解封函数中显示指定类型参数。
+
+## Conditional Types
+
+条件类型就是基于条件来决定采用何种类型：
+
+```ts
+T extends U ? X : Y
+```
+
+上面的代码表示：当 `T` 能够被赋值给 `U` 时类型是 `X`，否则类型是 `Y`
+
+由于 `T extends U ? X : Y` 的条件依赖于一个或多个类型变量，因此它可能被解析为 X，也可能是 Y，还有可能延迟解析。解析为 `X` 或者 `Y` 还是说延迟解析取决于类型系统是否有足够的信息来推断 T 是否总是可以赋值给 U。
+
+```ts
+declare function f<T extends boolean>(x: T): T extends true ? string : number;
+
+// Type is 'string | number'
+let x = f(Math.random() < 0.5);
+//  ^ = let x: string | number
+```
+
+由于 `Math.random() < 0.5` 可能为 true，也可能为 false，因此 x 类型可能是 `string` 也可能是 `number`，所以为联合类型 `string | number`
+
+另一个例子是 `TypeName` 类型别名，它使用嵌套的条件类型：
+
+```ts
+type TypeName<T> = T extends string ? "string" : T extends number ? "number" : T extends boolean ? "boolean" : T extends undefined ? "undefined" : T extends Function ? "function" : "object";
+
+type T0 = TypeName<string>;
+//   ^ = type T0 = "string"
+type T1 = TypeName<"a">;
+//   ^ = type T1 = "string"
+type T2 = TypeName<true>;
+//   ^ = type T2 = "boolean"
+type T3 = TypeName<() => void>;
+//   ^ = type T3 = "function"
+type T4 = TypeName<string[]>;
+//   ^ = type T4 = "object"
+```
+
+```ts
+interface Foo {
+  propA: boolean;
+  propB: boolean;
+}
+
+declare function f<T>(x: T): T extends Foo ? string : number;
+
+function foo<U>(x: U) {
+  // Has type 'U extends Foo ? string : number'
+  let a = f(x);
+
+  // This assignment is allowed though!
+  let b: string | number = a;
+}
+```
+
+在上面的例子中，变量 `a` 是一个条件类型，且并没有选中某一个条件分支。只有当调用 `foo` 的时候通过传入的参数 x 的类型才能决定 a 是何种类型。
+
+只要条件类型的任意分支类型都满足目标类型，则可以将条件类型赋值给目标类型。
+
+## Distributive conditional types
+
