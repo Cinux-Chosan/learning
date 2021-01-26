@@ -742,3 +742,204 @@ function foo<U>(x: U) {
 
 ## Distributive conditional types
 
+可分配条件类型。
+
+可分配条件类型会自动运用到联合类型上，如条件类型是 `T extends U ? X : Y`，如果传给 `T` 的参数类型是 `A | B | C`，则最终类型是： `(A extends U ? X : Y) | (B extends U ? X : Y) | (C extends U ? X : Y)`。
+
+```ts
+// TypeName 在上面定义过
+type T5 = TypeName<string | (() => void)>;
+//   ^ = type T5 = "string" | "function"
+type T6 = TypeName<string | string[] | undefined>;
+//   ^ = type T6 = "string" | "undefined" | "object"
+type T7 = TypeName<string[] | number[]>;
+//   ^ = type T7 = "object"
+```
+
+```ts
+type BoxedValue<T> = { value: T };
+type BoxedArray<T> = { array: T[] };
+type Boxed<T> = T extends any[] ? BoxedArray<T[number]> : BoxedValue<T>;
+
+type T1 = Boxed<string>;
+//   ^ = type T1 = {
+//       value: string;
+//   }
+type T2 = Boxed<number[]>;
+//   ^ = type T2 = {
+//       array: number[];
+//   }
+type T3 = Boxed<string | number[]>;
+//   ^ = type T3 = BoxedValue | BoxedArray
+```
+
+```ts
+// Remove types from T that are assignable to U
+// 从 T 类型中移除掉兼容类型 U 的类型
+type Diff<T, U> = T extends U ? never : T;
+// Remove types from T that are not assignable to U
+// 从 T 类型中移除掉不兼容类型 U 的类型
+type Filter<T, U> = T extends U ? T : never;
+
+type T1 = Diff<"a" | "b" | "c" | "d", "a" | "c" | "f">;
+//   ^ = type T1 = "b" | "d"
+type T2 = Filter<"a" | "b" | "c" | "d", "a" | "c" | "f">; // "a" | "c"
+//   ^ = type T2 = "a" | "c"
+type T3 = Diff<string | number | (() => void), Function>; // string | number
+//   ^ = type T3 = string | number
+type T4 = Filter<string | number | (() => void), Function>; // () => void
+//   ^ = type T4 = () => void
+
+// Remove null and undefined from T
+type NotNullable<T> = Diff<T, null | undefined>;
+
+type T5 = NotNullable<string | number | undefined>;
+//   ^ = type T5 = string | number
+type T6 = NotNullable<string | string[] | null | undefined>;
+//   ^ = type T6 = string | string[]
+
+function f1<T>(x: T, y: NotNullable<T>) {
+  x = y;
+  y = x;
+  // Error: Type 'T' is not assignable to type 'Diff<T, null | undefined>'.
+}
+
+function f2<T extends string | undefined>(x: T, y: NotNullable<T>) {
+  x = y;
+  y = x;
+  // Error: Type 'T' is not assignable to type 'Diff<T, null | undefined>'.
+  //   Error: Type 'string | undefined' is not assignable to type 'Diff<T, null | undefined>'.
+  //     Error: Type 'undefined' is not assignable to type 'Diff<T, null | undefined>'.
+  let s1: string = x;
+  // Error: Type 'T' is not assignable to type 'string'.
+  //   Error: Type 'string | undefined' is not assignable to type 'string'.
+  //     Error: Type 'undefined' is not assignable to type 'string'.
+  let s2: string = y;
+}
+```
+
+条件类型和 mapped 类型组合会非常有用：
+
+```ts
+type FunctionPropertyNames<T> = {
+  [K in keyof T]: T[K] extends Function ? K : never;
+}[keyof T];
+
+type FunctionProperties<T> = Pick<T, FunctionPropertyNames<T>>;
+
+type NonFunctionPropertyNames<T> = {
+  [K in keyof T]: T[K] extends Function ? never : K;
+}[keyof T];
+
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
+
+interface Part {
+  id: number;
+  name: string;
+  subparts: Part[];
+  updatePart(newName: string): void;
+}
+
+type T1 = FunctionPropertyNames<Part>;
+//   ^ = type T1 = "updatePart"
+type T2 = NonFunctionPropertyNames<Part>;
+//   ^ = type T2 = "id" | "name" | "subparts"
+type T3 = FunctionProperties<Part>;
+//   ^ = type T3 = {
+//       updatePart: (newName: string) => void;
+//   }
+type T4 = NonFunctionProperties<Part>;
+//   ^ = type T4 = {
+//       id: number;
+//       name: string;
+//       subparts: Part[];
+//   }
+```
+
+与联合和交叉类型相似，条件类型不允许递归引用自己。例如，以下是错误：
+
+```ts
+type ElementType<T> = T extends any[] ? ElementType<T[number]> : T; // Error
+```
+
+## Type inference in conditional types
+
+条件类型中的类型推断
+
+在条件类型的 `extends` 语句中可以使用 `infer` 声明来表示某个类型需要被推断（个人理解为动态类型，相当于是从传入的类型中来获取类型。由于并不是所有的类型都能够硬编码出来，因此动态的去获取类型非常有用）。这种推断类型变量只能在条件类型的 `true` 分支被引用。
+
+对于同一个类型变量可以有多个 `infer`。
+
+```ts
+// 从传入的类型中动态确定 R
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+```
+
+可以嵌套条件类型以形成一系列按顺序求值的模式匹配：
+
+```ts
+// 不能确定传入的是什么类型数组类型，因此使用 infer 来获取 U 的类型，如果是 string[] 则 U 为 string，如果是 number[] 则 U 为 number
+type Unpacked<T> = T extends (infer U)[] ? U : T extends (...args: any[]) => infer U ? U : T extends Promise<infer U> ? U : T;
+
+type T0 = Unpacked<string>;
+//   ^ = type T0 = string
+type T1 = Unpacked<string[]>;
+//   ^ = type T1 = string
+type T2 = Unpacked<() => string>;
+//   ^ = type T2 = string
+type T3 = Unpacked<Promise<string>>;
+//   ^ = type T3 = string
+type T4 = Unpacked<Promise<string>[]>;
+//   ^ = type T4 = Promise
+type T5 = Unpacked<Unpacked<Promise<string>[]>>;
+//   ^ = type T5 = string
+```
+
+下面展示同一个类型变量 `U` 被推断为**联合类型**的情况：
+
+```ts
+type Foo<T> = T extends { a: infer U; b: infer U } ? U : never;
+
+type T1 = Foo<{ a: string; b: string }>;
+//   ^ = type T1 = string
+type T2 = Foo<{ a: string; b: number }>;
+//   ^ = type T2 = string | number
+```
+
+下面展示同一个类型变量 `U` 被推断为**交叉类型**的情况：
+
+```ts
+type Bar<T> = T extends { a: (x: infer U) => void; b: (x: infer U) => void } ? U : never;
+
+type T1 = Bar<{ a: (x: string) => void; b: (x: string) => void }>;
+//   ^ = type T1 = string
+type T2 = Bar<{ a: (x: string) => void; b: (x: number) => void }>;
+//   ^ = type T2 = never
+```
+
+当从多个调用签名（如函数重载）中推断类型的时候，从最后一个签名中获取引用（一般是重载的兜底方案）。无法根据参数列表分别对重载进行解析推断。
+
+```ts
+declare function foo(x: string): number;
+declare function foo(x: number): string;
+declare function foo(x: number): boolean;
+declare function foo(x: string | number): string | number;
+
+type T1 = ReturnType<typeof foo>;
+//   ^ = type T1 = string | number
+```
+
+对于常规类型参数而言，不能使用 `infer` 声明：
+
+```ts
+type ReturnedType<T extends (...args: any[]) => infer R> = R;
+// 'infer' declarations are only permitted in the 'extends' clause of a conditional type.
+// Cannot find name 'R'.
+```
+
+但是可以采用曲线救国的思路，移除掉约束中的类型变量，使用条件类型来取代：
+
+```ts
+type AnyFunction = (...args: any[]) => any;
+type ReturnType<T extends AnyFunction> = T extends (...args: any[]) => infer R ? R : any;
+```
