@@ -1,1 +1,6 @@
-type ReturnedType<T extends (...args: any[]) => infer R> = R;
+class A {
+  hello() {}
+  name: string;
+}
+
+type pA = Partial<A>;
