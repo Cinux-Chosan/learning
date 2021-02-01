@@ -208,9 +208,59 @@ import ‘folder2/file3’:
 
 ## Virtual Directories with rootDirs
 
-有些情况是项目中多个目录下的资源会在编译期合并生成到一个输出目录。这可以看做是通过一组源目录创建了一个 “虚拟” 目录。
+有些情况是项目中多个目录下的资源会在编译期合并生成到一个输出目录。这可以看做是通过一组源目录创建了一个 “虚拟” 目录（相当于编译器会把每个目录中的内容拉平，相当于它们在一个目录里面一样）。
 
-使用 `rootDirs` 来告诉编译器
+使用 `rootDirs` 来告诉编译器组成这个虚拟目录的根目录们。因此编译器可以以相对路径的方式来解析这些目录中模块之间的导入，就像它们已经被合并到一个目录中一样。
+
+例如考虑下面的项目结构：
+
+```
+ src
+ └── views
+     └── view1.ts (imports './template1')
+     └── view2.ts
+
+ generated
+ └── templates
+         └── views
+             └── template1.ts (imports './view2')
+```
+
+在 `src/views` 中的文件使用户的 UI 视图控制界面。在 `generated/templates` 中是模板生成器生成的 UI 模板代码。在构建阶段会将 `/src/views` 和 `/generated/templates/views` 中的文件拷贝到同一个输出目录中。在运行时，视图文件预期它的模板会在同一个目录中，因此使用相对路径 `./template` 进行模板导入。
+
+为了告诉编译器它们之间的关系，需要用到 `rootDirs`。该字段指定了一系列目录集合，这些目录集合在运行时会合并到一起，因此在我们的例子中，`tsconfig.json` 如下：
+
+```json
+{
+  "compilerOptions": {
+    "rootDirs": ["src/views", "generated/templates/views"]
+  }
+}
+```
+
+每次编译器发现 `rootDirs` 中指定的目录中的文件存在相对模块导入，它就会去 `rootDirs` 中指定的每一项目录中进行文件查找。
+
+`rootDirs` 的灵活性不仅限于指定一系列逻辑上合并在一起的物理目录。还可以指定任意数量的临时目录，不管它们是否真的存在。这允许编译器以类型安全的方式捕获复杂的绑定和运行时特性，例如条件包含和特定于项目的加载程序插件。
+
+考虑一个国际化场景，其中构建工具通过插入一个特殊的路径标记自动生成特定于语言环境的打包文件，如使用 `#{locale}` 作为模块相对路径的一部分，如 `./#{locale}/messages`。假设有一个枚举工具能够将这样的抽象路径映射为 `./zh/messages`、`./de/messages` 等路径。
+
+假设每个路径的本地化文件都暴露一个字符串列表，以 `./zh/messages` 为例，假设内容如下：
+
+```ts
+export default ["您好吗", "很高兴认识你"];
+```
+
+通过 rootDirs 我们可以告诉编译器此时的映射关系以及使得编译器可以安全的解析 `./#{locale}/messages`，即便是该目录不存在。例如有一下配置：
+
+```json
+{
+  "compilerOptions": {
+    "rootDirs": ["src/zh", "src/de", "src/#{locale}"]
+  }
+}
+```
+
+由于 `src/#{locale}` 是 `rootDirs` 中指定的目录，因此编译器会在 rootDirs 中指定的目录进行文件查找，第一项是 `src/zh`，在其中找到了 `messages`，因此编译器现在会将 `import messages from './#{locale}/message'` 解析为 `import messages from './zh/messages'`，这使得可以在开发过程中调试本地化代码。（个人理解是，只要 import 的文件路径存在于 rootDirs 列表中，则都会从 rootDirs 的第一项开始查找，相当于 rootDirs 中的每一项都会在导入路径中被一个一个的替换并尝试查找对应的文件，即便是使用的 `import messages from ./de/messages` 且 `/de/messages` 存在，但是只要 `./zh/messages` 也存在，就会优先解析到 `./zh/messages` 文件去）
 
 ## Using --noResolve
 
