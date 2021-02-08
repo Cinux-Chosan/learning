@@ -508,6 +508,9 @@ iterate(uris)
 - [configstore](https://www.npmjs.com/package/configstore)
   - 存放和加载用户信息而不用关心具体存放在什么位置
 
+- [patch-package](https://github.com/ds300/patch-package)
+  - 在某些边缘情况下需要修改 node_modules 中的源码，但是重新 `npm i` 之后修改会丢失，该包用于记录修改到当前项目下，保持修改一直跟随当前项目。 
+
 ## 一些有趣的 lib
 
 - [WD.js](https://www.npmjs.com/package/wd)
