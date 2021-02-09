@@ -9,7 +9,7 @@ secrets 是你在组织、仓库或者仓库环境中创建的加密的环境变
 
 对于 organization secrets，你可以通过访问策略来控制哪个仓库能够使用到它。organization secret 可以让你在多个仓库中共享这些数据，从而减少重复创建 secrets，并且能够统一修改。
 
-对于环境级别的 secrets，你能够开启必要的审批机制来控制对 secrets 的访问。如果没有得到允许，workflow job 是无法访问环境 secrets 的。
+对于 environment secrets，你能够开启必要的审批机制来控制对 secrets 的访问。如果没有得到允许，workflow job 是无法访问环境 secrets 的。
 
 ### secrets 命名
 
