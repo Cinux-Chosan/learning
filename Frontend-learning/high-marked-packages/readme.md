@@ -533,3 +533,13 @@ iterate(uris)
 
 - [autocannon](https://www.npmjs.com/package/autocannon)
   - 接口压力测试
+
+
+## 独立工具
+
+- [Wheat](https://github.com/creationix/wheat)
+  - 一个博客引擎，从 git 读取并呈现为网站
+
+- [surge](https://github.com/sintaxi/surge)
+  - 无需配置，一键部署网站或者内容到互联网，主页 https://surge.sh/
+  - 免费托管
