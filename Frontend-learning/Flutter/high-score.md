@@ -5,3 +5,6 @@
 
 - [flutter_swiper](https://pub.dev/packages/flutter_swiper)
   - flutter swiper 
+
+- [badges](https://pub.dev/packages/badges)
+  - 创建 flutter 徽章
