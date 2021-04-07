@@ -495,6 +495,8 @@ iterate(uris)
 - [cpy-cli](https://www.npmjs.com/package/cpy-cli)
   - cpy 的 cli 版本，例如可用于 `package.json#script#postinstall` 中。
 
+- [validator](https://github.com/validatorjs/validator.js)
+  - 能够方便完成字符串的各种验证逻辑
 ## 一些不那么高的但比较有用的模块
 
 - [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
