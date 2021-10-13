@@ -5,6 +5,8 @@ class Vue {
   }
 }
 
+const targets = [];
+
 class Watcher {
   constructor(vm, prop, cb) {
     this.vm = vm;
@@ -14,9 +16,11 @@ class Watcher {
   }
 
   get() {
+    targets.push(this);
     Dep.target = this;
     this.getter();
-    Dep.target = null;
+    targets.pop();
+    Dep.target = targets[targets.length - 1];
   }
 
   update() {
@@ -49,6 +53,7 @@ function defineReactive(obj, key, value) {
     },
     set(newValue) {
       value = newValue;
+      observe(newValue);
       dep.notify();
     },
   });
@@ -86,6 +91,8 @@ function proxy(target, sourceKey) {
   }
 }
 
+// ---------- 测试 ----------
+
 const comp = new Vue({
   data() {
     return {
@@ -104,3 +111,5 @@ const comp = new Vue({
 const watcher1 = new Watcher(comp, 'firstName', () => console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`))
 const watcher2 = new Watcher(comp, 'firstName', () => console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`))
 const watcher3 = new Watcher(comp, 'otherInfo.hometown', () => console.log(`otherInfo.hometown 发生了变化，最新值为${comp.otherInfo.hometown}，我可以在这里更新 DOM`))
+comp.otherInfo = { street: 'xx street' }
+const watcher4 = new Watcher(comp, 'otherInfo.street', () => console.log(`otherInfo.street 发生了变化，最新值为${comp.otherInfo.street}，我可以在这里更新 DOM`))

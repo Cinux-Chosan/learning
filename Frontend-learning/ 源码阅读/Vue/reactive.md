@@ -209,7 +209,7 @@ class Dep {
 ```js
 class Watcher {
   // 假定 prop 是属性路径，如 vm.otherInfo.lang，则 prop 是 'otherInfo.lang'
-  // 此处只是演示基本逻辑，不处理数组以及
+  // 此处只是演示基本逻辑，不处理数组以及其他特殊情况
   constructor(vm, prop, cb) {
     this.vm = vm;
     this.getter = () => prop.split('.').reduce((o, k) => o[k], vm);
@@ -219,7 +219,7 @@ class Watcher {
 
   get () {
     // 将自己挂载到 Dep.target，以便 defineReactive 可以将自己纳入依赖中
-    // 但是在真实实现中，由于可能存在嵌套访问的情况，会使用数组保存 target，并在下面的 getter 调用完成之后将当前 target 弹出，并将 Dep.target 设置为数组最后一项
+    // 但是在真实实现中，由于可能存在同时嵌套访问的情况，会使用数组保存 target，并在下面的 getter 调用完成之后将当前 target 弹出，并将 Dep.target 设置为数组最后一项
     Dep.target = this;
     // 挂载之后，访问属性则可以将自己加入到该属性依赖中去，即触发依赖搜集
     this.getter();
@@ -275,7 +275,7 @@ comp.otherInfo.hometown = 'TL'
 
 ## 其它说明
 
-- 本文只是一步一步引导并对 Vue 中的响应式做了基本实现，为了简化逻辑，很多对演示无关紧要的特殊情况并未处理，如对同一个对象多次调用 `observe` 等。
+- 本文只是一步一步引导并对 Vue 中的响应式做了基本实现，为了简化逻辑，很多对演示无关紧要的特殊情况并未处理，如对同一个对象多次调用 `observe`，删除依赖等，另外部分逻辑还进行了更加深入的简化。
 - 本文不涉及模板编译，模板编译的内容将在后续推出。
 - 暂时由于时间关系未处理数组部分，后期可能会添加，感兴趣的小伙伴可以自己查看源码，大致思路就是拦截数组的几个 `mutation` 方法。
 - 完整代码参考[这里](./reactive.js)
