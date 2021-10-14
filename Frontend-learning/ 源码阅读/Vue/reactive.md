@@ -25,9 +25,9 @@ const comp = new Vue({
       age: 18,
       hobbies: ["games", "sports"],
       otherInfo: {
-        hometown: 'CQ',
-        lang: 'zh-CN'
-      }
+        hometown: "CQ",
+        lang: "zh-CN",
+      },
     };
   },
 });
@@ -57,7 +57,7 @@ o.firstName; // 正在获取 firstName，可以在这里搜集哪些地方依赖
 o.firstName = "Sanfeng"; // 正在修改 firstName，新值是 Sanfeng，可以在这里通知我的依赖
 ```
 
-为了能让上面的功能更通用，我们将它封装为函数：
+为了能让上面的功能更通用，我们将它封装为函数 `defineReactive`：
 
 ```js
 function defineReactive(obj, key, value) {
@@ -134,7 +134,7 @@ function proxy(target, sourceKey) {
 }
 ```
 
-由于 `data` 返回的数据可能嵌套对象，因此会涉及到递归，为了更加通用，所以我们将它的逻辑抽到 `observe` 中来实现：
+由于 `data` 返回的数据可能嵌套对象，因此会涉及到递归，为了更加通用，所以我们将它的逻辑抽到 `observe` 中来实现，需要达成以下目标：
 
 - 对传入的对象中每个属性调用 `defineReactive` 进行拦截
 - 如果某个属性值时对象，则递归调用
@@ -156,7 +156,7 @@ function isObject(obj) {
 }
 ```
 
-此时我们已经对 Vue 中的 `data` 全部进行了拦截，但是并没有完成依赖搜集（我们只是简单的在 `defineReactive` 的 `get` 中打印了一段文字），现在我们来完善依赖搜集的部分，我们需要对 `defineReactive` 进行修改：
+此时我们已经对 Vue 中的 `data` 全部进行了拦截，但是并没有完成依赖搜集（我们只是简单的在 `defineReactive` 的 `get` 中打印了一段文字），现在我们来完善依赖搜集的部分，我们需要对 `defineReactive` 进行修改，需要达成以下目标：
 
 - 需要记录所有依赖
 
@@ -191,7 +191,7 @@ class Dep {
   }
 
   notify() {
-    this.subs.forEach(sub => sub.update());
+    this.subs.forEach((sub) => sub.update());
   }
 }
 ```
@@ -212,12 +212,12 @@ class Watcher {
   // 此处只是演示基本逻辑，不处理数组以及其他特殊情况
   constructor(vm, prop, cb) {
     this.vm = vm;
-    this.getter = () => prop.split('.').reduce((o, k) => o[k], vm);
+    this.getter = () => prop.split(".").reduce((o, k) => o[k], vm);
     this.cb = cb;
     this.get();
   }
 
-  get () {
+  get() {
     // 将自己挂载到 Dep.target，以便 defineReactive 可以将自己纳入依赖中
     // 但是在真实实现中，由于可能存在同时嵌套访问的情况，会使用数组保存 target，并在下面的 getter 调用完成之后将当前 target 弹出，并将 Dep.target 设置为数组最后一项
     Dep.target = this;
@@ -262,20 +262,170 @@ function defineReactive(obj, key, value) {
 至此，我们有了一个 Vue 中响应式的基本模型：
 
 ```js
-const watcher1 = new Watcher(comp, 'firstName', () => console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`))
-const watcher2 = new Watcher(comp, 'firstName', () => console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`))
-const watcher3 = new Watcher(comp, 'otherInfo.hometown', () => console.log(`otherInfo.hometown 发生了变化，最新值为${comp.otherInfo.hometown}，我可以在这里更新 DOM`))
+const watcher1 = new Watcher(comp, "firstName", () =>
+  console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`)
+);
+const watcher2 = new Watcher(comp, "firstName", () =>
+  console.log(`firstNae 发生了变化，最新值为${comp.firstName}，我可以在这里更新 DOM`)
+);
+const watcher3 = new Watcher(comp, "otherInfo.hometown", () =>
+  console.log(`otherInfo.hometown 发生了变化，最新值为${comp.otherInfo.hometown}，我可以在这里更新 DOM`)
+);
 
-comp.firstName = 'Sanfeng'; 
+comp.firstName = "Sanfeng";
+// 输出：
 // firstNae 发生了变化，最新值为Sanfeng
 // firstNae 发生了变化，最新值为Sanfeng
-comp.otherInfo.hometown = 'TL'
+comp.otherInfo.hometown = "TL";
+// 输出：
 // otherInfo.hometown 发生了变化，最新值为TL
+comp.otherInfo = { street: "xx street" };
+// 父级发生变化，输出：
+// otherInfo.hometown 发生了变化，最新值为undefined，我可以在这里更新 DOM
+const watcher4 = new Watcher(comp, "otherInfo.street", () =>
+  console.log(`otherInfo.street 发生了变化，最新值为${comp.otherInfo.street}，我可以在这里更新 DOM`)
+);
+comp.otherInfo.street = "Wall Street";
+// 输出：
+// otherInfo.street 发生了变化，最新值为Wall Street，我可以在这里更新 DOM
 ```
+
+## 关于数组
+
+由于数组是引用类型，对数组元素进行增删并不会导致数组本身的引用被改变。因此为了拦截数组的改变，我们需要拦截 7 个可以增删数组元素的方法，并在方法中通知依赖：
+
+- 7 个方法分别为： `push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`
+- 基于数组原型链继承一个新的原型链，覆盖其本来的原型链，其目的主要是为了加入通知依赖更新和对新加入的对象进行响应式处理的逻辑。
+
+```js
+const arrayMethods = Object.create(Array.prototype);
+const methodsToPatch = ["push", "pop", "shift", "unshift", "splice", "sort", "reverse"];
+
+methodsToPatch.forEach((method) => {
+  arrayMethods[method] = function mutator(...args) {
+    const original = arrayMethods.__proto__[method];
+    const result = original.apply(this, args);
+    let inserted;
+    switch (method) {
+      case "push":
+      case "unshift":
+        inserted = args;
+        break;
+      case "splice":
+        inserted = args.slice(2);
+        break;
+    }
+    // 对新加入元素进行响应式处理
+    if (inserted) observeArray(inserted);
+    // 通知数组依赖更新
+    notifyArrayDeps(this);
+    return result;
+  };
+});
+
+function observeArray(items) {
+  for (let i = 0; i < items.length; i++) {
+    observe(items[i]);
+  }
+}
+
+function notifyArrayDeps(array) {
+  // ...
+}
+```
+
+由于我们是拦截的数组方法，而数组的 `dep` 也被封装到了 `defineReactive` 中，因此为了获取到 `dep`，我们可以在 `defineReactive` 中将 `dep` 挂载到数组上：
+
+```js
+function defineReactive(obj, key, value) {
+  const dep = new Dep();
+  Object.defineProperty(obj, key, {
+    get() {
+      // 挂载 dep 到对象上
+      mountDep(value, dep);
+      // 如果挂载点上有数据，那就将它搜集为依赖
+      if (Dep.target) {
+        dep.addSub(Dep.target);
+      }
+      return value;
+    },
+    set(newValue) {
+      value = newValue;
+      // 由于新值可能是对象，也需要添加响应式。因此执行 observe
+      observe(newValue);
+
+      // 通知数据发生变化
+      dep.notify();
+    },
+  });
+}
+
+function mountDep(o, dep) {
+  o.__dep__ = o.__dep__ || dep;
+}
+```
+
+然后完善 `notifyArrayDeps`：
+
+```js
+function notifyArrayDeps(array) {
+  array.__dep__?.notify();
+}
+```
+
+在 `observe` 中添加对数组的处理：
+
+```js
+function observe(obj) {
+  if (!isObject(obj)) return;
+
+  // 添加对数组的处理
+  if (Array.isArray(obj)) {
+    obj.__proto__ = arrayMethods;
+    observeArray(obj);
+  } else {
+    for (let k in obj) {
+      const value = obj[k];
+      // value 可能是嵌套对象，因此也需要 observe 一下
+      observe(value);
+      defineReactive(obj, k, value);
+    }
+  }
+}
+```
+
+测试一下：
+
+```js
+const watcher5 = new Watcher(comp, "hobbies", () => console.log(`hobbies 发生了改变`));
+comp.hobbies.push("music");
+// 输出：
+// hobbbies 发生了改变
+comp.hobbies = [];
+// 输出
+// hobbbies 发生了改变
+```
+
+## 总结
+
+其实在 Vue 响应式实现中，主要需要解决以下几个问题：
+
+- 基本思路：
+
+  - 普通对象属性通过 `Object.defineProperty` 来进行拦截，在 `get` 中搜集依赖，在 `set` 中触发依赖
+  - 对于数组，还需要通过对七个可以修改数组的方法进行拦截，并在拦截的方法中通知依赖进行更新
+    - 由于数组方法和 `defineReactive` 逻辑独立，且 `dep` 被封装在 `defineReactive` 内部，因此可以将 `dep` 挂载到数组本身上以便在拦截方法中通知依赖更新
+
+- 如何找到依赖？
+
+  - 依赖访问属性之前，将自己挂载到 `defineReactive` 可以访问的地方，在 Vue 实现中是挂载到 `Dep.target` 上，`defineReactive` 通过 `Dep.target` 就可以知道是谁依赖了该属性。
+
+- 如何收集依赖？
+
+  - 依赖将自己挂载到 `Dep.target` 之后通过访问对应的属性触发该属性的依赖收集，从而才能将自己加入到属性的依赖中
 
 ## 其它说明
 
-- 本文只是一步一步引导并对 Vue 中的响应式做了基本实现，为了简化逻辑，很多对演示无关紧要的特殊情况并未处理，如对同一个对象多次调用 `observe`，删除依赖等，另外部分逻辑还进行了更加深入的简化。
+- 本文只是一步一步引导并对 Vue 中的响应式做了基本实现，为了简化逻辑，省略了源码中对演示无关紧要的部分，并且对部分代码做了简单修改。
 - 本文不涉及模板编译，模板编译的内容将在后续推出。
-- 暂时由于时间关系未处理数组部分，后期可能会添加，感兴趣的小伙伴可以自己查看源码，大致思路就是拦截数组的几个 `mutation` 方法。
 - 完整代码参考[这里](./reactive.js)
