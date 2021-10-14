@@ -100,7 +100,7 @@ function initData(vm) {
 }
 ```
 
-此时，我们需要对 Vue 实例中的数据进行拦截，需要实现 `initData` 函数：
+此时，我们需要对 Vue 实例中的数据进行拦截，需要实现 `initData` 函数，它需要达成目标：
 
 - 获取并保存 `data` 中的值
 - 遍历 `data` 中的数据，对每个属性使用 `defineReactive` 进行拦截
@@ -204,7 +204,7 @@ class Dep {
 
 - 当访问经过 `defineReactive` 处理过后的响应式数据时，需要访问者主动将自己暴露给 `defineReactive` 以便 `defineReactive` 能够清楚知道当前是谁在访问这个属性，从而进行依赖搜集。
 
-这个暴露的过程可以看做是一个属性的挂载，这个挂载点需要 `defineReactive` 和访问者都能访问到。选择 window 这种全局作用域属性肯定是不好的，既然是和依赖相关，我们就将它挂载到 `Dep.target` 属性上。
+这个暴露的过程可以看做是一个属性的挂载，这个挂载点需要 `defineReactive` 和访问者都能访问到。选择 window 这种全局作用域属性肯定是不好的，既然是和依赖相关，我们就将它挂载到 `Dep.target` 属性上（下面的 `get` 函数中）：
 
 ```js
 class Watcher {
@@ -334,7 +334,9 @@ function notifyArrayDeps(array) {
 }
 ```
 
-由于我们是拦截的数组方法，而数组的 `dep` 也被封装到了 `defineReactive` 中，因此为了获取到 `dep`，我们可以在 `defineReactive` 中将 `dep` 挂载到数组上：
+由于我们是拦截的数组方法，而数组的 `dep` 又被封装到了 `defineReactive` 中，我们需要用到 `dep` 来通知依赖更新，怎么做呢？
+
+为了获取到 `dep`，我们可以在 `defineReactive` 中将 `dep` 挂载到数组上：
 
 ```js
 function defineReactive(obj, key, value) {
