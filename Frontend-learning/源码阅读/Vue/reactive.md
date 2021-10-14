@@ -305,6 +305,8 @@ methodsToPatch.forEach((method) => {
   arrayMethods[method] = function mutator(...args) {
     const original = arrayMethods.__proto__[method];
     const result = original.apply(this, args);
+
+    // 下面就是在原数组方法上新增的逻辑，用于对新加入元素的响应式处理以及通知依赖更新
     let inserted;
     switch (method) {
       case "push":
