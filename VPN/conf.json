@@ -1,0 +1,54 @@
+{
+    "inbounds": [
+        {
+            "protocol": "http",
+            "port": 63333,
+            "settings": {
+                "allowTransparent": false
+            },
+            "streamSettings": {
+                "httpSettings": {
+                    "host": [
+                        "p.imin.kim"
+                    ],
+                    "path": "/v2-api"
+                }
+            }
+        },
+        {
+            "listen": "0.0.0.0",
+            "protocol": "socks",
+            "settings": {
+                "udp": true,
+                "auth": "noauth"
+            },
+            "port": 65533
+        },
+        {
+            "protocol": "vmess",
+            "port": 63334,
+            "settings": {
+                "clients": [
+                    {
+                        "id": "f303c824-bfb8-4bd4-be3e-fd9388888888",
+                        "alterId": 64
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/v2-api"
+                }
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "AsIs"
+            }
+        }
+    ]
+}
