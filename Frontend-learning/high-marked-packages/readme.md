@@ -1,5 +1,9 @@
 ## 重要
 
+- [worker-farm](https://www.npmjs.com/package/worker-farm)
+
+  - 简单易用的多线程 API，可以轻松将任务分配到子进程中执行
+
 - [ajv](https://www.npmjs.com/package/ajv/v/0.1.4)
   - json 模式校验，如在编译之前校验配置文件是否符合模式等
 
@@ -63,7 +67,7 @@
 
   const app = express();
 
-  app.get("/user", function(req, res) {
+  app.get("/user", function (req, res) {
     res.status(200).json({ name: "john" });
   });
 
@@ -72,7 +76,7 @@
     .expect("Content-Type", /json/)
     .expect("Content-Length", "15")
     .expect(200)
-    .end(function(err, res) {
+    .end(function (err, res) {
       if (err) throw err;
     });
   ```
@@ -414,8 +418,8 @@
 // RxJS 或者 Nodejs stream 虽然可以解决这个问题，但是它们都是异步的
 new Set(
   Array.from(uris)
-    .filter(uri => uri.startsWith("file://"))
-    .map(uri => uri.substr("file:///".length))
+    .filter((uri) => uri.startsWith("file://"))
+    .map((uri) => uri.substr("file:///".length))
 );
 ```
 
@@ -424,8 +428,8 @@ new Set(
 import iterate from "iterare";
 
 iterate(uris)
-  .filter(uri => uri.startsWith("file://"))
-  .map(uri => uri.substr("file:///".length))
+  .filter((uri) => uri.startsWith("file://"))
+  .map((uri) => uri.substr("file:///".length))
   .toSet();
 ```
 
@@ -493,10 +497,12 @@ iterate(uris)
       - 相关：https://www.npmjs.com/package/make-dir#related
 
 - [cpy-cli](https://www.npmjs.com/package/cpy-cli)
+
   - cpy 的 cli 版本，例如可用于 `package.json#script#postinstall` 中。
 
 - [validator](https://github.com/validatorjs/validator.js)
   - 能够方便完成字符串的各种验证逻辑
+
 ## 一些不那么高的但比较有用的模块
 
 - [redirect-ssl](https://www.npmjs.com/package/redirect-ssl)
@@ -508,10 +514,11 @@ iterate(uris)
   - 在构建网站的时候同步多个页面、设备的静态资源。类似于 webpack devServer 热替换模块
 
 - [configstore](https://www.npmjs.com/package/configstore)
+
   - 存放和加载用户信息而不用关心具体存放在什么位置
 
 - [patch-package](https://github.com/ds300/patch-package)
-  - 在某些边缘情况下需要修改 node_modules 中的源码，但是重新 `npm i` 之后修改会丢失，该包用于记录修改到当前项目下，保持修改一直跟随当前项目。 
+  - 在某些边缘情况下需要修改 node_modules 中的源码，但是重新 `npm i` 之后修改会丢失，该包用于记录修改到当前项目下，保持修改一直跟随当前项目。
 
 ## 一些有趣的 lib
 
@@ -536,11 +543,10 @@ iterate(uris)
 - [autocannon](https://www.npmjs.com/package/autocannon)
   - 接口压力测试
 
-
-
 ## 独立工具
 
 - [Wheat](https://github.com/creationix/wheat)
+
   - 一个博客引擎，从 git 读取并呈现为网站
 
 - [surge](https://github.com/sintaxi/surge)
@@ -548,5 +554,6 @@ iterate(uris)
   - 免费托管
 
 ## 动画
+
 - [dynamics.js](https://www.npmjs.com/package/dynamics.js)
   - 一个物理动画库
