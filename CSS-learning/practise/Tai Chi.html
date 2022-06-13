@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>太极图</title>
+    <style>
+      #taichi {
+        --dot-width: 20px;
+        --container-width: 240px;
+        --container-border-width: 2px;
+        --half-width: calc(var(--container-width) / 2);
+        --dot-color: blue;
+        width: var(--container-width);
+        height: var(--half-width);
+        border: var(--container-border-width) solid black;
+        border-bottom-width: calc(var(--half-width) + 2px);
+        border-radius: 50%;
+        position: relative;
+      }
+      /* 宽度为中间圆点大小，周围用border撑开 */
+      #taichi::before,
+      #taichi::after {
+        content: "";
+        width: var(--dot-width);
+        height: var(--dot-width);
+        display: inline-block;
+        background-color: var(--dot-color);
+        border: calc(calc(var(--half-width) - var(--dot-width)) / 2) solid
+          rgb(40, 40, 40);
+        border-radius: 50%;
+        top: 50%;
+        position: relative;
+      }
+      #taichi::before {
+        border-color: rgb(244, 243, 243);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 思路 -->
+    <!-- 将容器分为上下两部分，上面是容器高度，下面使用 border-bottom 和容器等高组成太极的黑白个模块 -->
+    <!-- 中间使用两个伪元素作为圆点定位到容器中央，再利用伪元素边框撑开即可，边框颜色与黑白两色相同 -->
+    <div id="taichi"></div>
+    <p>
+      为了区分布局元素，我将颜色调整了一下，米白色与白色组成太极图白色部分，浅灰色和黑色部分组成太极图黑色部分
+    </p>
+  </body>
+</html>

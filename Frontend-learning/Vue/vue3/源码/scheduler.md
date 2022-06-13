@@ -4,7 +4,7 @@
 
 `job` 的执行使用 `Promise` 微任务队列实现，这里有两个状态需要说明：
 
-- `isFlushPending`：是否在等待任务执行，表示从 `创建 Promise` 到 `Promise 微任务启动` 这段时间
+- `isFlushPending`：是否在等待任务执行，表示从调用 `Promise#then` 到 `Promise 微任务启动` 这段时间
 - `isFlushing`：是否正在执行任务，它表示从 `Promise 微任务启动` 到执行完所有 `queue` 中的任务
 
 当需要将任务放入到微任务队列时，使用 [`queueJob(job)`](https://github.com/vuejs/core/blob/0cf9ae62be21a6180f909e03091f087254ae3e52/packages/runtime-core/src/scheduler.ts#L84) 方法来完成：

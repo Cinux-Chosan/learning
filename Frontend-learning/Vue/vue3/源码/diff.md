@@ -26,7 +26,7 @@ vue3 中，diff children 分为两种情况，带 `key` 的和不带 `key` 的
   - 新的节点已经对比完，旧的节点还有剩余，则 `unmount` 旧的节点
   - 新旧都存在未比对的元素（首尾都已经对比完成，因此未对比的元素仅会在中间）：
     - 将所有新的节点以 `key => index` 的方式记录到 map 结构 `keyToNewIndexMap` 中
-    - 遍历剩下的旧的节点
+    - 遍历剩下的旧的节点（即首尾对比完后中间的所有旧节点）
       - 如果：
         - 节点存在 `key`，则直接从 `keyToNewIndexMap` 中取出（对应 `key`）新的下标 `newIndex`
         - 不存在 `key`，则遍历新的节点，看是否可以找到一个类型匹配的节点，记录其下标为 `newIndex`
@@ -34,7 +34,7 @@ vue3 中，diff children 分为两种情况，带 `key` 的和不带 `key` 的
         - 不存在 `newIndex` 则直接 `unmount` 旧的节点
         - 存在，则 `patch` 两个节点（即当前的 `n1` 和 `c2[newIndex]`），并记录新节点下标对应的旧节点下标到 `newIndexToOldIndexMap` 数组，同时用布尔变量 `moved` 记录是否有节点移动了位置
       - 如果新节点已经全部都被 `patch` 过，则剩下的旧节点全部 `unmount`
-    - 遍历剩下的新节点
+    - 遍历剩下的新节点（即首尾对比完后中间的所有新节点）
       - 如果：
         - 新节点不存在对应的旧节点（通过之前记录的 `newIndexToOldIndexMap` 数组判断），则直接 `mount` 新节点
         - 移动了位置（通过 `moved` 布尔变量判断）

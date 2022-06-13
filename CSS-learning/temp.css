@@ -1,0 +1,73 @@
+/* 参考 bilibili 视频 https://www.bilibili.com/video/BV134411m7dJ?p=1&vd_source=3118911a5bd15918c681087fa14365a7 */
+
+.main {
+  display: grid;
+
+  /* 创建4行，分别为 100px 50px 100px 50px */
+  grid-template-rows: 100px 50px 100px 50px;
+  grid-template-rows: repeat(2, 100px 50px);
+  /* 自动填充行数，每两行为 100px 50px */
+  grid-template-rows: repeat(auto-fill, 100px 50px);
+  /* 按份数分，1 fr 就是 1 份，类似于 flex: 1 */
+  grid-template-rows: 1fr 2fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  /* minmax(min, max) 用于控制栅格大小，最小不低于 min，最大不超过 max */
+  grid-template-rows: 1fr 2fr minmax(50px, 100px);
+  /* 行间距 10px */
+  row-gap: 10px;
+  /* 简写方式，前面是行间距，后面是列间距 */
+  gap: 10px 20px;
+
+  /* 定义列数，用法同 grid-template-rows */
+  grid-template-columns: repeat(auto-fill, 100px);
+
+  /* 定义区域 */
+  /* 如划分了 3 行两列，下面的命名就是给对应的栅格命名，相同命名会合并 */
+  grid-template-areas:
+    "header header"
+    "nav main"
+    "footer footer";
+  /* 另外如果只是想要占位，后面并不会引用其名称，可使用 . 或者 ... 占位 */
+  grid-template-areas:
+    ". ."
+    ". main"
+    ". .";
+  /* 然后在需要使用区域的地方通过 gird-area 引用对应的命名 */
+  grid-area: main; /* 这个属性应该在其子元素中使用 */
+
+  /* 默认流动方向是从左往右，之上而下，可以调整流动方向 */
+  /* dense 表示使用网格稠密算法，它会让后面较小的栅格去填充前面栅格留下的空白。默认是稀疏算法，即不填充。参考 https://developer.mozilla.org/zh-CN/docs/Web/CSS/grid-auto-flow */
+  grid-auto-flow: row dense;
+  /* 水平、垂直居中方式和 flex 布局一样，参数也一样 */
+  justify-content: center;
+  align-content: center;
+
+  /* 可以通过 place-content 合并上面的写法，第一个是垂直方向，第二个是水平方向*/
+  place-content: end start;
+
+  /* 控制每个栅格内的对齐方式，默认为 stretch，即拉伸，也可以在对应的栅格内通过 justify-self、align-self 控制自身 */
+  justify-items: start;
+  align-items: end;
+  /* 同样可以通过 place-items 合并控制栅格内的对齐方式 */
+  place-items: start center;
+}
+
+.child {
+  /* 设置栅格位置、合并栅格等 */
+  /* start 数值代表起始行列，end 数值代表结束行列（结束不包括该行） */
+  /* 也可以将数值理解为行列的第几条线，行从顶部开始，列从左边开始，相当于两条线中间的区域 */
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  /* 另外，也支持给边框起别名，用别名的方式引用，但并不方便，如有需要参考 https://www.bilibili.com/video/BV134411m7dJ?p=12&vd_source=3118911a5bd15918c681087fa14365a7 */
+  /* 另外，结束也可以直接使用偏移量，默认从该元素本身开始的位置并通过 span 来控制占用几行或几列 */
+  grid-column-end: span 2;
+
+  /* 同样，可以直接使用简写 */
+  /* 分别表示起始位置，或者偏移 */
+  grid-row: 1 / 3;
+  grid-column: 1 / span 2;
+  /* 也可使用区域定位 */
+  grid-area: 1/1/3/2;
+}

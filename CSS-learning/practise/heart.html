@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>桃心</title>
+    <style>
+      #heart {
+        --width: 100px;
+        --color: red;
+        width: var(--width);
+        height: var(--width);
+        background: var(--color);
+        margin: 100px;
+        transform: rotate(45deg);
+        position: relative;
+      }
+
+      #heart::before,
+      #heart::after {
+        content: "";
+        background-color: var(--color);
+        width: var(--width);
+        height: var(--width);
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      #heart::before {
+        left: -50%;
+      }
+      #heart::after {
+        top: -50%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 思路 -->
+    <!-- 使用和父元素相同大小的 before 和 after 伪元素，沿着父元素相邻两条边超出父元素一半，然后设置圆形边框即可 -->
+    <div id="heart"></div>
+  </body>
+</html>
