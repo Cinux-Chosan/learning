@@ -1,6 +1,10 @@
 // 手写 Promise
 class Promise {
 
+    static resolve(result) {
+        return new Promise((res) => res(result))
+    }
+
     constructor(executor) {
         this.state = 'pending'
         this.result = null
@@ -86,3 +90,26 @@ console.log(p)
 
 // 最初参考 https://juejin.cn/post/6994594642280857630 但感觉他这个后面 then 方法里面太绕，因此按照自己的方式完善了一次
 // 另外还可以参考 [100 行代码实现 Promises/A+ 规范](https://mp.weixin.qq.com/s/qdJ0Xd8zTgtetFdlJL3P1g)
+
+
+// Promise.resolve().then(() => {
+//     console.log(0)
+//     return Promise.resolve(4)
+// }).then(console.log)
+
+// Promise.resolve()
+//     .then(() => {
+//         console.log(1)
+//     })
+//     .then(() => {
+//         console.log(2)
+//     })
+//     .then(() => {
+//         console.log(3)
+//     })
+//     .then(() => {
+//         console.log(5)
+//     })
+//     .then(() => {
+//         console.log(6)
+//     })
