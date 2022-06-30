@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      div {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        color: white;
+      }
+      .div1 {
+        background-color: red;
+        margin-right: -50px;
+        z-index: 1;
+        /* position: relative; */
+      }
+      .div2 {
+        background-color: blue;
+        /* position: relative; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="div1">div1</div>
+    <div class="div2">div2</div>
+
+    <p>
+      给 div1 单独添加 z-index 还是无法避免被 div2 覆盖，如果需要使 z-index
+      生效，可以配合 position: relative 等
+    </p>
+  </body>
+</html>
