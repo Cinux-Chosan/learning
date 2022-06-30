@@ -6,12 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        .btn{
-            
-        }
+      .btn {
+        border: 3px solid red;
+        padding: 0 10px;
+        text-decoration: none;
+        position: relative;
+        display: inline-flex;
+        justify-content: center;
+        color: #2c3e50;
+        overflow: hidden;
+      }
+      .btn::after {
+        content: "";
+        position: absolute;
+        display: inline-block;
+        width: 0;
+        height: 100%;
+        background: #e67e22;
+        z-index: -1;
+        transition: 0.6s;
+        transform: skew(45deg);
+      }
+      .btn:hover::after {
+        width: 200%;
+      }
     </style>
   </head>
   <body>
-    <a href="" class="btn">按钮</a>
+    <a href="" class="btn">鼠标移动到我</a>
+    <p>
+      主要利用对伪元素 after 实行 transform: skew(45deg)
+      来实现斜边效果，然后利用 hover 调整 width 出现对应动画
+    </p>
   </body>
 </html>

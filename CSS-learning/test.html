@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      main {
+        margin-top: 200px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        outline: 4px solid #eee;
+        width: 400px;
+        height: 200px;
+        perspective: 900px;
+        transform: rotateY(45deg);
+        /* transform: perspective(200px) rotateY(30deg); */
+      }
+      div {
+        width: 200px;
+        height: 200px;
+        /* transform: rotateY(30deg); */
+        position: absolute;
+        background-color: red;
+      }
+      div:nth-child(2) {
+        background-color: blue;
+        transform: translateZ(300px);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div></div>
+      <div></div>
+    </main>
+  </body>
+</html>

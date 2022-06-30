@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 200px;
+        height: 40px;
+        text-decoration: none;
+        background-color: #e74c3c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ecf0f1;
+        position: relative;
+        transition: 0.6s;
+      }
+
+      .btn:hover {
+        transform: skew(25deg);
+      }
+
+      .btn::before {
+        content: "";
+        width: 10px;
+        height: 100%;
+        position: absolute;
+        background-color: #34495e;
+        left: -10px;
+        /* 倾斜并拼接到左侧 */
+        transform: skewY(-45deg) translateY(5px);
+      }
+
+      .btn::after {
+        content: "";
+        width: 100%;
+        height: 10px;
+        position: absolute;
+        background-color: #34495e;
+        bottom: -10px;
+        /* 倾斜并拼接到下边 */
+        transform: skewX(-45deg) translateX(-5px);
+      }
+    </style>
+  </head>
+  <body>
+    <a href="" class="btn">按钮</a>
+
+    <p>
+      主要利用 before 和 after 伪类通过 transform: skew
+      来完成倾斜，并拼接到左侧和下边，从而视觉上呈现 3d
+    </p>
+  </body>
+</html>
