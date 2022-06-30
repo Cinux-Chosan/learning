@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        background-color: #34495e;
+        text-align: center;
+        color: white;
+      }
+      main {
+        display: flex;
+        justify-content: center;
+      }
+
+      .field {
+        position: relative;
+        overflow: hidden;
+      }
+      .field::before {
+        content: "";
+        width: 100%;
+        height: 2px;
+        left: 0;
+        bottom: 0;
+        position: absolute;
+        background: linear-gradient(
+          to right,
+          white,
+          rgb(255, 0, 0),
+          rgb(0, 54, 251),
+          rgb(30, 255, 0),
+          white
+        );
+        /* 初始状态：移动到外部，由于 overflow: hidden 因此隐藏起来 */
+        transform: translateX(-100%);
+        transition: 1s;
+      }
+
+      .field:hover::before {
+        /* 从左到右移动，呈现动画 */
+        transform: translateX(100%);
+      }
+      input {
+        outline: none;
+        border: none;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="field">
+        <input type="text" placeholder="请移动到这里" />
+      </div>
+    </main>
+    <p>利用 transform: translateX 对渐变元素实行平移，即出现了底部的特效</p>
+  </body>
+</html>
