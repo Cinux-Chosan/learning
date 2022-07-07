@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>旋转 3D 立方体</title>
+    <style>
+      body {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      body:hover main {
+        transform: perspective(900px) rotateX(330deg) rotateY(330deg);
+      }
+
+      main {
+        width: 100px;
+        height: 100px;
+        margin: 50px;
+        display: flex;
+        border: 1px solid #ccc;
+        transition: 2s;
+        transform-style: preserve-3d;
+        transform-origin: center center -50px;
+        transform: perspective(900px) rotateX(30deg) rotateY(30deg);
+      }
+
+      [class^="x-"] {
+        width: 100px;
+        height: 100px;
+        transform-origin: center center -50px;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 1s;
+        opacity: 0.8;
+        /* filter: blur(1px); */
+      }
+
+      [class^="x-"]:hover {
+        transform-origin: center center -60px;
+        filter: brightness(1.5) hue-rotate(180deg);
+      }
+
+      .x-1 {
+        background-color: antiquewhite;
+        transform: rotateY(0);
+      }
+      .x-2 {
+        background-color: aqua;
+        transform: rotateY(90deg);
+      }
+      .x-3 {
+        background-color: cadetblue;
+        transform: rotateY(180deg);
+      }
+      .x-4 {
+        background-color: violet;
+        transform: rotateY(270deg);
+      }
+      .x-5 {
+        background-color: tomato;
+        transform: rotateX(90deg);
+      }
+      .x-6 {
+        background-color: sandybrown;
+        transform: rotateX(-90deg);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="x-1">1</div>
+      <div class="x-2">2</div>
+      <div class="x-3">3</div>
+      <div class="x-4">4</div>
+      <div class="x-5">5</div>
+      <div class="x-6">6</div>
+    </main>
+
+    <p>
+      将旋转中点设定为正面的 z 轴背面，深度为正方体宽的一半。四个方向旋转围成 4
+      个面，然后封顶和底即可。
+    </p>
+  </body>
+</html>
