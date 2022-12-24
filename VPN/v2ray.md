@@ -166,8 +166,8 @@ http {
 # Settings for a TLS enabled server.
 #
 #    server {
-#        listen       443 ssl http2 default_server;
-#        listen       [::]:443 ssl http2 default_server;
+#        listen       65535 ssl http2 default_server;
+#        listen       [::]:65535 ssl http2 default_server;
 #        server_name  _;
 #        root         /usr/share/nginx/html;
 #
@@ -201,8 +201,8 @@ http {
 ## domain conf
 
  server {
-        listen       443 ssl http2 default_server;
-        listen       [::]:443 ssl http2 default_server;
+        listen       65535 ssl http2 default_server;
+        listen       [::]:65535 ssl http2 default_server;
         server_name  mm01.p.t.kim;
         root         /var/www/proxy-root;
         charset utf-8;
@@ -253,4 +253,23 @@ http {
     }
 
 
+```
+
+另外，如果仅使用某一个端口可能会被 isp 封禁，因此可以开放更多端口来使用，有两种方式：
+- nginx server 配置中，可以将端口号写作 10000-10499 来表示同时开启 10000 - 10499 共计 500 个端口。
+- 使用 firewall 来转发，将所有其他端口的流量转发到目标端口上，这样 nginx 可以只开放一个端口，使用方式如下：
+
+```shell
+# firewall 命令参数中将 --add 前缀改成 --remove 表示删除对应的配置
+# 启用 firewalld，centos 7 默认使用 firewall，但默认未开启，centos6 以下使用 iptables
+systemctl start firewalld
+systemctl enable firewalld
+# 开启端口，默认 firewall 只开放了几个特殊的端口，如 22 用于 ssh 登录， --permanent 用于将配置保存到文件，否则下次启动将失效
+firewall-cmd --permanent --zone=public --add-port=1-65535/tcp
+firewall-cmd --permanent --zone=public --add-port=1-65535/udp
+# 转发，如下面的命令会将 10000 - 60000 端口收到的 tcp/udp 转发到 65535 端口
+firewall-cmd --zone=public --add-forward-port=port=10000-60000:proto=tcp:toport=65535 --permanent
+firewall-cmd --zone=public --add-forward-port=port=10000-60000:proto=udp:toport=65535 --permanent
+# 重载配置生效
+firewall-cmd --reload
 ```
