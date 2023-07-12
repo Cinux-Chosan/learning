@@ -87,6 +87,9 @@
   - Run multiple commands concurrently。多个任务同时运行，并可追踪其输出和执行是否成功等。
 - [ts-node](https://www.npmjs.com/package/ts-node)
   - TypeScript execution and REPL for node.js, with source map support. Works with typescript@>=2.0。即 ts 命令行执行终端。
+- [Fuse](https://github.com/krisk/Fuse)
+  - 模糊搜索库
+ 
 
 ## 来自 [nwb](https://github.com/insin/nwb.git)
 
