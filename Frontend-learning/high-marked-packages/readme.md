@@ -154,6 +154,10 @@
   - 高吞吐量模板目录写入。支持使用 mustache 的 `{{}}` 语法注入变量。可用于编写 cli 工具时给模板注入变量。
 
 # 来自 [webpack](https://www.npmjs.com/package/webpack)
+- [selfsigned](https://github.com/jfromaniello/selfsigned#readme)
+  - 生成本地开发的签名证书，也可以执行以下命令直接生成对应的证书文件：
+    - `openssl genrsa 1024 > key.pem` # 生成 key
+    - `openssl req -x509 -new -key key.pem > key-cert.pem` # 生成 cert 
 
 - [neo-async](https://www.npmjs.com/package/neo-async)
   - Neo-Async 被认为是 Async 的直接替代品，几乎完全覆盖了它的功能并且运行速度更快。
