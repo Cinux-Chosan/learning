@@ -509,6 +509,9 @@ iterate(uris)
 
 - [validator](https://github.com/validatorjs/validator.js)
   - 能够方便完成字符串的各种验证逻辑
+ 
+- [expr-eval](https://www.npmjs.com/package/expr-eval)
+  - 数学表达式解析、计算。可以直接带入参数进行计算返回结果。
 
 ## 一些不那么高的但比较有用的模块
 
