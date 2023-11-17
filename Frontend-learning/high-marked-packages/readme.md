@@ -1,4 +1,6 @@
 ## 重要
+- [p-retry](https://github.com/sindresorhus/p-retry)
+  - 自动重试库
 
 - [worker-farm](https://www.npmjs.com/package/worker-farm)
 
